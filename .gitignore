@@ -17,6 +17,11 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Unneeded files
+errors.txt
+log.txt
+traceback.txt
+
 # =========================
 # Operating System Files
 # =========================
