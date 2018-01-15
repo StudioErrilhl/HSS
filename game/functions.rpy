@@ -3,12 +3,12 @@ init -100 python:
 
 
 init python:
-    def statschangeNotify(a,f,p=False):
+    def statschangenotify(a,f,p=False):
         # a = attribute to change
         # f = negative or positive value representing the change
         # p = longer pause or not
 
-        # This function have no reason to be used by anything else, so keep it internal to "statschangeNotify".
+        # This function have no reason to be used by anything else, so keep it internal to "statschangenotify".
         def _generateText( what, who, f ):
             if f < 0:
                 action = "deteriorated"
@@ -40,8 +40,8 @@ init python:
         else:
             setattr( store, a, getattr( store, a ) + f )
 
-        if a[:2] in [ "fm", "nk", "fs", "sn" ]:
-            if a[:2] in [ "fm", "fs" ]:
+        if a[:2] in [ "fp", "fm", "nk", "fs", "sn" ]:
+            if a[:2] in [ "fp", "fm", "fs" ]:
                 name = a[:2]
                 if a[3:] in [ "aro","cor","att","anal","pussy","bj" ]:
                     name = a[:2]
@@ -78,77 +78,142 @@ init python:
             upto += w
         assert False, "Shouldn't get here"
 
-label addtime(hours=False,minutes=False):
-    $ addhour = False
-    if minutes:
-        $ hour = current_hour
-        if int(hour[3:])+int(minutes) >= int('60'):
+init 10 python:
+    def addtime(hours=False,minutes=False):
+        global current_hour,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning
+        local_dw = day_week
+        addhour = False
+        if minutes:
+            hour = current_hour
+            if int(hour[3:])+int(minutes) >= int('60'):
+                if debug:
+                    "minutes happened"
+                update_minutes = str((int(hour[3:])+int(minutes))-60)
+                if len(update_minutes) == 1:
+                    update_minutes = '0'+update_minutes
+                addhour = True
+                current_hour = current_hour[:3]+str(update_minutes)
+                setattr(store, 'current_hour', current_hour)                
+            else:
+                update_minutes = str(int(hour[3:])+minutes)
+                hour = hour[:3]
+                if len(hour) == 2:
+                    hour = '0'+str(hour)
+                current_hour = str(hour)+str(update_minutes)
+                setattr(store, 'current_hour', current_hour)
+        if hours:
             if debug:
-                "minutes happened"
-            $ update_minutes = str((int(hour[3:])+int(minutes))-60)
-            if len(update_minutes) == 1:
-                $ update_minutes = '0'+update_minutes
-            $ addhour = True
-            $ current_hour = current_hour[:3]+str(update_minutes)
-        else:
-            $ update_minutes = str(int(hour[3:])+minutes)
-            $ hour = hour[:3]
-            if len(hour) == 2:
-                $ hour = '0'+str(hour)
-            $ current_hour = str(hour)+str(update_minutes)
-    if hours:
-        if debug:
-            "hours happened"
-        $ hour = current_hour
+                "hours happened"
+            hour = current_hour
+            if addhour:
+                if debug:
+                    "addhour - hours happened first"
+                if int(hour[:2])+hours+1 <= '23':
+                    if debug:
+                        "addhour - hours happened second"
+                    current_hour = str(int(hours)+1)+hour[2:]
+                    setattr(store, 'current_hour', current_hour)                    
+                else:
+                    if debug:
+                        "addhour - hours happened third"
+                    current_hour = str(int(hour[:2])+int(hours)+1)+hour[2:]
+                    setattr(store, 'current_hour', current_hour)                    
+            else:
+                if int(hour[:2])+hours <= '23':
+                    if debug:
+                        "addhour - hours happened fourth"
+                    if int(hour[:2])+int(hours) == 24:
+                        current_hour = str(int(0))+hour[2:]
+                        setattr(store, 'current_hour', current_hour)                        
+                        day_week = 0 if day_week == 6 else day_week+1
+                        if local_dw != day_week:
+                            if current_month_day == months_days[current_month][1]:
+                                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
+                                current_month_text = months_days[current_month][0]
+                                current_month_day = 1
+                            else:
+                                current_month_day += 1
+                                day_ahead = True
+                    elif int(hour[:2])+int(hours) > 24:
+                        current_hour = str(int(0))+(int(hour[:2])+int(hours)-24)+hour[2:]
+                        setattr(store, 'current_hour', current_hour)                        
+                        day_week = 0 if day_week == 6 else day_week+1
+                        if local_dw != day_week:
+                            if current_month_day == months_days[current_month][1]:
+                                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
+                                current_month_text = months_days[current_month][0]
+                                current_month_day = 1
+                            else:
+                                current_month_day += 1
+                                day_ahead = True
+                    else:
+                        current_hour = str(int(hour[:2])+int(hours))+hour[2:]
+                        setattr(store, 'current_hour', current_hour)                        
+                else:
+                    if debug:
+                        "addhour - hours happened fifth" 
+                    if int(hour[:2])+int(hours) == 24:
+                        current_hour = str(int(0))+hour[2:]
+                        setattr(store, 'current_hour', current_hour)                        
+                        day_week = 0 if day_week == 6 else day_week+1
+                        if local_dw != day_week:
+                            if current_month_day == months_days[current_month][1]:
+                                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
+                                current_month_text = months_days[current_month][0]
+                                current_month_day = 1
+                            else:
+                                current_month_day += 1
+                                day_ahead = True
+                    elif int(hour[:2])+int(hours) > 24:
+                        current_hour = str(int(0))+(int(hour[:2])+int(hours)-24)+hour[2:]
+                        setattr(store, 'current_hour', current_hour)                        
+                        day_week = 0 if day_week == 6 else day_week+1
+                        if local_dw != day_week:
+                            if current_month_day == months_days[current_month][1]:
+                                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
+                                current_month_text = months_days[current_month][0]
+                                current_month_day = 1
+                            else:
+                                current_month_day += 1
+                                day_ahead = True
+                    else:
+                        current_hour = str(int(hour[:2])+int(hours))+hour[2:]
+                        setattr(store, 'current_hour', current_hour)                        
+            if len(current_hour) < 5:
+                if debug:
+                    "addhour - hours happened sixth"
+                current_hour = '0'+current_hour
+                setattr(store, 'current_hour', current_hour)                
+
         if addhour:
             if debug:
-                "addhour - hours happened first"
-            if int(hour[:2])+hours+1 <= '23':
+                "addhour happened"
+            hour = current_hour
+            if int(hour[:2])+int(hours)+1 <= '23':
                 if debug:
-                    "addhour - hours happened second"
-                $ current_hour = str(int(hours)+1)+hour[2:]
+                    "first addhour clause"
+                if hours:
+                    current_hour = str(int(hours)+1)+hour[2:]
+                    setattr(store, 'current_hour', current_hour)                    
+                else:
+                    current_hour = str(int(hour[:2])+1)+str(hour[2:])
+                    setattr(store, 'current_hour', current_hour)                    
+            elif int(hour[:2])+hours+1 == '24':
+                if debug:
+                    "second addhour clause"
+                current_hour = str(00)+hour[2:]
+                setattr(store, 'current_hour', current_hour)                
             else:
                 if debug:
-                    "addhour - hours happened third"
-                $ current_hour = str(int(hour[:2])+int(hours)+1)+hour[2:]
-        else:
-            if int(hour[:2])+hours <= '23':
+                    "third addhour clause"
+                current_hour = str(int(hour[:2])+hours+1)+hour[2:]
+                setattr(store, 'current_hour', current_hour)                
+            if len(current_hour) < 5:
                 if debug:
-                    "addhour - hours happened fourth"
-                $ current_hour = str(int(hour[:2])+int(hours))+hour[2:]
-            else:
-                if debug:
-                    "addhour - hours happened fifth"                   
-                $ current_hour = str(int(hour[:2])+int(hours))+hour[2:]
-        if len(current_hour) < 5:
-            if debug:
-                "addhour - hours happened sixth"
-            $ current_hour = '0'+current_hour
+                    "fourth addhour clause"
+                current_hour = '0'+current_hour
+                setattr(store, 'current_hour', current_hour)                
 
-    if addhour:
-        if debug:
-            "addhour happened"
-        $ hour = current_hour
-        if int(hour[:2])+int(hours)+1 <= '23':
-            if debug:
-                "first addhour clause"
-            if hours:
-                $ current_hour = str(int(hours)+1)+hour[2:]
-            else:
-                $ current_hour = str(int(hour[:2])+1)+str(hour[2:])
-        elif int(hour[:2])+hours+1 == '24':
-            if debug:
-                "second addhour clause"
-            $ current_hour = str(00)+hour[2:]
-        else:
-            if debug:
-                "third addhour clause"
-            $ current_hour = str(int(hour[:2])+hours+1)+hour[2:]
-        if len(current_hour) < 5:
-            if debug:
-                "fourth addhour clause"
-            $ current_hour = '0'+current_hour
-    
     # if day_week <= 4:
     #     $ morning = True if int(current_hour[:2]) >= 6 and int(current_hour[:2]) < 9 else False
     #     $ day = True if int(current_hour[:2]) >= 9 and int(current_hour[:2]) <= 17 else False

@@ -1,39 +1,34 @@
 ﻿define config.screenshot_pattern = "D:\Dropbox\RenPy-games\Screenshots\HSS-screenshot%04d.png"
+
 label splashscreen:
     scene black 
     $ renpy.pause(1)
     show text "{size=60}{color=#ffffff}Studio Errilhl Presents ... {/color}{/size}" with dissolve
     $ renpy.pause(2)
     hide text with dissolve
+    $ renpy.block_rollback()
     if not persistent.splash_screen:
         show image "images/hss-logo.png" with dissolve:
             xalign .5 yalign .5
         $ renpy.pause(2)
         hide image "images/hss-logo.png" with dissolve
         $ renpy.pause(.75)
-        if persistent.patch_enabled:
-            show text "{size=30}{color=#ffffff}HSS - High School Shenanigans is a story about a very hot summer, where you'll play as <your name here>\n(You can name your own character, but the default is \"Marten\", so let's just go with that for now). So, you play as Marten, on his last stretch of high school, aiming to finish school, have some fun, fix his bike, and take his dream cross-country trip on it - but first, there's the exams. And the hot chicks... (among them, his mother and sister, who is both hot, and definitely part of his nighttime jerk-off sessions), the pool, the neighbor girl, and so much more - pretty much like there is in every teenager's life. You control what happens, who you eventually hook up with, what you end up doing with them, and so on and so forth.\n\n{b}Note that this is a very early Alpha-relese, and that quite a lot of the events haven't been added yet,\nor for those that have, might abruptly end. The game is playable,\nbut you won't reach a fulfilling conclusion as of yet!{/b}{/color}{/size}" as line1 with dissolve
-        else:
-            show text "{size=30}{color=#ffffff}HSS - High School Shenanigans is a story about a very hot summer, where you'll play as <your name here>\n(You can name your own character, but the default is \"Marten\", so let's just go with that for now). So, you play as Marten, on his last stretch of high school, aiming to finish school, have some fun, fix his bike, and take his dream cross-country trip on it - but first, there's the exams. And the hot chicks... and the pool, the neighbor girl, and so much more - pretty much like there is in every teenager's life. You control what happens, who you eventually hook up with, what you end up doing with them, and so on and so forth.\n\n{b}Note that this is a very early Alpha-relese, and that quite a lot of the events haven't been added yet,\nor for those that have, might abruptly end. The game is playable,\nbut you won't\nreach a fulfilling conclusion as of yet!{/b}{/color}{/size}" as line1 with dissolve
-        show text "{size=20}{color=#ffffff}Click to continue{/click}{/size}" as line2 with dissolve:
-            xalign .5 yalign 1.0
-        $ renpy.pause()
-        hide line1
-        hide line2
-        with dissolve
-        show text "{size=30}{color=#ffffff}The story is purely fictional, and does not reflect the creator's worldview.\nWe do not condone, nor support the actions and opinions of the characters{/color}{/size}" with dissolve
-        $ renpy.pause(3)
-        hide text with dissolve
-        $ renpy.pause(1)
-        show text "{size=60}{color=#ff0000}This game has the rollback / history enabled. Unfortunately, using it might mess up the inventory-system, so use at your own risk - it won't break the game, but some items may show up repeatedly, and other might not check correctly (for stat-mods and such). Come Beta (or earlier if possible), the rollback function will be disabled. Unfortunately, at the current stages, there are no real workarounds for this issue{/color}{/size}" as line1 with dissolve
-        show text "{size=20}{color=#ffffff}Click to continue{/click}{/size}" as line2 with dissolve:
-            xalign .5 yalign 1.0
-        $ renpy.pause()
-        hide line1
-        hide line2
+        if not persistent.accepted_splashscreen:
+            call screen confirm_age()   
+            $ renpy.block_rollback()
+        $ persistent.accepted_splashscreen = True
+        call screen splash_info()
+        $ renpy.block_rollback()
+        show screen disclaimer()
+        $ renpy.block_rollback()        
+        # hide text with dissolve
+        $ renpy.pause(2)
+        hide screen disclaimer        
         show text "{size=30}{color=#ffffff}Code / story by Studio Errilhl\nCharacter art by DivineChihaya{/color}{/size}"
+        $ renpy.block_rollback()
         $ renpy.pause(4)
         $ persistent.splash_screen = True
+        $ renpy.block_rollback()        
     return
 
 label after_load:
@@ -64,7 +59,8 @@ label start:
     $ conditions = Conditions() ## enables the conditions-parameter used for assigning conditions to disable / enable choice-items
     $ backpack = Container()
     $ updateInventory()
-
+    $ gp_bed = random.choice(fs_p)
+    $ gp_bath = random.choice(fs_p)    
     $ current_hour = "09:00"
     call fp_bedroom_scene
     ## intro - this is shown only once, when starting the game from the beginning
@@ -89,27 +85,36 @@ label start:
         fp "{i}So, there we are. April 1st, a Saturday, if I'm not mistaken. I'd just woken up, and was on my way downstairs to the kitchen when I heard noises coming from [fsName.formal]'s room. Usually I wouldn't care, but those sounds sounded... muffled. Like she was trying to keep it down, but failing. And I was curious what the hell she was doing. So, I walked up to her door, thinking I would just try to listen in, see if I could figure out what was going on.{/i}"
         fp "{i}Unfortunately, spying has never been my strong suit, and the door wasn't closed all the way... so when I leaned against it, I suddenly found myself tumbling into her room. Not very elegantly, mind. Quite ungracefully, in fact. But... that wasn't what was on my mind AT ALL.{/i}"
         call fs_intro_scene
-        fp "{i}[fsName.Myformalrole]'s room has the bed opposed the door. So right in front of my prone body, on her bed... well, half off her bed, was [fsName.informal], naked from the waist down, with most of her right hand buried between her legs, which, mind you, was spread quite wide over the edge of the bed. I couldn't really have had a better viewpoint even if I was sitting right in front of a porn-shoot.{/i}"
+        fp "{i}[fsName.Myformal]'s room has the bed opposed the door. So right in front of my prone body, on her bed... well, half off her bed, was [fsName.informal], naked from the waist down, with most of her right hand buried between her legs, which, mind you, was spread quite wide over the edge of the bed. I couldn't really have had a better viewpoint even if I was sitting right in front of a porn-shoot.{/i}"
         call upper_hallway_scene
-        show fs_standing mad with dissolve
+        show juliette_reflection
+        show juliette_mad_pantless:
+            zoom .74
+            yalign .72
+            xalign .2
+        with dissolve
         fp "{i}Didn't last long, though. About 5 seconds after me landing on her bedroom floor, I got hit with something hard! Then the shouting began, and 10 seconds after that, I was out in the hallway again, with a furious, but still very half-naked sister yelling at me. I'm still amazed that [fmName.informal] didn't show up... THAT would've been embarassing, for both of us... mostly for me.{/i}"
         fp "{i}Thankfully, [fsName.informal] realised what she was doing (partly because I had a raging boner in my boxer's, I guess) - turned on her heel, and went into her room again - this time locking the door.{/i}"
-        hide fs_standing with dissolve        
+        hide juliette_mad_pantless
+        hide juliette_reflection
+        with dissolve
         call upper_hallway_bathroom_scene
         fp "{i}Me... I went to the bathroom and jerked off. Yes, I know she's [fsName.myformal], and all that, but DAMN.{/i}"
         fp "{i}Okay... that might have been a bit TMI. I'm sorry. I just wanted you to understand what happened. And how that sort of led to... other things that happened as well. During that summer. You know... spring. Summer. End of high-school. The time I had all planned out. The plans that really didn't happen. Like... at all.{/i}"
         "So... the coming days, weeks and months, you'll be trying to pass your exams, finish your bike, getting some action, and generally being a high school senior going on freedom!"
         $ persistent.skipintro = True
         $ fs_mad = True        
-        return
+        # return
     label skippedintro:
         $ fs_mad = True
         show screen ingame_menu_display()
         fp "So. Quick recap: I woke up on April 1st, tried to somewhat remotely function and seem awake, and figure out what to with the day. Then, a little later, shellshocked, and trying to figure out how to get the image of my naked [fsName.role] off my mind, I decided spending the day working on my bike would be as good a way as any..."
-        # if current_month == 3 and current_month_day == 1:
         $ skip_breakfast = True
+        $ breakfast_food = False
+        $ breakfast_reply = False
+        $ breakfast_mod = False
+        $ breakfast_att = False
         call skip_breakfast(True)
-        return
 
     label day_start():
         $ detention_served = False
@@ -119,8 +124,13 @@ label start:
         $ count = 0
         $ end_bike_repair = False
         $ find_panties = True if renpy.random.random() > .75 else False
+        $ find_pb = True if renpy.random.random() > .80 else False
+        $ bathroom_find_panties = True if renpy.random.random() > .30 else False
+        $ find_ipad = True if renpy.random.random() > .65 else False        
+        $ had_breakfast = False
         $ morning_event_done = False
-        $ gp = random.choice(fs_p)
+        $ gp_bed = random.choice(fs_p)
+        $ gp_bath = random.choice(fs_p)
         $ br = random.choice([0,1,2,3])
         if wcount < 5:
             $ wcount += 1
@@ -133,7 +143,7 @@ label start:
             $ rainstorm = False
 
         if fs_mad:
-            $ statschangeNotify("fs_rel",-1)
+            $ statschangenotify("fs_rel",-1)
             pass
         if mc_b >= mc_b_max:
             $ mc_f = True
@@ -168,7 +178,6 @@ label start:
             $ new_weight = bf_weights[breakfast_select][1] - breakfast_weight
         $ bf_weights[breakfast_select] = (bf_weights[breakfast_select][0],new_weight)
 
-        # call day_wrapper()
         if int(current_hour[:2]) in night:
             if day_week <= 4:
                 $ mh = format(int(morning[renpy.random.randint(0,(len(morning)-3))]),"02d")
@@ -178,8 +187,8 @@ label start:
                 $ mh = format(int(random.choice(morning)),"02d")
                 $ mm = format(renpy.random.randint(00,59),"02d")
                 call settime(mh,mm)
-                # if int(current_hour[:2]) == 6:
-                #     call addtime(1, False) 
+                if int(current_hour[:2]) == 6:
+                    $ addtime(1, False) 
 
         call day_wrapper()
 
@@ -229,70 +238,35 @@ label start:
             # return
 
 #location changer
-    label change_loc(locname=False,timeadd=False,char=False,imgname=False):
-        if timeadd:
-            call addtime(False, 30)
-        if locname:
-            $ tmpname = locname.replace(' ','_')+"_scene"
-            call expression tmpname
-            show screen location(locname)
-            if char and imgname:
-                show expression "images/characters/[char]/body/standing/[imgname].png" as character at fs_standing_ahead_ani with dissolve:
-                    zoom .65
-                    xpos .7
-                    ypos 1.0
-                    xanchor .5
-                    yanchor .75
-            call screen empty()
-            hide screen empty
-            hide screen location
-            hide character
-        # return
-
-#event-labels
-
-
-    label travel_school(trs_called=False):
-        if trs_called:
-            $ trs_called = False
-            call schoolbuilding_scene
-            if late_oh_shit:
-                $ current_hour = "08:00"
-                "Barely, but on time. Close call indeed!"
-            else:
-                call addtime(False,25)
-                if int(current_hour[:2]) >= 8 and current_hour[4:] >= '00':
-                    $ school_walk_late_arrival = True
-                    call school_walk_late_arrival_event(True)
-                else:
-                    "You arrive with plenty of time to spare before the bell rings"
-                    call school_finished()
-            # return
-        # else:
-        #     return
-
-    # if school_walk_late_arrival:
-    #     label school_walk_late_arrival_event(called=False):
-    #         if called:
-    #             "{i}Arriving at school, you can see that you're late{/i}\nYou hurry up the stairs, trying to get to your classroom as fast as humanly possible"
-    #             sn "Greetings, [fp]!"
-    #             "[sn]s voice sneaks up on you as you hurry through the hallways"
-    #             "You turn around, and see [sn] standing in one of the doorways leading to the teacher's lounge"
-    #             fp "[sn]! Hi! I was just..."
-    #             sn "You're {b}late!{/b}"
-    #             "[sn] cuts you off, snapping at you"
-    #             fp "Yes, [sn], I am. I'm sorry, but..."
-    #             sn "I don't care, [fp]. You're not hurt, it seems, and doesn't seem to be in any distress, so I'm just gonna assume that you're late because of tardiness. Detention!"
-    #         # jump miss_novak_respond_detention
-
+    # label change_loc(locname=False,timeadd=False,char=False,imgname=False):
+    #     if timeadd:
+    #         $ addtime(False, 30)
+    #     if locname:
+    #         $ current_location = locname.replace(' ','_')+"_loc"
+    #         $ tmpname = locname.replace(' ','_')+"_scene"
+    #         call expression tmpname
+    #         show screen location(locname)
+    #         if char and imgname:
+    #             show expression "images/characters/[char]/body/standing/[imgname].png" as character at fs_standing_ahead_ani with dissolve:
+    #                 zoom .65
+    #                 xpos .7
+    #                 ypos 1.0
+    #                 xanchor .5
+    #                 yanchor .75
+    #         call screen empty()
+    #         hide screen empty
+    #         hide screen location
+    #         hide character
 
     label w_mc(wmc_called=False):
         if wmc_called or wmc_cfs:
             # $ wmc_called = wmc_cfs = False
             $ c = 0
+            $ mc_t = 0
             $ maxc = 1 if int(current_hour[:2]) == 6 else 2 if int(current_hour[:2]) > 14 and int(current_hour[:2]) < 22 and day_week <= 4 else 3
             $ events = [0,1,2,3,4,5,6,7,8,9,10]
             $ outside_events = [77,88,99]
+            $ modifier = .5 if mc_b < 50 else .4 if mc_b < 100 else .35
 
             label repeat_event(event=0):
                 if int(current_hour[:2]) < 7 and day_week <= 4 and event not in outside_events:
@@ -305,12 +279,12 @@ label start:
                     $ choice2 = "Or... I could go back inside, take a shower, get some breakfast, and get back out here later"
                     if not event or event == 0:                    
                         $ event = 7
-                elif int(current_hour[:2]) >= 7 and day_week <= 4 and event not in outside_events:
+                elif int(current_hour[:2]) in morning and day_week <= 4 and event not in outside_events:
                     $ choice1 = False
                     $ choice2 = "I don't really have time to work on the bike right now. I need to get to school"
                     if not event or event == 0:
                         $ event = 3
-                elif 14 < int(current_hour[:2]) < 20 and event not in outside_events:
+                elif 3 and 14 < int(current_hour[:2]) < 20 and event not in outside_events and event != 5 and day_week <= 4:
                     $ choice1 = "I can probably do at least a couple hours of bike repair today"
                     $ choice2 = "Or I could go back in the house, see if there's anything on TV, or play a game..."
                     if not event or event == 0:                    
@@ -325,26 +299,40 @@ label start:
                     menu:
                         "[choice1]" if choice1:
                             if event == 7:
-                                call addtime(1,False)
-                                if renpy.random.random() > .5:
+                                $ addtime(1,False)
+                                if renpy.random.random() > modifier:
                                     if backpack.has_item(toolbox_item):
-                                        $ mc_b += 2
+                                        $ mc_t = 2
                                     else:
-                                        $ mc_b += 1
+                                        $ mc_t = 1
                                 $ event = 77
-                                call repeat_event(77)
-                            elif c < maxc:
-                                call addtime(1, False)
-                                if renpy.random.random() > .5:
-                                    if backpack.has_item(toolbox_item):
-                                        $ mc_b += 2
-                                    else:
-                                        $ mc_b += 1                                        
-                                $ c += 1
+                                $ mc_b += mc_t
                                 $ mc_p = (float(mc_b)/float(mc_b_max))*100
                                 $ mc_p = "{0:.2f}".format(mc_p)
-                                $ renpy.notify("You're currently "+str(mc_p)+"% done with the bike")
-                                call repeat_event()
+                                if mc_t == 0:
+                                    $ renpy.notify("You did not improve the status of the bike this time")
+                                else:                                    
+                                    $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")                               
+                                call repeat_event(77)
+                            elif c <= maxc:
+                                $ addtime(1, False)
+                                if renpy.random.random() > modifier:
+                                    if backpack.has_item(toolbox_item):
+                                        $ mc_t = 2
+                                    else:
+                                        $ mc_t = 1                                        
+                                $ c += 1
+                                $ mc_b += mc_t
+                                $ mc_p = (float(mc_b)/float(mc_b_max))*100
+                                $ mc_p = "{0:.2f}".format(mc_p)
+                                if mc_t == 0:
+                                    $ renpy.notify("You did not improve the status of the bike this time")
+                                else:                                    
+                                    $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")                               
+                                if c == (maxc):
+                                    call repeat_event(88)
+                                else:
+                                    call repeat_event()
                             else:
                                 $ event = 88
                                 call repeat_event(88)
@@ -358,6 +346,7 @@ label start:
                     call breakfast_interaction(True)
                 elif event == 88:
                     "You're done working on the bike today"
+                    $ end_bike_repair = True
                     call outside_loc()
                 elif event == 99:
                     "You don't really wanna work on the bike right now"
@@ -377,11 +366,11 @@ label start:
 #                     "Leave keys":
 #                         $ smallkeys_added = False
 #             if fPshower:
-#                 call addtime(1, False)           
+#                 $ addtime(1, False)           
 #                 fp "{i}Ah, that was refreshing{/i}"
 #                 $ fPshower = False
 #             if fPsink:
-#                 call addtime(False,15)
+#                 $ addtime(False,15)
 #                 fp "{i}Good to get the filth off my hands{/i}"
 #                 $ fPsink = False
 #             call upper_hallway_bathroom_scene
@@ -402,7 +391,7 @@ label start:
 #             # $ skip_breakfast = False
 #             if called:
 #                 $ called = False
-#                 call addtime(False,30)
+#                 $ addtime(False,30)
 #                 fp "{i}Deciding to skip breakfast, to avoid uncomfortable incidents with [fsName.myformal], I go straight to the garage.{/i}"
 #                 call garage_scene
 #                 if not mc_f:
@@ -413,7 +402,7 @@ label start:
 #                                 label firstday_mc_work_internal():
 #                                 if count < 3:
 #                                     fp "{i}Damn... I just can't get that image out of my head...{/i}\nI've got to get this sorted, or else I won't be able to do anything all day."
-#                                     call addtime(1,False)
+#                                     $ addtime(1,False)
 #                                     $ count += 1
 #                                     menu:
 #                                         "Continue to work, trying to get your emotions under control":
@@ -429,9 +418,9 @@ label start:
 #                                             call livingroom_scene
 #                                             show fs_standing annoyed with dissolve
 #                                             if talk_later:
-#                                                 call addtime(10)
+#                                                 $ addtime(10)
 #                                             else:
-#                                                 call addtime(False,30)
+#                                                 $ addtime(False,30)
 #                                             fp "Hi, [fsName.informal]. Can we talk?"
 #                                             show fs_standing mad with dissolve
 #                                             fs mad "Fuck you"
@@ -445,7 +434,7 @@ label start:
 #                                             fs annoyed "So... you heard noises coming from my bedroom, and your first instinct is \"Let's check out the sounds from [fsName.myformal]s bedroom\"?"
 #                                             fp "Yeah...\n{b}you muster a foolish grin{/b}\nWhen you put it like that, it sounds sort of stupid..."
 #                                             show fs_standing ahead with dissolve
-#                                             call addtime(False, 30)
+#                                             $ addtime(False, 30)
 #                                             fs ahead "Can we just agree that unless I'm screaming bloody murder... and even if I am, check first!, that you do not go creeping about my door?"                                    
 #                                             fp "Sure, [fsName.informal]. I am really sorry!"
 #                                             fs ahead_eyes_closed "Yeah, yeah... not as sorry as me..."
@@ -460,8 +449,8 @@ label start:
 #                                             show fs_standing smile_open with dissolve
 #                                             fs smile "{b}Smiling now...{/b}\nOh, don't you worry. I will ask. You bet on it!"
 #                                             "With that, she picks herself off the couch, and wanders off"
-#                                             call addtime(1,False)
-#                                             $ statschangeNotify("fs_rel",3,True)
+#                                             $ addtime(1,False)
+#                                             $ statschangenotify("fs_rel",3,True)
 #                                             $ firstday_talk = False
 #                                             $ firstday_view = 0
 #                                             $ firstday_after_talk = True
@@ -578,7 +567,7 @@ label start:
 #                             else:
 #                                 "It's just not the day for outdoors activities, you decide to stay inside and just watch some TV instead"
 #                                 if fp_sts > 0:
-#                                     $ statschangeNotify("fp_sts",-1)
+#                                     $ statschangenotify("fp_sts",-1)
 #                 if not evening_event:
 #                     jump end_of_day
 #                 else:

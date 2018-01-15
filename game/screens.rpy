@@ -625,9 +625,10 @@ screen file_slots(title):
                 style_prefix "slot"
 
                 xalign 0.5
-                yalign 0.5
+                yalign 0.4
 
-                spacing gui.slot_spacing
+                xspacing 20
+                yspacing 50
 
                 for i in range(gui.file_slot_cols * gui.file_slot_rows):
 
@@ -640,7 +641,7 @@ screen file_slots(title):
 
                         add FileScreenshot(slot) xalign 0.5
 
-                        text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("empty slot")):
+                        text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("Empty slot")):
                             style "slot_time_text"
 
                         text FileSaveName(slot):
@@ -1136,7 +1137,7 @@ screen confirm(message, yes_action, no_action):
     ## Ensure other screens do not get input while this screen is displayed.
     modal True
 
-    zorder 200
+    zorder 950
 
     style_prefix "confirm"
 

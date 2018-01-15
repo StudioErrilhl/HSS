@@ -33,8 +33,8 @@ init -1 python:
                     self.finditem(item).amount += amount
                 else:
                     self.inventory.append(InvItem(item, amount))
-                name = item.name.lower().replace('fs','').replace('fm','').replace('_',' ')
-                renpy.notify(name.capitalize()+' added successfully')
+                name = item.name.lower().replace('fs','').replace('fm','').replace('_',' ').title()
+                renpy.notify(name+' added successfully')
 
         def has_item(self, item, a=1): #remember to use the Item-assignment, not a string to check for items
             if item in [i.item for i in self.inventory]:

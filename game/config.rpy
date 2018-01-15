@@ -44,6 +44,7 @@ default fp_aro = 0
 default fp_sts = 0
 default fpshower = False
 default fpsink = False
+default fp_creep = 0
 default punishment_late = 0 #this is the variable for punishment value for lateness at school - reach too high a number, and [fM] is called, and her relationship stat decrease
 default shitty_morning = False
 
@@ -148,6 +149,8 @@ default school_walk_late_event = False
 default breakfast_jump = False
 default schoolbooks_added = False
 default panties_added = False
+default bathroom_panties_added = False
+default ipad_added = False
 default smallkeys_added = False
 default toolbox_added = False
 default cheat = False
@@ -170,14 +173,18 @@ default school_hacker_first_thought = True
 default school_clues_search = False
 default school_clues_search_2 = False
 default school_clues_search_3 = False
-default clerk_talked_to = 'Natalie'
+default clerk_talked_to = scn.name
 default fs_pale_pink_panties = False
 default fs_light_blue_panties = False
 default fs_bright_pink_panties = False
 default fs_yellow_panties = False
 default find_panties = True
+default bathroom_find_panties = True
+default find_pb = False
 default morning_event_done = False
 default wine_added = False
+default phone_added = False
+default pb_added = False
 # default bottles = 99
 default bottles = False
 default after_sleep = False
@@ -188,9 +195,33 @@ default already_late = False
 default keys_mentioned = False
 default setstate = False
 default had_breakfast = False
+default call_nr = False
+default nr_involved = False
+default fs_ipad_bedroom = False
+default find_ipad = False
+default ipad_always_look = False
+default carry_phone = False
+default showclosebutton_iphone = True
+# default current_achievement = False
+default selected_number = 0
+default show_icons = True
+default quit_screen = False
+default cc_chosen = False
+default dinner_event = True
+default current_location = 'fp_bedroom_loc'
+default panties_sniffer = False
+default pb_return = False
+default testtest = False
 
-default fs_p = ['fs_yellow_panties','fs_light_blue_panties','fs_pale_pink_panties','fs_bright_pink_panties']
-default gp = False
+default fs_p = ['fs_yellow','fs_light_blue','fs_pale_pink','fs_bright_pink']
+default p_response = ["Hm... "+fsName.formal+"s panties...\n{b}sniffs them{/b}\nShould I take them with me?",
+                        "Oh, "+fsName.myinformal+" left her panties...",
+                        "Right-o! I don't think I have this color...",
+                        "{b}Sniffs panties{/b} I love her smell"
+        ] 
+
+default gp_bed = False
+default gp_bath = False
 default br = False
 
 #call locations from other screens
@@ -200,6 +231,8 @@ default gar_cfs = False
 default kit_cfs = False
 default uhl_cfs = False
 default uhl_bl_cfs = False
+default out_cfs = False
+default lvr_cfs = False
 
 default end_cfs = False
 default stn_cfs = False
@@ -221,13 +254,18 @@ default end_bike_repair = False
 default sc = 0
 # default sun_count = 0
 
-# inventory system
-# init python:
-#     for file in renpy.list_files():
-#         if file.startswith('images/inventory/') and file.endswith('.png'):
-#             if 'hover' in file:
-#                 name = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.png','')
-#                 setattr(store,""+name+"_item",Item(name,5))
+default fp_bedroom_ach = True
+default fs_bedroom_ach = False
+default uhl_bathroom_ach = False
+default uhl_ach = False
+default entrance_ach = False
+default livingroom_ach = False
+default kitchen_ach = False
+default outside_ach = False
+default garage_ach = False
+default school_ach = False
+default beach_ach = False
+
 
 #date and time stats
 default first_day = True
@@ -243,7 +281,7 @@ default current_month = 3
 default current_month_text = months_days[current_month][0]
 default current_day = week_days[day_week]
 define morning = [6,7,8,9,10,11]
-define day = [12,13,14,15,16,17,18,19,20,21]
+define day = [11,12,13,14,15,16,17,18,19,20,21,22]
 define night = [22,23,0,1,2,3,4,5]
 
 default current_hour = "06:00"
@@ -252,6 +290,7 @@ default addminute = False
 
 default wend_sat = False
 default wend_sun = False
+default sun_event = False
 
 # default time of day variables (used for calling specific elements each day)
 # default morning = True
@@ -265,3 +304,6 @@ default showStats = False
 default persistent.skipintro = False
 
 # define patchload = False
+
+init python:
+    _game_menu_screen = None

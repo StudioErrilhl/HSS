@@ -18,9 +18,11 @@ $RECYCLE.BIN/
 *.lnk
 
 # Unneeded files
-errors.txt
-log.txt
-traceback.txt
+patch.rpy
+patch.rpyc
+
+cache/*
+*.txt
 
 # =========================
 # Operating System Files

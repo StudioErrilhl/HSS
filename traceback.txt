@@ -1,269 +1,195 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
 While running game code:
-  File "game/script.rpy", line 111, in script call
+  File "game/script.rpy", line 117, in script call
     call skip_breakfast(True)
   File "game/morning_events.rpy", line 31, in script call
     call firstday_talk_fs(True)
-  File "game/morning_events.rpy", line 79, in script call
-    call end_of_day(True)
-  File "game/night_events.rpy", line 46, in script call
-    call sleep_the_night(True)
-  File "game/night_events.rpy", line 14, in script call
-    call sleeping(True)
-  File "game/script.rpy", line 184, in script call
-    call day_wrapper()
-  File "game/script.rpy", line 188, in script call
-    call morning_events()
-  File "game/morning_events.rpy", line 5, in script call
-    call fp_morning_content(True)
-  File "game/morning_events.rpy", line 437, in script call
-    call fp_bedroom_loc(True)
-  File "game/locations.rpy", line 16, in script call
-    call change_loc('fp bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 16, in script call
-    call change_loc('fp bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 3, in script call
-    call change_loc('entrance')
-  File "game/locations.rpy", line 118, in script call
-    call change_loc('kitchen')
-  File "game/locations.rpy", line 3, in script call
-    call change_loc('entrance')
-  File "game/locations.rpy", line 125, in script call
+  File "game/morning_events.rpy", line 81, in script call
     call change_loc('livingroom')
-  File "game/locations.rpy", line 3, in script call
+  File "game/locations.rpy", line 27, in script call
     call change_loc('entrance')
-  File "game/locations.rpy", line 142, in script call
+  File "game/locations.rpy", line 277, in script call
     call change_loc('upper hallway')
-  File "game/locations.rpy", line 3, in script call
-    call change_loc('entrance')
-  File "game/locations.rpy", line 135, in script call
-    call change_loc('outside neighborhood')
-  File "game/locations.rpy", line 51, in script call
-    call change_loc('garage')
-  File "game/locations.rpy", line 51, in script call
-    call change_loc('garage')
-  File "game/script.rpy", line 347, in script call
-    call repeat_event()
-  File "game/script.rpy", line 347, in script call
-    call repeat_event()
-  File "game/script.rpy", line 347, in script call
-    call repeat_event()
-  File "game/script.rpy", line 350, in script call
-    call repeat_event(88)
-  File "game/script.rpy", line 361, in script call
-    call outside_loc()
-  File "game/locations.rpy", line 135, in script call
-    call change_loc('outside neighborhood')
-  File "game/locations.rpy", line 3, in script call
-    call change_loc('entrance')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 16, in script call
+  File "game/locations.rpy", line 45, in script call
     call change_loc('fp bedroom')
-  File "game/night_events.rpy", line 8, in script call
-    call sleeping_day_away(True)
-  File "game/night_events.rpy", line 79, in script call
-    call fp_bedroom_loc(True)
-  File "game/locations.rpy", line 16, in script call
+  File "game/locations.rpy", line 45, in script call
     call change_loc('fp bedroom')
-  File "game/locations.rpy", line 142, in script call
+  File "game/locations.rpy", line 277, in script call
     call change_loc('upper hallway')
-  File "game/locations.rpy", line 167, in script call
+  File "game/locations.rpy", line 127, in script call
+    call change_loc('fs bedroom')
+  File "game/locations.rpy", line 127, in script call
+    call change_loc('fs bedroom')
+  File "game/locations.rpy", line 277, in script call
+    call change_loc('upper hallway')
+  File "game/locations.rpy", line 341, in script call
     call change_loc('upper hallway bathroom')
-  File "game/locations.rpy", line 142, in script call
+  File "game/locations.rpy", line 341, in script call
+    call change_loc('upper hallway bathroom')
+  File "game/locations.rpy", line 277, in script call
     call change_loc('upper hallway')
-  File "game/locations.rpy", line 16, in script call
-    call change_loc('fp bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 3, in script call
+  File "game/locations.rpy", line 27, in script call
     call change_loc('entrance')
+  File "game/locations.rpy", line 232, in script call
+    call change_loc('kitchen')
   File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 16, in script call
-    call change_loc('fp bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 39, in script call
-    call change_loc('fs bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 39, in script call
-    call change_loc('fs bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 39, in script call
-    call change_loc('fs bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 16, in script call
-    call change_loc('fp bedroom')
-  File "game/night_events.rpy", line 14, in script call
-    call sleeping(True)
-  File "game/script.rpy", line 184, in script call
-    call day_wrapper()
-  File "game/script.rpy", line 188, in script call
-    call morning_events()
-  File "game/morning_events.rpy", line 5, in script call
-    call fp_morning_content(True)
-  File "game/morning_events.rpy", line 450, in script call
     call change_loc('garage')
-  File "game/script.rpy", line 335, in script call
-    call repeat_event(77)
-  File "game/script.rpy", line 358, in script call
-    call breakfast_interaction(True)
-  File "game/morning_events.rpy", line 234, in script call
-    call travel_school(True)
-  File "game/script.rpy", line 269, in script call
-    call school_finished()
-  File "game/day_events.rpy", line 81, in script call
-    call evening_home()
-  File "game/day_events.rpy", line 132, in script
-    $ home_events = [
-  File "game/day_events.rpy", line 136, in <module>
-    ["When you arrive home, you catch a glimpse of "+fsname.yourformal+" by the pool, but "+fmName.yourformal+" is nowhere to be seen. Her car is still here, though.",True]
-NameError: name 'fsname' is not defined
+  File "game/locations.rpy", line 265, in script call
+    call change_loc('outside neighborhood')
+  File "game/locations.rpy", line 27, in script call
+    call change_loc('entrance')
+  File "game/locations.rpy", line 277, in script call
+    call change_loc('upper hallway')
+  File "game/locations.rpy", line 127, in script call
+    call change_loc('fs bedroom')
+  File "game/locations.rpy", line 277, in script call
+    call change_loc('upper hallway')
+  File "game/locations.rpy", line 341, in script call
+    call change_loc('upper hallway bathroom')
+  File "game/locations.rpy", line 277, in script call
+    call change_loc('upper hallway')
+  File "game/locations.rpy", line 27, in script call
+    call change_loc('entrance')
+  File "game/locations.rpy", line 232, in script call
+    call change_loc('kitchen')
+  File "game/locations.rpy", line 27, in script call
+    call change_loc('entrance')
+  File "game/locations.rpy", line 244, in script call
+    call change_loc('livingroom')
+  File "game/locations.rpy", line 142, in script call
+    call change_loc('garage')
+  File "game/locations.rpy", line 265, in script call
+    call change_loc('outside neighborhood')
+  File "game/locations.rpy", line 142, in script call
+    call change_loc('garage')
+  File "game/locations.rpy", line 265, in script call
+    call change_loc('outside neighborhood')
+  File "game/locations.rpy", line 27, in script call
+    call change_loc('entrance')
+  File "game/locations.rpy", line 277, in script call
+    call change_loc('upper hallway')
+  File "game/locations.rpy", line 127, in script call
+    call change_loc('fs bedroom')
+  File "game/locations.rpy", line 127, in script call
+    call change_loc('fs bedroom')
+  File "game/locations.rpy", line 277, in script call
+    call change_loc('upper hallway')
+  File "game/locations.rpy", line 27, in script call
+    call change_loc('entrance')
+  File "game/locations.rpy", line 276, in script call
+    call talk_fs(True)
+  File "game/day_events.rpy", line 325, in script
+    $ renpy.watch(pb_return)
+  File "game/day_events.rpy", line 325, in <module>
+    $ renpy.watch(pb_return)
+  File "renpy/common/00console.rpy", line 587, in renpy_watch
+    watch(l)
+  File "renpy/common/00console.rpy", line 567, in watch
+    expr = l.rest()
+TypeError: object of type 'bool' has no len()
 
 -- Full Traceback ------------------------------------------------------------
 
 Full traceback:
-  File "game/script.rpy", line 111, in script call
+  File "game/script.rpy", line 117, in script call
     call skip_breakfast(True)
   File "game/morning_events.rpy", line 31, in script call
     call firstday_talk_fs(True)
-  File "game/morning_events.rpy", line 79, in script call
-    call end_of_day(True)
-  File "game/night_events.rpy", line 46, in script call
-    call sleep_the_night(True)
-  File "game/night_events.rpy", line 14, in script call
-    call sleeping(True)
-  File "game/script.rpy", line 184, in script call
-    call day_wrapper()
-  File "game/script.rpy", line 188, in script call
-    call morning_events()
-  File "game/morning_events.rpy", line 5, in script call
-    call fp_morning_content(True)
-  File "game/morning_events.rpy", line 437, in script call
-    call fp_bedroom_loc(True)
-  File "game/locations.rpy", line 16, in script call
-    call change_loc('fp bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 16, in script call
-    call change_loc('fp bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 3, in script call
-    call change_loc('entrance')
-  File "game/locations.rpy", line 118, in script call
-    call change_loc('kitchen')
-  File "game/locations.rpy", line 3, in script call
-    call change_loc('entrance')
-  File "game/locations.rpy", line 125, in script call
+  File "game/morning_events.rpy", line 81, in script call
     call change_loc('livingroom')
-  File "game/locations.rpy", line 3, in script call
+  File "game/locations.rpy", line 27, in script call
     call change_loc('entrance')
-  File "game/locations.rpy", line 142, in script call
+  File "game/locations.rpy", line 277, in script call
     call change_loc('upper hallway')
-  File "game/locations.rpy", line 3, in script call
-    call change_loc('entrance')
-  File "game/locations.rpy", line 135, in script call
-    call change_loc('outside neighborhood')
-  File "game/locations.rpy", line 51, in script call
-    call change_loc('garage')
-  File "game/locations.rpy", line 51, in script call
-    call change_loc('garage')
-  File "game/script.rpy", line 347, in script call
-    call repeat_event()
-  File "game/script.rpy", line 347, in script call
-    call repeat_event()
-  File "game/script.rpy", line 347, in script call
-    call repeat_event()
-  File "game/script.rpy", line 350, in script call
-    call repeat_event(88)
-  File "game/script.rpy", line 361, in script call
-    call outside_loc()
-  File "game/locations.rpy", line 135, in script call
-    call change_loc('outside neighborhood')
-  File "game/locations.rpy", line 3, in script call
-    call change_loc('entrance')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 16, in script call
+  File "game/locations.rpy", line 45, in script call
     call change_loc('fp bedroom')
-  File "game/night_events.rpy", line 8, in script call
-    call sleeping_day_away(True)
-  File "game/night_events.rpy", line 79, in script call
-    call fp_bedroom_loc(True)
-  File "game/locations.rpy", line 16, in script call
+  File "game/locations.rpy", line 45, in script call
     call change_loc('fp bedroom')
-  File "game/locations.rpy", line 142, in script call
+  File "game/locations.rpy", line 277, in script call
     call change_loc('upper hallway')
-  File "game/locations.rpy", line 167, in script call
+  File "game/locations.rpy", line 127, in script call
+    call change_loc('fs bedroom')
+  File "game/locations.rpy", line 127, in script call
+    call change_loc('fs bedroom')
+  File "game/locations.rpy", line 277, in script call
+    call change_loc('upper hallway')
+  File "game/locations.rpy", line 341, in script call
     call change_loc('upper hallway bathroom')
-  File "game/locations.rpy", line 142, in script call
+  File "game/locations.rpy", line 341, in script call
+    call change_loc('upper hallway bathroom')
+  File "game/locations.rpy", line 277, in script call
     call change_loc('upper hallway')
-  File "game/locations.rpy", line 16, in script call
-    call change_loc('fp bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 3, in script call
+  File "game/locations.rpy", line 27, in script call
     call change_loc('entrance')
+  File "game/locations.rpy", line 232, in script call
+    call change_loc('kitchen')
   File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 16, in script call
-    call change_loc('fp bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 39, in script call
-    call change_loc('fs bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 39, in script call
-    call change_loc('fs bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 39, in script call
-    call change_loc('fs bedroom')
-  File "game/locations.rpy", line 142, in script call
-    call change_loc('upper hallway')
-  File "game/locations.rpy", line 16, in script call
-    call change_loc('fp bedroom')
-  File "game/night_events.rpy", line 14, in script call
-    call sleeping(True)
-  File "game/script.rpy", line 184, in script call
-    call day_wrapper()
-  File "game/script.rpy", line 188, in script call
-    call morning_events()
-  File "game/morning_events.rpy", line 5, in script call
-    call fp_morning_content(True)
-  File "game/morning_events.rpy", line 450, in script call
     call change_loc('garage')
-  File "game/script.rpy", line 335, in script call
-    call repeat_event(77)
-  File "game/script.rpy", line 358, in script call
-    call breakfast_interaction(True)
-  File "game/morning_events.rpy", line 234, in script call
-    call travel_school(True)
-  File "game/script.rpy", line 269, in script call
-    call school_finished()
-  File "game/day_events.rpy", line 81, in script call
-    call evening_home()
-  File "game/day_events.rpy", line 132, in script
-    $ home_events = [
-  File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\ast.py", line 827, in execute
+  File "game/locations.rpy", line 265, in script call
+    call change_loc('outside neighborhood')
+  File "game/locations.rpy", line 27, in script call
+    call change_loc('entrance')
+  File "game/locations.rpy", line 277, in script call
+    call change_loc('upper hallway')
+  File "game/locations.rpy", line 127, in script call
+    call change_loc('fs bedroom')
+  File "game/locations.rpy", line 277, in script call
+    call change_loc('upper hallway')
+  File "game/locations.rpy", line 341, in script call
+    call change_loc('upper hallway bathroom')
+  File "game/locations.rpy", line 277, in script call
+    call change_loc('upper hallway')
+  File "game/locations.rpy", line 27, in script call
+    call change_loc('entrance')
+  File "game/locations.rpy", line 232, in script call
+    call change_loc('kitchen')
+  File "game/locations.rpy", line 27, in script call
+    call change_loc('entrance')
+  File "game/locations.rpy", line 244, in script call
+    call change_loc('livingroom')
+  File "game/locations.rpy", line 142, in script call
+    call change_loc('garage')
+  File "game/locations.rpy", line 265, in script call
+    call change_loc('outside neighborhood')
+  File "game/locations.rpy", line 142, in script call
+    call change_loc('garage')
+  File "game/locations.rpy", line 265, in script call
+    call change_loc('outside neighborhood')
+  File "game/locations.rpy", line 27, in script call
+    call change_loc('entrance')
+  File "game/locations.rpy", line 277, in script call
+    call change_loc('upper hallway')
+  File "game/locations.rpy", line 127, in script call
+    call change_loc('fs bedroom')
+  File "game/locations.rpy", line 127, in script call
+    call change_loc('fs bedroom')
+  File "game/locations.rpy", line 277, in script call
+    call change_loc('upper hallway')
+  File "game/locations.rpy", line 27, in script call
+    call change_loc('entrance')
+  File "game/locations.rpy", line 276, in script call
+    call talk_fs(True)
+  File "game/day_events.rpy", line 325, in script
+    $ renpy.watch(pb_return)
+  File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\ast.py", line 848, in execute
     renpy.python.py_exec_bytecode(self.code.bytecode, self.hide, store=self.store)
-  File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\python.py", line 1764, in py_exec_bytecode
+  File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\python.py", line 1804, in py_exec_bytecode
     exec bytecode in globals, locals
-  File "game/day_events.rpy", line 136, in <module>
-    ["When you arrive home, you catch a glimpse of "+fsname.yourformal+" by the pool, but "+fmName.yourformal+" is nowhere to be seen. Her car is still here, though.",True]
-NameError: name 'fsname' is not defined
+  File "game/day_events.rpy", line 325, in <module>
+    $ renpy.watch(pb_return)
+  File "renpy/common/00console.rpy", line 587, in renpy_watch
+    watch(l)
+  File "renpy/common/00console.rpy", line 567, in watch
+    expr = l.rest()
+  File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\parser.py", line 1180, in rest
+    self.skip_whitespace()
+  File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\parser.py", line 638, in skip_whitespace
+    self.match_regexp(ur"(\s+|\\\n)+")
+  File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\parser.py", line 619, in match_regexp
+    if self.pos == len(self.text):
+TypeError: object of type 'bool' has no len()
 
 Windows-8-6.2.9200
-Ren'Py 6.99.13.2919
+Ren'Py 6.99.14.3135
 High School Shenaningans 0.021-(Alpha)

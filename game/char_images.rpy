@@ -1,11 +1,11 @@
-# image side fM_talkside ahead = ConditionSwitch(
-#                                 "fM_aro >= 30", im.Flip("images/characters/anne/expressions/unbuttoned_straight_ahead.png",horizontal=True),
+# image side fm_talkside ahead = ConditionSwitch(
+#                                 "fm_aro >= 30", im.Flip("images/characters/anne/expressions/unbuttoned_straight_ahead.png",horizontal=True),
 #                                 True, im.Flip("images/characters/anne/expressions/buttoned_straight_ahead.png",horizontal=True)
 #                                 )
 
-image fM_standing ahead:
+image fm_standing ahead:
     ConditionSwitch(
-        "fM_aro >= 30", "images/characters/anne/body/standing/unbuttoned_straight_ahead.png",
+        "fm_aro >= 30", "images/characters/anne/body/standing/unbuttoned_straight_ahead.png",
         True, "images/characters/anne/body/standing/buttoned_straight_ahead.png",
         )
     zoom .7
@@ -15,9 +15,9 @@ image fM_standing ahead:
     xanchor .5
     yanchor .5
 
-image fM_standing ahead flip:
+image fm_standing ahead flip:
     ConditionSwitch(
-        "fM_aro >= 30", im.Flip("images/characters/anne/body/standing/unbuttoned_straight_ahead.png",horizontal=True),
+        "fm_aro >= 30", im.Flip("images/characters/anne/body/standing/unbuttoned_straight_ahead.png",horizontal=True),
         True, im.Flip("images/characters/anne/body/standing/buttoned_straight_ahead.png",horizontal=True)
         )
     zoom .7
@@ -314,7 +314,7 @@ image fs_standing smile_open:
     xanchor .5
     yanchor .75
 
-transform nK_standing_ahead_ani:
+transform nk_standing_ahead_ani:
     "images/characters/karen/body/standing/ahead.png"
     choice:
         pause 2
@@ -326,7 +326,7 @@ transform nK_standing_ahead_ani:
     pause .25
     repeat
 
-transform nK_standing_blushing_ani:
+transform nk_standing_blushing_ani:
     "images/characters/karen/body/standing/blushing.png"
     choice:
         pause 2
@@ -338,7 +338,7 @@ transform nK_standing_blushing_ani:
     pause .25
     repeat
 
-transform nK_standing_blushing_sad_ani:
+transform nk_standing_blushing_sad_ani:
     "images/characters/karen/body/standing/blushing_sad.png"
     choice:
         pause 2
@@ -350,7 +350,7 @@ transform nK_standing_blushing_sad_ani:
     pause .25
     repeat
 
-transform nK_standing_crying_ani:
+transform nk_standing_crying_ani:
     "images/characters/karen/body/standing/crying.png"
     choice:
         pause 4
@@ -360,7 +360,7 @@ transform nK_standing_crying_ani:
     pause .25
     repeat
 
-transform nK_standing_devious_ani:
+transform nk_standing_devious_ani:
     "images/characters/karen/body/standing/devious.png"
     choice:
         pause 2
@@ -372,7 +372,7 @@ transform nK_standing_devious_ani:
     pause .25
     repeat
 
-transform nK_standing_flustered_ani:
+transform nk_standing_flustered_ani:
     "images/characters/karen/body/standing/flustered.png"
     choice:
         pause 2
@@ -384,7 +384,7 @@ transform nK_standing_flustered_ani:
     pause .25
     repeat
 
-transform nK_standing_mad_ani:
+transform nk_standing_mad_ani:
     "images/characters/karen/body/standing/mad.png"
     choice:
         pause 2
@@ -396,7 +396,7 @@ transform nK_standing_mad_ani:
     pause .25
     repeat
 
-transform nK_standing_sad_ani:
+transform nk_standing_sad_ani:
     "images/characters/karen/body/standing/sad.png"
     choice:
         pause 2
@@ -408,7 +408,7 @@ transform nK_standing_sad_ani:
     pause .25
     repeat
 
-transform nK_standing_smile_ani:
+transform nk_standing_smile_ani:
     "images/characters/karen/body/standing/smile.png"
     choice:
         pause 2
@@ -420,7 +420,7 @@ transform nK_standing_smile_ani:
     pause .25
     repeat
 
-transform nK_standing_smile_open_ani:
+transform nk_standing_smile_open_ani:
     "images/characters/karen/body/standing/smile_open.png"
     choice:
         pause 2
@@ -432,15 +432,15 @@ transform nK_standing_smile_open_ani:
     pause .25
     repeat
 
-image nK_standing ahead:
-    contains nK_standing_ahead_ani
+image nk_standing ahead:
+    contains nk_standing_ahead_ani
     zoom .6
     xpos .7
     ypos 1.0
     xanchor .5
     yanchor .75
 
-image nK_standing annoyed:
+image nk_standing annoyed:
     "images/characters/karen/body/standing/annoyed.png"
     zoom .6
     xpos .7
@@ -448,81 +448,81 @@ image nK_standing annoyed:
     xanchor .5
     yanchor .75
 
-image nK_standing blushing:
-    contains nK_standing_blushing_ani
+image nk_standing blushing:
+    contains nk_standing_blushing_ani
     zoom .6
     xpos .7
     ypos 1.0
     xanchor .5
     yanchor .75
 
-image nK_standing blushing_sad:
-    contains nK_standing_blushing_sad_ani
+image nk_standing blushing_sad:
+    contains nk_standing_blushing_sad_ani
     zoom .6
     xpos .7
     ypos 1.0
     xanchor .5
     yanchor .75
 
-image nK_standing crying:
-    contains nK_standing_crying_ani
+image nk_standing crying:
+    contains nk_standing_crying_ani
     zoom .6
     xpos .7
     ypos 1.0
     xanchor .5
     yanchor .75
 
-image nK_standing devious:
-    contains nK_standing_devious_ani
+image nk_standing devious:
+    contains nk_standing_devious_ani
     zoom .6
     xpos .7
     ypos 1.0
     xanchor .5
     yanchor .75
 
-image nK_standing flustered:
-    contains nK_standing_flustered_ani
+image nk_standing flustered:
+    contains nk_standing_flustered_ani
     zoom .6
     xpos .7
     ypos 1.0
     xanchor .5
     yanchor .75
 
-image nK_standing mad:
-    contains nK_standing_mad_ani
+image nk_standing mad:
+    contains nk_standing_mad_ani
     zoom .6
     xpos .7
     ypos 1.0
     xanchor .5
     yanchor .75
 
-image nK_standing sad:
-    contains nK_standing_sad_ani
+image nk_standing sad:
+    contains nk_standing_sad_ani
     zoom .6
     xpos .7
     ypos 1.0
     xanchor .5
     yanchor .75
 
-image nK_standing smile:
-    contains nK_standing_smile_ani
+image nk_standing smile:
+    contains nk_standing_smile_ani
     zoom .6
     xpos .7
     ypos 1.0
     xanchor .5
     yanchor .75
 
-image nK_standing smile_open:
-    contains nK_standing_smile_open_ani
+image nk_standing smile_open:
+    contains nk_standing_smile_open_ani
     zoom .6
     xpos .7
     ypos 1.0
     xanchor .5
     yanchor .75
 
-# image fM_standing ahead:
+# image fm_standing ahead:
 #     ConditionSwitch(
-#         "fM_aro >= 30", "images/characters/anne/body/standing/unbuttoned_straight_ahead.png",
+#         "fm_aro >= 30", "images/characters/anne/body/standing/unbuttoned_straight_ahead.png",
 #         True, "images/characters/anne/body/standing/buttoned_straight_ahead.png"
 #         )
 #     zoom .7
@@ -569,39 +569,45 @@ image side fs_talkside smile_open:
     "images/characters/juliette/expressions/smile_open.png"
     zoom .8
 
-image side nK_talkside ahead:
+image side nk_talkside ahead:
     "images/characters/karen/expressions/ahead.png"
     zoom .8
-image side nK_talkside annoyed:
+image side nk_talkside annoyed:
     "images/characters/karen/expressions/annoyed.png"
     zoom .8
-image side nK_talkside blushing:
+image side nk_talkside blushing:
     "images/characters/karen/expressions/blushing.png"
     zoom .8
-image side nK_talkside blushing_sad:
+image side nk_talkside blushing_sad:
     "images/characters/karen/expressions/blushing_sad.png"
     zoom .8
-image side nK_talkside crying:
+image side nk_talkside crying:
     "images/characters/karen/expressions/crying.png"
     zoom .8
-image side nK_talkside devious:
+image side nk_talkside devious:
     "images/characters/karen/expressions/devious.png"
     zoom .8
-image side nK_talkside flustered:
+image side nk_talkside flustered:
     "images/characters/karen/expressions/flustered.png"
     zoom .8
-image side nK_talkside mad:
+image side nk_talkside mad:
     "images/characters/karen/expressions/mad.png"
     zoom .8
-image side nK_talkside sad:
+image side nk_talkside sad:
     "images/characters/karen/expressions/sad.png"
     zoom .8
-image side nK_talkside smile:
+image side nk_talkside smile:
     "images/characters/karen/expressions/smile.png"
     zoom .8
-image side nK_talkside smile_open:
+image side nk_talkside smile_open:
     "images/characters/karen/expressions/smile_open.png"
     zoom .8
+
+image juliette_mad_pantless:
+    "images/characters/juliette/mad_pantless.png"
+
+image juliette_reflection:
+    "images/backgrounds/upper_hallway_juliette_reflection.png"    
 
 image books_on_dresser:
     "images/backgrounds/interactions_item/fp_bedroom_morning_dresser_idle.png"
@@ -614,3 +620,6 @@ image rain:
     "images/rain3.png"
     0.2
     repeat
+
+transform ModZoom(z):
+    zoom z    

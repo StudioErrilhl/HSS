@@ -235,21 +235,27 @@ define gui.choice_button_disabled_text_xalign = 0.5
 ## image files in gui/button, like the other kinds of buttons.
 
 ## The save slot button.
-define gui.slot_button_width = 414
-define gui.slot_button_height = 309
+define gui.slot_button_width = 380
+define gui.slot_button_height = 230
 define gui.slot_button_borders = Borders(15, 15, 15, 15)
 define gui.slot_button_text_size = 21
 define gui.slot_button_text_xalign = 0.5
 define gui.slot_button_text_idle_color = gui.idle_small_color
 
 ## The width and height of thumbnails used by the save slots.
-define config.thumbnail_width = 384
-define config.thumbnail_height = 216
+define config.thumbnail_width = 350
+define config.thumbnail_height = 200
 
 ## The number of columns and rows in the grid of save slots.
 define gui.file_slot_cols = 3
 define gui.file_slot_rows = 2
 
+## The width and height of thumbnails used by the save slots.
+# define config.custom_thumbnail_width = 350
+# define config.custom_thumbnail_height = 197
+
+define gui.custom_file_slot_cols = 1
+define gui.custom_file_slot_rows = 6
 
 ## Positioning and Spacing #####################################################
 ##
@@ -264,7 +270,7 @@ define gui.navigation_xpos = 30
 define gui.skip_ypos = 15
 
 ## The vertical position of the notify screen.
-define gui.notify_ypos = 68
+define gui.notify_ypos = 115
 
 ## The spacing between menu choices.
 define gui.choice_spacing = 20

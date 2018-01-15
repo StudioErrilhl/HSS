@@ -42,7 +42,7 @@ label night_events():
                 else:
                     $ current_month_day += 1
                     $ day_ahead = True
-            # call fp_bedroom_scene
+            call fp_bedroom_scene
             call sleep_the_night(True)
             # return
         # else:

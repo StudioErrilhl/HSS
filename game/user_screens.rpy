@@ -149,6 +149,8 @@ style navigation_button_text:
 screen main_menu():
     tag menu
 
+    # add gui.main_menu_background
+
     if main_menu:
         imagemap:
             ground "gui/menu.png"
@@ -373,15 +375,27 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
         xval = 1.0 if x > config.screen_width/2 else .0
         yval = 1.0 if y > config.screen_height/2 else .0
 
-    vbox xalign 0 yalign 0:
+    hbox xalign 0 yalign 0:
         imagebutton auto "images/stats_%s.png" focus_mask True action Show('stat_screen'):
             hovered tt.Action("Here you'll find all the stats for all the characters in the game. Some characters doesn't have a lot of stats currently, this may change with the coming updates")
         add "images/stats_overlay.png":
-            ypos -128
+            xpos -128
             if int(current_hour[:2]) not in night:
                 alpha 0.0
             else:
                 alpha 0.5
+        if carry_phone:
+            imagebutton auto "images/menu_phone_%s.png" focus_mask True action Show('iphone') at ModZoom(.65):
+                xpos -175
+                ypos -15
+                hovered tt.Action("Here's your phone. Here you will be able to load, save and view galleries and more")
+            add "images/menu_phone_overlay.png" at ModZoom(.65):
+                xpos -340
+                ypos -15
+                if int(current_hour[:2]) not in night:
+                    alpha 0.0
+                else:
+                    alpha 0.5
 
     vbox xalign .99 yalign .99: #inventory / backpack
         imagebutton auto "images/backpack_%s.png":
@@ -455,11 +469,14 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
         hbox: #hour-display
             xsize 50
             $ hour = current_hour[:2]
-            text "[hour]":
-                color "#ffffff"
+            textbutton "[hour]":
+                text_color "#ffffff"
                 xalign .5
-                font "gui/fonts/digital_dismay.otf"
-                size 25
+                ypos -20
+                text_font "gui/fonts/digital_dismay.otf"
+                text_size 25
+                # action Function(renpy.call,'addtime',1,False)
+                action Function(addtime,1,False)
         hbox: #: - separates hours and minutes
             xsize 2
             xpos 44
@@ -473,11 +490,14 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             xsize 50
             xpos 50
             $ minute = current_hour[3:]
-            text "[minute]":
-                color "#ffffff"
+            textbutton "[minute]":
+                text_color "#ffffff"
                 xalign .5
-                font "gui/fonts/digital_dismay.otf"                
-                size 25                
+                ypos -20
+                text_font "gui/fonts/digital_dismay.otf"                
+                text_size 25                
+                # action Function(renpy.call,'addtime',False,30)
+                action Function(addtime,False,30)                
 
         add "images/clock_overlay.png":
             if int(current_hour[:2]) not in night:
@@ -519,14 +539,13 @@ style about_label_text:
     size gui.label_text_size
 
 screen splash():
-    timer 2.0 action Hide("splash",dissolve) #Hide("splash",dissolve) #Dissolve(1.0)
+    timer 2.0 action Hide("splash",dissolve)
     add "#000"
-    # scene black
     text "Errilhl Studios Presents..." size 60 color "#ffffff" yalign .5 xalign .5
 
 screen stat_screen():
     modal True
-    zorder 10000
+    zorder 800
     default stats = None
     frame:
         xalign .5 ypos .1
@@ -629,50 +648,73 @@ screen inventory_screen():
     modal True
     frame:
         xalign .5 ypos .1
-        xsize 740
-        ysize 700
+        xsize 672
+        ysize 539
+        xpadding 20
+        ypadding 20
         $ current_items = set()
         $ xa = 0
         $ ya = 0
         $ i = 0
-        for file in renpy.list_files():
-            if file.startswith('images/inventory/') and file.endswith('.png'):
-                if 'hover' in file:
-                    $ name = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.png','')
-                    for item in backpack:
-                        if item.name == name:
-                            vbox:
-                                xpos xa
-                                ypos ya
+        # viewport:
+        #     scrollbars "vertical"
+        #     edgescroll 100,500
+        #     mousewheel True
+        vpgrid:
+            cols 4
+            rows 4
+            scrollbars "vertical"
+            edgescroll 100,500
+            mousewheel True 
+            spacing 5               
+            for file in renpy.list_files():
+                if file.startswith('images/inventory/') and file.endswith('.png'):
+                    if 'hover' in file:
+                        $ name = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.png','')
+                        for item in backpack:
+                            if item.name == name:
+                                fixed:
+                                    xsize 148
+                                    ysize 160
+                                    $ current_items = item.name
+                                    if name == 'pink_buttplug':
+                                        imagebutton auto "images/inventory/"+name+"_%s.png":
+                                            xalign .5
+                                            yalign 0
+                                            focus_mask True
+                                            # action [SetVariable('tfs_cfs',True),SetVariable('pb_given_back',True),Hide('inventory_screen'),Jump('talk_fs')]
+                                            action [SetVariable('pb_return',True),Function(renpy.restart_interaction),Hide('inventory_screen')]
+                                        $ renpy.watch(str(pb_return))
+                                    else:
+                                        imagebutton auto "images/inventory/"+name+"_%s.png":
+                                            xalign .5
+                                            yalign 0
+                                            focus_mask True 
+                                            action [Hide("inventory_screen")]
+                                    text "[item.amount]":
+                                        xalign .45
+                                        yalign 1.0
+                                    $ xa += 148
+                                    $ i += 1
+                                    $ ya -= 148
+                                    if (i % 4 == 0):
+                                        $ xa = 0
+                                        $ ya += 173
+                        if not name in current_items:
+                            fixed:
                                 xsize 148
-                                ysize 148
-                                $ current_items = item.name
-                                imagebutton auto "images/inventory/"+name+"_%s.png":
-                                    xalign 0
-                                    yalign 0
-                                    focus_mask True 
-                                    action [Hide("inventory_screen")]
-                                text "[item.amount]":
+                                ysize 160
+                                add "images/inventory/"+name+"_insensitive.png":
                                     xalign .5
-                            $ xa += 148
-                            $ i += 1
-                            if (i % 5 == 0):
-                                $ xa = 0
-                                $ ya += 173
-                    if not name in current_items:
-                        vbox:
-                            xpos xa
-                            ypos ya
-                            xsize 148
-                            ysize 148
-                            add "images/inventory/"+name+"_insensitive.png"
-                            text "0":
-                                xalign .5
-                        $ xa += 148
-                        $ i += 1
-                        if (i % 5 == 0):
-                            $ xa = 0
-                            $ ya += 173
+                                text "0":
+                                    xalign .5
+                                    yalign 1.0
+                                $ xa += 148
+                                $ i += 1
+                                $ ya -= 148
+                                if (i % 4 == 0):
+                                    $ xa = 0
+                                    $ ya += 173
 
         imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action Hide("inventory_screen")                        
 
@@ -798,21 +840,21 @@ screen location(room=False):
 
     if room == 'entrance':
         if int(current_hour[:2]) in night:
-            imagebutton auto "images/backgrounds/interactions_move/front_door_night_%s.png" focus_mask True action Jump('outside_loc'):
+            imagebutton auto "images/backgrounds/interactions_move/front_door_night_%s.png" focus_mask True action [SetVariable('out_cfs',True),Jump('outside_loc')]:
                 hovered tt.Action("Go outside")
             imagebutton auto "images/backgrounds/interactions_move/kitchen_door_night_%s.png" focus_mask True action [SetVariable('kit_cfs',True),Jump('kitchen_loc')]:
                 hovered tt.Action('Kitchen')
-            imagebutton auto "images/backgrounds/interactions_move/livingroom_door_night_%s.png" focus_mask True action Jump('livingroom_loc'):
+            imagebutton auto "images/backgrounds/interactions_move/livingroom_door_night_%s.png" focus_mask True action [SetVariable('lvr_cfs',True),Jump('livingroom_loc')]:
                 hovered tt.Action("Livingroom")
             imagebutton auto "images/backgrounds/interactions_move/stairs_up_night_%s.png" focus_mask True action [SetVariable('uhl_cfs',True),Jump('upper_hallway_loc')]
             # imagebutton auto "images/backgrounds/entrance_hallway_night_%s.png" focus_mask True action Jump('lower_hallway_loc'):
             #     hovered tt.Action("Hallway")
         else:
-            imagebutton auto "images/backgrounds/interactions_move/front_door_morning_%s.png" focus_mask True action Jump('outside_loc'):
+            imagebutton auto "images/backgrounds/interactions_move/front_door_morning_%s.png" focus_mask True action [SetVariable('out_cfs',True),Jump('outside_loc')]:
                 hovered tt.Action("Go outside")
             imagebutton auto "images/backgrounds/interactions_move/kitchen_door_morning_%s.png" focus_mask True action [SetVariable('kit_cfs',True),Jump('kitchen_loc')]:
                 hovered tt.Action('Kitchen')                            
-            imagebutton auto "images/backgrounds/interactions_move/livingroom_door_morning_%s.png" focus_mask True action Jump('livingroom_loc'):
+            imagebutton auto "images/backgrounds/interactions_move/livingroom_door_morning_%s.png" focus_mask True action [SetVariable('lvr_cfs',True),Jump('livingroom_loc')]:
                 hovered tt.Action("Livingroom")            
             imagebutton auto "images/backgrounds/interactions_move/stairs_up_morning_%s.png" focus_mask True action [SetVariable('uhl_cfs',True),Jump('upper_hallway_loc')]                
         #     imagebutton auto "images/backgrounds/entrance_hallway_morning_%s.png" focus_mask True action Jump('lower_hallway_loc'):
@@ -836,6 +878,12 @@ screen location(room=False):
         else:
             imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_morning_bed_%s.png" focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
 
+        if not carry_phone:
+            if int(current_hour[:2]) in night:
+                imagebutton auto "images/backgrounds/interactions_item/phone_night_%s.png" focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]
+            else:
+                imagebutton auto "images/backgrounds/interactions_item/phone_morning_%s.png" focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]                
+
         $ exitdown_event_var = "uhl_cfs"
         $ exitdown_event = "upper_hallway_loc"
         $ exitdown = "Upper hallway"
@@ -843,10 +891,21 @@ screen location(room=False):
     if room == "fs bedroom":
         if find_panties:
             if int(current_hour[:2]) in night:
-                imagebutton auto "images/backgrounds/interactions_item/"+gp+"_night_%s.png" focus_mask True action [SetVariable('find_panties',False),SetVariable('panties_added',True),SetVariable('gp',gp),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
+                imagebutton auto "images/backgrounds/interactions_item/bedroom_panties_"+gp_bed+"_night_%s.png" focus_mask True action [SetVariable('find_panties',False),SetVariable('panties_added',True),SetVariable('gp_bed',gp_bed),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
             else:
-                imagebutton auto "images/backgrounds/interactions_item/"+gp+"_morning_%s.png" focus_mask True action [SetVariable('find_panties',False),SetVariable('panties_added',True),SetVariable('gp',gp),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
+                imagebutton auto "images/backgrounds/interactions_item/bedroom_panties_"+gp_bed+"_morning_%s.png" focus_mask True action [SetVariable('find_panties',False),SetVariable('panties_added',True),SetVariable('gp_bed',gp_bed),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
 
+        if find_ipad:
+            if int(current_hour[:2]) in night:
+                imagebutton auto "images/backgrounds/interactions_item/fs_ipad_bedroom_night_%s.png" focus_mask True action [SetVariable('find_ipad',False),SetVariable('ipad_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
+            else:
+                imagebutton auto "images/backgrounds/interactions_item/fs_ipad_bedroom_morning_%s.png" focus_mask True action [SetVariable('find_ipad',False),SetVariable('ipad_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]                
+        if find_pb:             
+            if not backpack.has_item(pink_buttplug_item):   
+                if int(current_hour[:2]) in night:
+                    imagebutton auto "images/backgrounds/interactions_item/pink_buttplug_night_%s.png" focus_mask True action [SetVariable('find_pb',False),SetVariable('pb_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
+                else:
+                    imagebutton auto "images/backgrounds/interactions_item/pink_buttplug_morning_%s.png" focus_mask True action [SetVariable('find_pb',False),SetVariable('pb_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
         $ exitdown_event_var = "uhl_cfs"
         $ exitdown_event = "upper_hallway_loc"
         $ exitdown = "Upper hallway"       
@@ -865,6 +924,7 @@ screen location(room=False):
                 xalign .5
                 yalign .5
 
+        $ exitdown_event_var = "out_cfs"            
         $ exitdown_event = "outside_loc"
         $ exitdown = "Go outside"        
 
@@ -889,12 +949,51 @@ screen location(room=False):
     if room == "kitchen":
         if wcount == 5:
             if bottles == 1 or br == 1:
-                imagebutton auto "images/backgrounds/interactions_item/wine_bottle_%s.png" focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',1),SetVariable('wine_added',True),Jump('kitchen_loc')]
+                if int(current_hour[:2]) in night:
+                    imagebutton auto "images/backgrounds/interactions_item/wine_bottle_night_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',1),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .485
+                        xpos .31
+                else:
+                    imagebutton auto "images/backgrounds/interactions_item/wine_bottle_morning_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',1),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .485
+                        xpos .31
             elif bottles == 2 or br == 2:
-                imagebutton auto "images/backgrounds/interactions_item/wine_two_bottles_%s.png" focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]
+                if int(current_hour[:2]) in night:
+                    imagebutton auto "images/backgrounds/interactions_item/wine_bottle_night_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .485
+                        xpos .31       
+                    imagebutton auto "images/backgrounds/interactions_item/wine_bottle_night_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .485
+                        xpos .325                    
+                else:
+                    imagebutton auto "images/backgrounds/interactions_item/wine_bottle_morning_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .485
+                        xpos .31       
+                    imagebutton auto "images/backgrounds/interactions_item/wine_bottle_morning_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .485
+                        xpos .325
             elif bottles == 3 or br == 3:
-                imagebutton auto "images/backgrounds/interactions_item/wine_three_bottles_%s.png" focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]
-
+                if int(current_hour[:2]) in night:
+                    imagebutton auto "images/backgrounds/interactions_item/wine_bottle_night_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .480
+                        xpos .315                    
+                    imagebutton auto "images/backgrounds/interactions_item/wine_bottle_night_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .485
+                        xpos .31                                        
+                    imagebutton auto "images/backgrounds/interactions_item/wine_bottle_night_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .485
+                        xpos .325                    
+                else:
+                    imagebutton auto "images/backgrounds/interactions_item/wine_bottle_morning_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .480
+                        xpos .315 
+                    imagebutton auto "images/backgrounds/interactions_item/wine_bottle_morning_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .485
+                        xpos .31                    
+                    imagebutton auto "images/backgrounds/interactions_item/wine_bottle_morning_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .485
+                        xpos .325                    
+                   
         $ exitdown_event = "entrance_loc"
         $ exitdown = "Entrance"
 
@@ -926,9 +1025,7 @@ screen location(room=False):
             imagebutton auto "images/backgrounds/interactions_move/upper_hallway_bathroom_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]:
                 hovered tt.Action("Enter bathroom")       
             imagebutton auto "images/backgrounds/interactions_move/stairs_down_morning_%s.png" focus_mask True action Jump('entrance_loc'):
-                hovered tt.Action("Downstairs")       
-
-
+                hovered tt.Action("Downstairs")
 
     if room == "upper hallway bathroom":
         if int(current_hour[:2]) >= 6 and int(current_hour[:2]) <= 14 and not backpack.has_item(small_keys_item) and keys_mentioned:
@@ -937,9 +1034,16 @@ screen location(room=False):
         if int(current_hour[:2]) in night:
             # imagebutton auto "images/backgrounds/upper_hallway_bathroom_shower_night_%s.png" focus_mask True action [SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
             imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]
+            if bathroom_light:
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_light_on_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]    
+            else:
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
         else:
+            if bathroom_find_panties:
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.png" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
             imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]            
             imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]                        
+            add "images/backgrounds/interactions_item/bathroom_lightswitch_morning_off_idle.png"
 
         $ exitdown_event_var = "uhl_cfs"
         $ exitdown_event = "upper_hallway_loc"
@@ -996,3 +1100,517 @@ screen location(room=False):
             pos(x, y)
             anchor (xval, yval)
             text tt.value style "tooltip_hover"        
+
+
+screen iphone():
+    modal True
+    zorder 800
+    fixed:
+        fit_first True
+        xmaximum 500
+        ymaximum 800  
+        xalign .5
+        yalign .5      
+        hbox:
+            add "images/iphone_white.png" at ModZoom(.5)
+            xalign .5
+            yalign .5
+        hbox:
+            xalign .5
+            yalign .45
+            if not show_icons and not quit_screen:
+                add "images/iphone_screen_achievement.png" at ModZoom(0.5)
+            else:
+                add "images/iphone_screen.png" at ModZoom(0.5)
+        hbox:
+            xalign 0.125
+            yalign 0.14 
+            spacing 10          
+            if show_icons:
+                imagebutton auto "images/iphone_achievement_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.45)
+
+        hbox:
+            xalign 0.5
+            yalign .83
+            # yalign 0.22
+            spacing 10
+            if show_icons:
+                imagebutton auto "images/iphone_main_menu_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.45)
+                imagebutton auto "images/iphone_save_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.45)
+                imagebutton auto "images/iphone_load_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.45)
+                imagebutton auto "images/iphone_settings_button_%s.png" focus_mask True action ShowMenu('preferences') at ModZoom(.45)
+                imagebutton auto "images/iphone_quit_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.45)                
+
+        hbox:
+            imagebutton auto "images/iphone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('iphone')] at ModZoom(.5)
+            xalign .5
+            yalign .5
+        hbox:
+            imagebutton auto "images/iphone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.5)
+            xalign .5
+            yalign .5
+
+
+screen custom_confirm(cc_chosen=False):
+    zorder 900
+
+    frame:
+        background None
+        xpadding 0
+        top_padding 40
+        bottom_padding 10
+        xalign .5
+        yalign .44
+        maximum 370,686
+        vbox:
+            if cc_chosen == 'quit':
+                text "{color=#fff}Do you want to quit?{/color}":
+                    xalign .5
+            elif cc_chosen == 'mainmenu':
+                text "{color=#fff}Do you want to go to the main menu? All unsaved progress will be lost{/color}":
+                    xalign .5
+            textbutton "{color=#0f0}Yes{/color}\n":
+                xalign 0.5
+                ypos 100
+                if cc_chosen == 'quit':
+                    action Function(renpy.quit)                
+                elif cc_chosen == 'mainmenu':
+                    action MainMenu(confirm=False)
+            textbutton "{color=#f00}No{/color}\n":
+                xalign 0.5
+                ypos 100
+                action [SetVariable('show_icons',True),Hide('custom_confirm')]
+
+screen display_achievements():
+    zorder 900
+    on 'show' action Function(achievement_trophy_case.update)
+
+    use display_achievements_category_panel
+
+    frame:
+        background None
+        xpadding 0
+        top_padding 40
+        bottom_padding 10
+        xalign .5
+        yalign .44
+        maximum 370,686
+
+        viewport:
+            mousewheel True
+            vbox:
+                $ i = 0
+                for achievement in achievements:
+                    if achievement.category in selected_category:
+                        if achievement.hidden:
+                            if not hide_hidden_achievements:
+                                fixed:
+                                    xsize 370
+                                    ysize 100
+                                    imagebutton auto "images/achievement_%s.png" focus_mask True:
+                                        if selected_achievement != achievement_hidden:
+                                            action [SetVariable('selected_number',i),SetVariable('selected_achievement', achievement_hidden)]
+                                        elif selected_achievement == achievement_hidden and selected_number != i:
+                                            action [SetVariable('selected_number',i),SetVariable('selected_achievement', achievement_hidden)]                                            
+                                        else:                                
+                                            action SetVariable('selected_achievement',False)
+                                        selected selected_achievement == achievement_hidden
+                                    add achievement.hidden_image at ModZoom(.5):
+                                        ypos 14
+                                        xalign .1
+                                    text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
+                                        xpos 100  
+                                        ypos 38  
+                                    add "images/phone_hidden.png":
+                                        xpos 300
+                                        ypos 35
+                                    if selected_achievement == achievement_hidden and i == selected_number:
+                                        ysize 160
+                                        vbox:
+                                            xsize 370
+                                            xalign .5
+                                            yalign .9
+                                            if selected_achievement.unlocked:
+                                                text "Achievement Unlocked!" xalign 0.5 yalign 0.5 size 14
+                                            text "{b}"+selected_achievement.name+"{/b}" size 16 xalign 0.5 text_align 0.5
+                                            text selected_achievement.description size 14 xalign 0.5 text_align 0.5
+                                            if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
+                                                text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5                                  
+                        else:
+                            if hide_unlocked_achievements and hide_locked_achievements:
+                                pass
+                            elif hide_unlocked_achievements:
+                                if not achievement.unlocked:
+                                    fixed:
+                                        xsize 370
+                                        ysize 100                           
+                                        imagebutton auto "images/achievement_%s.png" focus_mask True:                                   
+                                            if selected_achievement != achievement:
+                                                action SetVariable('selected_achievement', achievement)
+                                            else:                                
+                                                action SetVariable('selected_achievement',False)
+                                            selected selected_achievement == achievement
+                                        add achievement.image at ModZoom(.5):
+                                            ypos 14
+                                            xalign .1
+                                        text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
+                                            xpos 100 
+                                            ypos 38                                        
+                                        add "images/phone_lock.png":
+                                            xpos 300
+                                            ypos 35
+                                        if selected_achievement == achievement:
+                                            ysize 160
+                                            vbox:
+                                                xsize 370
+                                                xalign .5
+                                                yalign .9
+                                                if selected_achievement.unlocked:
+                                                    text "Achievement Unlocked!" xalign 0.5 yalign 0.5 size 14
+                                                text "{b}"+selected_achievement.name+"{/b}" size 16 xalign 0.5 text_align 0.5
+                                                text selected_achievement.description size 14 xalign 0.5 text_align 0.5
+                                                if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
+                                                    text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5                                  
+
+                            elif hide_locked_achievements:
+                                if achievement.unlocked:
+                                    fixed:
+                                        xsize 370
+                                        ysize 100
+                                        imagebutton auto "images/achievement_%s.png" focus_mask True:                                 
+                                            if selected_achievement != achievement:
+                                                action SetVariable('selected_achievement', achievement)
+                                            else:                                
+                                                action SetVariable('selected_achievement',False)
+                                            selected selected_achievement == achievement                                                
+                                        add achievement.image at ModZoom(.5):
+                                            ypos 14
+                                            xalign .1
+                                        text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
+                                            xpos 100  
+                                            ypos 38     
+                                        add "images/phone_unlock.png":                               
+                                            xpos 300
+                                            ypos 35
+                                        if selected_achievement == achievement:
+                                            ysize 160                                            
+                                            vbox:
+                                                xsize 370
+                                                xalign .5
+                                                yalign .9
+                                                if selected_achievement.unlocked:
+                                                    text "Achievement Unlocked!" xalign 0.5 yalign 0.5 size 14
+                                                text "{b}{color=#fff}"+selected_achievement.name+"{/color}{/b}" size 16 xalign 0.5 text_align 0.5
+                                                text selected_achievement.description size 14 xalign 0.5 text_align 0.5
+                                                if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
+                                                    text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5                                  
+                            else:
+                                fixed:
+                                    xsize 370
+                                    ysize 100         
+                                    imagebutton auto "images/achievement_%s.png" focus_mask True:                                
+                                        if selected_achievement != achievement:
+                                            action SetVariable('selected_achievement', achievement)
+                                        else:                                
+                                            action SetVariable('selected_achievement',False)
+                                        selected selected_achievement == achievement                                            
+                                    add achievement.image at ModZoom(.5):
+                                        ypos 14
+                                        xalign .1
+                                    text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
+                                        xpos 100
+                                        ypos 38
+                                    if achievement.unlocked:
+                                        add "images/phone_unlock.png":
+                                            xpos 300
+                                            ypos 35
+                                    elif not achievement.unlocked:
+                                        add "images/phone_lock.png":
+                                            xpos 300
+                                            ypos 35
+                                    elif achievement.hidden:
+                                        add "images/phone_hidden.png":
+                                            xpos 300
+                                            ypos 35
+                                    if selected_achievement == achievement:
+                                        ysize 160
+                                        vbox:
+                                            xsize 370
+                                            xalign .5
+                                            yalign .9
+                                            if selected_achievement.unlocked:
+                                                text "Achievement Unlocked!" xalign 0.5 yalign 0.5 size 14
+                                            text "{b}"+selected_achievement.name+"{/b}" size 16 xalign 0.5 text_align 0.5
+                                            text selected_achievement.description size 14 xalign 0.5 text_align 0.5
+                                            if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
+                                                text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 12 xalign 0.5 text_align 0.5   
+                    $ i += 1                               
+
+    frame:
+        background None
+        xalign .5
+        yalign .475
+        maximum 370,686
+        hbox:
+            xalign .5
+            yalign .5
+            add "images/iphone_screen_achievement_top_bottom.png" at ModZoom(.5)
+        hbox:
+            xalign .5
+            yalign 1.0
+            maximum 370,20
+            imagebutton idle "phone_unlock.png" at ModZoom(1.0):
+                action ToggleVariable('hide_unlocked_achievements')
+                xpos -100
+                ypos 10
+            imagebutton idle "phone_lock.png" at ModZoom(1.0):
+                action ToggleVariable('hide_locked_achievements')
+                xalign .5
+                ypos 10
+            imagebutton idle "phone_hidden.png" at ModZoom(1.0):
+                action ToggleVariable('hide_hidden_achievements')        
+                xpos 100
+                ypos 10
+
+
+# This allows the user to view achievements based on their category
+screen display_achievements_category_panel():
+    frame:
+        padding 15, 15
+        align 0.03, 0.13
+        vbox:                 
+            spacing 5
+            text "Category" xalign 0.5 underline True size 26
+            textbutton "All":
+                action SetVariable('selected_category', [category.lower() for category in achievement_categories])
+                selected selected_category == [category.lower() for category in achievement_categories]
+            for category in achievement_categories:
+                textbutton category:
+                    action SetVariable('selected_category', category.lower())
+                    selected selected_category == category.lower()
+                    
+# This is the achievement notification
+screen display_achievement_unlocked():
+
+    # I SPENT HOURS TRYING TO GET IT TO WORK WITHOUT THIS!!!! I AM SO ANGRY RIGHT NOW AND I FUCKING GIVE UP!!!!!!! <--- LOOK HOW MANY EXCLAMATION MARKS THAT IS!!!!!! (╯°□°)╯︵ ┻━┻
+    #if len(achievement_notification_queue) > 0: <---- FUCK YOU!!!!!!!!!! I DON'T NEED YOU ANYMORE
+    python:
+        show_length = len(achievement_notification_queue[0].name + achievement_notification_queue[0].description) * 0.1            
+        if show_length < 3.0: 
+            show_length = 3.0 
+        elif show_length > 7.0: 
+            show_length = 7.0
+                                                    
+    frame:
+        at achievement_transform
+        padding 15,15
+        #background "#333333"
+        xmaximum 450
+        hbox:
+            spacing 10
+            if achievement_notification_queue[0].image:
+                add achievement_notification_queue[0].image xalign 0.5 yalign 0.5
+            vbox:
+                spacing 5
+                text "Achievement Unlocked!" xalign 0.5 size 14 #color "#FFFFFF"
+                text achievement_notification_queue[0].name size 20 xalign 0.5 text_align 0.5 #color "#FFFFFF"
+                text achievement_notification_queue[0].description size 16 xalign 0.5 text_align 0.5 #color "#FFFFFF"
+                
+        # timer show_length action [Hide('display_achievement_unlocked'), RemoveFromSet(achievement_notification_queue, achievement_notification_queue[0]), 
+                                # If(len(achievement_notification_queue) > 0, true=Show('display_achievement_unlocked'), false=NullAction())]           
+        
+    timer show_length action If(len(achievement_notification_queue) > 1, 
+                                true=[Hide('display_achievement_unlocked'), RemoveFromSet(achievement_notification_queue, achievement_notification_queue[0]), Show('display_achievement_unlocked')], 
+                                false=[Hide('display_achievement_unlocked'), RemoveFromSet(achievement_notification_queue, achievement_notification_queue[0])]
+                                )      
+
+transform achievement_transform:
+    on show:
+        xalign 1.2 
+        yalign .22 
+        linear 1.0 xalign 0.9 yalign .22
+    on hide:
+        linear 1.2 alpha 0.0            
+
+screen confirm_age():
+    frame:
+        background "#000"
+        margin 15,15
+        padding 15,15
+        at truecenter
+        xsize 1200
+        vbox:            
+            text "\n{i}{color=#fff}AGE-RESTRICTED CONTENT WARNING{/color}{/i}\n" xalign 0.5
+            text "{b}{color=#fff}You must be 18 years of age or older to play this game{/color}{/b}\n" xalign 0.5
+            text "{color=#fff}I confirm that I am over 18 years of age, and understand that this game contains material featuring nudity and/or sexually-explicit material and/or adult themes that are age-restricted, and I confirm that by clicking 'ENTER' I agree that I am not offended by viewing such material.{/color}\n" xalign 0.5 
+            textbutton "{color=#0f0}ENTER{/color}\n":
+                xalign 0.5
+                action Return()
+            text "{color=#fff}I am under 18 years of age and/or do not want to access this game{/color}\n" xalign 0.5
+            textbutton "{color=#f00}EXIT{/color}\n":
+                xalign 0.5
+                action Function(renpy.quit)
+
+screen splash_info():
+    frame:
+        background "#000"
+        margin 15,15
+        padding 15,15
+        at truecenter
+        xsize 1200
+        vbox:
+            if persistent.patch_enabled:
+                text "{size=30}{color=#ffffff}HSS - High School Shenanigans is a story about a very hot summer, where you'll play as <your name here> (You can name your own character, but the default is \"Marten\", so let's just go with that for now). So, you play as Marten, on his last stretch of high school, aiming to finish school, have some fun, fix his bike, and take his dream cross-country trip on it - but first, there's the exams. And the hot chicks... (among them, his mother and sister, who is both hot, and definitely part of his nighttime jerk-off sessions), the pool, the neighbor girl, and so much more - pretty much like there is in every teenager's life. You control what happens, who you eventually hook up with, what you end up doing with them, and so on and so forth. \n\n{b}Note that this is a very early Alpha-relese, and that quite a lot of the events haven't been added yet, and those that have been, might abruptly end. The game is playable, but you won't reach a fulfilling conclusion as of yet!{/b}{/color}{/size}"
+            else:
+                text "{size=30}{color=#ffffff}HSS - High School Shenanigans is a story about a very hot summer, where you'll play as <your name here> (You can name your own character, but the default is \"Marten\", so let's just go with that for now). So, you play as Marten, on his last stretch of high school, aiming to finish school, have some fun, fix his bike, and take his dream cross-country trip on it - but first, there's the exams. And the hot chicks... and the pool, the neighbor girl, and so much more - pretty much like there is in every teenager's life. You control what happens, who you eventually hook up with, what you end up doing with them, and so on and so forth.\n\n{b}Note that this is a very early Alpha-relese, and that quite a lot of the events haven't been added yet, and those that have been, might abruptly end. The game is playable, but you won't reach a fulfilling conclusion as of yet!{/b}{/color}{/size}" #with dissolve
+    textbutton "{size=25}{color=#ffffff}Click to continue{/click}{/size}":
+        xalign .5 
+        yalign 0.9
+        action Return()
+
+screen disclaimer():
+    frame:
+        background "#000"
+        margin 15,15
+        padding 15,15
+        at truecenter
+        xsize 1300
+        vbox:
+            text "{size=30}{color=#ffffff}The story is purely fictional, and does not reflect the creator's worldview.\nWe do not condone, nor support the actions and opinions of the characters{/color}{/size}"
+
+
+screen custom_save():
+    zorder 900
+    use custom_file_slots(_("Save"))
+
+
+screen custom_load():
+    zorder 900
+    use custom_file_slots(_("Load"))
+
+
+screen custom_file_slots(title):
+    default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
+
+    frame:
+        background None
+        xpadding 0
+        top_padding 40
+        bottom_padding 10
+        xalign .5
+        yalign .44
+        maximum 370,686
+
+        viewport:
+            mousewheel True
+            ysize 600
+            vbox:
+                hbox:
+                    xalign .5
+                    yalign 0
+                    maximum 370, 20
+                    input:
+                        style "custom_page_label_text"
+                        value page_name_value
+
+                for i in range(gui.custom_file_slot_cols * gui.custom_file_slot_rows):
+                    fixed:
+                        style_prefix "custom_slot"
+                        xsize 370
+                        ysize 220
+                        xalign .5
+                        $ slot = i + 1
+
+                        button:
+                            style "custom_slot_button"
+                            if title == "Load":
+                                action FileLoad(slot)
+                            else:
+                                action FileAction(slot)
+                            xsize 350
+                            ysize 200
+                            padding 0,0
+                            xalign .5
+                            add "#555"
+                            add FileScreenshot(slot) xalign 0.5 #at ModZoom(.9)
+                            frame:
+                                background "#000000cc"
+                                xsize 350
+                                ysize 60
+                                padding 0,0
+                                yalign .5
+                                text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("Empty slot")):
+                                    style "slot_name_text"
+                                    color "#fff"
+                                text FileSaveName(slot):
+                                    style "slot_name_text"
+                                    color "#fff"
+                            key "save_delete" action FileDelete(slot)
+
+        ## Buttons to access other pages.
+        hbox:
+            xalign 0.5
+            yalign 1.0
+
+            spacing gui.page_spacing
+            textbutton _("<") action FilePagePrevious():
+                style "nav_buttons"
+                text_color "#fff"                
+            if config.has_autosave:
+                textbutton _("{#auto_page}A") action FilePage("auto"):
+                    style "nav_buttons"
+                    text_color "#fff"
+            if config.has_quicksave:
+                textbutton _("{#quick_page}Q") action FilePage("quick"):
+                    style "nav_buttons"
+                    text_color "#fff"
+            ## range(1, 10) gives the numbers from 1 to 9.
+            for page in range(1, 10):
+                textbutton "[page]" action FilePage(page):
+                    style "nav_buttons"
+                    text_color "#fff"
+            textbutton _(">") action FilePageNext():
+                style "nav_buttons"
+                text_color "#fff"
+                                     
+style custom_page_label is gui_label
+style custom_page_label_text is gui_label_text
+style custom_page_button is gui_button
+style custom_page_button_text is gui_button_text
+
+# style custom_slot_button is gui_button
+style slot_button is gui_button
+style custom_slot_button_text is gui_button_text
+style custom_slot_time_text is custom_slot_button_text
+style custom_slot_name_text is custom_slot_button_text
+
+style custom_page_label:
+    xpadding 75
+    ypadding 5
+
+style nav_buttons:
+    size 13
+    xpadding 4
+    color "#fff"
+
+style custom_page_label_text:
+    text_align 0.5
+    layout "subtitle"
+    hover_color gui.hover_color
+    color "#fff"
+
+# style custom_slot_button:
+#     # properties gui.button_properties("custom_slot_button")
+#     xsize 360
+#     ysize 220
+
+style custom_slot_button:
+    # properties gui.button_properties("custom_slot_button")
+    xsize 370
+    ysize 330
+    background "#f00"
+
+
+style custom_slot_button_text:
+    size 15
+    color "#222"
