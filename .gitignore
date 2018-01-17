@@ -17,13 +17,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# Unneeded files
-patch.rpy
-patch.rpyc
-
-cache/**
-*.txt
-
 # =========================
 # Operating System Files
 # =========================
@@ -52,3 +45,16 @@ cache/**
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Ren'py specific files to ignore
+*.rpyc
+*.rpyb
+*.log
+*.swp
+/log.txt
+/backtrace.txt
+/errors.txt
+/tmp
+/traceback.txt
+/game/saves
+/game/cache

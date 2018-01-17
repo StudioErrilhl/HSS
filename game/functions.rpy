@@ -21,17 +21,17 @@ init python:
             elif what == "dom":
                 return "Your dominance over {0} has {1} by {2}".format( who, action, abs( f ) )
             elif what == "aro":
-                return "{0}'s arousal has {1} by {2}".format( who, action, abs( f ) )
+                return "{0}'s arousal has {1} by {2}".format( who, action, abs( f ) ).capitalize()
             elif what == "cor":
-                return "{0}'s corruption has {1} by {2}".format( who, action, abs( f ) )
+                return "{0}'s corruption has {1} by {2}".format( who, action, abs( f ) ).capitalize()
             elif what == "att":
-                return "{0}'s attitude has {1} by {2}".format( who, action, abs( f ) )
+                return "{0}'s attitude has {1} by {2}".format( who, action, abs( f ) ).capitalize()
             elif what == "anal":
-                return "{0}'s acceptance of anal sex has {1} by {2}".format( who, action, abs( f ) )
+                return "{0}'s acceptance of anal sex has {1} by {2}".format( who, action, abs( f ) ).capitalize()
             elif what == "pussy":
-                return "{0}'s acceptance of regular sex has {1} by {2}".format( who, action, abs( f ) )
+                return "{0}'s acceptance of regular sex has {1} by {2}".format( who, action, abs( f ) ).capitalize()
             elif what == "bj":
-                return "{0}'s acceptance of giving blowjobs has {1} by {2}".format( who, action, abs( f ) )
+                return "{0}'s acceptance of giving blowjobs has {1} by {2}".format( who, action, abs( f ) ).capitalize()
             return "Oop's something really weird happen !"
 
         # A single line for all the possible variables, as well as both positive and negative values.
@@ -42,12 +42,25 @@ init python:
 
         if a[:2] in [ "fp", "fm", "nk", "fs", "sn" ]:
             if a[:2] in [ "fp", "fm", "fs" ]:
-                name = a[:2]
-                if a[3:] in [ "aro","cor","att","anal","pussy","bj" ]:
+                if a[:2] == 'fm':
+                    name = fmName.yourformal
+                elif a[:2] == 'fs':
+                    name = fsName.yourformal
+                else:
                     name = a[:2]
+                if a[3:] in [ "aro","cor","att","anal","pussy","bj" ]:
+                    if a[:2] == 'fm':
+                        name = fmName.Yourformal
+                    elif a[:2] == 'fs':
+                        name = fsName.Yourformal
+                    else:
+                        name = a[:2]
             else:
                 name = a[:2]
-            text = _generateText( a[3:], str( getattr(store,name) ), f )
+            if name == a[:2]:
+                text = _generateText( a[3:], str( getattr(store,name) ), f )
+            else:
+                text = _generateText( a[3:], str(name), f)
         elif a == "mc_b":
             if f < 0:
                 text = "Your motorcycle build decreased by {0}".format( abs( f ) )

@@ -4,9 +4,10 @@ init -1 python:
     from operator import attrgetter # we need this for sorting items
 
     class Item(store.object):
-        def __init__(self, name, weight):
+        def __init__(self, name, weight,amount=1):
             self.name = name
             self.weight = weight
+            self.amount = amount
 
     class InvItem(store.object):
         def __init__(self, item, amount):
@@ -52,7 +53,7 @@ init -1 python:
                     inventory.pop(inventory.index(self.finditem(item)))
                     renpy.notify(item.name.capitalize()+" has been deleted")
                 else:
-                    renpy.notify("There are "+str(item.amount)+" left")
+                    renpy.notify("There are "+str(self.finditem(item).amount)+" "+str(item.name)+" left")
             else:
                 renpy.notify("Couldn't find the item you were trying to delete")
 

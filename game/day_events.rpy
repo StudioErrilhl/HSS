@@ -42,8 +42,8 @@ label day_events():
                         $ statschangenotify("fm_dom",.5,True)
                         $ statschangenotify("fm_rel",-.5)
             $ sun_event = False
-            call livingroom_scene
-            call change_loc('livingroom')
+            # call livingroom_scene
+            # call change_loc('livingroom')
             # return
         # else:
             # return

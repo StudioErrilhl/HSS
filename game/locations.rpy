@@ -53,29 +53,18 @@ label fs_bedroom_loc(fsl_called=False):
     if fsl_called or uhl_fsb_cfs:
         $ fsl_called = uhl_fsb_cfs = False
         if ipad_added:
-            "Oh, she left her iPad..."
             if not ipad_always_look:
+                "Oh, she left her iPad..."
                 menu:
                     "Look at iPad":
-                        show ipad_background:
-                            zoom .5
-                            yalign .5
-                            xalign .5
-                        $ renpy.pause()
-                        $ ipad_added = False
-                        $ find_ipad = True
+                        $ ic_num = []
                         $ ipad_always_look = True
+                        call screen fs_ipad()
                     "Leave iPad":
                         $ ipad_added = False
                         $ find_ipad = True
             else:
-                show ipad_background:
-                    zoom .5
-                    yalign .5
-                    xalign .5
-                $ renpy.pause()
-                $ ipad_added = False
-                $ find_ipad = True
+                call screen fs_ipad()
         if panties_added:
             # "Hm... [fsName.formal]s panties...\n{b}sniffs them{/b}\nShould I take them with me?"
             $ current_p = getattr(store,gp_bed+"_panties_item")

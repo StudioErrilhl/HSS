@@ -30,9 +30,9 @@ label morning_events():
                                             $ count = 3
                                             call firstday_talk_fs(True)
                                     # if firstday_talk:
-                                    label firstday_talk_fs(called=False):
-                                        if called:
-                                            $ called = False
+                                    label firstday_talk_fs(fdtfs_called=False):
+                                        if fdtfs_called and (firstday_talk or talk_later):
+                                            $ fdtfs_called = False
                                             call livingroom_scene
                                             show fs_standing annoyed with dissolve
                                             if talk_later:
@@ -90,8 +90,9 @@ label morning_events():
                                                 else:
                                                     call end_of_day(True)
 
-                                        else:
-                                            call settime(22,False)
+                                        elif fdtfs_called:
+                                            $ fdtfs_called = False
+                                            call settime(22)
                                             "{i}Hmm... where did my damn [fsName.role] go?{/i}"
                                             "{i}Oh, well. I'll find her tomorrow. Time for bed{/i}"
                                             # call fp_bedroom_scene

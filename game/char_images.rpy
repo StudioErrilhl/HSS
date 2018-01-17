@@ -623,3 +623,19 @@ image rain:
 
 transform ModZoom(z):
     zoom z    
+
+transform achievement_transform:
+    on show:
+        xalign 1.2 
+        yalign .22 
+        linear 1.0 xalign 0.9 yalign .22
+    on hide:
+        linear 1.2 alpha 0.0
+
+transform hide_transform:
+    on show:
+        xalign .5
+        yalign 1.2
+        linear 1.0 xalign .5 yalign 1.0
+    on hide:
+        linear 1.0 alpha 0.0    

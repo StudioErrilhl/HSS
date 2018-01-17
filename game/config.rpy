@@ -211,7 +211,13 @@ default dinner_event = True
 default current_location = 'fp_bedroom_loc'
 default panties_sniffer = False
 default pb_return = False
-default testtest = False
+
+# fs_ipad screen variables
+default ipad_code = False
+default ipad_home = True
+default ic_num = []
+default ipad_stored_code = 2625
+default fsi_cfs = False
 
 default fs_p = ['fs_yellow','fs_light_blue','fs_pale_pink','fs_bright_pink']
 default p_response = ["Hm... "+fsName.formal+"s panties...\n{b}sniffs them{/b}\nShould I take them with me?",
@@ -233,6 +239,8 @@ default uhl_cfs = False
 default uhl_bl_cfs = False
 default out_cfs = False
 default lvr_cfs = False
+default tfs_cfs = False
+
 
 default end_cfs = False
 default stn_cfs = False

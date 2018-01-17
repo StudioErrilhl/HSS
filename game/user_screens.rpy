@@ -366,7 +366,8 @@ style notify_text:
 
 screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=current_month_day,current_hour=current_hour):
     zorder 300
-    default tt = Tooltip("")
+    # default tt = Tooltip("")
+    # default tooltip = ''    
     default x = 500
     default y = 400
     # Get mouse coords:
@@ -377,7 +378,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
 
     hbox xalign 0 yalign 0:
         imagebutton auto "images/stats_%s.png" focus_mask True action Show('stat_screen'):
-            hovered tt.Action("Here you'll find all the stats for all the characters in the game. Some characters doesn't have a lot of stats currently, this may change with the coming updates")
+            tooltip "Here you'll find all the stats for all the characters in the game. Some characters doesn't have a lot of stats currently, this may change with the coming updates"
         add "images/stats_overlay.png":
             xpos -128
             if int(current_hour[:2]) not in night:
@@ -388,7 +389,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             imagebutton auto "images/menu_phone_%s.png" focus_mask True action Show('iphone') at ModZoom(.65):
                 xpos -175
                 ypos -15
-                hovered tt.Action("Here's your phone. Here you will be able to load, save and view galleries and more")
+                tooltip "Here's your phone. Here you will be able to load, save and view galleries and more"
             add "images/menu_phone_overlay.png" at ModZoom(.65):
                 xpos -340
                 ypos -15
@@ -403,7 +404,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             ypos 100
             focus_mask True 
             action [Show("inventory_screen")]
-            hovered tt.Action("Here you'll be able to see what you have in your backpack")
+            tooltip "Here you'll be able to see what you have in your backpack"
         add "images/backpack_overlay.png":
             ypos -16
             if int(current_hour[:2]) not in night:
@@ -506,11 +507,12 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                 alpha 0.5
 
 
-    if tt.value: #show tooltips
+    # if tt.value: #show tooltips
+    if GetTooltip() is not None:
         frame:
             pos(x, y)
             anchor (xval, yval)
-            text tt.value style "tooltip_hover"
+            text GetTooltip() style "tooltip_hover"        
 
 screen changelog():
     tag menu
@@ -656,10 +658,6 @@ screen inventory_screen():
         $ xa = 0
         $ ya = 0
         $ i = 0
-        # viewport:
-        #     scrollbars "vertical"
-        #     edgescroll 100,500
-        #     mousewheel True
         vpgrid:
             cols 4
             rows 4
@@ -682,9 +680,7 @@ screen inventory_screen():
                                             xalign .5
                                             yalign 0
                                             focus_mask True
-                                            # action [SetVariable('tfs_cfs',True),SetVariable('pb_given_back',True),Hide('inventory_screen'),Jump('talk_fs')]
                                             action [SetVariable('pb_return',True),Function(renpy.restart_interaction),Hide('inventory_screen')]
-                                        $ renpy.watch(str(pb_return))
                                     else:
                                         imagebutton auto "images/inventory/"+name+"_%s.png":
                                             xalign .5
@@ -829,7 +825,8 @@ style say_dialogue:
 screen location(room=False):
     layer "master"
     $ exitdown = exitleft = exitup = exitright = False
-    default tt = Tooltip("")
+    # default tt = Tooltip("")
+    # default tooltip = ''
     default x = 500
     default y = 400
     # Get mouse coords:
@@ -841,27 +838,20 @@ screen location(room=False):
     if room == 'entrance':
         if int(current_hour[:2]) in night:
             imagebutton auto "images/backgrounds/interactions_move/front_door_night_%s.png" focus_mask True action [SetVariable('out_cfs',True),Jump('outside_loc')]:
-                hovered tt.Action("Go outside")
+                tooltip "Go outside"
             imagebutton auto "images/backgrounds/interactions_move/kitchen_door_night_%s.png" focus_mask True action [SetVariable('kit_cfs',True),Jump('kitchen_loc')]:
-                hovered tt.Action('Kitchen')
+                tooltip 'Kitchen'
             imagebutton auto "images/backgrounds/interactions_move/livingroom_door_night_%s.png" focus_mask True action [SetVariable('lvr_cfs',True),Jump('livingroom_loc')]:
-                hovered tt.Action("Livingroom")
+                tooltip "Livingroom"
             imagebutton auto "images/backgrounds/interactions_move/stairs_up_night_%s.png" focus_mask True action [SetVariable('uhl_cfs',True),Jump('upper_hallway_loc')]
-            # imagebutton auto "images/backgrounds/entrance_hallway_night_%s.png" focus_mask True action Jump('lower_hallway_loc'):
-            #     hovered tt.Action("Hallway")
         else:
             imagebutton auto "images/backgrounds/interactions_move/front_door_morning_%s.png" focus_mask True action [SetVariable('out_cfs',True),Jump('outside_loc')]:
-                hovered tt.Action("Go outside")
+                tooltip "Go outside"
             imagebutton auto "images/backgrounds/interactions_move/kitchen_door_morning_%s.png" focus_mask True action [SetVariable('kit_cfs',True),Jump('kitchen_loc')]:
-                hovered tt.Action('Kitchen')                            
+                tooltip 'Kitchen'
             imagebutton auto "images/backgrounds/interactions_move/livingroom_door_morning_%s.png" focus_mask True action [SetVariable('lvr_cfs',True),Jump('livingroom_loc')]:
-                hovered tt.Action("Livingroom")            
+                tooltip "Livingroom"
             imagebutton auto "images/backgrounds/interactions_move/stairs_up_morning_%s.png" focus_mask True action [SetVariable('uhl_cfs',True),Jump('upper_hallway_loc')]                
-        #     imagebutton auto "images/backgrounds/entrance_hallway_morning_%s.png" focus_mask True action Jump('lower_hallway_loc'):
-        #         hovered tt.Action("Hallway")
-
-        # $ exitdown_event = "lower_hallway_loc"
-        # $ exitdown = "Hallway"
 
     if room == "fp bedroom":
         if day_week <= 4:
@@ -932,20 +922,6 @@ screen location(room=False):
         $ exitdown_event = "entrance_loc"
         $ exitdown = "Entrance"
 
-    # if room == "lower hallway":
-    #     if int(current_hour[:2]) in night:
-    #         imagebutton auto "images/backgrounds/interactions_move/lower_hallway_night_kitchen_%s.png" focus_mask True action [SetVariable('kit_cfs',True),Jump('kitchen_loc')]
-    #     else:
-    #         imagebutton auto "images/backgrounds/interactions_move/lower_hallway_morning_kitchen_%s.png" focus_mask True action [SetVariable('kit_cfs',True),Jump('kitchen_loc')]
-    #     if hallway_pot_enable:
-    #         imagebutton auto "images/backgrounds/interactions_item/lower_hallway_morning_pot_%s.png" focus_mask True action Jump('lower_hallway_loc')
-
-    #     $ exitleft_event_var = "uhl_cfs"
-    #     $ exitleft_event = "upper_hallway_loc"
-    #     $ exitleft = "Upper hallway"
-    #     $ exitdown_event = "entrance_loc"
-    #     $ exitdown = "Entrance"
-
     if room == "kitchen":
         if wcount == 5:
             if bottles == 1 or br == 1:
@@ -1010,22 +986,22 @@ screen location(room=False):
     if room == "upper hallway":
         if int(current_hour[:2]) in night:
             imagebutton auto "images/backgrounds/interactions_move/upper_hallway_fp_door_night_%s.png" focus_mask True action [SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]:
-                hovered tt.Action("Enter your room")
+                tooltip "Enter your room"
             imagebutton auto "images/backgrounds/interactions_move/upper_hallway_fs_door_night_%s.png" focus_mask True action [SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]:
-                hovered tt.Action("Enter [fsName.yourformal]'s room")
+                tooltip "Enter [fsName.yourformal]'s room"
             imagebutton auto "images/backgrounds/interactions_move/upper_hallway_bathroom_night_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]:
-                hovered tt.Action("Enter bathroom")
+                tooltip "Enter bathroom"
             imagebutton auto "images/backgrounds/interactions_move/stairs_down_night_%s.png" focus_mask True action Jump('entrance_loc'):
-                hovered tt.Action("Downstairs")       
+                tooltip "Downstairs"
         else:
             imagebutton auto "images/backgrounds/interactions_move/upper_hallway_fp_door_morning_%s.png" focus_mask True action [SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]:
-                hovered tt.Action("Enter your room")
+                tooltip "Enter your room"
             imagebutton auto "images/backgrounds/interactions_move/upper_hallway_fs_door_morning_%s.png" focus_mask True action [SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]:
-                hovered tt.Action("Enter [fsName.yourformal]'s room")
+                tooltip "Enter [fsName.yourformal]'s room"
             imagebutton auto "images/backgrounds/interactions_move/upper_hallway_bathroom_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]:
-                hovered tt.Action("Enter bathroom")       
+                tooltip "Enter bathroom"
             imagebutton auto "images/backgrounds/interactions_move/stairs_down_morning_%s.png" focus_mask True action Jump('entrance_loc'):
-                hovered tt.Action("Downstairs")
+                tooltip "Downstairs"
 
     if room == "upper hallway bathroom":
         if int(current_hour[:2]) >= 6 and int(current_hour[:2]) <= 14 and not backpack.has_item(small_keys_item) and keys_mentioned:
@@ -1055,56 +1031,65 @@ screen location(room=False):
             imagebutton auto "images/exit_down_%s.png" focus_mask True action [SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
                 xalign .5
                 yalign 1.0
-                hovered tt.Action(exitdown)
+                tooltip exitdown
         else:
             imagebutton auto "images/exit_down_%s.png" focus_mask True action Jump(exitdown_event):
                 xalign .5
                 yalign 1.0
-                hovered tt.Action(exitdown)
+                tooltip exitdown
     if exitleft:
         if exitleft_event_var:
             imagebutton auto "images/exit_left_%s.png" focus_mask True action [SetVariable(exitleft_event_var,True),Jump(exitleft_event)]:
                 xalign 0.0
                 yalign .5
-                hovered tt.Action(exitleft)
+                tooltip exitleft
         else:
             imagebutton auto "images/exit_left_%s.png" focus_mask True action Jump(exitleft_event):
                 xalign 0.0
                 yalign .5
-                hovered tt.Action(exitleft)
+                tooltip exitleft
     if exitup:
         if exitup_event_var:
             imagebutton auto "images/exit_up_%s.png" focus_mask True action [SetVariable(exitup_event_var,True),Jump(exitup_event)]:
                 xalign .5
                 yalign 0.0
-                hovered tt.Action(exitup)
+                tooltip exitup
         else:
             imagebutton auto "images/exit_up_%s.png" focus_mask True action Jump(exitup_event):
                 xalign .5
                 yalign 0.0
-                hovered tt.Action(exitup)
+                tooltip exitup
     if exitright:
         if exitright_event_var:
             imagebutton auto "images/exit_right_%s.png" focus_mask True action [SetVariable(exitright_event_var,True),Jump(exitright_event)]:
                 xalign 1.0
                 yalign .5
-                hovered tt.Action(exitright)
+                tooltip exitright
         else:
             imagebutton auto "images/exit_right_%s.png" focus_mask True action Jump(exitright_event):
                 xalign 1.0
                 yalign .5
-                hovered tt.Action(exitright)
+                tooltip exitright
 
-    if tt.value:
+    if GetTooltip() is not None:
         frame:
             pos(x, y)
             anchor (xval, yval)
-            text tt.value style "tooltip_hover"        
-
+            text GetTooltip() style "tooltip_hover"        
 
 screen iphone():
     modal True
     zorder 800
+    # default tt = Tooltip("")
+    # default tooltip = ''    
+    default x = 500
+    default y = 400
+    # Get mouse coords:
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
+
     fixed:
         fit_first True
         xmaximum 500
@@ -1112,22 +1097,23 @@ screen iphone():
         xalign .5
         yalign .5      
         hbox:
-            add "images/iphone_white.png" at ModZoom(.5)
+            add "images/iphone_white.png" at ModZoom(.85)
             xalign .5
             yalign .5
         hbox:
             xalign .5
             yalign .45
             if not show_icons and not quit_screen:
-                add "images/iphone_screen_achievement.png" at ModZoom(0.5)
+                add "images/iphone_screen_achievement.png" #at ModZoom(.5)
             else:
-                add "images/iphone_screen.png" at ModZoom(0.5)
+                add "images/iphone_screen.png" # at ModZoom(0.5)
         hbox:
             xalign 0.125
             yalign 0.14 
             spacing 10          
             if show_icons:
-                imagebutton auto "images/iphone_achievement_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.45)
+                imagebutton auto "images/iphone_achievement_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.9):
+                    tooltip "Open the achievement-screen"
 
         hbox:
             xalign 0.5
@@ -1135,21 +1121,34 @@ screen iphone():
             # yalign 0.22
             spacing 10
             if show_icons:
-                imagebutton auto "images/iphone_main_menu_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.45)
-                imagebutton auto "images/iphone_save_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.45)
-                imagebutton auto "images/iphone_load_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.45)
-                imagebutton auto "images/iphone_settings_button_%s.png" focus_mask True action ShowMenu('preferences') at ModZoom(.45)
-                imagebutton auto "images/iphone_quit_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.45)                
+                imagebutton auto "images/iphone_main_menu_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.9):
+                    tooltip "Go to the main menu"
+                imagebutton auto "images/iphone_save_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.9):
+                    tooltip "Save your game"
+                imagebutton auto "images/iphone_load_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.9):
+                    tooltip "Load your game"
+                imagebutton auto "images/iphone_settings_button_%s.png" focus_mask True action ShowMenu('preferences') at ModZoom(.9):
+                    tooltip "Show preferences screen"
+                imagebutton auto "images/iphone_quit_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.9):
+                    tooltip "Quit the game"
 
         hbox:
-            imagebutton auto "images/iphone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('iphone')] at ModZoom(.5)
+            imagebutton auto "images/iphone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('iphone')] at ModZoom(.85):
+                tooltip "Shut off the phone"
             xalign .5
             yalign .5
         hbox:
-            imagebutton auto "images/iphone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.5)
+            imagebutton auto "images/iphone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
+                tooltip "Go back to the home-screen"
             xalign .5
             yalign .5
 
+    # if tooltip: #show tooltips
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"        
 
 screen custom_confirm(cc_chosen=False):
     zorder 900
@@ -1182,7 +1181,18 @@ screen custom_confirm(cc_chosen=False):
                 action [SetVariable('show_icons',True),Hide('custom_confirm')]
 
 screen display_achievements():
-    zorder 900
+    modal True
+    zorder 800
+    # default tt = Tooltip("")
+    # default tooltip = ''    
+    default x = 500
+    default y = 400
+    # Get mouse coords:
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
+
     on 'show' action Function(achievement_trophy_case.update)
 
     use display_achievements_category_panel
@@ -1352,25 +1362,41 @@ screen display_achievements():
         yalign .475
         maximum 370,686
         hbox:
+            imagebutton auto "images/iphone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('iphone')] at ModZoom(.85):
+                tooltip "Shut off the phone"
+            xalign .505
+            yalign .465
+        hbox:
+            imagebutton auto "images/iphone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
+                tooltip "Go back to the home-screen"
+            xalign .505
+            yalign .465           
+        hbox:
             xalign .5
             yalign .5
-            add "images/iphone_screen_achievement_top_bottom.png" at ModZoom(.5)
+            add "images/iphone_screen_achievement_top_bottom.png"
         hbox:
             xalign .5
             yalign 1.0
             maximum 370,20
-            imagebutton idle "phone_unlock.png" at ModZoom(1.0):
+            imagebutton idle "phone_unlock.png":
                 action ToggleVariable('hide_unlocked_achievements')
                 xpos -100
                 ypos 10
-            imagebutton idle "phone_lock.png" at ModZoom(1.0):
+            imagebutton idle "phone_lock.png":
                 action ToggleVariable('hide_locked_achievements')
                 xalign .5
                 ypos 10
-            imagebutton idle "phone_hidden.png" at ModZoom(1.0):
+            imagebutton idle "phone_hidden.png":
                 action ToggleVariable('hide_hidden_achievements')        
                 xpos 100
                 ypos 10
+
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"    
 
 
 # This allows the user to view achievements based on their category
@@ -1423,14 +1449,6 @@ screen display_achievement_unlocked():
                                 true=[Hide('display_achievement_unlocked'), RemoveFromSet(achievement_notification_queue, achievement_notification_queue[0]), Show('display_achievement_unlocked')], 
                                 false=[Hide('display_achievement_unlocked'), RemoveFromSet(achievement_notification_queue, achievement_notification_queue[0])]
                                 )      
-
-transform achievement_transform:
-    on show:
-        xalign 1.2 
-        yalign .22 
-        linear 1.0 xalign 0.9 yalign .22
-    on hide:
-        linear 1.2 alpha 0.0            
 
 screen confirm_age():
     frame:
@@ -1614,3 +1632,167 @@ style custom_slot_button:
 style custom_slot_button_text:
     size 15
     color "#222"
+
+# screen iphone():
+#     modal True
+#     zorder 800
+#     fixed:
+#         fit_first True
+#         xmaximum 500
+#         ymaximum 800  
+#         xalign .5
+#         yalign .5      
+#         hbox:
+#             add "images/iphone_white.png" at ModZoom(.5)
+#             xalign .5
+#             yalign .5
+#         hbox:
+#             xalign .5
+#             yalign .45
+#             if not show_icons and not quit_screen:
+#                 add "images/iphone_screen_achievement.png" at ModZoom(0.5)
+#             else:
+#                 add "images/iphone_screen.png" at ModZoom(0.5)
+#         hbox:
+#             xalign 0.125
+#             yalign 0.14 
+#             spacing 10          
+#             if show_icons:
+#                 imagebutton auto "images/iphone_achievement_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.45)
+
+
+screen fs_ipad():
+    default ic_num_str = 0
+    modal True
+    zorder 800
+    fixed:
+        fit_first True
+        xmaximum 600
+        ymaximum 800
+        xalign .5
+        yalign .5
+        if len(ic_num) == 4:
+            $ ic_num_str = ''.join(map(str, ic_num))
+        hbox:
+            yalign .5
+            xalign .5
+            add "images/ipad.png" at ModZoom(.85)
+        hbox: #backgrounds
+            yalign .5
+            xalign .5
+            if len(ic_num) == 4:
+                $ ic_num_str = ''.join(map(str, ic_num))
+                if int(ic_num_str) == ipad_stored_code:
+                    $ ipad_code = True
+                    $ ic_num = []
+                    add "ipad_background.png" at ModZoom(.85)
+                else:
+                    $ ic_num = []
+            elif ipad_code:
+                add "images/ipad_background.png" at ModZoom(.85)                
+        hbox:
+            xalign .5
+            yalign .5
+            imagebutton auto "images/ipad_power_%s.png" focus_mask True action [SetVariable('ipad_added',False),SetVariable('find_ipad',True),Return()] at ModZoom(.85)
+                # xpos -620
+
+        if not ipad_code:
+            hbox:
+                imagemap:
+                    alpha False
+                    if len(ic_num) == 1:
+                        add "images/ipad_unlock_1.png"
+                    elif len(ic_num) == 2:
+                        add "images/ipad_unlock_2.png"
+                    elif len(ic_num) == 3:
+                        add "images/ipad_unlock_3.png"
+                    elif len(ic_num) == 4:
+                        add "images/ipad_unlock_4.png"
+                    ground "images/ipad_unlock.png"
+                    hover "images/ipad_unlock_hover.png"
+                    at ModZoom(.85)
+                    yalign .5
+                    xalign .5
+                    if int(ic_num_str) != ipad_stored_code:
+                        hotspot (204, 392, 94, 96) action [AddToSet(ic_num,1)]:
+                            sensitive True
+                        hotspot (318, 392, 94, 96) action [AddToSet(ic_num,2)]:
+                            sensitive True
+                        hotspot (436, 394, 94, 96) action [AddToSet(ic_num,3)]:
+                            sensitive True
+                        hotspot (204, 502, 94, 96) action [AddToSet(ic_num,4)]:
+                            sensitive True
+                        hotspot (318, 502, 94, 96) action [AddToSet(ic_num,5)]:
+                            sensitive True
+                        hotspot (436, 502, 94, 96) action [AddToSet(ic_num,6)]:
+                            sensitive True
+                        hotspot (204, 610, 94, 96) action [AddToSet(ic_num,7)]:
+                            sensitive True
+                        hotspot (318, 610, 94, 96) action [AddToSet(ic_num,8)]:
+                            sensitive True
+                        hotspot (436, 610, 94, 96) action [AddToSet(ic_num,9)]:
+                            sensitive True
+                        hotspot (318, 718, 94, 96) action [AddToSet(ic_num,0)]:
+                            sensitive True
+                        hotspot (464, 839, 71, 33) action [SetVariable('ipad_added',False),SetVariable('find_ipad',True),Return()]:
+                            sensitive True
+        # hbox:
+        #     if len(ic_num) == 4:
+        #         $ ic_num_str = ''.join(map(str, ic_num))
+        #         if int(ic_num_str) == ipad_stored_code:
+        #             $ ipad_code = True
+        #             $ ic_num = []
+        #             frame:
+        #                 background "ipad_white_background.png" at ModZoom(.85)
+        #                 yalign .5
+        #                 xalign .5
+        #         else:
+        #             $ ic_num = []
+
+# screen iphone():
+#     modal True
+#     zorder 800
+#     fixed:
+#         fit_first True
+#         xmaximum 500
+#         ymaximum 800  
+#         xalign .5
+#         yalign .5      
+#         hbox:
+#             add "images/iphone_white.png" at ModZoom(.5)
+#             xalign .5
+#             yalign .5
+#         hbox:
+#             xalign .5
+#             yalign .45
+#             if not show_icons and not quit_screen:
+#                 add "images/iphone_screen_achievement.png" at ModZoom(0.5)
+#             else:
+#                 add "images/iphone_screen.png" at ModZoom(0.5)
+#         hbox:
+#             xalign 0.125
+#             yalign 0.14 
+#             spacing 10          
+#             if show_icons:
+#                 imagebutton auto "images/iphone_achievement_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.45)
+
+#         hbox:
+#             xalign 0.5
+#             yalign .83
+#             # yalign 0.22
+#             spacing 10
+#             if show_icons:
+#                 imagebutton auto "images/iphone_main_menu_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.45)
+#                 imagebutton auto "images/iphone_save_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.45)
+#                 imagebutton auto "images/iphone_load_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.45)
+#                 imagebutton auto "images/iphone_settings_button_%s.png" focus_mask True action ShowMenu('preferences') at ModZoom(.45)
+#                 imagebutton auto "images/iphone_quit_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.45)                
+
+#         hbox:
+#             imagebutton auto "images/iphone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('iphone')] at ModZoom(.5)
+#             xalign .5
+#             yalign .5
+#         hbox:
+#             imagebutton auto "images/iphone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.5)
+#             xalign .5
+#             yalign .5
