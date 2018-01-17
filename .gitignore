@@ -51,10 +51,10 @@ Temporary Items
 *.rpyb
 *.log
 *.swp
-/log.txt
-/backtrace.txt
-/errors.txt
-/tmp
-/traceback.txt
-/game/saves
-/game/cache
+log.txt
+backtrace.txt
+errors.txt
+tmp/**
+traceback.txt
+game/saves/**
+game/cache/**
