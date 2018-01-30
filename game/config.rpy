@@ -1,5 +1,5 @@
 init python:
-    import os
+    import os, math
     def define_images(characterImageFolder, excludeFirstXFolders=0, flip=True):
         for path in renpy.list_files():
             if path.startswith(characterImageFolder + "/"):

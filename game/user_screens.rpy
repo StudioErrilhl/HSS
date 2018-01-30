@@ -1,6 +1,7 @@
 style tooltip_hover:
     yalign 0.5
     xmaximum 600
+    color "#fff"
 
 style red_color:
     color "#f00"
@@ -379,6 +380,7 @@ style notify_frame:
 
 style notify_text:
     properties gui.text_properties("notify")
+    color "#fff"
 
 screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=current_month_day,current_time=current_time):
     zorder 300
@@ -513,10 +515,11 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             $ current_month_day = month_day
             text "[current_month]":
                 xalign .5
-                color "#ffffff"
+                color "#fff"
                 size 20
             text "[current_month_day]":
                 xalign .5
+                color "#000"
                 ypos -5
                 size 60
             if bad_weather and rainstorm and int(current_time[:2]) in night:
@@ -694,10 +697,10 @@ screen stat_screen():
                             text "["+stats[1]+"_dom]":
                                 xpos 10
                         if cheat:
-                            imagebutton auto "images/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_dom",getattr(store,stats[1]+"_dom")-1):
+                            imagebutton auto "images/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_dom",math.floor(getattr(store,stats[1]+"_dom")-1)):
                                 ypos 5
                                 xpos 40
-                            imagebutton auto "images/plusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_dom",getattr(store,stats[1]+"_dom")+1):
+                            imagebutton auto "images/plusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_dom",math.floor(getattr(store,stats[1]+"_dom")+1)):
                                 ypos 5
                                 xpos 50
                     hbox:
@@ -707,10 +710,10 @@ screen stat_screen():
                             text "["+stats[1]+"_rel]":
                                 xpos 20
                         if cheat:                                
-                            imagebutton auto "images/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_rel",getattr(store,stats[1]+"_rel")-1):
+                            imagebutton auto "images/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")-1)):
                                 ypos 5
                                 xpos 40
-                            imagebutton auto "images/plusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_rel",getattr(store,stats[1]+"_rel")+1):
+                            imagebutton auto "images/plusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")+1)):
                                 ypos 5
                                 xpos 50
                     hbox:
@@ -720,10 +723,10 @@ screen stat_screen():
                             text "["+stats[1]+"_aro]":
                                 xpos 20
                         if cheat:                                
-                            imagebutton auto "images/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_aro",getattr(store,stats[1]+"_aro")-1):
+                            imagebutton auto "images/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")-1)):
                                 ypos 5
                                 xpos 40
-                            imagebutton auto "images/plusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_aro",getattr(store,stats[1]+"_aro")+1):
+                            imagebutton auto "images/plusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")+1)):
                                 ypos 5
                                 xpos 50
                     if getattr(store, ""+stats[1]+"_cor") > 10:
@@ -745,6 +748,7 @@ screen inventory_screen():
         $ ya = 0
         $ i = 0
         vpgrid:
+            style_prefix "inventory"
             cols 4
             rows 4
             scrollbars "vertical"
@@ -806,6 +810,8 @@ screen inventory_screen():
 
         imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action Hide("inventory_screen")                        
 
+style inventory_text:
+    color "#fff"
 
 screen say(who, what):
     style_prefix "say"
@@ -1223,16 +1229,8 @@ screen iphone():
         ymaximum 800  
         xalign .5
         yalign .5   
-        hbox:
-            xalign .5
-            yalign .45
-            if battery_text != 0:
-                if not show_icons and not quit_screen and not pref_screen:
-                    add "images/iphone_background_light.png" at ModZoom(.85)
-                else:
-                    add "images/iphone_background_black.png" at ModZoom(.85)
-            else:
-                add "images/iphone_background_black.png" at ModZoom(.85)                
+        add "images/iphone_background_black.png" at ModZoom(.85)
+         
         hbox: #notification-bar
             if battery_text != 0:
                 add "images/iphone_notification_bar.png" at ModZoom(.85)
@@ -1393,14 +1391,66 @@ screen display_achievements():
 
     use display_achievements_category_panel
 
+    hbox:
+        xalign .5
+        yalign .5
+        add "images/iphone_background_light.png" at ModZoom(.85)
+    hbox: #notification-bar
+        if battery_text != 0:
+            add "images/iphone_notification_bar.png" at ModZoom(.85)
+            xalign .5
+            yalign .5
+    hbox: #battery-indicator
+        if battery_text != 0:
+            if battery_text == 100:
+                add "images/iphone_battery_100.png"
+            elif battery_text < 100 and battery_text >= 90:
+                add "images/iphone_battery_90.png"
+            elif battery_text < 90 and battery_text >= 80:
+                add "images/iphone_battery_80.png"
+            elif battery_text < 80 and battery_text >= 70:
+                add "images/iphone_battery_70.png"
+            elif battery_text < 70 and battery_text >= 60:
+                add "images/iphone_battery_60.png"
+            elif battery_text < 60 and battery_text >= 50:
+                add "images/iphone_battery_50.png"
+            elif battery_text < 50 and battery_text >= 40:
+                add "images/iphone_battery_40.png"
+            elif battery_text < 40 and battery_text >= 30:
+                add "images/iphone_battery_30.png"
+            elif battery_text < 30 and battery_text >= 20:
+                add "images/iphone_battery_20.png"
+            elif battery_text < 20 and battery_text >= 10:
+                add "images/iphone_battery_10.png"
+            else:
+                add "images/iphone_battery_0.png"                
+            at ModZoom(.85)
+            xalign .5
+            yalign .5
+    hbox: #battery-text
+        if battery_text != 0:
+            xalign .575
+            yalign .18
+            text "[battery_text]":
+                font "gui/fonts/texgyreheroes_regular.otf"
+                size 13
+    hbox: #clock
+        if battery_text != 0:
+            xalign .5
+            yalign .177
+            text "[current_time]":
+                font "gui/fonts/texgyreheroes_regular.otf"
+                size 18
     frame:
         background None
+        # add "images/iphone_background_light.png" at ModZoom(.85)
         xpadding 0
         top_padding 40
         bottom_padding 10
         xalign .5
         yalign .44
         maximum 370,686
+        # background "images/iphone_background_light.png" at ModZoom(.85)
 
         viewport:
             mousewheel True
@@ -1597,7 +1647,7 @@ screen display_achievements_category_panel():
         align 0.03, 0.13
         vbox:                 
             spacing 5
-            text "Category" xalign 0.5 underline True size 26
+            text "Category" xalign 0.5 underline True size 26 color "#fff"
             textbutton "All":
                 action SetVariable('selected_category', [category.lower() for category in achievement_categories])
                 selected selected_category == [category.lower() for category in achievement_categories]
@@ -1628,10 +1678,11 @@ screen display_achievement_unlocked():
             if achievement_notification_queue[0].image:
                 add achievement_notification_queue[0].image xalign 0.5 yalign 0.5
             vbox:
+                yalign .5
                 spacing 5
-                text "Achievement Unlocked!" xalign 0.5 size 14 #color "#FFFFFF"
-                text achievement_notification_queue[0].name size 20 xalign 0.5 text_align 0.5 #color "#FFFFFF"
-                text achievement_notification_queue[0].description size 16 xalign 0.5 text_align 0.5 #color "#FFFFFF"
+                text "Achievement Unlocked!" xalign 0.5 size 14 color "#fff"
+                text achievement_notification_queue[0].name size 20 xalign 0.5 text_align 0.5 color "#fff"
+                text achievement_notification_queue[0].description size 16 xalign 0.5 text_align 0.5 color "#fff"
                 
         # timer show_length action [Hide('display_achievement_unlocked'), RemoveFromSet(achievement_notification_queue, achievement_notification_queue[0]), 
                                 # If(len(achievement_notification_queue) > 0, true=Show('display_achievement_unlocked'), false=NullAction())]           
