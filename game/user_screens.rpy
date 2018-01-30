@@ -24,10 +24,21 @@ screen choice(items):
                         action action
                         style "choice_button"
                         text caption style "choice_button"                 
-            else:                           
-                text caption style "choice_button"
+            else:                       
+                frame:
+                    background "gui/textbox_top.png"
+                    xalign .5
+                    xpos -50
+                    ypos -650
+                    hbox:
+                        xalign .5
+                        text caption:
+                            # xalign .8
+                            xpos 650
+                            ypos 20
+
 init -2:
-    $ config.narrator_menu = True
+    $ config.narrator_menu = False
 
     style choice_vbox is vbox
     style choice_button is button
@@ -39,6 +50,13 @@ init -2:
         ypos 405
         yanchor 0.5
         spacing gui.choice_spacing
+
+    # style choice_caption:
+        # xalign .5
+        # yalign 0.0
+        # yanchor 0.0
+        # ypos -600
+        # color "#000"
 
     style choice_button is default:
         properties gui.button_properties("choice_button")
@@ -60,8 +78,6 @@ init -2:
     style menu_choice_button is button:
         xminimum int(config.screen_width * 0.75)
         xmaximum int(config.screen_width * 0.75)
-
-
 
 screen nvl:
 
@@ -180,7 +196,7 @@ screen main_menu():
         yalign 1.0
         text "[config.version]":
             style "main_menu_version"
-            xpos -830
+            xpos -730
             ypos 65
 
         imagebutton:
@@ -364,7 +380,7 @@ style notify_frame:
 style notify_text:
     properties gui.text_properties("notify")
 
-screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=current_month_day,current_hour=current_hour):
+screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=current_month_day,current_time=current_time):
     zorder 300
     # default tt = Tooltip("")
     # default tooltip = ''    
@@ -381,22 +397,75 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             tooltip "Here you'll find all the stats for all the characters in the game. Some characters doesn't have a lot of stats currently, this may change with the coming updates"
         add "images/stats_overlay.png":
             xpos -128
-            if int(current_hour[:2]) not in night:
+            if int(current_time[:2]) not in night:
                 alpha 0.0
             else:
                 alpha 0.5
-        if carry_phone:
-            imagebutton auto "images/menu_phone_%s.png" focus_mask True action Show('iphone') at ModZoom(.65):
-                xpos -175
-                ypos -15
-                tooltip "Here's your phone. Here you will be able to load, save and view galleries and more"
-            add "images/menu_phone_overlay.png" at ModZoom(.65):
-                xpos -340
-                ypos -15
-                if int(current_hour[:2]) not in night:
-                    alpha 0.0
+        # if carry_phone:
+        #     imagebutton auto "images/menu_phone_%s.png" focus_mask True action Show('iphone') at ModZoom(.65):
+        #         xpos -175
+        #         ypos -15
+        #         tooltip "Here's your phone. Here you will be able to load, save and view galleries and more"
+        #     add "images/menu_phone_overlay.png" at ModZoom(.65):
+        #         xpos -340
+        #         ypos -15
+        #         if int(current_time[:2]) not in night:
+        #             alpha 0.0
+        #         else:
+        #             alpha 0.5
+        if filth_val == 0:
+            imagebutton idle "gui/tshirt.png":
+                xpos -150
+                ypos 10
+                tooltip "You're clean as a whistle"
+                action NullAction()
+        else:
+            add "gui/tshirt.png":
+                xpos -150
+                ypos 10
+            imagebutton idle "gui/tshirt_overlay.png":
+                xpos -250
+                ypos 10
+                # ypos -100
+                if filth_val < 10:
+                    at alpha_transform(.1)
+                    tooltip "Might be time to wash your hands ("+str(filth_val)+"% dirty)"
+                    action NullAction()                        
+                elif filth_val < 20:
+                    at alpha_transform(.2)
+                    tooltip "Cleanliness is a virtue ("+str(filth_val)+"% dirty)"
+                    action NullAction()                        
+                elif filth_val < 30:
+                    at alpha_transform(.3)
+                    tooltip "You pick your nose with those hands? Yuck! ("+str(filth_val)+"% dirty)"
+                    action NullAction()                        
+                elif filth_val < 40:
+                    at alpha_transform(.4)
+                    tooltip "Okay, a bit of grime under the fingernails isn't that bad... but seriously ("+str(filth_val)+"% dirty)"
+                    action NullAction()                        
+                elif filth_val < 50:
+                    at alpha_transform(.5)
+                    tooltip "There is dirty, and then there is you ("+str(filth_val)+"% dirty)"
+                    action NullAction()                        
+                elif filth_val < 60:
+                    at alpha_transform(.6)
+                    tooltip "Have you been digging up the entire back yard? ("+str(filth_val)+"% dirty)"
+                    action NullAction()                        
+                elif filth_val < 70:
+                    at alpha_transform(.7)
+                    tooltip "Seriously, have you ever heard of soap? ("+str(filth_val)+"% dirty)"
+                    action NullAction()                        
+                elif filth_val < 80:
+                    at alpha_transform(.8)
+                    tooltip "Sometimes, one wonders why we even invented showers, or soap ("+str(filth_val)+"% dirty)"
+                    action NullAction()
+                elif filth_val < 90:
+                    at alpha_transform(.9)
+                    tooltip "You're really dirty. You should go take a shower ("+str(filth_val)+"% dirty)"
+                    action NullAction()
                 else:
-                    alpha 0.5
+                    tooltip "You're filthy! Go wash up! ("+str(filth_val)+"% dirty)"
+                    action NullAction()
 
     vbox xalign .99 yalign .99: #inventory / backpack
         imagebutton auto "images/backpack_%s.png":
@@ -407,10 +476,29 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             tooltip "Here you'll be able to see what you have in your backpack"
         add "images/backpack_overlay.png":
             ypos -16
-            if int(current_hour[:2]) not in night:
+            if int(current_time[:2]) not in night:
                 alpha 0.0
             else:
                 alpha 0.5
+
+    frame: #filth-meter
+        xpos 1650
+        xpadding 0
+        ypadding 0
+        background None
+        vbox:
+            if carry_phone:
+                imagebutton auto "images/menu_phone_%s.png" focus_mask True action Show('iphone') at ModZoom(.65):
+                    # xpos -175
+                    ypos -15
+                    tooltip "Here's your phone. Here you will be able to load, save and view galleries and more"
+                add "images/menu_phone_overlay.png" at ModZoom(.65):
+                    xpos -340
+                    ypos -15
+                    if int(current_time[:2]) not in night:
+                        alpha 0.0
+                    else:
+                        alpha 0.5
 
     frame: #calendar-display
         xpos 1810
@@ -431,7 +519,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                 xalign .5
                 ypos -5
                 size 60
-            if bad_weather and rainstorm and int(current_hour[:2]) in night:
+            if bad_weather and rainstorm and int(current_time[:2]) in night:
                 add "images/night_rain_icon.png":
                     xalign .5
                     ypos -20                
@@ -439,7 +527,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                 add "images/morning_rain_icon.png":
                     xalign .5
                     ypos -20                
-            elif int(current_hour[:2]) in night:
+            elif int(current_time[:2]) in night:
                 add "images/night_icon.png":
                     xalign .5
                     ypos -20
@@ -456,7 +544,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
 
             add "images/calendar_overlay.png":
                 ypos -145
-                if int(current_hour[:2]) not in night:
+                if int(current_time[:2]) not in night:
                     alpha 0.0
                 else:
                     alpha 0.5
@@ -466,10 +554,10 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
         ypos 120
         xpadding 0
         ypadding 0
-        background Image('images/clock.png')
+        background Image('images/clock_idle.png')
         hbox: #hour-display
             xsize 50
-            $ hour = current_hour[:2]
+            $ hour = current_time[:2]
             textbutton "[hour]":
                 text_color "#ffffff"
                 xalign .5
@@ -490,7 +578,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
         hbox: #minute-display
             xsize 50
             xpos 50
-            $ minute = current_hour[3:]
+            $ minute = current_time[3:]
             textbutton "[minute]":
                 text_color "#ffffff"
                 xalign .5
@@ -501,13 +589,11 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                 action Function(addtime,False,30)                
 
         add "images/clock_overlay.png":
-            if int(current_hour[:2]) not in night:
+            if int(current_time[:2]) not in night:
                 alpha 0.0
             else:
                 alpha 0.5
 
-
-    # if tt.value: #show tooltips
     if GetTooltip() is not None:
         frame:
             pos(x, y)
@@ -681,6 +767,12 @@ screen inventory_screen():
                                             yalign 0
                                             focus_mask True
                                             action [SetVariable('pb_return',True),Function(renpy.restart_interaction),Hide('inventory_screen')]
+                                    elif name == 'phone' and current_location == 'fp_bedroom_loc':
+                                        imagebutton auto "images/inventory/"+name+"_%s.png":
+                                            xalign .5
+                                            yalign 0
+                                            focus_mask True
+                                            action [SetVariable('charge_phone',True),Hide('inventory_screen'),SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]
                                     else:
                                         imagebutton auto "images/inventory/"+name+"_%s.png":
                                             xalign .5
@@ -713,6 +805,7 @@ screen inventory_screen():
                                     $ ya += 173
 
         imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action Hide("inventory_screen")                        
+
 
 screen say(who, what):
     style_prefix "say"
@@ -825,8 +918,6 @@ style say_dialogue:
 screen location(room=False):
     layer "master"
     $ exitdown = exitleft = exitup = exitright = False
-    # default tt = Tooltip("")
-    # default tooltip = ''
     default x = 500
     default y = 400
     # Get mouse coords:
@@ -836,14 +927,17 @@ screen location(room=False):
         yval = 1.0 if y > config.screen_height/2 else .0
 
     if room == 'entrance':
-        if int(current_hour[:2]) in night:
-            imagebutton auto "images/backgrounds/interactions_move/front_door_night_%s.png" focus_mask True action [SetVariable('out_cfs',True),Jump('outside_loc')]:
+        if int(current_time[:2]) in night:
+            imagebutton auto "images/backgrounds/interactions_move/front_door_night_%s.png" focus_mask True action [SetVariable('trans',True),SetVariable('out_cfs',True),Jump('outside_loc')]:
                 tooltip "Go outside"
             imagebutton auto "images/backgrounds/interactions_move/kitchen_door_night_%s.png" focus_mask True action [SetVariable('kit_cfs',True),Jump('kitchen_loc')]:
                 tooltip 'Kitchen'
             imagebutton auto "images/backgrounds/interactions_move/livingroom_door_night_%s.png" focus_mask True action [SetVariable('lvr_cfs',True),Jump('livingroom_loc')]:
                 tooltip "Livingroom"
-            imagebutton auto "images/backgrounds/interactions_move/stairs_up_night_%s.png" focus_mask True action [SetVariable('uhl_cfs',True),Jump('upper_hallway_loc')]
+            imagebutton auto "images/backgrounds/interactions_move/stairs_up_night_%s.png" focus_mask True action [SetVariable('uhl_cfs',True),Jump('upper_hallway_loc')]:
+                tooltip "Upstairs"
+            imagebutton auto "images/backgrounds/interactions_move/stairs_basement_night_%s.png" focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]:
+                tooltip "Downstairs / Garage"
         else:
             imagebutton auto "images/backgrounds/interactions_move/front_door_morning_%s.png" focus_mask True action [SetVariable('out_cfs',True),Jump('outside_loc')]:
                 tooltip "Go outside"
@@ -851,25 +945,28 @@ screen location(room=False):
                 tooltip 'Kitchen'
             imagebutton auto "images/backgrounds/interactions_move/livingroom_door_morning_%s.png" focus_mask True action [SetVariable('lvr_cfs',True),Jump('livingroom_loc')]:
                 tooltip "Livingroom"
-            imagebutton auto "images/backgrounds/interactions_move/stairs_up_morning_%s.png" focus_mask True action [SetVariable('uhl_cfs',True),Jump('upper_hallway_loc')]                
+            imagebutton auto "images/backgrounds/interactions_move/stairs_up_morning_%s.png" focus_mask True action [SetVariable('uhl_cfs',True),Jump('upper_hallway_loc')]:
+                tooltip "Upstairs"
+            imagebutton auto "images/backgrounds/interactions_move/stairs_basement_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]:
+                tooltip "Downstairs / Garage"
 
     if room == "fp bedroom":
         if day_week <= 4:
             if not backpack.has_item(schoolbooks_item):
-                if int(current_hour[:2]) in night:
+                if int(current_time[:2]) in night:
                     add "images/backgrounds/interactions_item/fp_bedroom_night_dresser_idle.png"
                 else:
                     imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_morning_dresser_%s.png" focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('schoolbooks_added',True),Jump('fp_bedroom_loc')]
 
-        if int(current_hour[:2]) == 22 or int(current_hour[:2]) == 23 or current_hour[:2] == 0 or int(current_hour[:2]) == 1:
+        if int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or current_time[:2] == 0 or int(current_time[:2]) == 1:
             imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_night_bed_glow_%s.png" focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
-        elif int(current_hour[:2]) in night:
+        elif int(current_time[:2]) in night:
             imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_night_bed_%s.png" focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
         else:
             imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_morning_bed_%s.png" focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
 
-        if not carry_phone:
-            if int(current_hour[:2]) in night:
+        if not carry_phone:    
+            if int(current_time[:2]) in night:
                 imagebutton auto "images/backgrounds/interactions_item/phone_night_%s.png" focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]
             else:
                 imagebutton auto "images/backgrounds/interactions_item/phone_morning_%s.png" focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]                
@@ -880,19 +977,19 @@ screen location(room=False):
 
     if room == "fs bedroom":
         if find_panties:
-            if int(current_hour[:2]) in night:
+            if int(current_time[:2]) in night:
                 imagebutton auto "images/backgrounds/interactions_item/bedroom_panties_"+gp_bed+"_night_%s.png" focus_mask True action [SetVariable('find_panties',False),SetVariable('panties_added',True),SetVariable('gp_bed',gp_bed),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
             else:
                 imagebutton auto "images/backgrounds/interactions_item/bedroom_panties_"+gp_bed+"_morning_%s.png" focus_mask True action [SetVariable('find_panties',False),SetVariable('panties_added',True),SetVariable('gp_bed',gp_bed),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
 
-        if find_ipad:
-            if int(current_hour[:2]) in night:
-                imagebutton auto "images/backgrounds/interactions_item/fs_ipad_bedroom_night_%s.png" focus_mask True action [SetVariable('find_ipad',False),SetVariable('ipad_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
+        if find_tablet:
+            if int(current_time[:2]) in night:
+                imagebutton auto "images/backgrounds/interactions_item/fs_tablet_bedroom_night_%s.png" focus_mask True action [SetVariable('find_tablet',False),SetVariable('tablet_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
             else:
-                imagebutton auto "images/backgrounds/interactions_item/fs_ipad_bedroom_morning_%s.png" focus_mask True action [SetVariable('find_ipad',False),SetVariable('ipad_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]                
+                imagebutton auto "images/backgrounds/interactions_item/fs_tablet_bedroom_morning_%s.png" focus_mask True action [SetVariable('find_tablet',False),SetVariable('tablet_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]                
         if find_pb:             
-            if not backpack.has_item(pink_buttplug_item):   
-                if int(current_hour[:2]) in night:
+            if not backpack.has_item(princessplug_item):   
+                if int(current_time[:2]) in night:
                     imagebutton auto "images/backgrounds/interactions_item/pink_buttplug_night_%s.png" focus_mask True action [SetVariable('find_pb',False),SetVariable('pb_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
                 else:
                     imagebutton auto "images/backgrounds/interactions_item/pink_buttplug_morning_%s.png" focus_mask True action [SetVariable('find_pb',False),SetVariable('pb_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
@@ -902,30 +999,36 @@ screen location(room=False):
 
     if room == "garage":
         if not backpack.has_item(toolbox_item):
-            if int(current_hour[:2]) in night:
+            if int(current_time[:2]) in night:
                 add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_night_idle.png"
             elif not end_bike_repair:
                 imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('toolbox_added',True),Jump('garage_loc')]
             else:
                 imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]
 
-        if int(current_hour[:2]) not in night and not end_bike_repair:
+        if int(current_time[:2]) not in night and not end_bike_repair and not mc_f:
             imagebutton auto "images/tools_1_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('wmc_cfs',True),Jump('w_mc')]:
                 xalign .5
                 yalign .5
+
+        $ exitleft_event = "entrance_loc"
+        $ exitleft = "Upstairs / Entrance"
 
         $ exitdown_event_var = "out_cfs"            
         $ exitdown_event = "outside_loc"
         $ exitdown = "Go outside"        
 
     if room == "livingroom":
+        $ exitright_event_var = "kit_cfs"
+        $ exitright_event = "kitchen_loc"
+        $ exitright = "Kitchen"
         $ exitdown_event = "entrance_loc"
         $ exitdown = "Entrance"
 
     if room == "kitchen":
         if wcount == 5:
             if bottles == 1 or br == 1:
-                if int(current_hour[:2]) in night:
+                if int(current_time[:2]) in night:
                     imagebutton auto "images/backgrounds/interactions_item/wine_bottle_night_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',1),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
                         xpos .31
@@ -934,7 +1037,7 @@ screen location(room=False):
                         ypos .485
                         xpos .31
             elif bottles == 2 or br == 2:
-                if int(current_hour[:2]) in night:
+                if int(current_time[:2]) in night:
                     imagebutton auto "images/backgrounds/interactions_item/wine_bottle_night_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
                         xpos .31       
@@ -949,7 +1052,7 @@ screen location(room=False):
                         ypos .485
                         xpos .325
             elif bottles == 3 or br == 3:
-                if int(current_hour[:2]) in night:
+                if int(current_time[:2]) in night:
                     imagebutton auto "images/backgrounds/interactions_item/wine_bottle_night_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .480
                         xpos .315                    
@@ -969,11 +1072,14 @@ screen location(room=False):
                     imagebutton auto "images/backgrounds/interactions_item/wine_bottle_morning_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
                         xpos .325                    
-                   
+
+        $ exitleft_event_var = "lvr_cfs"
+        $ exitleft_event = "livingroom_loc"
+        $ exitleft = "Livingroom"                   
         $ exitdown_event = "entrance_loc"
         $ exitdown = "Entrance"
 
-    if room == "outside neighborhood":
+    if room == "outside":
         $ exitdown_event = "entrance_loc"
         $ exitdown = "Back into the house"
         $ exitleft_event_var = "gar_cfs"
@@ -984,7 +1090,7 @@ screen location(room=False):
             $ exitright = "Go to the beach"
 
     if room == "upper hallway":
-        if int(current_hour[:2]) in night:
+        if int(current_time[:2]) in night:
             imagebutton auto "images/backgrounds/interactions_move/upper_hallway_fp_door_night_%s.png" focus_mask True action [SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]:
                 tooltip "Enter your room"
             imagebutton auto "images/backgrounds/interactions_move/upper_hallway_fs_door_night_%s.png" focus_mask True action [SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]:
@@ -1004,10 +1110,10 @@ screen location(room=False):
                 tooltip "Downstairs"
 
     if room == "upper hallway bathroom":
-        if int(current_hour[:2]) >= 6 and int(current_hour[:2]) <= 14 and not backpack.has_item(small_keys_item) and keys_mentioned:
+        if int(current_time[:2]) >= 6 and int(current_time[:2]) <= 14 and not backpack.has_item(small_keys_item) and keys_mentioned:
             imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_keys_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("smallkeys_added",True),Jump('upper_hallway_bathroom_loc')]
 
-        if int(current_hour[:2]) in night:
+        if int(current_time[:2]) in night:
             # imagebutton auto "images/backgrounds/upper_hallway_bathroom_shower_night_%s.png" focus_mask True action [SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
             imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]
             if bathroom_light:
@@ -1025,13 +1131,34 @@ screen location(room=False):
         $ exitdown_event = "upper_hallway_loc"
         $ exitdown = "Upper hallway"
 
-
     if exitdown:
         if exitdown_event_var:
-            imagebutton auto "images/exit_down_%s.png" focus_mask True action [SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
-                xalign .5
-                yalign 1.0
-                tooltip exitdown
+            if current_location == 'upper_hallway_bathroom_loc' and (bathroom_panties_added or fpshower):
+                imagebutton auto "images/exit_down_%s.png" focus_mask True action [SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                    xalign .5
+                    yalign 1.0
+                    tooltip exitdown
+            elif current_location == 'fs_bedroom_loc' and (panties_added or pb_added):
+                if panties_added and not pb_added:
+                    imagebutton auto "images/exit_down_%s.png" focus_mask True action [SetVariable('panties_added',False),SetVariable('find_panties',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                        xalign .5
+                        yalign 1.0
+                        tooltip exitdown
+                elif not panties_added and pb_added:
+                    imagebutton auto "images/exit_down_%s.png" focus_mask True action [SetVariable('pb_added',False),SetVariable('find_pb',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                        xalign .5
+                        yalign 1.0
+                        tooltip exitdown
+                else:
+                    imagebutton auto "images/exit_down_%s.png" focus_mask True action [SetVariable('pb_added',False),SetVariable('find_pb',True),SetVariable('panties_added',False),SetVariable('find_panties',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                        xalign .5
+                        yalign 1.0
+                        tooltip exitdown
+            else:
+                imagebutton auto "images/exit_down_%s.png" focus_mask True action [SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                    xalign .5
+                    yalign 1.0
+                    tooltip exitdown
         else:
             imagebutton auto "images/exit_down_%s.png" focus_mask True action Jump(exitdown_event):
                 xalign .5
@@ -1080,68 +1207,118 @@ screen location(room=False):
 screen iphone():
     modal True
     zorder 800
-    # default tt = Tooltip("")
-    # default tooltip = ''    
     default x = 500
     default y = 400
-    # Get mouse coords:
     python:
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
         yval = 1.0 if y > config.screen_height/2 else .0
+
+    if persistent.iphone_info:
+        on 'show' action Show('iphone_info_screen')
 
     fixed:
         fit_first True
         xmaximum 500
         ymaximum 800  
         xalign .5
-        yalign .5      
+        yalign .5   
+        hbox:
+            xalign .5
+            yalign .45
+            if battery_text != 0:
+                if not show_icons and not quit_screen and not pref_screen:
+                    add "images/iphone_background_light.png" at ModZoom(.85)
+                else:
+                    add "images/iphone_background_black.png" at ModZoom(.85)
+            else:
+                add "images/iphone_background_black.png" at ModZoom(.85)                
+        hbox: #notification-bar
+            if battery_text != 0:
+                add "images/iphone_notification_bar.png" at ModZoom(.85)
+                xalign .5
+                yalign 0.0
+        hbox: #battery-indicator
+            if battery_text != 0:
+                if battery_text == 100:
+                    add "images/iphone_battery_100.png"
+                elif battery_text < 100 and battery_text >= 90:
+                    add "images/iphone_battery_90.png"
+                elif battery_text < 90 and battery_text >= 80:
+                    add "images/iphone_battery_80.png"
+                elif battery_text < 80 and battery_text >= 70:
+                    add "images/iphone_battery_70.png"
+                elif battery_text < 70 and battery_text >= 60:
+                    add "images/iphone_battery_60.png"
+                elif battery_text < 60 and battery_text >= 50:
+                    add "images/iphone_battery_50.png"
+                elif battery_text < 50 and battery_text >= 40:
+                    add "images/iphone_battery_40.png"
+                elif battery_text < 40 and battery_text >= 30:
+                    add "images/iphone_battery_30.png"
+                elif battery_text < 30 and battery_text >= 20:
+                    add "images/iphone_battery_20.png"
+                elif battery_text < 20 and battery_text >= 10:
+                    add "images/iphone_battery_10.png"
+                else:
+                    add "images/iphone_battery_0.png"                
+                at ModZoom(.85)
+                xalign .5
+                yalign 0.0
+        hbox: #battery-text
+            if battery_text != 0:
+                xalign .825
+                yalign 0.123
+                text "[battery_text]":
+                    font "gui/fonts/texgyreheroes_regular.otf"
+                    size 13
+        hbox: #clock
+            if battery_text != 0:
+                xalign .5
+                yalign 0.118 
+                text "[current_time]":
+                    font "gui/fonts/texgyreheroes_regular.otf"
+                    size 18
+        hbox:
+            if battery_text != 0:
+                xalign 0.120
+                yalign 0.17 
+                spacing 10          
+                if show_icons:
+                    imagebutton auto "images/iphone_achievement_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.9):
+                        tooltip "Open the achievement-screen"
         hbox:
             add "images/iphone_white.png" at ModZoom(.85)
             xalign .5
             yalign .5
         hbox:
-            xalign .5
-            yalign .45
-            if not show_icons and not quit_screen:
-                add "images/iphone_screen_achievement.png" #at ModZoom(.5)
-            else:
-                add "images/iphone_screen.png" # at ModZoom(0.5)
-        hbox:
-            xalign 0.125
-            yalign 0.14 
-            spacing 10          
-            if show_icons:
-                imagebutton auto "images/iphone_achievement_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.9):
-                    tooltip "Open the achievement-screen"
-
-        hbox:
-            xalign 0.5
-            yalign .83
-            # yalign 0.22
-            spacing 10
-            if show_icons:
-                imagebutton auto "images/iphone_main_menu_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.9):
-                    tooltip "Go to the main menu"
-                imagebutton auto "images/iphone_save_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.9):
-                    tooltip "Save your game"
-                imagebutton auto "images/iphone_load_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.9):
-                    tooltip "Load your game"
-                imagebutton auto "images/iphone_settings_button_%s.png" focus_mask True action ShowMenu('preferences') at ModZoom(.9):
-                    tooltip "Show preferences screen"
-                imagebutton auto "images/iphone_quit_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.9):
-                    tooltip "Quit the game"
-
+            if battery_text != 0:
+                xalign 0.5
+                yalign .83
+                # yalign 0.22
+                spacing 10
+                if show_icons:
+                    imagebutton auto "images/iphone_main_menu_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.9):
+                        tooltip "Go to the main menu"
+                    imagebutton auto "images/iphone_save_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.9):
+                        tooltip "Save your game"
+                    imagebutton auto "images/iphone_load_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.9):
+                        tooltip "Load your game"
+                    imagebutton auto "images/iphone_settings_button_%s.png" focus_mask True action [SetVariable('pref_screen',True),SetVariable('show_icons',False),Show('custom_preferences')] at ModZoom(.9):
+                        tooltip "Show preferences screen"
+                    imagebutton auto "images/iphone_quit_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.9):
+                        tooltip "Quit the game"
         hbox:
             imagebutton auto "images/iphone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('iphone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
             xalign .5
             yalign .5
         hbox:
-            imagebutton auto "images/iphone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
-                tooltip "Go back to the home-screen"
-            xalign .5
-            yalign .5
+            if battery_text != 0:
+                imagebutton auto "images/iphone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
+                    tooltip "Go back to the home-screen"
+                xalign .5
+                yalign .5
 
     # if tooltip: #show tooltips
     if GetTooltip() is not None:
@@ -1149,6 +1326,28 @@ screen iphone():
             pos(x, y)
             anchor (xval, yval)
             text GetTooltip() style "tooltip_hover"        
+
+screen iphone_info_screen():
+    zorder 950
+    hbox:
+        imagebutton:
+            idle "images/iphone_white_power_hover.png"
+            hover "images/iphone_white_power_hover.png"
+            focus_mask True
+            action [SetField(persistent,'iphone_info',False),SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('iphone_info_screen'),Hide('display_achievements'),Hide('iphone')] at ModZoom(.85)
+            tooltip "Shut off the phone"
+        xalign .5
+        yalign .5
+    hbox:
+        if battery_text != 0:
+            imagebutton:
+                idle "images/iphone_white_home_hover.png"
+                hover "images/iphone_white_home_hover.png"
+                focus_mask True
+                action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85)
+                tooltip "Go back to the home-screen"
+            xalign .5
+            yalign .5
 
 screen custom_confirm(cc_chosen=False):
     zorder 900
@@ -1183,11 +1382,8 @@ screen custom_confirm(cc_chosen=False):
 screen display_achievements():
     modal True
     zorder 800
-    # default tt = Tooltip("")
-    # default tooltip = ''    
     default x = 500
     default y = 400
-    # Get mouse coords:
     python:
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
@@ -1359,38 +1555,33 @@ screen display_achievements():
     frame:
         background None
         xalign .5
-        yalign .475
-        maximum 370,686
+        yalign .5
         hbox:
             imagebutton auto "images/iphone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('iphone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
-            xalign .505
-            yalign .465
+            xalign .5
+            yalign .5
         hbox:
             imagebutton auto "images/iphone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
                 tooltip "Go back to the home-screen"
-            xalign .505
-            yalign .465           
+            xalign .5
+            yalign .5           
         hbox:
             xalign .5
             yalign .5
-            add "images/iphone_screen_achievement_top_bottom.png"
+            add "images/iphone_bottom_overlay.png" at ModZoom(.85)
         hbox:
             xalign .5
-            yalign 1.0
-            maximum 370,20
+            yalign .818
             imagebutton idle "phone_unlock.png":
                 action ToggleVariable('hide_unlocked_achievements')
                 xpos -100
-                ypos 10
             imagebutton idle "phone_lock.png":
                 action ToggleVariable('hide_locked_achievements')
                 xalign .5
-                ypos 10
             imagebutton idle "phone_hidden.png":
                 action ToggleVariable('hide_hidden_achievements')        
                 xpos 100
-                ypos 10
 
     if GetTooltip() is not None:
         frame:
@@ -1506,6 +1697,280 @@ screen custom_load():
     zorder 900
     use custom_file_slots(_("Load"))
 
+screen custom_preferences():
+    modal True
+    zorder 800
+    default x = 500
+    default y = 400
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
+
+    frame:
+        background None
+        xpadding 0
+        top_padding 40
+        bottom_padding 10
+        xalign .5
+        yalign .44
+        maximum 370,686
+
+        viewport:
+            mousewheel True
+            vbox:
+                if renpy.variant("pc"):
+                    fixed:
+                        style_prefix "custom_radio"
+                        xsize 370
+                        ysize 150
+                        hbox:
+                            yalign 0.0
+                            xalign .5
+                            label _("Display"):
+                                text_color "#fff"
+                        hbox:
+                            ypos 40
+                            textbutton _("Window") action Preference("display", "window"):
+                                foreground "gui/button/check_[prefix_]foreground_white.png"                            
+                        hbox:
+                            ypos 80
+                            textbutton _("Fullscreen") action Preference("display", "fullscreen"):
+                                foreground "gui/button/check_[prefix_]foreground_white.png"                            
+
+                fixed:
+                    xsize 370
+                    ysize 200
+                    # style_prefix "custom_radio"
+                    style_prefix "custom_radio"
+                    hbox:
+                        yalign 0.0
+                        xalign .5
+                        label _("Rollback Side"):
+                            text_color "#fff"
+                    hbox:
+                        ypos 40
+                        textbutton _("Disable") action Preference("rollback side", "disable"):
+                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                    hbox:
+                        ypos 80
+                        textbutton _("Left") action Preference("rollback side", "left"):
+                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                    hbox:
+                        ypos 120
+                        textbutton _("Right") action Preference("rollback side", "right"):
+                            foreground "gui/button/check_[prefix_]foreground_white.png"
+
+                fixed:
+                    xsize 370
+                    ysize 200
+                    # style_prefix "custom_check"
+                    style_prefix "custom_radio"
+                    hbox:
+                        yalign 0.0
+                        xalign .5
+                        label _("Skip"):
+                            text_color "#fff"
+                    hbox:
+                        ypos 40
+                        textbutton _("Unseen Text") action Preference("skip", "toggle"):
+                            foreground "gui/button/check_[prefix_]foreground_white.png"                        
+                    hbox:
+                        ypos 80
+                        textbutton _("After Choices") action Preference("after choices", "toggle"):
+                            foreground "gui/button/check_[prefix_]foreground_white.png"                        
+                    hbox:
+                        ypos 120
+                        textbutton _("Transitions") action InvertSelected(Preference("transitions", "toggle")):
+                            foreground "gui/button/check_[prefix_]foreground_white.png"                        
+
+                fixed:
+                    xsize 370
+                    ysize 200
+                    # style_prefix "custom_slider"
+                    hbox:
+                        yalign 0.0
+                        xalign .5
+                        label _("Text Speed"):
+                            text_color "#fff"
+                    hbox:
+                        ypos 80
+                        bar value Preference("text speed")
+                fixed:
+                    xsize 370
+                    ysize 200
+                    # style_prefix "custom_slider"                   
+                    hbox:
+                        yalign 0.0
+                        xalign .5
+                        label _("Auto-Forward Time"):
+                            text_color "#fff"
+                    hbox:
+                        ypos 80
+                        bar value Preference("auto-forward time")
+                if config.has_music:
+                    fixed:
+                        xsize 370
+                        ysize 200
+                        # style_prefix "custom_slider"                    
+                        hbox:
+                            yalign 0.0
+                            xalign .5
+                            label _("Music Volume"):
+                                text_color "#fff"
+                        hbox:
+                            ypos 80
+                            bar value Preference("music volume"):
+                                xsize 375
+                if config.has_sound:
+                    fixed:
+                        xsize 370
+                        ysize 200
+                        # style_prefix "custom_slider"                                    
+                        hbox:
+                            yalign 0.0
+                            xalign .5
+                            label _("Sound Volume"):
+                                text_color "#fff"
+                        hbox:
+                            ypos 80
+                            bar value Preference("sound volume"):
+                                xsize 375
+                            if config.sample_sound:
+                                textbutton _("Test") action Play("sound", config.sample_sound)
+                if config.has_voice:
+                    fixed:
+                        xsize 370
+                        ysize 200
+                        # style_prefix "custom_slider"                                    
+                        hbox:
+                            yalign 0.0
+                            xalign .5
+                            label _("Voice Volume"):
+                                text_color "#fff"
+                        hbox:
+                            ypos 80
+                            bar value Preference("voice volume"):
+                                xsize 375
+                            if config.sample_voice:
+                                textbutton _("Test") action Play("voice", config.sample_voice):
+                                    text_color "#fff"
+                if config.has_music or config.has_sound or config.has_voice:
+                    fixed:
+                        xsize 370
+                        ysize 200
+                        # style_prefix "custom_slider"                                 
+                        hbox:
+                            yalign 0.0
+                            xalign .5
+                            textbutton _("Mute All"):
+                                action Preference("all mute", "toggle")
+                                style "mute_all_button"
+                                text_color "#fff"
+                                foreground "gui/button/check_[prefix_]foreground_white.png"
+
+    frame:
+        background None
+        xalign .5
+        yalign .5
+        hbox:
+            imagebutton auto "images/iphone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('custom_preferences'),Hide('iphone')] at ModZoom(.85):
+                tooltip "Shut off the phone"
+            xalign .5
+            yalign .5
+        hbox:
+            imagebutton auto "images/iphone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('custom_preferences')] at ModZoom(.85):
+                tooltip "Go back to the home-screen"
+            xalign .5
+            yalign .5           
+
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover" 
+
+
+# style pref_label is pref_heading
+# style pref_label_text is gui_label_text
+# style pref_vbox is vbox
+
+# style radio_label is custom_pref_label
+# style radio_label_text is custom_pref_label_text
+# style radio_button is gui_button
+# style radio_button_text is gui_button_text
+# style radio_vbox is pref_vbox
+
+# style check_label is custom_pref_label
+# style check_label_text is custom_pref_label_text
+# style check_button is gui_button
+# style check_button_text is gui_button_text
+# style check_vbox is pref_vbox
+
+# style slider_label is pref_label
+# style slider_label_text is pref_label_text
+# style slider_slider is gui_slider
+# style slider_button is gui_button
+# style slider_button_text is gui_button_text
+# style slider_pref_vbox is pref_vbox
+
+# style mute_all_button is check_button
+# style mute_all_button_text is check_button_text
+
+# style pref_heading:
+#     # xalign .5
+#     # xpos 75
+#     xalign .5
+#     color "#fff"
+
+# style custom_pref_label:
+#     top_margin gui.pref_spacing
+#     bottom_margin 3
+#     color "#fff"
+
+# style custom_pref_label_text:
+#     yalign 1.0
+#     color "#fff"
+
+# style pref_vbox:
+#     xsize 338
+
+# style radio_vbox:
+#     spacing gui.pref_button_spacing
+
+# style custom_radio_button:
+    # properties gui.button_properties("radio_button")
+    # foreground "gui/button/check_[prefix_]foreground_white.png"
+
+# style custom_radio:
+#     foreground "gui/button/radio_[prefix_]foreground_white.png"
+
+# style radio_button_text:
+#     properties gui.button_text_properties("radio_button")
+
+# style check_vbox:
+#     spacing gui.pref_button_spacing
+
+# style custom_check_button:
+#     # properties gui.button_properties("check_button")
+#     foreground "gui/button/check_[prefix_]foreground_white.png"
+
+# # style check_button_text:
+# #     properties gui.button_text_properties("check_button")
+
+# style custom_slider_slider:
+#     xsize 375
+
+# # style slider_button:
+# #     properties gui.button_properties("slider_button")
+# #     yalign 0.5
+# #     left_margin 15
+
+# style custom_slider_button_text:
+#     color "#fff"
+
+# style slider_vbox:
+#     xsize 675
 
 screen custom_file_slots(title):
     default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
@@ -1661,7 +2126,7 @@ style custom_slot_button_text:
 #                 imagebutton auto "images/iphone_achievement_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.45)
 
 
-screen fs_ipad():
+screen fs_tablet():
     default ic_num_str = 0
     modal True
     zorder 800
@@ -1676,44 +2141,45 @@ screen fs_ipad():
         hbox:
             yalign .5
             xalign .5
-            add "images/ipad.png" at ModZoom(.85)
+            add "images/tablet.png" at ModZoom(.85)
         hbox: #backgrounds
             yalign .5
             xalign .5
             if len(ic_num) == 4:
                 $ ic_num_str = ''.join(map(str, ic_num))
-                if int(ic_num_str) == ipad_stored_code:
-                    $ ipad_code = True
+                if int(ic_num_str) == tablet_stored_code:
+                    $ tablet_code = True
                     $ ic_num = []
-                    add "ipad_background.png" at ModZoom(.85)
+                    # add "tablet_background.png" at ModZoom(.85)
+                    add "tablet_no_content_warning.png" at ModZoom(.85)
                 else:
                     $ ic_num = []
-            elif ipad_code:
-                add "images/ipad_background.png" at ModZoom(.85)                
+            elif tablet_code:
+                add "images/tablet_background.png" at ModZoom(.85)                
         hbox:
             xalign .5
             yalign .5
-            imagebutton auto "images/ipad_power_%s.png" focus_mask True action [SetVariable('ipad_added',False),SetVariable('find_ipad',True),Return()] at ModZoom(.85)
+            imagebutton auto "images/tablet_power_%s.png" focus_mask True action [SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()] at ModZoom(.85)
                 # xpos -620
 
-        if not ipad_code:
+        if not tablet_code:
             hbox:
                 imagemap:
                     alpha False
                     if len(ic_num) == 1:
-                        add "images/ipad_unlock_1.png"
+                        add "images/tablet_unlock_1.png"
                     elif len(ic_num) == 2:
-                        add "images/ipad_unlock_2.png"
+                        add "images/tablet_unlock_2.png"
                     elif len(ic_num) == 3:
-                        add "images/ipad_unlock_3.png"
+                        add "images/tablet_unlock_3.png"
                     elif len(ic_num) == 4:
-                        add "images/ipad_unlock_4.png"
-                    ground "images/ipad_unlock.png"
-                    hover "images/ipad_unlock_hover.png"
+                        add "images/tablet_unlock_4.png"
+                    ground "images/tablet_unlock.png"
+                    hover "images/tablet_unlock_hover.png"
                     at ModZoom(.85)
                     yalign .5
                     xalign .5
-                    if int(ic_num_str) != ipad_stored_code:
+                    if int(ic_num_str) != tablet_stored_code:
                         hotspot (204, 392, 94, 96) action [AddToSet(ic_num,1)]:
                             sensitive True
                         hotspot (318, 392, 94, 96) action [AddToSet(ic_num,2)]:
@@ -1734,16 +2200,16 @@ screen fs_ipad():
                             sensitive True
                         hotspot (318, 718, 94, 96) action [AddToSet(ic_num,0)]:
                             sensitive True
-                        hotspot (464, 839, 71, 33) action [SetVariable('ipad_added',False),SetVariable('find_ipad',True),Return()]:
+                        hotspot (464, 839, 71, 33) action [SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()]:
                             sensitive True
         # hbox:
         #     if len(ic_num) == 4:
         #         $ ic_num_str = ''.join(map(str, ic_num))
-        #         if int(ic_num_str) == ipad_stored_code:
-        #             $ ipad_code = True
+        #         if int(ic_num_str) == tablet_stored_code:
+        #             $ tablet_code = True
         #             $ ic_num = []
         #             frame:
-        #                 background "ipad_white_background.png" at ModZoom(.85)
+        #                 background "tablet_white_background.png" at ModZoom(.85)
         #                 yalign .5
         #                 xalign .5
         #         else:

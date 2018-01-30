@@ -33,6 +33,7 @@ define sp = Character("Principal Hudson")
 define sj = Character("Jack")
 define scn = Character("Natalie")
 define scm = Character("Mattie")
+# define menu = Character("menu")
 #remember to add default color="#000000" if the character do not have a namebox_charname.png in the gui/-directory
 
 default chars = [[fp,"fp"],[fm,"fm"],[fs,"fs"],[nb,"nb"],[nr,"nr"],[nk,"nk"],[sn,"sn"],[sp,"sp"],[sj,"sj"]]
@@ -150,7 +151,7 @@ default breakfast_jump = False
 default schoolbooks_added = False
 default panties_added = False
 default bathroom_panties_added = False
-default ipad_added = False
+default tablet_added = False
 default smallkeys_added = False
 default toolbox_added = False
 default cheat = False
@@ -197,9 +198,9 @@ default setstate = False
 default had_breakfast = False
 default call_nr = False
 default nr_involved = False
-default fs_ipad_bedroom = False
-default find_ipad = False
-default ipad_always_look = False
+default fs_tablet_bedroom = False
+default find_tablet = False
+default tablet_always_look = False
 default carry_phone = False
 default showclosebutton_iphone = True
 # default current_achievement = False
@@ -211,14 +212,42 @@ default dinner_event = True
 default current_location = 'fp_bedroom_loc'
 default panties_sniffer = False
 default pb_return = False
+default end_game = False
+default filth_val = 0
+default after_principal_talk = False
 
-# fs_ipad screen variables
-default ipad_code = False
-default ipad_home = True
+# all_the_stuff-achievement variables
+default beer_pickup = False
+default carkeys_pickup = False
+default bright_pink_panties_pickup = False
+default light_blue_panties_pickup = False
+default pale_pink_panties_pickup = False
+default yellow_panties_pickup = False
+default gin_pickup = False            
+default phone_pickup = False
+default princessplug_pickup = False
+default roses_pickup = False
+default schoolbooks_pickup = False
+default smallkeys_pickup = False
+default toolbox_pickup = False
+default vodka_pickup = False
+default whiskey_pickup = False
+default wine_pickup = False
+default pref_screen = False 
+default trans = False
+
+# fp_phone variables
+default battery_text = 100
+default charge_phone = False
+
+# fs_tablet screen variables
+default tablet_code = False
+default tablet_home = True
 default ic_num = []
-default ipad_stored_code = 2625
+default tablet_stored_code = 2625
 default fsi_cfs = False
 
+default firstday_talk_list = ['livingroom','fp bedroom','fs bedroom','kitchen','entrance','outside']
 default fs_p = ['fs_yellow','fs_light_blue','fs_pale_pink','fs_bright_pink']
 default p_response = ["Hm... "+fsName.formal+"s panties...\n{b}sniffs them{/b}\nShould I take them with me?",
                         "Oh, "+fsName.myinformal+" left her panties...",
@@ -240,7 +269,6 @@ default uhl_bl_cfs = False
 default out_cfs = False
 default lvr_cfs = False
 default tfs_cfs = False
-
 
 default end_cfs = False
 default stn_cfs = False
@@ -274,7 +302,6 @@ default garage_ach = False
 default school_ach = False
 default beach_ach = False
 
-
 #date and time stats
 default first_day = True
 default day_week = 5
@@ -292,7 +319,7 @@ define morning = [6,7,8,9,10,11]
 define day = [11,12,13,14,15,16,17,18,19,20,21,22]
 define night = [22,23,0,1,2,3,4,5]
 
-default current_hour = "06:00"
+default current_time = "06:00"
 default addhour = False
 default addminute = False
 
@@ -310,6 +337,7 @@ default sun_event = False
 #UI / game
 default showStats = False
 default persistent.skipintro = False
+default persistent.iphone_info = True
 
 # define patchload = False
 

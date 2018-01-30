@@ -18,6 +18,7 @@ init 10:
 
     # Other Achievements
     default achievement_trophy_case = NewAchievement("Trophy Case", "Open the achievement screen", 1, 'star.png')
+    default achievement_all_the_stuff = NewAchievement("All the stuff","Find, and pick up, all the stuff in game",16,'star.png')
     default achievement_mc_finished = NewAchievement("Ace Mechanic","Finish rebuilding the bike",1,'star.png')
     default achievement_even_more_wine = NewAchievement("Even more wine!","That's 10 bottles. Please tell me you're not gonna drink them alone?",10,'inventory/wine_idle.png',hidden=True)
     default achievement_all_the_wine = NewAchievement("All the wine!","That's 5 bottles. Please tell me you're not gonna drink them alone?",5,'inventory/wine_idle.png',hidden=True,next_tier=[achievement_even_more_wine])
@@ -92,3 +93,54 @@ init python:
     def update_been_everywhere_achievement():
         if fp_bedroom_ach and fs_bedroom_ach and uhl_bathroom_ach and uhl_ach and entrance_ach and livingroom_ach and kitchen_ach and outside_ach and garage_ach and school_ach and beach_ach:
             achievement_been_everywhere.update()
+
+    def update_all_the_stuff():
+        global beer_pickup, carkeys_pickup, bright_pink_panties_pickup, light_blue_panties_pickup, pale_pink_panties_pickup, yellow_panties_pickup, gin_pickup, phone_pickup, princessplug_pickup, roses_pickup, schoolbooks_pickup, smallkeys_pickup, toolbox_pickup, vodka_pickup, whiskey_pickup, wine_pickup
+        if beer_pickup:
+            achievement_all_the_stuff.update()
+            beer_pickup = False
+        if carkeys_pickup:
+            achievement_all_the_stuff.update()
+            carkeys_pickup = False
+        if bright_pink_panties_pickup:
+            achievement_all_the_stuff.update()
+            bright_pink_panties_pickup = False
+        if light_blue_panties_pickup:
+            achievement_all_the_stuff.update()
+            light_blue_panties_pickup = False
+        if pale_pink_panties_pickup:
+            achievement_all_the_stuff.update()
+            pale_pink_panties_pickup = False
+        if yellow_panties_pickup:
+            achievement_all_the_stuff.update()
+            yellow_panties_pickup = False
+        if gin_pickup:
+            achievement_all_the_stuff.update()
+            gin_pickup = False            
+        if phone_pickup:
+            achievement_all_the_stuff.update()
+            phone_pickup = False
+        if princessplug_pickup:
+            achievement_all_the_stuff.update()
+            princessplug_pickup = False
+        if roses_pickup:
+            achievement_all_the_stuff.update()
+            roses_pickup = False
+        if schoolbooks_pickup:
+            achievement_all_the_stuff.update()
+            schoolbooks_pickup = False
+        if smallkeys_pickup:
+            achievement_all_the_stuff.update()
+            smallkeys_pickup = False
+        if toolbox_pickup:
+            achievement_all_the_stuff.update()
+            toolbox_pickup = False
+        if vodka_pickup:
+            achievement_all_the_stuff.update()
+            absolut_pickup = False
+        if whiskey_pickup:
+            achievement_all_the_stuff.update()
+            whiskey_pickup = False
+        if wine_pickup:
+            achievement_all_the_stuff.update()
+            wine_pickup = False

@@ -1,0 +1,19 @@
+TODO for HSS
+
+* After driving with Karen to school, you have "plenty of time to spare", but there is no interaction between them - this needs to be rectified (even maybe adding a potential "still arriving late due to... hanky panky")
+* Working on the bike during week-days should potentially add points to the bike-stat, and should have a little bit more content (1 hour work, approx)
+* Expand on sisters problem with the school (make sure the event doesn't repeat, for once)
+
+* Set up a menu for settings (for settings, make it possible to set persistent back to false)
+* Set up a weather-system (random, based on previous days, with sudden rainstorms etc) Needs a temperature gauge as well, based on time of year, general weather and so on
+* Add a character level system, and a character-class which can control all the different stats and modifiers (algorithms and such can be found on the stories pae)
+
+* Make it so hovering over the name of a character opens up the stats for that character?
+
+* Fix the "overslept" thing - create reasons that makes it understandable that you overslept (maybe also have an exhaustion stat, that builds up over time if there is a lot of crap happening)
+* Fix the garage / bike rebuild - currently it jumps back and forth based on location, and the counter doesn't work properly - also, the loop isn't working quite right (due to the exit-button on the in-garage screen - move the entire loop to the screen)
+
+* BUG: after talking to Karen about studying, sometimes you don't actually get to the part where she arrives (the time stops at around 18.30, instead of going to 19.00 when she shows up)
+* BUG: if entering the kitchen mid-day, the day will start over
+* BUG: Going to the beach Sunday just jumps to the beach... and doesn't allow you to skip / get past it, it seems (this has been "fixed" - in that it now just skips past the going to the beach-bit, since the variable isn't set)
+* the automatic beach-thing doesn't happen any more, but there isn't a lot to do some days either - should update time, maybe give some hints, and of course add more content

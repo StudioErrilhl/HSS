@@ -1,0 +1,1 @@
+{"layout": null, "package": "com.studioerrilhl.hss", "include_pil": false, "numeric_version": "21", "expansion": false, "name": "HSS - High School Shenaningans", "source": false, "icon_name": "HSS", "version": "0.021", "target_version": 14, "permissions": ["VIBRATE"], "include_sqlite": false, "store": "none", "orientation": "sensorLandscape"}

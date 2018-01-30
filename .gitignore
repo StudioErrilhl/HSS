@@ -54,6 +54,7 @@ Temporary Items
 log.txt
 backtrace.txt
 errors.txt
+patch.rpy
 tmp/**
 traceback.txt
 game/saves/**

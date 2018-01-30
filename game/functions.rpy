@@ -93,51 +93,20 @@ init python:
 
 init 10 python:
     def addtime(hours=False,minutes=False):
-        global current_hour,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning
+        global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text
         local_dw = day_week
         addhour = False
-        if minutes:
-            hour = current_hour
-            if int(hour[3:])+int(minutes) >= int('60'):
-                if debug:
-                    "minutes happened"
-                update_minutes = str((int(hour[3:])+int(minutes))-60)
-                if len(update_minutes) == 1:
-                    update_minutes = '0'+update_minutes
-                addhour = True
-                current_hour = current_hour[:3]+str(update_minutes)
-                setattr(store, 'current_hour', current_hour)                
-            else:
-                update_minutes = str(int(hour[3:])+minutes)
-                hour = hour[:3]
-                if len(hour) == 2:
-                    hour = '0'+str(hour)
-                current_hour = str(hour)+str(update_minutes)
-                setattr(store, 'current_hour', current_hour)
-        if hours:
-            if debug:
-                "hours happened"
-            hour = current_hour
-            if addhour:
-                if debug:
-                    "addhour - hours happened first"
-                if int(hour[:2])+hours+1 <= '23':
-                    if debug:
-                        "addhour - hours happened second"
-                    current_hour = str(int(hours)+1)+hour[2:]
-                    setattr(store, 'current_hour', current_hour)                    
-                else:
-                    if debug:
-                        "addhour - hours happened third"
-                    current_hour = str(int(hour[:2])+int(hours)+1)+hour[2:]
-                    setattr(store, 'current_hour', current_hour)                    
-            else:
-                if int(hour[:2])+hours <= '23':
-                    if debug:
-                        "addhour - hours happened fourth"
-                    if int(hour[:2])+int(hours) == 24:
-                        current_hour = str(int(0))+hour[2:]
-                        setattr(store, 'current_hour', current_hour)                        
+        sethour = hours
+        starthour = current_time[:2]
+        if hours or minutes:
+            local_time = current_time
+            if hours:
+                if int(local_time[:2])+int(hours) <= 23:
+                    if int(local_time[:2])+int(hours) == 24:
+                        current_time = str(int(0))+local_time[2:]
+                        if len(current_time) == 4:
+                            current_time = '0'+current_time
+                        setattr(store, 'current_time', current_time)                        
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:
                             if current_month_day == months_days[current_month][1]:
@@ -147,9 +116,11 @@ init 10 python:
                             else:
                                 current_month_day += 1
                                 day_ahead = True
-                    elif int(hour[:2])+int(hours) > 24:
-                        current_hour = str(int(0))+(int(hour[:2])+int(hours)-24)+hour[2:]
-                        setattr(store, 'current_hour', current_hour)                        
+                    elif int(local_time[:2])+int(hours) > 24:
+                        current_time = str(int(0))+(int(local_time[:2])+int(hours)-24)+local_time[2:]
+                        if len(current_time) == 4:
+                            current_time = '0'+current_time
+                        setattr(store, 'current_time', current_time)                        
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:
                             if current_month_day == months_days[current_month][1]:
@@ -160,14 +131,16 @@ init 10 python:
                                 current_month_day += 1
                                 day_ahead = True
                     else:
-                        current_hour = str(int(hour[:2])+int(hours))+hour[2:]
-                        setattr(store, 'current_hour', current_hour)                        
+                        current_time = str(int(local_time[:2])+int(hours))+local_time[2:]
+                        if len(current_time) == 4:
+                            current_time = '0'+current_time
+                        setattr(store, 'current_time', current_time)                        
                 else:
-                    if debug:
-                        "addhour - hours happened fifth" 
-                    if int(hour[:2])+int(hours) == 24:
-                        current_hour = str(int(0))+hour[2:]
-                        setattr(store, 'current_hour', current_hour)                        
+                    if int(local_time[:2])+int(hours) == 24:
+                        current_time = str(int(0))+local_time[2:]
+                        if len(current_time) == 4:
+                            current_time = '0'+current_time
+                        setattr(store, 'current_time', current_time)                        
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:
                             if current_month_day == months_days[current_month][1]:
@@ -177,9 +150,11 @@ init 10 python:
                             else:
                                 current_month_day += 1
                                 day_ahead = True
-                    elif int(hour[:2])+int(hours) > 24:
-                        current_hour = str(int(0))+(int(hour[:2])+int(hours)-24)+hour[2:]
-                        setattr(store, 'current_hour', current_hour)                        
+                    elif int(local_time[:2])+int(hours) > 24:
+                        current_time = str(int(0))+(int(local_time[:2])+int(hours)-24)+local_time[2:]
+                        if len(current_time) == 4:
+                            current_time = '0'+current_time
+                        setattr(store, 'current_time', current_time)                        
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:
                             if current_month_day == months_days[current_month][1]:
@@ -190,72 +165,132 @@ init 10 python:
                                 current_month_day += 1
                                 day_ahead = True
                     else:
-                        current_hour = str(int(hour[:2])+int(hours))+hour[2:]
-                        setattr(store, 'current_hour', current_hour)                        
-            if len(current_hour) < 5:
-                if debug:
-                    "addhour - hours happened sixth"
-                current_hour = '0'+current_hour
-                setattr(store, 'current_hour', current_hour)                
-
-        if addhour:
-            if debug:
-                "addhour happened"
-            hour = current_hour
-            if int(hour[:2])+int(hours)+1 <= '23':
-                if debug:
-                    "first addhour clause"
-                if hours:
-                    current_hour = str(int(hours)+1)+hour[2:]
-                    setattr(store, 'current_hour', current_hour)                    
+                        current_time = str(int(local_time[:2])+int(hours))+local_time[2:]
+                        if len(current_time) == 4:
+                            current_time = '0'+current_time
+                        setattr(store, 'current_time', current_time)
+            if minutes:
+                if int(local_time[-2:])+int(minutes) >= 60:
+                    update_minutes = (int(local_time[-2:])+int(minutes))-60
+                    if len(str(update_minutes)) == 1:
+                        update_minutes = '0'+str(update_minutes)
+                    if local_time == '23:30':
+                        setattr(store,'current_time','00:00')
+                        day_week = 0 if day_week == 6 else day_week+1
+                        if local_dw != day_week:
+                            if current_month_day == months_days[current_month][1]:
+                                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
+                                current_month_text = months_days[current_month][0]
+                                current_month_day = 1
+                            else:
+                        
+                                current_month_day += 1
+                                day_ahead = True                        
+                    else:
+                        current_time = str(int(local_time[:2])+1)+':'+str(update_minutes)
+                    if len(current_time) == 4:
+                        current_time = '0'+current_time
+                    setattr(store,'current_time',current_time)
                 else:
-                    current_hour = str(int(hour[:2])+1)+str(hour[2:])
-                    setattr(store, 'current_hour', current_hour)                    
-            elif int(hour[:2])+hours+1 == '24':
-                if debug:
-                    "second addhour clause"
-                current_hour = str(00)+hour[2:]
-                setattr(store, 'current_hour', current_hour)                
-            else:
-                if debug:
-                    "third addhour clause"
-                current_hour = str(int(hour[:2])+hours+1)+hour[2:]
-                setattr(store, 'current_hour', current_hour)                
-            if len(current_hour) < 5:
-                if debug:
-                    "fourth addhour clause"
-                current_hour = '0'+current_hour
-                setattr(store, 'current_hour', current_hour)                
+                    if local_time == '23:30':
+                        setattr(store,'current_time','00:00')
+                        day_week = 0 if day_week == 6 else day_week+1
+                        if local_dw != day_week:
+                            if current_month_day == months_days[current_month][1]:
+                                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
+                                current_month_text = months_days[current_month][0]
+                                current_month_day = 1
+                            else:
+                        
+                                current_month_day += 1
+                                day_ahead = True                        
+                    else:
+                        current_time = str(local_time[:2])+':'+str(minutes)
+                    if len(current_time) == 4:
+                        current_time = '0'+current_time
+                    setattr(store, 'current_time', current_time)                
 
-    # if day_week <= 4:
-    #     $ morning = True if int(current_hour[:2]) >= 6 and int(current_hour[:2]) < 9 else False
-    #     $ day = True if int(current_hour[:2]) >= 9 and int(current_hour[:2]) <= 17 else False
-    #     $ evening = True if int(current_hour[:2]) > 17 and int(current_hour[:2]) < 22 else False
-    #     $ night = True if int(current_hour[:2]) >= 22 or int(current_hour[:2]) >= 0 and int(current_hour[:2]) < 6 else False
-    # elif day_week >= 5:
-    #     $ morning = True if int(current_hour[:2]) >= 7 and int(current_hour[:2]) < 12 else False
-    #     $ day = True if int(current_hour[:2]) >= 12 and int(current_hour[:2]) <= 19 else False
-    #     $ evening = True if int(current_hour[:2]) > 19 and int(current_hour[:2]) <= 23 else False
-    #     $ night = True if int(current_hour[:2]) >= 0 and int(current_hour[:2]) < 7 else False
-    # return
+            if charge_phone:
+                total = (int(sethour)+int(starthour))-int(starthour)
+                if total >= 1:# and battery_text <= 100:
+                    while (total):
+                        if battery_text <= 100:
+                            battery_text += 25
+                            total -= 1
+                    if battery_text > 100:
+                        battery_text = 100
+
+            if int(current_time[:2]) >= 22 or int(current_time[:2]) < 6:
+                current_imgs = list(renpy.get_showing_tags())
+                indices = [i for i, elem in enumerate(current_imgs) if '_morning' in elem]
+                if indices:
+                    current_bg = current_imgs[indices[0]].replace('_morning','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
+                    if current_bg == 'upper_hallway_bathroom_night':
+                        setattr(store,"bathroom_light",True)
+                    else:
+                        renpy.call("change_loc",current_bg)
+                    #the following function reloads any other images in the scene as well
+                    indices = [i for i, elem in enumerate(current_imgs) if not '_morning' in elem]
+                    for x in range(0,len(indices)):
+                        current_img = current_imgs[x]
+                        if current_img[:2] in ['fm','fs']:
+                            testimg = str(current_img+" ahead")
+                            renpy.hide(current_img)
+                            renpy.show(testimg,at_list=[center_transform])
+            elif int(current_time[:2]) >= 6 or int(current_time[:2]) < 22:
+                current_imgs = list(renpy.get_showing_tags())
+                indices = [i for i, elem in enumerate(current_imgs) if '_night' in elem]
+                mn_check = False
+                # if not indices:
+                #     indices = [i for i, elem in enumerate(current_imgs) if '_morning' in elem]
+                #     mn_check = True
+                if indices:
+                    if mn_check:
+                        current_bg = current_imgs[indices[0]]
+                    else:
+                        current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
+                    renpy.call("change_loc",current_bg)
+                    #the following function reloads any other images in the scene as well
+                    indices = [i for i, elem in enumerate(current_imgs) if not '_night' in elem]
+                    for x in range(0,len(indices)):
+                        current_img = current_imgs[x]
+                        if current_img[:2] in ['fm','fs']:
+                            testimg = str(current_img+" ahead")
+                            renpy.hide(current_img)
+                            renpy.show(testimg,at_list=[center_transform])
+
 
 label settime(hours=False,minutes=False):
-    if hours:
-        if len(str(hours)) == 1:
-            $ hours = '0'+str(hours)
-        $ current_hour = str(hours)+current_hour[2:]
-    if minutes:
-        $ current_hour = str(current_hour[:3])+str(minutes)
+    if debug:
+        "settime called"
+    if int(current_time[:2]) <= hours:
+        if debug:
+            "current local_time less than hours"
+        if hours:
+            if debug:
+                "hours set"
+            if len(str(hours)) == 1:
+                $ hours = '0'+str(hours)
+            $ current_time = str(hours)+str(current_time[2:])
+    if int(current_time[3:]) < minutes:
+        if debug:
+            "current minutes less than minutes"
+        if minutes:
+            if debug:
+                "minutes set"
+            if len(str(minutes)) == 1:
+                $ minutes = '0'+str(minutes)
+            $ current_time = str(current_time[:3])+str(minutes)
     # if day_week <= 4:
-    #     $ morning = True if int(current_hour[:2]) >= 6 and int(current_hour[:2]) < 9 else False
-    #     $ day = True if int(current_hour[:2]) >= 9 and int(current_hour[:2]) <= 17 else False
-    #     $ evening = True if int(current_hour[:2]) > 17 and int(current_hour[:2]) < 22 else False
-    #     $ night = True if int(current_hour[:2]) >= 22 or int(current_hour[:2]) >= 0 and int(current_hour[:2]) < 6 else False
+    #     $ morning = True if int(current_time[:2]) >= 6 and int(current_time[:2]) < 9 else False
+    #     $ day = True if int(current_time[:2]) >= 9 and int(current_time[:2]) <= 17 else False
+    #     $ evening = True if int(current_time[:2]) > 17 and int(current_time[:2]) < 22 else False
+    #     $ night = True if int(current_time[:2]) >= 22 or int(current_time[:2]) >= 0 and int(current_time[:2]) < 6 else False
     # elif day_week >= 5:
-    #     $ morning = True if int(current_hour[:2]) >= 7 and int(current_hour[:2]) <= 12 else False
-    #     $ day = True if int(current_hour[:2]) > 12 and int(current_hour[:2]) <= 19 else False
-    #     $ evening = True if int(current_hour[:2]) > 19 and int(current_hour[:2]) <= 23 else False
-    #     $ night = True if int(current_hour[:2]) >= 0 and int(current_hour[:2]) < 7 else False
+    #     $ morning = True if int(current_time[:2]) >= 7 and int(current_time[:2]) <= 12 else False
+    #     $ day = True if int(current_time[:2]) > 12 and int(current_time[:2]) <= 19 else False
+    #     $ evening = True if int(current_time[:2]) > 19 and int(current_time[:2]) <= 23 else False
+    #     $ night = True if int(current_time[:2]) >= 0 and int(current_time[:2]) < 7 else False
     # return
 
 # Copyright 2017  Anne O'Nymous - AON/SC4X

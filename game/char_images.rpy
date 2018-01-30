@@ -3,33 +3,42 @@
 #                                 True, im.Flip("images/characters/anne/expressions/buttoned_straight_ahead.png",horizontal=True)
 #                                 )
 
-image fm_standing ahead:
-    ConditionSwitch(
-        "fm_aro >= 30", "images/characters/anne/body/standing/unbuttoned_straight_ahead.png",
-        True, "images/characters/anne/body/standing/buttoned_straight_ahead.png",
-        )
-    zoom .7
-    yalign 1.0
-    xpos .6
-    ypos .70
-    xanchor .5
-    yanchor .5
+# image fm_standing ahead:
+#     ConditionSwitch(
+#         "fm_aro >= 30", "images/characters/anne/body/standing/unbuttoned_straight_ahead.png",
+#         True, "images/characters/anne/body/standing/buttoned_straight_ahead.png",
+#         )
+#     zoom .7
+#     yalign 1.0
+#     xpos .6
+#     ypos .55
+#     xanchor .5
+#     yanchor .5
 
-image fm_standing ahead flip:
-    ConditionSwitch(
-        "fm_aro >= 30", im.Flip("images/characters/anne/body/standing/unbuttoned_straight_ahead.png",horizontal=True),
-        True, im.Flip("images/characters/anne/body/standing/buttoned_straight_ahead.png",horizontal=True)
-        )
+# image fm_standing ahead flip:
+#     ConditionSwitch(
+#         "fm_aro >= 30", im.Flip("images/characters/anne/body/standing/unbuttoned_straight_ahead.png",horizontal=True),
+#         True, im.Flip("images/characters/anne/body/standing/buttoned_straight_ahead.png",horizontal=True)
+#         )
+#     zoom .7
+#     yalign 1.0
+#     xpos .6
+#     ypos .70
+#     xanchor .5
+#     yanchor .5
+
+image fm_standing ahead:
+    "images/characters/anne/body/standing/sweather_straight_ahead.png"
     zoom .7
     yalign 1.0
     xpos .6
-    ypos .70
+    ypos .55
     xanchor .5
     yanchor .5
 
 transform fs_standing_ahead_ani:
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/ahead_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/ahead_night.png",
         True, "images/characters/juliette/body/standing/ahead.png"
         )
     choice:
@@ -39,7 +48,7 @@ transform fs_standing_ahead_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/ahead_eyes_closed_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/ahead_eyes_closed_night.png",
         True, "images/characters/juliette/body/standing/ahead_eyes_closed.png"
         )
     pause .25
@@ -62,7 +71,7 @@ transform fs_standing_ahead_ani:
 
 transform fs_standing_blushing_ani:
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/blushing_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/blushing_night.png",
         True, "images/characters/juliette/body/standing/blushing.png"
         )
     choice:
@@ -72,7 +81,7 @@ transform fs_standing_blushing_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/blushing_eyes_closed_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/blushing_eyes_closed_night.png",
         True, "images/characters/juliette/body/standing/blushing_eyes_closed.png"
         )
     pause .25
@@ -80,7 +89,7 @@ transform fs_standing_blushing_ani:
 
 transform fs_standing_blushing_sad_ani:
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/blushing_sad_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/blushing_sad_night.png",
         True, "images/characters/juliette/body/standing/blushing_sad.png"
         )
     choice:
@@ -90,7 +99,7 @@ transform fs_standing_blushing_sad_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/blushing_sad_eyes_closed_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/blushing_sad_eyes_closed_night.png",
         True, "images/characters/juliette/body/standing/blushing_sad_eyes_closed.png"
         )
     pause .25
@@ -98,7 +107,7 @@ transform fs_standing_blushing_sad_ani:
 
 transform fs_standing_crying_ani:
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/crying_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/crying_night.png",
         True, "images/characters/juliette/body/standing/crying.png"
         )
     choice:
@@ -108,7 +117,7 @@ transform fs_standing_crying_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/crying_eyes_closed_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/crying_eyes_closed_night.png",
         True, "images/characters/juliette/body/standing/crying_eyes_closed.png"
         )
     pause .25
@@ -116,7 +125,7 @@ transform fs_standing_crying_ani:
 
 transform fs_standing_devious_ani:
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/devious_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/devious_night.png",
         True, "images/characters/juliette/body/standing/devious.png"
         )
     choice:
@@ -126,7 +135,7 @@ transform fs_standing_devious_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/devious_eyes_closed_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/devious_eyes_closed_night.png",
         True, "images/characters/juliette/body/standing/devious_eyes_closed.png"
         )
     pause .25
@@ -135,7 +144,7 @@ transform fs_standing_devious_ani:
 
 transform fs_standing_flustered_ani:
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/flustered_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/flustered_night.png",
         True, "images/characters/juliette/body/standing/flustered.png"
         )
     choice:
@@ -145,7 +154,7 @@ transform fs_standing_flustered_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/flustered_eyes_closed_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/flustered_eyes_closed_night.png",
         True, "images/characters/juliette/body/standing/flustered_eyes_closed.png"
         )
     pause .25
@@ -153,7 +162,7 @@ transform fs_standing_flustered_ani:
 
 transform fs_standing_mad_ani:
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/mad_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/mad_night.png",
         True, "images/characters/juliette/body/standing/mad.png"
         )
     choice:
@@ -163,7 +172,7 @@ transform fs_standing_mad_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/mad_eyes_closed_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/mad_eyes_closed_night.png",
         True, "images/characters/juliette/body/standing/mad_eyes_closed.png"
         )
     pause .25
@@ -171,7 +180,7 @@ transform fs_standing_mad_ani:
 
 transform fs_standing_sad_ani:
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/sad_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/sad_night.png",
         True, "images/characters/juliette/body/standing/sad.png"
         )
     choice:
@@ -181,7 +190,7 @@ transform fs_standing_sad_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/sad_eyes_closed_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/sad_eyes_closed_night.png",
         True, "images/characters/juliette/body/standing/sad_eyes_closed.png"
         )
     pause .25
@@ -189,7 +198,7 @@ transform fs_standing_sad_ani:
 
 transform fs_standing_smile_ani:
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/smile_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/smile_night.png",
         True, "images/characters/juliette/body/standing/smile.png"
         )
     choice:
@@ -199,7 +208,7 @@ transform fs_standing_smile_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/smile_eyes_closed_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/smile_eyes_closed_night.png",
         True, "images/characters/juliette/body/standing/smile_eyes_closed.png"
         )
     pause .25
@@ -207,7 +216,7 @@ transform fs_standing_smile_ani:
 
 transform fs_standing_smile_open_ani:
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/smile_open_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/smile_open_night.png",
         True, "images/characters/juliette/body/standing/smile_open.png"
         )
     choice:
@@ -217,7 +226,7 @@ transform fs_standing_smile_open_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/smile_open_eyes_closed_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/smile_open_eyes_closed_night.png",
         True, "images/characters/juliette/body/standing/smile_open_eyes_closed.png"
         )
     pause .25
@@ -233,7 +242,7 @@ image fs_standing ahead:
 
 image fs_standing annoyed:
     ConditionSwitch(
-        "int(current_hour[:2]) in night","images/characters/juliette/body/standing/annoyed_night.png",
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/annoyed_night.png",
         True, "images/characters/juliette/body/standing/annoyed.png"
         )
     zoom .65
@@ -621,8 +630,18 @@ image rain:
     0.2
     repeat
 
+transform alpha_transform(a):
+    alpha a
+
 transform ModZoom(z):
     zoom z    
+
+transform center_transform:
+    yalign 1.0
+    xpos .6
+    ypos .55
+    xanchor .5
+    yanchor .5
 
 transform achievement_transform:
     on show:

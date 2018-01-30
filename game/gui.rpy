@@ -312,7 +312,7 @@ define gui.skip_frame_borders = Borders(20, 20, 20, 20)
 define gui.notify_frame_borders = Borders(20, 20, 20, 20)
 
 ## Should frame backgrounds be tiled?
-define gui.frame_tile = True
+define gui.frame_tile = False
 
 
 ## Bars, Scrollbars, and Sliders ###############################################

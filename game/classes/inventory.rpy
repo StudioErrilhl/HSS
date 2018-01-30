@@ -16,7 +16,7 @@ init -1 python:
             self.amount = amount
 
     class Container(store.object):
-        def __init__(self, weight_max=100):
+        def __init__(self, weight_max=1000):
             self.inventory = []
             self.weight_max = weight_max
 
@@ -28,14 +28,15 @@ init -1 python:
             
         def add_item(self, item, amount=1): #remember to use the item-assignment, not anything else, to add to inventory
             if item.weight * amount > self.weight_max - sum(i.item.weight * i.amount for i in self.inventory):
-                renpy.notify(item.name.capitalize+' exceeds max weight you can carry')
+                name = item.name.lower().replace('fs','').replace('fm','').replace('_',' ').title()
+                renpy.notify(name.capitalize()+' exceeds max weight you can carry')
             else:
                 if self.has_item(item):
                     self.finditem(item).amount += amount
                 else:
                     self.inventory.append(InvItem(item, amount))
                 name = item.name.lower().replace('fs','').replace('fm','').replace('_',' ').title()
-                renpy.notify(name+' added successfully')
+                renpy.notify(name.capitalize()+' added successfully')
 
         def has_item(self, item, a=1): #remember to use the Item-assignment, not a string to check for items
             if item in [i.item for i in self.inventory]:
@@ -50,7 +51,7 @@ init -1 python:
             if self.has_item(item):
                 self.finditem(item).amount -= amount
                 if self.finditem(item).amount <= 0:
-                    inventory.pop(inventory.index(self.finditem(item)))
+                    self.inventory.pop(self.inventory.index(self.finditem(item)))
                     renpy.notify(item.name.capitalize()+" has been deleted")
                 else:
                     renpy.notify("There are "+str(self.finditem(item).amount)+" "+str(item.name)+" left")
