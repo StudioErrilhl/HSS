@@ -58,36 +58,37 @@ label day_events():
                 $ current_time = "17:00"
             else:
                 $ current_time = "15:05"
-                if school_hacker:
-                    if school_hacker_first_thought:
-                        "{i}You've been thinking about what happened with your sister, and you were almost sure that it wouldn't be possible to manage that many mistakes by accident. Also, they hadn't found out who had updated the records... that's usually registered...{/i}"
-                        $ school_hacker_first_thought = False
-                    fp "I should go talk to [scn]. She loves me, I'm sure I'll be able to get some answers from her!"
-                    menu:
-                        "Go talk to [scn], try to find out more about what happened to [fsName.yourformal]":
-                            fp "Hi, [scn]!"
-                            scn "Hi, [fp] - did you have an appointment today? I don't have anything on screen, it seems?"
-                            fp "Nah, [scn] - I just swung by to say hi! {i}You give [scn] a quick wink{/i}"
-                            "{i}[scn] is blushing a bit{/i}"
-                            #"Oh, you silly boy, you'll make a cradle snatcher out of me! I'm more than twice your age, you know!" 
-                            scn "Oh, you silly boy! You shouldn't flirt with women more than twice your age, [fp]! {i}She's trying to sound scolding, but she's not very successful. Her slight smile gives away that she's mostly pleased with the situation{/i}"
-                            fp "{i}Trying to look sad and apologetic{/i}\nOkay, [scn]. I promise I won't do it again!"
-                            scn "..."
-                            fp "Ah, who am I kidding! I will definitely be doing it again!"
-                            "[scn] looks pleased, although she's still blushing slightly"
-                            fp "Oh, and I wanted to ask you about something. I know you're not supposed to talk about other students, but it's about [fmName.myformal]. She was in here the other day, and I thought what she told me after sounded... a bit weird."
-                            scn "Yeah, I remember. The whole thing is a bit embarrassing, to be honest"
-                            fp "Oh?"
-                            scn "Yeah... {i}She lowers her voice, obviously not wanting to be overheard{/i}\nYou see, there is evidence that none of the teachers did this, whether by accident or by malice"
-                            fp "Oh... kay? So, none of the teachers, huh?"
-                            scn "Yeah... interprete that as you will"
-                            fp "{i}So, there {b}is{/b} a chance someone did this on purpose - or, maybe even just by accident, messing with the internal systems. Damn, I wish I was a little bit more knowledgeable about computers... I have no idea what kind of knowledge this would take, nor if anyone here at school would be capable. Maybe I could ask [nr]. He's pretty geeky, and probably knows who is able to do something like this...{/i}"
-                            $ school_hacker = False
-                            $ school_hacker_2 = True                         
-                            $ call_nr = True
-                            call evening_home(True) from _call_evening_home
-                        "Nah, not today, I'll do it tomorrow instead":
-                            call evening_home(True) from _call_evening_home_1
+                call school_hacker_talk(True)
+                # if school_hacker:
+                #     if school_hacker_first_thought:
+                #         "{i}You've been thinking about what happened with [fsName.yourformal], and you were almost sure that it wouldn't be possible to manage that many mistakes by accident. Also, they hadn't found out who had updated the records... that's usually registered...{/i}"
+                #         $ school_hacker_first_thought = False
+                #     fp "I should go talk to [scn]. She loves me, I'm sure I'll be able to get some answers from her!"
+                #     menu:
+                #         "Go talk to [scn], try to find out more about what happened to [fsName.yourformal]":
+                #             fp "Hi, [scn]!"
+                #             scn "Hi, [fp] - did you have an appointment today? I don't have anything on screen, it seems?"
+                #             fp "Nah, [scn] - I just swung by to say hi! {i}You give [scn] a quick wink{/i}"
+                #             "{i}[scn] is blushing a bit{/i}"
+                #             #"Oh, you silly boy, you'll make a cradle snatcher out of me! I'm more than twice your age, you know!" 
+                #             scn "Oh, you silly boy! You shouldn't flirt with women more than twice your age, [fp]! {i}She's trying to sound scolding, but she's not very successful. Her slight smile gives away that she's mostly pleased with the situation{/i}"
+                #             fp "{i}Trying to look sad and apologetic{/i}\nOkay, [scn]. I promise I won't do it again!"
+                #             scn "..."
+                #             fp "Ah, who am I kidding! I will definitely be doing it again!"
+                #             "[scn] looks pleased, although she's still blushing slightly"
+                #             fp "Oh, and I wanted to ask you about something. I know you're not supposed to talk about other students, but it's about [fmName.myformal]. She was in here the other day, and I thought what she told me after sounded... a bit weird."
+                #             scn "Yeah, I remember. The whole thing is a bit embarrassing, to be honest"
+                #             fp "Oh?"
+                #             scn "Yeah... {i}She lowers her voice, obviously not wanting to be overheard{/i}\nYou see, there is evidence that none of the teachers did this, whether by accident or by malice"
+                #             fp "Oh... kay? So, none of the teachers, huh?"
+                #             scn "Yeah... interprete that as you will"
+                #             fp "{i}So, there {b}is{/b} a chance someone did this on purpose - or, maybe even just by accident, messing with the internal systems. Damn, I wish I was a little bit more knowledgeable about computers... I have no idea what kind of knowledge this would take, nor if anyone here at school would be capable. Maybe I could ask [nr]. He's pretty geeky, and probably knows who is able to do something like this...{/i}"
+                #             $ school_hacker = False
+                #             $ school_hacker_2 = True                         
+                #             $ call_nr = True
+                #             call evening_home(True) from _call_evening_home
+                #         "Nah, not today, I'll do it tomorrow instead":
+                #             call evening_home(True) from _call_evening_home_1
             "After school, you decide to just trek back home. No plans for today, and not that much interesting happening in town anyway"
             call evening_home(True) from _call_evening_home_2
 
@@ -128,7 +129,7 @@ label day_events():
                         fp "Well... [fsName.name] isn't really speaking to me at the moment..."
                         fm "Oh? What did you do now?"
                         fp "Why do you just assume I did anything? I'll talk to her, but now might not be the best time... I'll tell her dinner is ready if I see her, okay?"
-                        fm "Fine. But you fix this with your sister, okay?"
+                        fm "Fine. But you fix this with [fsName.yourformal], okay?"
                         fp "I will, [fmName.informal], I will"
                         $ dinner_event = False
                         call kitchen_loc(True) from _call_kitchen_loc_4
@@ -156,22 +157,22 @@ label day_events():
                         ["When you arrive home, you catch a glimpse of "+fsName.yourformal+" by the pool, but "+fmName.yourformal+" is nowhere to be seen. Her car is still here, though.",True]
                     ] # create more events here
                     if n == 1:
-                        # call outside_scene
-                        call change_loc('outside') from _call_change_loc_20
+                        call change_loc('outside')
                     else:
-                        call livingroom_scene from _call_livingroom_scene_3
+                        call livingroom_scene
                     $ text = home_events[n][0]
                     "[text]"
+                    call change_loc('livingroom')
                     if home_events[n][1] and fs_mad:
-                        call firstday_talk_fs(True) from _call_firstday_talk_fs_3
+                        call fs_talk(True)
                 
-                if renpy.random.random() > .5 and not school_hacker_3:
+                if renpy.random.random() > .5 and not hacker_3:
                     if  current_month >= 5 and current_month <= 8 and not detention_served:
                         "You decide to just lounge by the pool for a while, trying to stand the heat"
                 else:
                     if not detention_served:
                         if not mc_f:
-                            if school_hacker_3:
+                            if hacker_3:
                                 menu:
                                     "So... you can either work a bit on your bike, or call up [nr] and see if he can give you some info about [fsName.yourformal]s problems"
                                     "Go work on bike":
@@ -338,44 +339,63 @@ label day_events():
             call change_loc('bathroom_loc') from _call_change_loc_25
 
     label talk_fs(tfs_called=False):
-        # if tfs_called or tfs_cfs:
-        #     $ tfs_called = tfs_cfs = False
-        #     show fs_standing ahead with dissolve
-        #     if not pb_return:
-        #         fs ahead "Hey [fp]!"
-        #         fp "Hey, [fsName.role] - what's up?"
-        #         if pb_return:
-        #             fs "Have you taken my buttplug?"
-        #         fs "Have you been in my room?"
-        #         if fs_bedroom_ach:
-        #             menu:
-        #                 "Yes (offer no explanation)":
-        #                     $ result = "true"
-        #                 "Yes, I went in there looking for you the other day, when I wanted to talk to you":
-        #                     $ result = "lie (white)"
-        #                 "You mean except when I stumbled in on you earlier?":
-        #                     $ result = "question"
-        #                 "No (lie)":
-        #                     $ result = "lie"
-        #         else:
-        #             menu:
-        #                 "Yes (lie)":
-        #                     $ result = "lie"
-        #                 "Yes - I went in there looking for you the other day, when I wanted to talk to you":
-        #                     $ result = "lie (white)"
-        #                 "You mean except when I stumbled in on you earlier?":
-        #                     $ resule = "question"
-        #                 "No (tell the truth)":
-        #                     $ result = "true"
-        #         if result == "lie":
-        #             fs "You're lying"
-        #         elif result == "question":
-        #             fs "Answering with a question of your own, huh? I guess you're hiding {i}something{/i}!"
-        #         else:
-        #             fs "That's actually refreshing. Truth!"
-        #     hide fs_standing with dissolve
-        #     # $ renpy.watch(result)
-        #     $ renpy.pause()
+        if tfs_called or tfs_cfs:
+            $ tfs_called = tfs_cfs = False
+            show fs_standing ahead with dissolve
+            if not pb_return:
+                fs ahead "Hey [fp]!"
+                fp "Hey, [fsName.informal] - what's up?"
+                if fs_aro > 10 and backpack.has_item(princessplug_item):
+                    fs "Have you taken my buttplug?"
+                else:
+                    fs "Have you been in my room?"
+                if fs_bedroom_ach:
+                    menu:
+                        "Yes (offer no explanation)":
+                            $ result = "true_1"
+                        "Yes, I went in there looking for you the other day, when I wanted to talk to you":
+                            $ result = "lie_(white)_1"
+                        "You mean except when I stumbled in on you earlier?":
+                            $ result = "question"
+                        "No (lie)":
+                            $ result = "lie_1"
+                else:
+                    menu:
+                        "Yes (lie)":
+                            $ result = "lie_2"
+                        "Yes - I went in there looking for you the other day, when I wanted to talk to you":
+                            $ result = "lie_(white)_2"
+                        "You mean except when I stumbled in on you earlier?":
+                            $ resule = "question"
+                        "No (tell the truth)":
+                            $ result = "true_2"
+                if result == "lie_1":
+                    fs "You're lying"
+                    if backpack.has_item(princessplug_item) and fs_aro > 10:
+                        fs "I know you went in my room. There is no need to deny it, I know you did, and I know you took something!"
+                        fp "Took what?"
+                        fs "What I asked you about, dummy!"
+                        fp "Oh..."
+                        $ item = backpack.has_item(princessplug_item,returnname=True)
+                        menu:
+                            "Return the [item] to [fsName.yourformal]":
+                                $ pb_return = True
+                                $ backpack.remove_item(princessplug_item,sec_reply=True)
+                            "Keep the [item]":
+                                $ pb_return = False
+                elif result == "question":
+                    fs "Answering with a question of your own, huh? I guess you're hiding {i}something{/i}!"
+                    fp "I'm not hiding anything, I promise!"
+                    fs "I don't believe you. I really don't!"
+                    fp "Well, I can't do anything about that, now can I?"
+                    fs "Jerk!"
+                    $ statschangenotify('fs_aro',-1,True)
+                    $ statschangenotify('fs_rel',-1)
+                else:
+                    fs "That's actually refreshing. Truth!"
+            hide fs_standing with dissolve
+            # $ renpy.watch(result)
+            $ renpy.pause()
             return
 
     label evening_event_label(ee_called=False):

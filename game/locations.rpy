@@ -7,9 +7,9 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
         $ tmpname = locname.replace(' ','_')+"_scene"
         if loctrans:
             $ loctrans = False
-            call expression tmpname pass (False) from _call_expression_1
+            call expression tmpname pass (False)
         else:
-            call expression tmpname from _call_expression
+            call expression tmpname
         show screen location(locname)
         if locname in firstday_talk_list:
             if firstday_talk:
@@ -30,6 +30,7 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
         hide character
 
 label entrance_loc(trans=False):
+    $ current_location = 'entrance_loc'
     if not entrance_ach:
         $ entrance_ach = True
         $ update_been_everywhere_achievement()
@@ -39,6 +40,8 @@ label entrance_loc(trans=False):
     # # return
 
 label fp_bedroom_loc(fpl_called=False,trans=False):
+    $ current_location = 'fp_bedroom_loc'
+    $ loct = False
     $ update_been_everywhere_achievement()    
     if fpl_called or uhl_fpb_cfs:
         $ fpl_called = uhl_fpb_cfs = False
@@ -50,6 +53,7 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
                 $ update_all_the_stuff()                        
             $ backpack.add_item(schoolbooks_item)
             $ schoolbooks_added = False
+            $ loct = True
         if phone_added:
             if charge_phone:
                 menu:
@@ -61,8 +65,10 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
                         $ backpack.add_item(phone_item)
                         $ phone_added = False
                         $ carry_phone = True
+                        $ charge_phone = False
                     "Leave the phone to charge":
                         $ phone_added = False
+                        $ loct = True
             else:                                
                 if not backpack.has_item(phone_item):
                     $ phone_pickup = True
@@ -70,9 +76,10 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
                 $ backpack.add_item(phone_item)
                 $ phone_added = False
                 $ carry_phone = True
-        elif charge_phone:
-            $ backpack.remove_item(phone_item)
+        elif charge_phone and carry_phone:
+            $ backpack.remove_item(phone_item,sec_reply=True)
             $ carry_phone = False
+            $ loct = True
         if current_time[:2] in morning and not morning_event_done:
             if debug:
                 "test fp_bedroom_loc morning content"
@@ -80,11 +87,13 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
         else:
             if debug:
                 "test fp_bedroom_loc change loc"
-            call change_loc('fp bedroom') from _call_change_loc_1                
+            call change_loc('fp bedroom',loctrans=loct)
     # else:
     #     # return
 
 label fs_bedroom_loc(fsl_called=False,trans=False):
+    $ current_location = 'fs_bedroom_loc'
+    $ loct = False
     if not fs_bedroom_ach:
         $ fs_bedroom_ach = True
         $ update_been_everywhere_achievement()        
@@ -149,6 +158,7 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                 "Leave panties":
                     $ panties_added = False
                     $ find_panties = True
+                    $ loct = True
         if pb_added:
             "Holy... is that a {b}buttplug{/b}!?"
             menu:
@@ -164,13 +174,15 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                     $ pb_added = False
                     $ statschangenotify('fs_cor',1,True)
                     $ find_pb = True
+                    $ loct = True
         # if trans:
         #     call fs_bedroom_scene from _call_fs_bedroom_scene
-        call change_loc('fs bedroom') from _call_change_loc_2
+        call change_loc('fs bedroom',loctrans=loct)
     # else:
     #     # return
 
 label garage_loc(gar_called=False,trans=False):
+    $ current_location = 'garage_loc'
     if not garage_ach:
         $ garage_ach = True
         $ update_been_everywhere_achievement()
@@ -190,6 +202,7 @@ label garage_loc(gar_called=False,trans=False):
     #     # return
 
 label kitchen_loc(kit_called=False,trans=False):
+    $ current_location = 'kitchen_loc'
     if not kitchen_ach:
         $ kitchen_ach = True
         $ update_been_everywhere_achievement()
@@ -272,36 +285,34 @@ label kitchen_loc(kit_called=False,trans=False):
                     $ achievement_even_more_wine.update(3)                    
                 "Leave the bottles" if bottles == 3:
                     $ wine_added = False
+
         if int(current_time[:2]) in morning and not morning_event_done:
-            # if trans:
-            #     call kitchen_scene from _call_kitchen_scene
-            call change_loc('kitchen',sec_call="breakfast_interaction") from _call_change_loc_26
-            # call breakfast_interaction(True) from _call_breakfast_interaction
-        elif int(current_time[:2]) >= 16 and int(current_time[:2]) <= 18:
-            # if trans:
-            #     call kitchen_scene from _call_kitchen_scene_1
+            call change_loc('kitchen',sec_call="breakfast_interaction")
+        elif 16 <= int(current_time[:2]) <= 18:
             if dinner_event:
-                call change_loc('kitchen',sec_call="dinner_events") from _call_dinner_events
+                call change_loc('kitchen',sec_call="dinner_events")
             else:
-                call change_loc('kitchen') from _call_change_loc_4
+                call change_loc('kitchen')
+        if day_week <= 4 and int(current_time[:2]) in fs_present and renpy.random.random() < .5:
+            call change_loc('kitchen',sec_call='fs_talk')
+        elif day_week > 4 and int(current_time[:2]) in fs_present_we and renpy.random.random() < .5:
+            call change_loc('kitchen',sec_call='fs_talk')
         else:
-            # if trans:
-            #     call kitchen_scene from _call_kitchen_scene_2
-            call change_loc('kitchen') from _call_change_loc_5
-        # return
-    # else:
-    #     # return
+            call change_loc('kitchen')
 
 label livingroom_loc(lvr_called=False,trans=False):
+    $ current_location = 'livingroom_loc'
     if lvr_called or lvr_cfs:
         $ lvr_called = lvr_cfs = False
         if not livingroom_ach:
             $ livingroom_ach = True
             $ update_been_everywhere_achievement()
-        # if trans:
-        #     call livingroom_scene from _call_livingroom_scene
-        call change_loc('livingroom') from _call_change_loc_6
-    # return
+        if day_week <= 4 and int(current_time[:2]) in fs_present and renpy.random.random() < .5:
+            call change_loc('livingroom',sec_call='fs_talk')
+        elif day_week > 4 and int(current_time[:2]) in fs_present_we and renpy.random.random() < .5:
+            call change_loc('livingroom',sec_call='fs_talk')
+        else:
+            call change_loc('livingroom')
 
 # label lower_hallway_loc():
 #     call lower_hallway_scene
@@ -309,6 +320,7 @@ label livingroom_loc(lvr_called=False,trans=False):
 #     # return
 
 label outside_loc(out_called=False,trans=False):
+    $ current_location = 'outside_loc'
     if out_called or out_cfs:
         $ out_called = out_cfs = False
         if not outside_ach:
@@ -326,6 +338,7 @@ label outside_loc(out_called=False,trans=False):
     # return
 
 label upper_hallway_loc(uhl_called=False,trans=False):
+    $ current_location = 'upper_hallway_loc'
     if not uhl_ach:
         $ uhl_ach = True
         $ update_been_everywhere_achievement()        
@@ -341,6 +354,7 @@ label upper_hallway_loc(uhl_called=False,trans=False):
     #     # return
 
 label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
+    $ current_location = 'upper_hallway_bathroom_loc'
     $ loct = False
     if not uhl_bathroom_ach:
         $ uhl_bathroom_ach = True
@@ -405,13 +419,17 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                     $ bathroom_find_panties = True
                     $ loct = True               
         if fpshower:
-            $ addtime(1, False)
+            if day_week <= 4 and int(current_time[:2]) < 8:
+                $ addtime(False,30)
+            else:
+                $ addtime(1, False)
             if filth_val != 0:
                 $ filth_val -= 20
                 if filth_val < 0:
                     $ filth_val = 0
             fp "{i}Ah, that was refreshing{/i}"
             $ fpshower = False
+            $ loct = True
         if fpsink:
             $ addtime(False,15)
             if filth_val != 0:
@@ -420,6 +438,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                     $ filth_val = 0
             fp "{i}Good to get the filth off my hands{/i}"
             $ fpsink = False
+            $ loct = True
         # if trans:
         #     call upper_hallway_bathroom_scene from _call_upper_hallway_bathroom_scene
         call change_loc('upper hallway bathroom',loctrans=loct) from _call_change_loc_9

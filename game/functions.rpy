@@ -92,7 +92,7 @@ init python:
         assert False, "Shouldn't get here"
 
 init 10 python:
-    def addtime(hours=False,minutes=False):
+    def addtime(hours=False,minutes=False,update_scene=False):
         global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text
         local_dw = day_week
         addhour = False
@@ -106,7 +106,7 @@ init 10 python:
                         current_time = str(int(0))+local_time[2:]
                         if len(current_time) == 4:
                             current_time = '0'+current_time
-                        setattr(store, 'current_time', current_time)                        
+                        setattr(store, 'current_time', current_time)
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:
                             if current_month_day == months_days[current_month][1]:
@@ -220,44 +220,42 @@ init 10 python:
                     if battery_text > 100:
                         battery_text = 100
 
-            if int(current_time[:2]) >= 22 or int(current_time[:2]) < 6:
-                current_imgs = list(renpy.get_showing_tags())
-                indices = [i for i, elem in enumerate(current_imgs) if '_morning' in elem]
-                if indices:
-                    current_bg = current_imgs[indices[0]].replace('_morning','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
-                    if current_bg == 'upper_hallway_bathroom_night':
-                        setattr(store,"bathroom_light",True)
-                    else:
+            if update_scene:
+                if int(current_time[:2]) >= 22 or int(current_time[:2]) < 6:
+                    current_imgs = list(renpy.get_showing_tags())
+                    indices = [i for i, elem in enumerate(current_imgs) if '_morning' in elem]
+                    if indices:
+                        current_bg = current_imgs[indices[0]].replace('_morning','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
+                        if current_bg == 'upper_hallway_bathroom_night':
+                            setattr(store,"bathroom_light",True)
+                        else:
+                            renpy.call("change_loc",current_bg)
+                        #the following function reloads any other images in the scene as well
+                        indices = [i for i, elem in enumerate(current_imgs) if not '_morning' in elem]
+                        # for x in range(0,len(indices)):
+                        #     current_img = current_imgs[x]
+                        #     if current_img[:2] in ['fm','fs']:
+                        #         testimg = str(current_img+" ahead")
+                        #         renpy.hide(current_img)
+                        #         renpy.show(testimg,at_list=[center_transform])
+                elif int(current_time[:2]) >= 6 or int(current_time[:2]) < 22:
+                    current_imgs = list(renpy.get_showing_tags())
+                    indices = [i for i, elem in enumerate(current_imgs) if '_night' in elem]
+                    mn_check = False
+                    if indices:
+                        if mn_check:
+                            current_bg = current_imgs[indices[0]]
+                        else:
+                            current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
                         renpy.call("change_loc",current_bg)
-                    #the following function reloads any other images in the scene as well
-                    indices = [i for i, elem in enumerate(current_imgs) if not '_morning' in elem]
-                    for x in range(0,len(indices)):
-                        current_img = current_imgs[x]
-                        if current_img[:2] in ['fm','fs']:
-                            testimg = str(current_img+" ahead")
-                            renpy.hide(current_img)
-                            renpy.show(testimg,at_list=[center_transform])
-            elif int(current_time[:2]) >= 6 or int(current_time[:2]) < 22:
-                current_imgs = list(renpy.get_showing_tags())
-                indices = [i for i, elem in enumerate(current_imgs) if '_night' in elem]
-                mn_check = False
-                # if not indices:
-                #     indices = [i for i, elem in enumerate(current_imgs) if '_morning' in elem]
-                #     mn_check = True
-                if indices:
-                    if mn_check:
-                        current_bg = current_imgs[indices[0]]
-                    else:
-                        current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
-                    renpy.call("change_loc",current_bg)
-                    #the following function reloads any other images in the scene as well
-                    indices = [i for i, elem in enumerate(current_imgs) if not '_night' in elem]
-                    for x in range(0,len(indices)):
-                        current_img = current_imgs[x]
-                        if current_img[:2] in ['fm','fs']:
-                            testimg = str(current_img+" ahead")
-                            renpy.hide(current_img)
-                            renpy.show(testimg,at_list=[center_transform])
+                        #the following function reloads any other images in the scene as well
+                        indices = [i for i, elem in enumerate(current_imgs) if not '_night' in elem]
+                        # for x in range(0,len(indices)):
+                        #     current_img = current_imgs[x]
+                        #     if current_img[:2] in ['fm','fs']:
+                        #         testimg = str(current_img+" ahead")
+                        #         renpy.hide(current_img)
+                        #         renpy.show(testimg,at_list=[center_transform])
 
 
 label settime(hours=False,minutes=False):

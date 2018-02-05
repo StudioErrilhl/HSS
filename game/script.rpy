@@ -63,6 +63,9 @@ label start:
     $ current_time = "09:00"
     call fp_bedroom_scene from _call_fp_bedroom_scene_2
 
+    if config.developer:
+        show screen debug_tools()
+
     ## intro - this is shown only once, when starting the game from the beginning
     python:
         fpinput = renpy.input("First, we'll need to know your name (default, Marten):")
@@ -92,7 +95,7 @@ label start:
             yalign .72
             xalign .2
         with dissolve
-        fp "{i}Didn't last long, though. About 5 seconds after me landing on her bedroom floor, I got hit with something hard! Then the shouting began, and 10 seconds after that, I was out in the hallway again, with a furious, but still very half-naked sister yelling at me. I'm still amazed that [fmName.informal] didn't show up... THAT would've been embarassing, for both of us... mostly for me.{/i}"
+        fp "{i}Didn't last long, though. About 5 seconds after me landing on her bedroom floor, I got hit with something hard! Then the shouting began, and 10 seconds after that, I was out in the hallway again, with a furious, but still very half-naked [fsName.role] yelling at me. I'm still amazed that [fmName.informal] didn't show up... THAT would've been embarassing, for both of us... mostly for me.{/i}"
         fp "{i}Thankfully, [fsName.informal] realised what she was doing (partly because I had a raging boner in my boxer's, I guess) - turned on her heel, and went into her room again - this time locking the door.{/i}"
         hide juliette_mad_pantless
         hide juliette_reflection
@@ -116,40 +119,37 @@ label start:
         call skip_breakfast(True) from _call_skip_breakfast
 
     label day_start():
-        $ detention_served = False
-        $ late_oh_shit = False
-        $ breakfast_jump = False
-        $ shitty_morning = False
-        $ count = 0
-        $ end_bike_repair = False
         $ find_panties = True if renpy.random.random() > .75 else False
-        $ find_pb = True if renpy.random.random() > .80 else False
-        $ bathroom_find_panties = True if renpy.random.random() > .30 else False
+        $ find_pb_mod = .65 if fs_aro > 10 else .90
+        $ find_pb = True if renpy.random.random() > find_pb_mod else False
+        $ bathroom_find_panties = True if renpy.random.random() > .60 else False
         $ find_tablet = True if renpy.random.random() > .65 else False        
-        $ had_breakfast = False
-        $ morning_event_done = False
         $ gp_bed = random.choice(fs_p)
         $ gp_bath = random.choice(fs_p)
         $ br = random.choice([0,1,2,3])
+
+        $ breakfast_jump = False
+        $ had_breakfast = False
+        $ morning_event_done = False
+        $ dinner_event = True
+        $ shitty_morning = False
+        $ late_oh_shit = False
+        $ detention_served = False
         $ after_principal_talk = False
+
+        $ count = 0
+        $ end_bike_repair = False
+
         if wcount < 5:
             $ wcount += 1
 
-        if renpy.random.random() > .75:
-            $ bad_weather = True
-            $ rainstorm = True
-        else:
-            $ bad_weather = False
-            $ rainstorm = False
+        $ bad_weather = True if renpy.random.random() > .75 else False
+        $ rainstorm = True if bad_weather else False
 
         if fs_mad:
             $ statschangenotify("fs_rel",-1)
-            pass
-        if mc_b >= mc_b_max:
-            $ mc_f = True
-        else:
-            $ mc_f = False
-        
+        $ mc_f = True if mc_b >= mc_b_max else False
+
         # breakfast choices - the bf_weights is updated when you pick something, and will change the weight depending on whether or not you benefit or not
         $ bf_weights = [(0,5),(1,4),(2,2),(3,1),(4,5),(5,2),(6,2),(7,4),(8,1),(9,4),(10,2)]
         $ breakfast = [
@@ -289,8 +289,9 @@ label start:
                 elif event == 77:
                     $ text = "I should go in, {0} and {1}".format("take a shower","have breakfast and get ready for school" if day_week <= 4 else "have breakfast")
                     "[text]"
-                    call kitchen_scene from _call_kitchen_scene_3
-                    call breakfast_interaction(True) from _call_breakfast_interaction_1
+                    call change_loc('upper hallway bathroom')
+                    # call kitchen_scene
+                    # call breakfast_interaction(True)
                 elif event == 88:
                     "You're done working on the bike today"
                     $ end_bike_repair = True

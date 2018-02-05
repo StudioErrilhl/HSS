@@ -6,6 +6,9 @@ style tooltip_hover:
 style red_color:
     color "#f00"
 
+style inventory_text:
+    color "#fff"
+
 screen empty()
 
 screen choice(items):
@@ -61,9 +64,11 @@ init -2:
 
     style choice_button is default:
         properties gui.button_properties("choice_button")
+        hover_color "#000"
 
-    style choice_button_text is default:
-        properties gui.button_text_properties("choice_button")
+    # style choice_button_text is default:
+    #     # properties gui.button_text_properties("choice_button")
+    #     hover_color "#000"
 
     style choice_button_disabled is default:
         properties gui.button_properties("choice_button_disabled")
@@ -73,8 +78,8 @@ init -2:
         color "#aaaaaa"        
     style menu_window is default
 
-    style menu_choice is button_text:
-        clear
+    # style menu_choice is button_text:
+    #     clear
 
     style menu_choice_button is button:
         xminimum int(config.screen_width * 0.75)
@@ -521,32 +526,34 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                 xalign .5
                 color "#000"
                 ypos -5
-                size 60
+                size 55
             if bad_weather and rainstorm and int(current_time[:2]) in night:
                 add "images/night_rain_icon.png":
                     xalign .5
-                    ypos -20                
+                    ypos -15               
             elif bad_weather and rainstorm:
                 add "images/morning_rain_icon.png":
                     xalign .5
-                    ypos -20                
+                    ypos -15                
             elif int(current_time[:2]) in night:
                 add "images/night_icon.png":
                     xalign .5
-                    ypos -20
+                    ypos -15
             else:
                 add "images/sun_icon.png":
                     xalign .5
-                    ypos -20
+                    ypos -15
             text "[current_day]":
-                ypos -25
+                ypos -20
                 xalign .5
                 size 16
                 if current_day == "Saturday" or current_day == "Sunday":
                     color "#f00"
+                else:
+                    color "#000"
 
             add "images/calendar_overlay.png":
-                ypos -145
+                ypos -140
                 if int(current_time[:2]) not in night:
                     alpha 0.0
                 else:
@@ -568,7 +575,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                 text_font "gui/fonts/digital_dismay.otf"
                 text_size 25
                 # action Function(renpy.call,'addtime',1,False)
-                action Function(addtime,1,False)
+                action Function(addtime,1,False,True)
         hbox: #: - separates hours and minutes
             xsize 2
             xpos 44
@@ -589,7 +596,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                 text_font "gui/fonts/digital_dismay.otf"                
                 text_size 25                
                 # action Function(renpy.call,'addtime',False,30)
-                action Function(addtime,False,30)                
+                action Function(addtime,False,30,True)                
 
         add "images/clock_overlay.png":
             if int(current_time[:2]) not in night:
@@ -770,13 +777,13 @@ screen inventory_screen():
                                             xalign .5
                                             yalign 0
                                             focus_mask True
-                                            action [SetVariable('pb_return',True),Function(renpy.restart_interaction),Hide('inventory_screen')]
+                                            action [Hide('inventory_screen')]
                                     elif name == 'phone' and current_location == 'fp_bedroom_loc':
                                         imagebutton auto "images/inventory/"+name+"_%s.png":
                                             xalign .5
                                             yalign 0
                                             focus_mask True
-                                            action [SetVariable('charge_phone',True),Hide('inventory_screen'),SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]
+                                            action [Hide('inventory_screen'),SetVariable('charge_phone',True),SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]
                                     else:
                                         imagebutton auto "images/inventory/"+name+"_%s.png":
                                             xalign .5
@@ -809,9 +816,6 @@ screen inventory_screen():
                                     $ ya += 173
 
         imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action Hide("inventory_screen")                        
-
-style inventory_text:
-    color "#fff"
 
 screen say(who, what):
     style_prefix "say"
@@ -1033,7 +1037,7 @@ screen location(room=False):
 
     if room == "kitchen":
         if wcount == 5:
-            if bottles == 1 or br == 1:
+            if bottles == 1 or br == 1 and int(current_time[:2]) in (day or night):
                 if int(current_time[:2]) in night:
                     imagebutton auto "images/backgrounds/interactions_item/wine_bottle_night_%s.png" at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',1),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
@@ -1719,10 +1723,10 @@ screen splash_info():
         at truecenter
         xsize 1200
         vbox:
-            if persistent.patch_enabled:
-                text "{size=30}{color=#ffffff}HSS - High School Shenanigans is a story about a very hot summer, where you'll play as <your name here> (You can name your own character, but the default is \"Marten\", so let's just go with that for now). So, you play as Marten, on his last stretch of high school, aiming to finish school, have some fun, fix his bike, and take his dream cross-country trip on it - but first, there's the exams. And the hot chicks... (among them, his mother and sister, who is both hot, and definitely part of his nighttime jerk-off sessions), the pool, the neighbor girl, and so much more - pretty much like there is in every teenager's life. You control what happens, who you eventually hook up with, what you end up doing with them, and so on and so forth. \n\n{b}Note that this is a very early Alpha-relese, and that quite a lot of the events haven't been added yet, and those that have been, might abruptly end. The game is playable, but you won't reach a fulfilling conclusion as of yet!{/b}{/color}{/size}"
-            else:
-                text "{size=30}{color=#ffffff}HSS - High School Shenanigans is a story about a very hot summer, where you'll play as <your name here> (You can name your own character, but the default is \"Marten\", so let's just go with that for now). So, you play as Marten, on his last stretch of high school, aiming to finish school, have some fun, fix his bike, and take his dream cross-country trip on it - but first, there's the exams. And the hot chicks... and the pool, the neighbor girl, and so much more - pretty much like there is in every teenager's life. You control what happens, who you eventually hook up with, what you end up doing with them, and so on and so forth.\n\n{b}Note that this is a very early Alpha-relese, and that quite a lot of the events haven't been added yet, and those that have been, might abruptly end. The game is playable, but you won't reach a fulfilling conclusion as of yet!{/b}{/color}{/size}" #with dissolve
+            # if persistent.patch_enabled:
+            text "{size=30}{color=#ffffff}HSS - High School Shenanigans is a story about a very hot summer, where you'll play as <your name here> (You can name your own character, but the default is \"Marten\", so let's just go with that for now). So, you play as Marten, on his last stretch of high school, aiming to finish school, have some fun, fix his bike, and take his dream cross-country trip on it - but first, there's the exams. And the hot chicks... (among them, his [fmName.role] and [fsName.role], who is both hot, and definitely part of his nighttime jerk-off sessions), the pool, the neighbor girl, and so much more - pretty much like there is in every teenager's life. You control what happens, who you eventually hook up with, what you end up doing with them, and so on and so forth. \n\n{b}Note that this is a very early Alpha-relese, and that quite a lot of the events haven't been added yet, and those that have been, might abruptly end. The game is playable, but you won't reach a fulfilling conclusion as of yet!{/b}{/color}{/size}"
+            # else:
+            #     text "{size=30}{color=#ffffff}HSS - High School Shenanigans is a story about a very hot summer, where you'll play as <your name here> (You can name your own character, but the default is \"Marten\", so let's just go with that for now). So, you play as Marten, on his last stretch of high school, aiming to finish school, have some fun, fix his bike, and take his dream cross-country trip on it - but first, there's the exams. And the hot chicks... and the pool, the neighbor girl, and so much more - pretty much like there is in every teenager's life. You control what happens, who you eventually hook up with, what you end up doing with them, and so on and so forth.\n\n{b}Note that this is a very early Alpha-relese, and that quite a lot of the events haven't been added yet, and those that have been, might abruptly end. The game is playable, but you won't reach a fulfilling conclusion as of yet!{/b}{/color}{/size}" #with dissolve
     textbutton "{size=25}{color=#ffffff}Click to continue{/click}{/size}":
         xalign .5 
         yalign 0.9
@@ -2313,3 +2317,10 @@ screen fs_tablet():
 #             imagebutton auto "images/iphone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.5)
 #             xalign .5
 #             yalign .5
+init python:
+    def dd_cursor_position(st, at):
+        x, y = renpy.get_mouse_pos()
+        return Text("{size=-5}%d-%d" % (x, y)), .1
+
+screen debug_tools():
+    add DynamicDisplayable(dd_cursor_position)

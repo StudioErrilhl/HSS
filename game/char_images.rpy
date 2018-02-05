@@ -28,13 +28,29 @@
 #     yanchor .5
 
 image fm_standing ahead:
-    "images/characters/anne/body/standing/sweather_straight_ahead.png"
+    contains fm_standing_ahead_ani
     zoom .7
     yalign 1.0
     xpos .6
     ypos .55
     xanchor .5
     yanchor .5
+
+transform fm_standing_ahead_ani:
+    ConditionSwitch(
+        True,"images/characters/anne/body/standing/ahead.png"
+        )
+    choice:
+        pause 2
+    choice:
+        pause 4
+    choice:
+        pause 6
+    ConditionSwitch(
+        True,"images/characters/anne/body/standing/ahead_eyes_closed.png"
+    )
+    pause .25
+    repeat
 
 transform fs_standing_ahead_ani:
     ConditionSwitch(

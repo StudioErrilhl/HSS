@@ -20,34 +20,58 @@ label entrance_scene:
         scene entrance_morning with Dissolve(.25)
     return
 
-label fp_bedroom_scene: #this is the starting scene, and the one that repeats every morning (unless there are circumstances altering the morning events)
+label fp_bedroom_scene(trans=True): #this is the starting scene, and the one that repeats every morning (unless there are circumstances altering the morning events)
     $ update_been_everywhere_achievement()
     $ hours = [0,1,22,23]
     if int(current_time[:2]) in hours:
         if backpack.has_item(phone_item):
-            scene fp_bedroom_night_glow with Dissolve(.25)
+            if trans:
+                scene fp_bedroom_night_glow with Dissolve(.25)
+            else:
+                scene fp_bedroom_night_glow
         else:
-            scene fp_bedroom_night_glow_phone
+            if trans:
+                scene fp_bedroom_night_glow_phone with Dissolve(.25)
+            else:
+                scene fp_bedroom_night_glow_phone
     elif int(current_time[:2]) in night:
         if backpack.has_item(phone_item):
-            scene fp_bedroom_night with Dissolve(.25)
+            if trans:
+                scene fp_bedroom_night with Dissolve(.25)
+            else:
+                scene fp_bedroom_night
         else:
-            scene fp_bedroom_night_phone with Dissolve(.25)
+            if trans:
+                scene fp_bedroom_night_phone with Dissolve(.25)
+            else:
+                scene fp_bedroom_night_phone
     else:
         if backpack.has_item(phone_item):
-            scene fp_bedroom_morning with Dissolve(.25)
+            if trans:
+                scene fp_bedroom_morning with Dissolve(.25)
+            else:
+                scene fp_bedroom_morning
         else:
-            scene fp_bedroom_morning_phone with Dissolve(.25)
+            if trans:
+                scene fp_bedroom_morning_phone with Dissolve(.25)
+            else:
+                scene fp_bedroom_morning_phone
     return
 
-label fs_bedroom_scene:
+label fs_bedroom_scene(trans=True):
     if not fs_bedroom_ach:
         $ fs_bedroom_ach = True
         $ update_been_everywhere_achievement()        
     if int(current_time[:2]) in night:
-        scene fs_bedroom_night with Dissolve(.25)
+        if trans:
+            scene fs_bedroom_night with Dissolve(.25)
+        else:
+            scene fs_bedroom_night
     else:
-        scene fs_bedroom_morning with Dissolve(.25)
+        if trans:
+            scene fs_bedroom_morning with Dissolve(.25)
+        else:
+            scene fs_bedroom_morning
     return
 
 label fs_intro_scene:
@@ -89,13 +113,6 @@ label livingroom_scene:
     else:
         scene livingroom_morning with Dissolve(.25)
     return
-
-# label lower_hallway_scene:
-#     if int(current_time[:2]) in night:
-#         scene lower_hallway_night
-#     else:
-#         scene lower_hallway_morning
-#     return
 
 label outside_scene:
     if not outside_ach:
