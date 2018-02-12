@@ -4,7 +4,7 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
         $ addtime(False, 30)
     if locname:
         $ current_location = locname.replace(' ','_')+"_loc"
-        $ tmpname = locname.replace(' ','_')+"_scene"
+        $ tmpname = locname.replace(' ','_').replace('_loc','')+"_scene"
         if loctrans:
             $ loctrans = False
             call expression tmpname pass (False)
@@ -14,7 +14,7 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
         if locname in firstday_talk_list:
             if firstday_talk:
                 if renpy.random.random() > .75:
-                    call firstday_talk_fs(True) from _call_firstday_talk_fs
+                    call fs_talk(True)
         if char and imgname:
             show expression "images/characters/[char]/body/standing/[imgname].png" as character: # at fs_standing_ahead_ani with dissolve:
                 zoom .65
@@ -23,7 +23,7 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
                 xanchor .5
                 yanchor .75
         if sec_call:
-            call expression sec_call pass (True) from _call_expression_2
+            call expression sec_call pass (True)
         call screen empty()
         hide screen empty
         hide screen location
@@ -34,26 +34,28 @@ label entrance_loc(trans=False):
     if not entrance_ach:
         $ entrance_ach = True
         $ update_been_everywhere_achievement()
-    # if trans:
-    #     call entrance_scene from _call_entrance_scene
     call change_loc('entrance') from _call_change_loc
-    # # return
 
 label fp_bedroom_loc(fpl_called=False,trans=False):
     $ current_location = 'fp_bedroom_loc'
     $ loct = False
-    $ update_been_everywhere_achievement()    
+    if not fp_bedroom_ach:
+        $ fp_bedroom_ach = True
+        $ update_been_everywhere_achievement()    
     if fpl_called or uhl_fpb_cfs:
         $ fpl_called = uhl_fpb_cfs = False
-        # if trans:
-        #     call fp_bedroom_scene from _call_fp_bedroom_scene_1
         if schoolbooks_added:
-            if not backpack.has_item(schoolbooks_item):
-                $ schoolbooks_pickup = True
-                $ update_all_the_stuff()                        
-            $ backpack.add_item(schoolbooks_item)
-            $ schoolbooks_added = False
-            $ loct = True
+            if backpack_carry:
+                if not backpack.has_item(schoolbooks_item):
+                    $ schoolbooks_pickup = True
+                    $ update_all_the_stuff()                        
+                $ backpack.add_item(schoolbooks_item)
+                $ schoolbooks_added = False
+                $ loct = True
+            else:
+                $ renpy.notify("You don't have anything to carry the books in")
+                $ schoolbooks_added = False
+                $ loct = True
         if phone_added:
             if charge_phone:
                 menu:
@@ -66,6 +68,7 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
                         $ phone_added = False
                         $ carry_phone = True
                         $ charge_phone = False
+                        $ loct = True
                     "Leave the phone to charge":
                         $ phone_added = False
                         $ loct = True
@@ -76,20 +79,15 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
                 $ backpack.add_item(phone_item)
                 $ phone_added = False
                 $ carry_phone = True
+                $ loct = True
         elif charge_phone and carry_phone:
             $ backpack.remove_item(phone_item,sec_reply=True)
             $ carry_phone = False
             $ loct = True
         if current_time[:2] in morning and not morning_event_done:
-            if debug:
-                "test fp_bedroom_loc morning content"
-            call fp_morning_content(True) from _call_fp_morning_content
+            call fp_morning_content(True)
         else:
-            if debug:
-                "test fp_bedroom_loc change loc"
             call change_loc('fp bedroom',loctrans=loct)
-    # else:
-    #     # return
 
 label fs_bedroom_loc(fsl_called=False,trans=False):
     $ current_location = 'fs_bedroom_loc'
@@ -113,7 +111,6 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
             else:
                 call screen fs_tablet()
         if panties_added:
-            # "Hm... [fsName.formal]s panties...\n{b}sniffs them{/b}\nShould I take them with me?"
             $ current_p = getattr(store,gp_bed+"_panties_item")
             if not backpack.has_item(current_p):
                 $ r = random.randint(0,3)
@@ -175,11 +172,7 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                     $ statschangenotify('fs_cor',1,True)
                     $ find_pb = True
                     $ loct = True
-        # if trans:
-        #     call fs_bedroom_scene from _call_fs_bedroom_scene
         call change_loc('fs bedroom',loctrans=loct)
-    # else:
-    #     # return
 
 label garage_loc(gar_called=False,trans=False):
     $ current_location = 'garage_loc'
@@ -188,21 +181,20 @@ label garage_loc(gar_called=False,trans=False):
         $ update_been_everywhere_achievement()
     if gar_called or gar_cfs:
         $ gar_called = g_called_from_screen = False
-        if not backpack.has_item(toolbox_item):
-            $ toolbox_pickup = True
-            $ update_all_the_stuff()
-            if toolbox_added:
-                $ backpack.add_item(toolbox_item)
-                $ toolbox_added = False
-        # if trans:
-        #     call garage_scene from _call_garage_scene
+        if backpack_carry:
+            if not backpack.has_item(toolbox_item):
+                $ toolbox_pickup = True
+                $ update_all_the_stuff()
+                if toolbox_added:
+                    $ backpack.add_item(toolbox_item)
+                    $ toolbox_added = False
+        else:
+            $ renpy.notify("You don't have anywhere to carry this item")
         call change_loc('garage') from _call_change_loc_3
-    #     # return
-    # else:
-    #     # return
 
 label kitchen_loc(kit_called=False,trans=False):
     $ current_location = 'kitchen_loc'
+    $ loct = False
     if not kitchen_ach:
         $ kitchen_ach = True
         $ update_been_everywhere_achievement()
@@ -211,94 +203,133 @@ label kitchen_loc(kit_called=False,trans=False):
         if wine_added:
             menu:
                 "Take the bottle" if bottles == 1:
-                    if not backpack.has_item(wine_item):
-                        $ wine_pickup = True
-                        $ update_all_the_stuff()
-                    $ backpack.add_item(wine_item)
-                    $ bottles = 0
-                    $ br = 0
-                    $ wcount = 0
-                    $ wine_added = False
-                    $ achievement_wine_collector.update()
-                    $ achievement_all_the_wine.update()
-                    $ achievement_even_more_wine.update()
+                    if backpack_carry:
+                        if not backpack.has_item(wine_item):
+                            $ wine_pickup = True
+                            $ update_all_the_stuff()
+                        $ backpack.add_item(wine_item)
+                        $ bottles = 0
+                        $ br = 0
+                        $ wcount = 0
+                        $ wine_added = False
+                        $ achievement_wine_collector.update()
+                        $ achievement_all_the_wine.update()
+                        $ achievement_even_more_wine.update()
+                        $ loct = True                        
+                    else:
+                        $ renpy.notify("You have no way of carrying this")
+                        $ wine_added = False
+                        $ loct = True                        
                 "Leave the bottle" if bottles == 1:
                     $ wine_added = False
+                    $ loct = True                    
                 "Take one bottle" if bottles == 2:
-                    if not backpack.has_item(wine_item):
-                        $ wine_pickup = True
-                        $ update_all_the_stuff()                
-                    $ backpack.add_item(wine_item)
-                    $ bottles = 1
-                    $ br = 1
-                    $ wine_added = False
-                    $ achievement_wine_collector.update()                    
-                    $ achievement_all_the_wine.update()
-                    $ achievement_even_more_wine.update()                    
+                    if backpack_carry:
+                        if not backpack.has_item(wine_item):
+                            $ wine_pickup = True
+                            $ update_all_the_stuff()                
+                        $ backpack.add_item(wine_item)
+                        $ bottles = 1
+                        $ br = 1
+                        $ wine_added = False
+                        $ achievement_wine_collector.update()                    
+                        $ achievement_all_the_wine.update()
+                        $ achievement_even_more_wine.update()
+                        $ loct = True                        
+                    else:
+                        $ renpy.notify("You have no way of carrying this")
+                        $ wine_added = False
+                        $ loct = True                                              
                 "Take both bottles" if bottles == 2:
-                    if not backpack.has_item(wine_item):
-                        $ wine_pickup = True
-                        $ update_all_the_stuff()                
-                    $ backpack.add_item(wine_item,2)
-                    $ bottles = 0
-                    $ br = 0
-                    $ wcount = 0
-                    $ wine_added = False
-                    $ achievement_wine_collector.update(2)                                        
-                    $ achievement_all_the_wine.update(2)
-                    $ achievement_even_more_wine.update(2)                    
+                    if backpack_carry:
+                        if not backpack.has_item(wine_item):
+                            $ wine_pickup = True
+                            $ update_all_the_stuff()                
+                        $ backpack.add_item(wine_item,2)
+                        $ bottles = 0
+                        $ br = 0
+                        $ wcount = 0
+                        $ wine_added = False
+                        $ achievement_wine_collector.update(2)                                        
+                        $ achievement_all_the_wine.update(2)
+                        $ achievement_even_more_wine.update(2)
+                        $ loct = True                        
+                    else:
+                        $ renpy.notify("You have no way of carrying this")
+                        $ wine_added = False
+                        $ loct = True                        
                 "Leave the bottles" if bottles == 2:
                     $ wine_added = False
+                    $ loct = True                    
                 "Take one bottle" if bottles == 3:
-                    if not backpack.has_item(wine_item):
-                        $ wine_pickup = True
-                        $ update_all_the_stuff()                
-                    $ backpack.add_item(wine_item)
-                    $ bottles = 2
-                    $ br = 2
-                    $ wine_added = False
-                    $ achievement_wine_collector.update()
-                    $ achievement_all_the_wine.update()
-                    $ achievement_even_more_wine.update()                                        
+                    if backpack_carry:
+                        if not backpack.has_item(wine_item):
+                            $ wine_pickup = True
+                            $ update_all_the_stuff()                
+                        $ backpack.add_item(wine_item)
+                        $ bottles = 2
+                        $ br = 2
+                        $ wine_added = False
+                        $ achievement_wine_collector.update()
+                        $ achievement_all_the_wine.update()
+                        $ achievement_even_more_wine.update()
+                        $ loct = True                        
+                    else:
+                        $ renpy.notify("You have no way of carrying this")
+                        $ wine_added = False
+                        $ loct = True                        
                 "Take two bottles" if bottles == 3:
-                    if not backpack.has_item(wine_item):
-                        $ wine_pickup = True
-                        $ update_all_the_stuff()                
-                    $ backpack.add_item(wine_item,2)
-                    $ bottles = 1
-                    $ br = 1
-                    $ wine_added = False
-                    $ achievement_wine_collector.update(2)                    
-                    $ achievement_all_the_wine.update(2)
-                    $ achievement_even_more_wine.update(2)                    
+                    if backpack_carry:
+                        if not backpack.has_item(wine_item):
+                            $ wine_pickup = True
+                            $ update_all_the_stuff()                
+                        $ backpack.add_item(wine_item,2)
+                        $ bottles = 1
+                        $ br = 1
+                        $ wine_added = False
+                        $ achievement_wine_collector.update(2)                    
+                        $ achievement_all_the_wine.update(2)
+                        $ achievement_even_more_wine.update(2)
+                        $ loct = True                        
+                    else:
+                        $ renpy.notify("You have no way of carrying this")
+                        $ wine_added = False                        
+                        $ loct = True                        
                 "Take all three bottles" if bottles == 3:
-                    if not backpack.has_item(wine_item):
-                        $ wine_pickup = True
-                        $ update_all_the_stuff()                
-                    $ backpack.add_item(wine_item,3)
-                    $ bottles = 0
-                    $ br = 0
-                    $ wcount = 0
-                    $ wine_added = False
-                    $ achievement_wine_collector.update(3)                    
-                    $ achievement_all_the_wine.update(3)
-                    $ achievement_even_more_wine.update(3)                    
+                    if backpack_carry:
+                        if not backpack.has_item(wine_item):
+                            $ wine_pickup = True
+                            $ update_all_the_stuff()                
+                        $ backpack.add_item(wine_item,3)
+                        $ bottles = 0
+                        $ br = 0
+                        $ wcount = 0
+                        $ wine_added = False
+                        $ achievement_wine_collector.update(3)                    
+                        $ achievement_all_the_wine.update(3)
+                        $ achievement_even_more_wine.update(3)
+                        $ loct = True                        
+                    else:
+                        $ renpy.notify("You have no way of carrying this")
+                        $ wine_added = False                        
+                        $ loct = True
                 "Leave the bottles" if bottles == 3:
                     $ wine_added = False
+                    $ loct = True
 
         if int(current_time[:2]) in morning and not morning_event_done:
-            call change_loc('kitchen',sec_call="breakfast_interaction")
+            call change_loc('kitchen',sec_call="breakfast_interaction",loctrans=loct)
         elif 16 <= int(current_time[:2]) <= 18:
             if dinner_event:
-                call change_loc('kitchen',sec_call="dinner_events")
+                call change_loc('kitchen',sec_call="dinner_events",loctrans=loct)
             else:
-                call change_loc('kitchen')
+                call change_loc('kitchen',loctrans=loct)
         if day_week <= 4 and int(current_time[:2]) in fs_present and renpy.random.random() < .5:
-            call change_loc('kitchen',sec_call='fs_talk')
+            call change_loc('kitchen',sec_call='fs_talk',loctrans=loct)
         elif day_week > 4 and int(current_time[:2]) in fs_present_we and renpy.random.random() < .5:
-            call change_loc('kitchen',sec_call='fs_talk')
+            call change_loc('kitchen',sec_call='fs_talk',loctrans=loct)
         else:
-            call change_loc('kitchen')
+            call change_loc('kitchen',loctrans=loct)
 
 label livingroom_loc(lvr_called=False,trans=False):
     $ current_location = 'livingroom_loc'
@@ -314,11 +345,6 @@ label livingroom_loc(lvr_called=False,trans=False):
         else:
             call change_loc('livingroom')
 
-# label lower_hallway_loc():
-#     call lower_hallway_scene
-#     call change_loc('lower hallway')
-#     # return
-
 label outside_loc(out_called=False,trans=False):
     $ current_location = 'outside_loc'
     if out_called or out_cfs:
@@ -327,7 +353,7 @@ label outside_loc(out_called=False,trans=False):
             $ outside_ach = True
             $ update_been_everywhere_achievement()
         if trans:    
-            call outside_scene from _call_outside_scene
+            call outside_scene
         if day_week <= 4 and int(current_time[:2]) in morning:
             menu:
                 "Go to school":
@@ -335,7 +361,6 @@ label outside_loc(out_called=False,trans=False):
                 "Stay home":
                     pass
         call change_loc('outside') from _call_change_loc_7
-    # return
 
 label upper_hallway_loc(uhl_called=False,trans=False):
     $ current_location = 'upper_hallway_loc'
@@ -344,14 +369,9 @@ label upper_hallway_loc(uhl_called=False,trans=False):
         $ update_been_everywhere_achievement()        
     if uhl_called or uhl_cfs:
         $ uhl_called = uhl_cfs = False
-        # if trans:
-        #     call upper_hallway_scene from _call_upper_hallway_scene
         if backpack.has_item(princessplug_item):
             call talk_fs(True) from _call_talk_fs   
         call change_loc('upper hallway') from _call_change_loc_8
-        # return
-    # else:
-    #     # return
 
 label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
     $ current_location = 'upper_hallway_bathroom_loc'
@@ -370,11 +390,9 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                 "Leave keys":
                     $ smallkeys_added = False
         if bathroom_panties_added:
-            # "Hm... [fsName.formal]s panties...\n{b}sniffs them{/b}\nShould I take them with me?"
             $ current_p = getattr(store,gp_bath+"_panties_item")
             if not backpack.has_item(current_p):
                 $ r = random.randint(0,3)
-                # $ renpy.watch(str(r))
                 $ text = p_response[r]
                 if r == 0 or r == 3:
                     $ panties_sniffer = True
@@ -383,7 +401,6 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                 $ aux = list(p_response)
                 $ del aux[2]
                 $ r = random.randrange(len(aux))
-                # $ renpy.watch(str(r)+"aux")                
                 $ text = p_response[r]
                 if r == 0 or r == 3:
                     $ panties_sniffer = True
@@ -419,15 +436,18 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                     $ bathroom_find_panties = True
                     $ loct = True               
         if fpshower:
-            if day_week <= 4 and int(current_time[:2]) < 8:
-                $ addtime(False,30)
+            if filth_val == 0:
+                fp "I don't need to take a shower right now"
             else:
-                $ addtime(1, False)
-            if filth_val != 0:
-                $ filth_val -= 20
-                if filth_val < 0:
-                    $ filth_val = 0
-            fp "{i}Ah, that was refreshing{/i}"
+                if day_week <= 4 and int(current_time[:2]) < 8:
+                    $ addtime(False,30)
+                else:
+                    $ addtime(1, False)
+                if filth_val != 0:
+                    $ filth_val -= 20
+                    if filth_val < 0:
+                        $ filth_val = 0
+                fp "{i}Ah, that was refreshing{/i}"
             $ fpshower = False
             $ loct = True
         if fpsink:
@@ -439,12 +459,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
             fp "{i}Good to get the filth off my hands{/i}"
             $ fpsink = False
             $ loct = True
-        # if trans:
-        #     call upper_hallway_bathroom_scene from _call_upper_hallway_bathroom_scene
-        call change_loc('upper hallway bathroom',loctrans=loct) from _call_change_loc_9
-        # hide screen room
-    # $ renpy.pause()
-    # # return
+        call change_loc('upper hallway bathroom',loctrans=loct)
 
 label tv_games_evening(tvg_called=False,trans=False):
     if tvg_called:
@@ -456,8 +471,6 @@ label beach_ride(br_called=False):
     if br_called:
         $ br_called = False
         $ addtime(1,30)
-        # if trans:
-        #     call beach_scene from _call_beach_scene_1
         call change_loc('beach') from _call_change_loc_10
     call end_of_day() from _call_end_of_day_1
 

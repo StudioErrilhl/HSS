@@ -21,7 +21,9 @@ label entrance_scene:
     return
 
 label fp_bedroom_scene(trans=True): #this is the starting scene, and the one that repeats every morning (unless there are circumstances altering the morning events)
-    $ update_been_everywhere_achievement()
+    if not fp_bedroom_ach:
+        $ fp_bedroom_ach = True
+        $ update_been_everywhere_achievement()
     $ hours = [0,1,22,23]
     if int(current_time[:2]) in hours:
         if backpack.has_item(phone_item):
@@ -97,17 +99,26 @@ label garage_scene:
             scene honda_cx_500_build_morning with Dissolve(.25)
     return
 
-label kitchen_scene:
+label kitchen_scene(trans=True):
     if not kitchen_ach:
         $ kitchen_ach = True
         $ update_been_everywhere_achievement()        
     if int(current_time[:2]) in night:
-        scene kitchen_night with Dissolve(.25)
+        if trans:
+            scene kitchen_night with Dissolve(.25)
+        else:
+            scene kitchen_night
     else:
-        scene kitchen_morning with Dissolve(.25)
+        if trans:
+            scene kitchen_morning with Dissolve(.25)
+        else:
+            scene kitchen_morning
     return   
 
 label livingroom_scene:
+    if not livingroom_ach:
+        $ livingroom_ach = True
+        $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         scene livingroom_night with Dissolve(.25)
     else:
@@ -135,23 +146,33 @@ label outside_scene:
     return
 
 label schoolbuilding_scene:
-    if not school_ach:
-        $ school_ach = True
+    if not school_outside_ach:
+        $ school_outside_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         if bad_weather and rainstorm:
-            scene schoolbuilding_night
+            scene school_outside_night
             show rain
             with Dissolve(.25)
         else:
-            scene schoolbuilding_night with Dissolve(.25)
+            scene school_outside_night with Dissolve(.25)
     else:
         if bad_weather and rainstorm:
-            scene schoolbuilding_morning
+            scene school_outside_morning
             show rain
             with Dissolve(.25)
         else:
-            scene schoolbuilding_morning with Dissolve(.25)
+            scene school_outside_morning with Dissolve(.25)
+    return
+
+label school_po_scene:
+    if not school_principal_office_ach:
+        $ school_prinicpal_ach = True
+        $ update_been_everywhere_achievement()
+    if int(current_time[:2]) in night:
+        scene school_principal_office_night with Dissolve(.25)
+    else:
+        scene school_principal_office_morning with Dissolve(.25)
     return
 
 label upper_hallway_scene:

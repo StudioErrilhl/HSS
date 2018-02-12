@@ -24,12 +24,14 @@ init -10 python:
 # persistent variables
 default persistent.first_playthrough = True
 default persistent.skipintro = False
-default persistent.iphone_info = True
 default persistent.splash_screen = False
+default persistent.maininfo = True
+default persistent.phone_firstshow = True
+default persistent.backpack_info = True
 
 # character definitions
 define fp = Character("[fpinput]")
-define fm = Character("[fmName.Formal]")
+define fm = Character("[fmName.Formal]",image="fm_talkside")
 define fs = Character("[fsName.Formal]",image="fs_talkside")
 define nb = Character("Bridget")
 define nr = Character("Ron") 
@@ -46,6 +48,7 @@ default chars = [[fp,"fp"],[fm,"fm"],[fs,"fs"],[nb,"nb"],[nr,"nr"],[nk,"nk"],[sn
 default atts = ['rel','dom','aro','cor','att']
 
 #fp
+default fpinput = "Marten"
 default fp_att = 0
 default fp_aro = 0
 default fp_sts = 0
@@ -209,6 +212,7 @@ default keys_mentioned = False
 default gp_bed = False
 default gp_bath = False
 default br = False
+default backpack_carry = False
 
 # tablet
 default fs_tablet_bedroom = False
@@ -224,7 +228,7 @@ default fsi_cfs = False
 # phone
 default phone_added = False
 default carry_phone = False
-default showclosebutton_iphone = True
+default showclosebutton_phone = True
 default show_icons = True
 default quit_screen = False
 default charge_phone_now = False
@@ -271,7 +275,7 @@ default pref_screen = False
 default trans = False
 default fdtfs_after = True
 
-default fp_bedroom_ach = True
+default fp_bedroom_ach = False
 default fs_bedroom_ach = False
 default uhl_bathroom_ach = False
 default uhl_ach = False
@@ -280,7 +284,8 @@ default livingroom_ach = False
 default kitchen_ach = False
 default outside_ach = False
 default garage_ach = False
-default school_ach = False
+default school_outside_ach = False
+default school_principal_office_ach = False
 default beach_ach = False
 
 default selected_number = 0
@@ -293,10 +298,35 @@ default p_response = ["Hm... "+fsName.formal+"s panties...\n{b}sniffs them{/b}\n
                         "Oh, "+fsName.myinformal+" left her panties...",
                         "Right-o! I don't think I have this color...",
                         "{b}Sniffs panties{/b} I love her smell"
+        ]
+# breakfast choices - the bf_weights is updated when you pick something, and will change the weight depending on whether or not you benefit or not
+default bf_weights = [(0,5),(1,4),(2,2),(3,1),(4,5),(5,2),(6,2),(7,4),(8,1),(9,4),(10,2)]
+default breakfast = [ #food, reply, modifier, stat, weight-mod
+            ["pancakes","I love your pancakes",2,"fm_rel",.5], 
+            ["bacon and eggs","I'm gonna get fat if I continue eating this",1,"fm_rel",.25],
+            ["scones","I don't really like scones",-1,"fm_rel",.25],
+            ["scones","Ah, scones again... okay, I guess they'll do",0,"fm_rel",.25],
+            ["sandwiches","Ah, I just love those sandwiches",2,"fm_rel",.5],
+            ["beans and bacon","What am I? A cowboy? Seriously",-1,"fm_rel",.25],
+            ["cereal","Well, if there's nothing else...",-1,"fm_rel",.25],
+            ["cereal","Cereal is fine",1,"fm_rel",.25],
+            ["muffins","I'm not in the mood for anything sweet. I'll just have coffee",0,"fm_rel",.25],
+            ["muffins","Sure, lemme have them",1,"fm_rel",.25],
+            ["muffins","These muffins taste... I'll just have coffe, thanks",-1,"fm_rel",.25]
         ] 
+
+default dinner_weights = [(0,3),(1,2),(2,5),(3,1)]        
+default dinner = [ # food, reply, comeback, modifier, stat, weight-mod
+            ["I just made mac n' cheese today","Okay, "+fmName.informal+", I like mac n' cheese","Well, that's good",1,"fm_rel",.5],
+            ["I made pizza - ham, cheese and tomato","Aw, no pepperoni?","No pepperoni today, "+fpinput+"",1,"fm_rel",.35],
+            ["I made steak","Oh, neat, I love steak","I know, "+fpinput+"",2,"fm_rel",.5],
+            ["I went vegetarian today","Oh...","You will try it before you go all mopey!",-1,"fm_rel",.25]
+        ]
+
 default fs_present = [0,1,2,3,4,5,6,7,8,15,16,17,18,19,20,21,22,23]
 default fs_present_we = [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19] if fs_party else [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
 
+default inv_list = []
 
 # motorcycle
 default mc_b = 0 #motorcycle build - shows how far along the main character is with fixing the bike

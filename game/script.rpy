@@ -67,11 +67,11 @@ label start:
         show screen debug_tools()
 
     ## intro - this is shown only once, when starting the game from the beginning
-    python:
-        fpinput = renpy.input("First, we'll need to know your name (default, Marten):")
-        fpinput = fpinput.strip()
-        if not fpinput:
-            fpinput = "Marten" 
+    # python:
+    $ fpinput = (renpy.input("First, we'll need to know your name (default, Marten):") or "Marten").strip()
+        # fpinput = fpinput.strip()
+        # if not fpinput:
+        #     fpinput = "Marten" 
 
     if persistent.skipintro:
         menu:
@@ -110,12 +110,19 @@ label start:
     label skippedintro:
         $ fs_mad = True
         show screen ingame_menu_display()
+        if persistent.maininfo:
+            call screen maininfo()
         fp "So. Quick recap: I woke up on April 1st, tried to somewhat remotely function and seem awake, and figure out what to with the day. Then, a little later, shellshocked, and trying to figure out how to get the image of my naked [fsName.role] off my mind, I decided spending the day working on my bike would be as good a way as any..."
         $ skip_breakfast = True
         $ breakfast_food = False
         $ breakfast_reply = False
         $ breakfast_mod = False
         $ breakfast_att = False
+        $ dinner_food = False
+        $ dinner_reply = False
+        $ dinner_comeback = False
+        $ dinner_mod = False
+        $ dinner_att = False
         call skip_breakfast(True) from _call_skip_breakfast
 
     label day_start():
@@ -150,22 +157,6 @@ label start:
             $ statschangenotify("fs_rel",-1)
         $ mc_f = True if mc_b >= mc_b_max else False
 
-        # breakfast choices - the bf_weights is updated when you pick something, and will change the weight depending on whether or not you benefit or not
-        $ bf_weights = [(0,5),(1,4),(2,2),(3,1),(4,5),(5,2),(6,2),(7,4),(8,1),(9,4),(10,2)]
-        $ breakfast = [
-            ["pancakes","I love your pancakes",2,"fm_rel",.5], #food, reply, modifier, stat, weight-modifier
-            ["bacon and eggs","I'm gonna get fat if I continue eating this",1,"fm_rel",.25],
-            ["scones","I don't really like scones",-1,"fm_rel",.25],
-            ["scones","Ah, scones again... okay, I guess they'll do",0,"fm_rel",.25],
-            ["sandwiches","Ah, I just love those sandwiches",2,"fm_rel",.5],
-            ["beans and bacon","What am I? A cowboy? Seriously",-1,"fm_rel",.25],
-            ["cereal","Well, if there's nothing else...",-1,"fm_rel",.25],
-            ["cereal","Cereal is fine",1,"fm_rel",.25],
-            ["muffins","I'm not in the mood for anything sweet. I'll just have coffee",0,"fm_rel",.25],
-            ["muffins","Sure, lemme have them",1,"fm_rel",.25],
-            ["muffins","These muffins taste... I'll just have coffe, thanks",-1,"fm_rel",.25]
-        ] 
-
         $ breakfast_select = weighted_choice(bf_weights)
         $ breakfast_food = breakfast[breakfast_select][0]
         $ breakfast_reply = breakfast[breakfast_select][1]
@@ -178,15 +169,28 @@ label start:
             $ new_weight = bf_weights[breakfast_select][1] - breakfast_weight
         $ bf_weights[breakfast_select] = (bf_weights[breakfast_select][0],new_weight)
 
+        $ dinner_select = weighted_choice(dinner_weights)
+        $ dinner_food = dinner[dinner_select][0]
+        $ dinner_reply = dinner[dinner_select][1]
+        $ dinner_comeback = dinner[dinner_select][2]
+        $ dinner_mod = dinner[dinner_select][3]
+        $ dinner_att = dinner[dinner_select][4]
+        $ dinner_weight = dinner[dinner_select][5]
+        if dinner_mod >= 0:
+            $ new_weight = dinner_weights[dinner_select][1] + dinner_weight
+        else:
+            $ new_weight = dinner_weights[dinner_select][1] - dinner_weight
+        $ dinner_weights[dinner_select] = (dinner_weights[dinner_select][0],new_weight)
+
         if int(current_time[:2]) in night:
             if day_week <= 4:
                 $ mh = format(int(morning[renpy.random.randint(0,(len(morning)-3))]),"02d")
                 $ mm = format(renpy.random.randint(00,30),"02d")
-                call settime(mh,mm) from _call_settime_2
+                $ settime(mh,mm)
             elif day_week >= 5:
                 $ mh = format(int(random.choice(morning)),"02d")
                 $ mm = format(renpy.random.randint(00,59),"02d")
-                call settime(mh,mm) from _call_settime_3
+                $ settime(mh,mm)
                 if int(current_time[:2]) == 6:
                     $ addtime(1, False) 
 
@@ -214,6 +218,8 @@ label start:
             $ modifier = .5 if mc_b < 50 else .4 if mc_b < 100 else .35
 
             label repeat_event(event=0):
+                $ choice1 = False
+                $ choice2 = False
                 if int(current_time[:2]) < 7 and day_week <= 4 and event not in outside_events:
                     $ choice1 = "Hm... I have at least an hour before school. Maybe I can get a bit done on the bike"
                     $ choice2 = "Or, I could just go back inside, eat breakfast and leave early"
@@ -241,72 +247,72 @@ label start:
                         $ event = 5
 
                 if event in events:
-                    menu:
-                        "[choice1]" if choice1:
-                            if event == 7:
-                                $ addtime(1,False)
-                                $ filth_val += 10
-                                if renpy.random.random() > modifier:
-                                    if backpack.has_item(toolbox_item):
-                                        $ mc_t = 2
+                    if choice1 or choice2:
+                        menu:
+                            "[choice1]" if choice1:
+                                if event == 7:
+                                    $ addtime(1,False)
+                                    $ filth_val += 10
+                                    if renpy.random.random() > modifier:
+                                        if backpack.has_item(toolbox_item):
+                                            $ mc_t = 2
+                                        else:
+                                            $ mc_t = 1
+                                    $ event = 77
+                                    $ mc_b += mc_t
+                                    $ mc_p = (float(mc_b)/float(mc_b_max))*100
+                                    $ mc_p = "{0:.2f}".format(mc_p)
+                                    if mc_t == 0:
+                                        $ renpy.notify("You did not improve the status of the bike this time")
+                                    else:                                    
+                                        $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")
+                                    call repeat_event(77) from _call_repeat_event
+                                elif c <= maxc:
+                                    $ addtime(1, False)
+                                    $ filth_val += 10                                
+                                    if renpy.random.random() > modifier:
+                                        if backpack.has_item(toolbox_item):
+                                            $ mc_t = 2
+                                        else:
+                                            $ mc_t = 1                                        
+                                    $ c += 1
+                                    $ mc_b += mc_t
+                                    $ mc_p = (float(mc_b)/float(mc_b_max))*100
+                                    $ mc_p = "{0:.2f}".format(mc_p)
+                                    if mc_t == 0:
+                                        $ renpy.notify("You did not improve the status of the bike this time")
+                                    else:                                    
+                                        $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")                               
+                                    if c == (maxc):
+                                        call repeat_event(88)
                                     else:
-                                        $ mc_t = 1
-                                $ event = 77
-                                $ mc_b += mc_t
-                                $ mc_p = (float(mc_b)/float(mc_b_max))*100
-                                $ mc_p = "{0:.2f}".format(mc_p)
-                                if mc_t == 0:
-                                    $ renpy.notify("You did not improve the status of the bike this time")
-                                else:                                    
-                                    $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")                               
-                                call repeat_event(77) from _call_repeat_event
-                            elif c <= maxc:
-                                $ addtime(1, False)
-                                $ filth_val += 10                                
-                                if renpy.random.random() > modifier:
-                                    if backpack.has_item(toolbox_item):
-                                        $ mc_t = 2
-                                    else:
-                                        $ mc_t = 1                                        
-                                $ c += 1
-                                $ mc_b += mc_t
-                                $ mc_p = (float(mc_b)/float(mc_b_max))*100
-                                $ mc_p = "{0:.2f}".format(mc_p)
-                                if mc_t == 0:
-                                    $ renpy.notify("You did not improve the status of the bike this time")
-                                else:                                    
-                                    $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")                               
-                                if c == (maxc):
-                                    call repeat_event(88) from _call_repeat_event_1
+                                        call repeat_event()
                                 else:
-                                    call repeat_event() from _call_repeat_event_2
-                            else:
-                                $ event = 88
-                                call repeat_event(88) from _call_repeat_event_3
-                        "[choice2]" if choice2:
-                            $ event = 99
-                            call repeat_event(99) from _call_repeat_event_4
+                                    $ event = 88
+                                    call repeat_event(88)
+                            "[choice2]" if choice2:
+                                $ event = 99
+                                call repeat_event(99)
+                    else:
+                        $ event = 77
+                        call repeat_event(77)
                 elif event == 77:
                     $ text = "I should go in, {0} and {1}".format("take a shower","have breakfast and get ready for school" if day_week <= 4 else "have breakfast")
                     "[text]"
                     call change_loc('upper hallway bathroom')
-                    # call kitchen_scene
-                    # call breakfast_interaction(True)
                 elif event == 88:
                     "You're done working on the bike today"
                     $ end_bike_repair = True
                     if bad_weather:
-                        call entrance_loc() from _call_entrance_loc
+                        call entrance_loc()
                     else:
-                        # call outside_loc(True) from _call_outside_loc
-                        call change_loc('outside') from _call_change_loc_27
+                        call change_loc('garage')
                 elif event == 99:
                     "You don't really wanna work on the bike right now"
                     if bad_weather:
-                        call entrance_loc() from _call_entrance_loc_1
+                        call entrance_loc()
                     else:
-                        # call outside_loc(True) from _call_outside_loc_1
-                        call change_loc('outside') from _call_change_loc_28
+                        call change_loc('garage')
 
 if end_game:
     return

@@ -21,7 +21,7 @@ label fs_talk(fst_called=False):
                 if persistent.first_playthrough:
                     fs ahead "Oh, it was nothing, really. We talked, and ended up going through all the entries made about me the last year. [fmName.Informal] confirmed she hadn't received any of the notes or calls that were registered in the system, which sort of made my teacher go a little pale, and become a little upset."
                     fp "Who?"
-                    fs "Oh, [se]. She can be a real bitch!"
+                    fs ahead "Oh, [se]. She can be a real bitch!"
                     fp "Oh, yeah, I've heard about her..."
                     fs ahead "Anyway. We ended up going to the principal's office, and talked to one of the clerks there, and she was able to look at the records, and figure out that someone had made a boo-boo, registering complaints for another student on me. She couldn't say for sure who'd done it, though, so they were gonna look into it."
                     fp "But you're off the hook?"
@@ -112,7 +112,7 @@ label fs_talk(fst_called=False):
                 $ text = "Look, I'm really sorry about {0}! I didn't mean to perv on you, {1}.".format("this morning" if first_day else "the other day", fsName.informal )                                    
                 fp "[text]"
                 show fs_standing mad with dissolve
-                fs "So, you just happened to be leaning against my door because...?"
+                fs mad "So, you just happened to be leaning against my door because...?"
                 fp "Well, that bit is true, but I was just trying to figure out what the sounds coming from your bedroom was. Honestly!"
                 show fs_standing annoyed with dissolve
                 fs annoyed "So... you heard noises coming from my bedroom, and your first instinct is \"Let's check out the sounds from [fsName.myformal]s bedroom\"?"
@@ -152,7 +152,7 @@ label fs_talk(fst_called=False):
                         call end_of_day(True)
                     return
             else:
-                call settime(22,False)
+                $ settime(22,False,True)
                 fp "{i}Hmm... where did my damn [fsName.role] go?{/i}"
                 fp "{i}Oh, well. I'll find her tomorrow. Time for bed{/i}"
                 call change_loc('fp bedroom')

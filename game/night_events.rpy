@@ -29,7 +29,7 @@ label night_events():
             with dissolve
             $ nh = format(int(night[renpy.random.randint(0,(len(night)-1))]),"02d")
             $ nm = format(renpy.random.randint(00,59),"02d")
-            call settime(nh,nm) from _call_settime
+            $ settime(nh,nm)
             $ first_day = False
             if int(nh) in xrange(2,6,1):
                 $ overslept = True
@@ -74,7 +74,7 @@ label night_events():
     label sleeping_day_away(sld_called=False):
         if sld_called:
             $ sld_called = False
-            call settime(22,False) from _call_settime_1
+            $ settime(22,False)
             # call fp_bedroom_scene
             call fp_bedroom_loc(True) from _call_fp_bedroom_loc_2
             # return

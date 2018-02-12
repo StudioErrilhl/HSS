@@ -1,8 +1,24 @@
 init -100 python:
     import random
 
-
 init python:
+
+    def info_hover(a,b="hide"):
+        # a what to show/hide
+        # b show/hide
+        c = [left]
+        d = 'master'
+        if a == "stats_hover":
+            c = [left,stats_hover_transform]
+            d = 'screens'
+        elif a == "tshirt_overlay":
+            c = [left,tshirt_overlay_transform]
+            d = 'screens'
+        if b == "show":
+            renpy.show(a,at_list=c,layer=d,zorder=970)
+        else:
+            renpy.hide(a,layer=d)
+
     def statschangenotify(a,f,p=False):
         # a = attribute to change
         # f = negative or positive value representing the change
@@ -205,7 +221,7 @@ init 10 python:
                                 current_month_day += 1
                                 day_ahead = True                        
                     else:
-                        current_time = str(local_time[:2])+':'+str(minutes)
+                        current_time = str(local_time[:2])+':'+str(int(local_time[3:])+minutes)
                     if len(current_time) == 4:
                         current_time = '0'+current_time
                     setattr(store, 'current_time', current_time)                
@@ -230,14 +246,7 @@ init 10 python:
                             setattr(store,"bathroom_light",True)
                         else:
                             renpy.call("change_loc",current_bg)
-                        #the following function reloads any other images in the scene as well
                         indices = [i for i, elem in enumerate(current_imgs) if not '_morning' in elem]
-                        # for x in range(0,len(indices)):
-                        #     current_img = current_imgs[x]
-                        #     if current_img[:2] in ['fm','fs']:
-                        #         testimg = str(current_img+" ahead")
-                        #         renpy.hide(current_img)
-                        #         renpy.show(testimg,at_list=[center_transform])
                 elif int(current_time[:2]) >= 6 or int(current_time[:2]) < 22:
                     current_imgs = list(renpy.get_showing_tags())
                     indices = [i for i, elem in enumerate(current_imgs) if '_night' in elem]
@@ -248,37 +257,63 @@ init 10 python:
                         else:
                             current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
                         renpy.call("change_loc",current_bg)
-                        #the following function reloads any other images in the scene as well
                         indices = [i for i, elem in enumerate(current_imgs) if not '_night' in elem]
-                        # for x in range(0,len(indices)):
-                        #     current_img = current_imgs[x]
-                        #     if current_img[:2] in ['fm','fs']:
-                        #         testimg = str(current_img+" ahead")
-                        #         renpy.hide(current_img)
-                        #         renpy.show(testimg,at_list=[center_transform])
 
+    def settime(hours=False,minutes=False,update_scene=False):
+        global current_time
+        if int(current_time[:2]) <= hours:
+            if hours:
+                if len(str(hours)) == 1:
+                    hours = '0'+str(hours)
+                current_time = str(hours)+str(current_time[2:])
+                setattr(store, 'current_time', current_time)   
+        if int(current_time[3:]) < minutes:
+            if minutes:
+                if len(str(minutes)) == 1:
+                    minutes = '0'+str(minutes)
+                current_time = str(current_time[:3])+str(minutes)
+                setattr(store, 'current_time', current_time)   
+        if update_scene:
+            if int(current_time[:2]) >= 22 or int(current_time[:2]) < 6:
+                current_imgs = list(renpy.get_showing_tags())
+                indices = [i for i, elem in enumerate(current_imgs) if '_morning' in elem]
+                if indices:
+                    current_bg = current_imgs[indices[0]].replace('_morning','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
+                    if current_bg == 'upper_hallway_bathroom_night':
+                        setattr(store,"bathroom_light",True)
+                    else:
+                        renpy.call("change_loc",current_bg)
+                    indices = [i for i, elem in enumerate(current_imgs) if not '_morning' in elem]
+            elif int(current_time[:2]) >= 6 or int(current_time[:2]) < 22:
+                current_imgs = list(renpy.get_showing_tags())
+                indices = [i for i, elem in enumerate(current_imgs) if '_night' in elem]
+                mn_check = False
+                if indices:
+                    if mn_check:
+                        current_bg = current_imgs[indices[0]]
+                    else:
+                        current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
+                    renpy.call("change_loc",current_bg)
+                    indices = [i for i, elem in enumerate(current_imgs) if not '_night' in elem]
 
-label settime(hours=False,minutes=False):
-    if debug:
-        "settime called"
-    if int(current_time[:2]) <= hours:
-        if debug:
-            "current local_time less than hours"
-        if hours:
-            if debug:
-                "hours set"
-            if len(str(hours)) == 1:
-                $ hours = '0'+str(hours)
-            $ current_time = str(hours)+str(current_time[2:])
-    if int(current_time[3:]) < minutes:
-        if debug:
-            "current minutes less than minutes"
-        if minutes:
-            if debug:
-                "minutes set"
-            if len(str(minutes)) == 1:
-                $ minutes = '0'+str(minutes)
-            $ current_time = str(current_time[:3])+str(minutes)
+    def inv_list_fetch():
+        global inv_list
+        inv_list = []
+        for file in renpy.list_files():
+            if file.startswith('images/inventory/') and file.endswith('.png'):
+                if 'hover' in file:
+                    if 'panties' in file:
+                        tempvar = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.png','').replace('fs_','').replace('_insensitive','').split('_')
+                        if len(tempvar) == 3:
+                            temp = tempvar[2]+' - '+tempvar[0]+' '+tempvar[1]
+                        elif len(tempvar) == 2:
+                            temp = tempvar[1]+' - '+tempvar[0]
+                        inv_list.append(temp)
+                    else:
+                        inv_list.append(file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.png','').replace('fs_','').replace('_',' '))
+        # print(inv_list)                        
+        return inv_list
+
     # if day_week <= 4:
     #     $ morning = True if int(current_time[:2]) >= 6 and int(current_time[:2]) < 9 else False
     #     $ day = True if int(current_time[:2]) >= 9 and int(current_time[:2]) <= 17 else False

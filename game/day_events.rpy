@@ -32,7 +32,8 @@ label day_events():
             $ wsun_called = False
             if sun_event:
                 if renpy.random.random() <= .5:
-                    fm "Could you help me open this, [fp]? I can't seem to get it open, and I need this for dinner today"
+                    show fm_standing ahead
+                    fm ahead "Could you help me open this, [fp]? I can't seem to get it open, and I need this for dinner today"
                     menu:
                         "Yes, [fmName.informal], no problem. *you open the jar*":
                             if fm_dom <= 5:
@@ -41,9 +42,11 @@ label day_events():
                             else:
                                 $ statschangenotify("fm_rel",.5)
                         "No, [fmName.informal], I don't have time to help you right now":
+                            show fm_standing mad
                             $ statschangenotify("fm_dom",.5,True)
                             $ statschangenotify("fm_rel",-.5)
                 $ sun_event = False
+                hide fm_standing
         # return
             # call livingroom_scene
             # call change_loc('livingroom')
@@ -117,28 +120,47 @@ label day_events():
                         $ statschangenotify("sn_dom",1.5,True)
                         $ statschangenotify("sn_rel",-1,True)
                         $ statschangenotify("sn_aro",1)
-                        call principal_after_punishment_late(True) from _call_principal_after_punishment_late
+                        call principal_after_punishment_late(True)
     
     label dinner_events(de_called=False):
         if de_called:
             $ de_called = False
             if dinner_event:
-                if day_week <= 4:
-                    if fs_mad:
-                        fm "Hey [fp]. It's dinnertime soon, do you wanna go see if you can find [fsName.name], and tell her to get ready?"
-                        fp "Well... [fsName.name] isn't really speaking to me at the moment..."
-                        fm "Oh? What did you do now?"
-                        fp "Why do you just assume I did anything? I'll talk to her, but now might not be the best time... I'll tell her dinner is ready if I see her, okay?"
-                        fm "Fine. But you fix this with [fsName.yourformal], okay?"
-                        fp "I will, [fmName.informal], I will"
-                        $ dinner_event = False
-                        call kitchen_loc(True) from _call_kitchen_loc_4
-                    else:
-                        $ dinner_event = False
-                        call kitchen_loc(True) from _call_kitchen_loc_5
-                if day_week >= 5:
+                # if day_week <= 4:
+                if fs_mad:
+                    show fm_standing smile
+                    fm smile "Hey [fp]. It's dinnertime soon, do you wanna go see if you can find [fsName.name], and tell her to get ready?"
+                    fp "Well... [fsName.name] isn't really speaking to me at the moment..."
+                    show fm_standing ahead
+                    fm ahead "Oh? What did you do now?"
+                    fp "Why do you just assume I did anything? I'll talk to her, but now might not be the best time... I'll tell her dinner is ready if I see her, okay?"
+                    fm ahead "Fine. But you fix this with [fsName.yourformal], okay?"
+                    fp "I will, [fmName.informal], I will"
                     $ dinner_event = False
-                    call kitchen_loc(True) from _call_kitchen_loc_6
+                    hide fm_standing
+                    # call kitchen_loc(True)
+                elif dinner_food:
+                    show fm_standing smile
+                    fm smile "Hey [fp]. Dinner is ready soon"
+                    fp "Nice. What are we having?"
+                    fm smile "[dinner_food]"
+                    fp "[dinner_reply]"
+                    if dinner_mod > 0:
+                        fm smile "[dinner_comeback]"
+                    else:
+                        fm ahead "[dinner_comeback]"
+                    if dinner_mod > 0:
+                        show fs_standing smile
+                    else:
+                        show fs_standing ahead
+                    $ setattr( store, dinner_att, getattr( store, dinner_att ) + dinner_mod )
+                    $ dinner_event = False
+                    hide fm_standing
+                    # call kitchen_loc(True)
+                call change_loc('kitchen',loctrans=True)
+                # if day_week >= 5:
+                #     $ dinner_event = False
+                #     call kitchen_loc(True)
 
 
     label evening_home(evh_called=False):
@@ -230,6 +252,7 @@ label day_events():
         if pap_called:
             $ pap_called = False
             $ addtime(1, False)
+            call school_po_scene
             sp "[fp]! What have you done, to be sent to me?"
             fp "I mouthed off to Miss Novak."
             fp "She was yelling at me for being late, and I just lost it."
@@ -246,6 +269,7 @@ label day_events():
             fp "Well..."
             sp "{i}Your principal shoots you a stern look{/i}\n"
             extend "You can go, [fp]"
+            call schoolbuilding_scene
             # call school_finished(True)
             $ after_principal_talk = True
             call sn_detention(True) from _call_sn_detention_1
@@ -258,7 +282,7 @@ label day_events():
             else:
                 "After arriving at school, and dealth with [sn]s blow-out, you go about your day as normal - attending classes, avoiding freshmen, trying to catch a glance of the cheerleaders rehearsing..."
                 "But, come end of day, you need to get your ass to [sn]s classroom, and attend detention."
-            call settime(15,5) from _call_settime_5
+            $ settime(15,5)
             $ detention_served = True
             if sn_rel > 15 or sn_aro > 10:
                 if renpy.random.random() > .5:
@@ -404,7 +428,7 @@ label day_events():
             if nk_school_assignment_evening and day_week <= 4:
                 $ nk_school_assignment_evening = False            
                 "{b}*ding dong*{/b}"
-                fm "{b}[fp], can you get that?{/b}"
+                fm ahead "{b}[fp], can you get that?{/b}"
                 call entrance_scene from _call_entrance_scene_1
                 "You go to get the door, expecting it to be [nk]"
                 nk smile "Hi [fp]."
