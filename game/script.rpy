@@ -96,6 +96,7 @@ label start:
             xalign .2
         with dissolve
         fp "{i}Didn't last long, though. About 5 seconds after me landing on her bedroom floor, I got hit with something hard! Then the shouting began, and 10 seconds after that, I was out in the hallway again, with a furious, but still very half-naked [fsName.role] yelling at me. I'm still amazed that [fmName.informal] didn't show up... THAT would've been embarassing, for both of us... mostly for me.{/i}"
+        $ images_unlocked.append('DCIM00001_portrait.png')
         fp "{i}Thankfully, [fsName.informal] realised what she was doing (partly because I had a raging boner in my boxer's, I guess) - turned on her heel, and went into her room again - this time locking the door.{/i}"
         hide juliette_mad_pantless
         hide juliette_reflection
@@ -157,17 +158,30 @@ label start:
             $ statschangenotify("fs_rel",-1)
         $ mc_f = True if mc_b >= mc_b_max else False
 
-        $ breakfast_select = weighted_choice(bf_weights)
-        $ breakfast_food = breakfast[breakfast_select][0]
-        $ breakfast_reply = breakfast[breakfast_select][1]
-        $ breakfast_mod = breakfast[breakfast_select][2]
-        $ breakfast_att = breakfast[breakfast_select][3]
-        $ breakfast_weight = breakfast[breakfast_select][4]
-        if breakfast_mod >= 0:
-            $ new_weight = bf_weights[breakfast_select][1] + breakfast_weight
-        else:
-            $ new_weight = bf_weights[breakfast_select][1] - breakfast_weight
-        $ bf_weights[breakfast_select] = (bf_weights[breakfast_select][0],new_weight)
+        $ breakfast_select = random.randint(0,len(breakfast_food_list))
+        $ breakfast_food = breakfast_food_list[breakfast_select]
+        $ breakfast_nice_select = random.randint(0,len(breakfast_nice_list))
+        $ breakfast_nice = breakfast_nice_list[breakfast_nice_select][0]
+        $ breakfast_nice_mod = breakfast_nice_list[breakfast_nice_select][1]
+        $ breakfast_nice_att = breakfast_nice_list[breakfast_nice_select][2]
+        $ breakfast_mean_select = random.randint(0,len(breakfast_mean_list))
+        $ breakfast_mean = breakfast_mean_list[breakfast_mean_select][0]
+        $ breakfast_mean_mod1 = breakfast_mean_list[breakfast_mean_select][1]
+        $ breakfast_mean_att1 = breakfast_mean_list[breakfast_mean_select][2]
+        $ breakfast_mean_mod2 = breakfast_mean_list[breakfast_mean_select][3]
+        $ breakfast_mean_att2 = breakfast_mean_list[breakfast_mean_select][4]
+
+        # $ breakfast_select = weighted_choice(bf_weights)
+        # $ breakfast_food = breakfast[breakfast_select][0]
+        # $ breakfast_reply = breakfast[breakfast_select][1]
+        # $ breakfast_mod = breakfast[breakfast_select][2]
+        # $ breakfast_att = breakfast[breakfast_select][3]
+        # $ breakfast_weight = breakfast[breakfast_select][4]
+        # if breakfast_mod >= 0:
+        #     $ new_weight = bf_weights[breakfast_select][1] + breakfast_weight
+        # else:
+        #     $ new_weight = bf_weights[breakfast_select][1] - breakfast_weight
+        # $ bf_weights[breakfast_select] = (bf_weights[breakfast_select][0],new_weight)
 
         $ dinner_select = weighted_choice(dinner_weights)
         $ dinner_food = dinner[dinner_select][0]
@@ -284,35 +298,35 @@ label start:
                                     else:                                    
                                         $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")                               
                                     if c == (maxc):
-                                        call repeat_event(88)
+                                        call repeat_event(88) from _call_repeat_event_1
                                     else:
-                                        call repeat_event()
+                                        call repeat_event() from _call_repeat_event_2
                                 else:
                                     $ event = 88
-                                    call repeat_event(88)
+                                    call repeat_event(88) from _call_repeat_event_3
                             "[choice2]" if choice2:
                                 $ event = 99
-                                call repeat_event(99)
+                                call repeat_event(99) from _call_repeat_event_4
                     else:
                         $ event = 77
-                        call repeat_event(77)
+                        call repeat_event(77) from _call_repeat_event_5
                 elif event == 77:
                     $ text = "I should go in, {0} and {1}".format("take a shower","have breakfast and get ready for school" if day_week <= 4 else "have breakfast")
                     "[text]"
-                    call change_loc('upper hallway bathroom')
+                    call change_loc('upper hallway bathroom') from _call_change_loc_14
                 elif event == 88:
                     "You're done working on the bike today"
                     $ end_bike_repair = True
                     if bad_weather:
-                        call entrance_loc()
+                        call entrance_loc() from _call_entrance_loc_4
                     else:
-                        call change_loc('garage')
+                        call change_loc('garage') from _call_change_loc_15
                 elif event == 99:
                     "You don't really wanna work on the bike right now"
                     if bad_weather:
-                        call entrance_loc()
+                        call entrance_loc() from _call_entrance_loc_5
                     else:
-                        call change_loc('garage')
+                        call change_loc('garage') from _call_change_loc_16
 
 if end_game:
     return

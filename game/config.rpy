@@ -300,20 +300,34 @@ default p_response = ["Hm... "+fsName.formal+"s panties...\n{b}sniffs them{/b}\n
                         "{b}Sniffs panties{/b} I love her smell"
         ]
 # breakfast choices - the bf_weights is updated when you pick something, and will change the weight depending on whether or not you benefit or not
-default bf_weights = [(0,5),(1,4),(2,2),(3,1),(4,5),(5,2),(6,2),(7,4),(8,1),(9,4),(10,2)]
-default breakfast = [ #food, reply, modifier, stat, weight-mod
-            ["pancakes","I love your pancakes",2,"fm_rel",.5], 
-            ["bacon and eggs","I'm gonna get fat if I continue eating this",1,"fm_rel",.25],
-            ["scones","I don't really like scones",-1,"fm_rel",.25],
-            ["scones","Ah, scones again... okay, I guess they'll do",0,"fm_rel",.25],
-            ["sandwiches","Ah, I just love those sandwiches",2,"fm_rel",.5],
-            ["beans and bacon","What am I? A cowboy? Seriously",-1,"fm_rel",.25],
-            ["cereal","Well, if there's nothing else...",-1,"fm_rel",.25],
-            ["cereal","Cereal is fine",1,"fm_rel",.25],
-            ["muffins","I'm not in the mood for anything sweet. I'll just have coffee",0,"fm_rel",.25],
-            ["muffins","Sure, lemme have them",1,"fm_rel",.25],
-            ["muffins","These muffins taste... I'll just have coffe, thanks",-1,"fm_rel",.25]
-        ] 
+# default bf_weights = [(0,5),(1,4),(2,2),(3,1),(4,5),(5,2),(6,2),(7,4),(8,1),(9,4),(10,2)]
+# default breakfast = [ #food, reply, modifier, stat, weight-mod
+#             ["pancakes","I love your pancakes",2,"fm_rel",.5], 
+#             ["bacon and eggs","I'm gonna get fat if I continue eating this",1,"fm_rel",.25],
+#             ["scones","I don't really like scones",-1,"fm_rel",.25],
+#             ["scones","Ah, scones again... okay, I guess they'll do",0,"fm_rel",.25],
+#             ["sandwiches","Ah, I just love those sandwiches",2,"fm_rel",.5],
+#             ["beans and bacon","What am I? A cowboy? Seriously",-1,"fm_rel",.25],
+#             ["cereal","Well, if there's nothing else...",-1,"fm_rel",.25],
+#             ["cereal","Cereal is fine",1,"fm_rel",.25],
+#             ["muffins","I'm not in the mood for anything sweet. I'll just have coffee",0,"fm_rel",.25],
+#             ["muffins","Sure, lemme have them",1,"fm_rel",.25],
+#             ["muffins","These muffins taste... I'll just have coffe, thanks",-1,"fm_rel",.25]
+#         ] 
+default breakfast_food_list = ['pancakes','bacon and eggs','scones','sandwiches','beans and bacon','quiche','cereal','muffins']
+default breakfast_nice_list = [
+                ['I love your {0}',2,'fm_rel'],
+                ['I\'m gonna get fat if I keep eating this',1,'fm_rel'],
+                ['Ah, I just love those {0}',2,'fm_rel'],
+                ['{0} is fine',1,'fm_rel'],
+                ['Sure, lemme have them',1,'fm_rel'],
+                ['Not really in the mood for food this morning, I\'ll just have coffee',0,'fm_rel']
+]
+default breakfast_mean_list = [
+                ['I don\'t really like {0}',-1,'fm_rel',1,'fm_dom'],
+                ['{0} again?',-1,'fm_rel',1,'fm_dom'],
+                ['You know I don\'t like {0}',0,'fm_rel',1,'fm_dom']
+]
 
 default dinner_weights = [(0,3),(1,2),(2,5),(3,1)]        
 default dinner = [ # food, reply, comeback, modifier, stat, weight-mod
@@ -322,6 +336,7 @@ default dinner = [ # food, reply, comeback, modifier, stat, weight-mod
             ["I made steak","Oh, neat, I love steak","I know, "+fpinput+"",2,"fm_rel",.5],
             ["I went vegetarian today","Oh...","You will try it before you go all mopey!",-1,"fm_rel",.25]
         ]
+default images_unlocked = []
 
 default fs_present = [0,1,2,3,4,5,6,7,8,15,16,17,18,19,20,21,22,23]
 default fs_present_we = [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19] if fs_party else [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]

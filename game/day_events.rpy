@@ -61,7 +61,7 @@ label day_events():
                 $ current_time = "17:00"
             else:
                 $ current_time = "15:05"
-                call school_hacker_talk(True)
+                call school_hacker_talk(True) from _call_school_hacker_talk
                 # if school_hacker:
                 #     if school_hacker_first_thought:
                 #         "{i}You've been thinking about what happened with [fsName.yourformal], and you were almost sure that it wouldn't be possible to manage that many mistakes by accident. Also, they hadn't found out who had updated the records... that's usually registered...{/i}"
@@ -120,7 +120,7 @@ label day_events():
                         $ statschangenotify("sn_dom",1.5,True)
                         $ statschangenotify("sn_rel",-1,True)
                         $ statschangenotify("sn_aro",1)
-                        call principal_after_punishment_late(True)
+                        call principal_after_punishment_late(True) from _call_principal_after_punishment_late
     
     label dinner_events(de_called=False):
         if de_called:
@@ -153,11 +153,12 @@ label day_events():
                         show fs_standing smile
                     else:
                         show fs_standing ahead
-                    $ setattr( store, dinner_att, getattr( store, dinner_att ) + dinner_mod )
+                    # $ setattr( store, dinner_att, getattr( store, dinner_att ) + dinner_mod )
+                    $ statschangenotify(dinner_att,dinner_mod)
                     $ dinner_event = False
                     hide fm_standing
                     # call kitchen_loc(True)
-                call change_loc('kitchen',loctrans=True)
+                call change_loc('kitchen',loctrans=True) from _call_change_loc_20
                 # if day_week >= 5:
                 #     $ dinner_event = False
                 #     call kitchen_loc(True)
@@ -179,14 +180,14 @@ label day_events():
                         ["When you arrive home, you catch a glimpse of "+fsName.yourformal+" by the pool, but "+fmName.yourformal+" is nowhere to be seen. Her car is still here, though.",True]
                     ] # create more events here
                     if n == 1:
-                        call change_loc('outside')
+                        call change_loc('outside') from _call_change_loc_26
                     else:
-                        call livingroom_scene
+                        call livingroom_scene from _call_livingroom_scene_1
                     $ text = home_events[n][0]
                     "[text]"
-                    call change_loc('livingroom')
+                    call change_loc('livingroom') from _call_change_loc_27
                     if home_events[n][1] and fs_mad:
-                        call fs_talk(True)
+                        call fs_talk(True) from _call_fs_talk_3
                 
                 if renpy.random.random() > .5 and not hacker_3:
                     if  current_month >= 5 and current_month <= 8 and not detention_served:
@@ -252,7 +253,7 @@ label day_events():
         if pap_called:
             $ pap_called = False
             $ addtime(1, False)
-            call school_po_scene
+            call school_po_scene from _call_school_po_scene
             sp "[fp]! What have you done, to be sent to me?"
             fp "I mouthed off to Miss Novak."
             fp "She was yelling at me for being late, and I just lost it."
@@ -269,7 +270,7 @@ label day_events():
             fp "Well..."
             sp "{i}Your principal shoots you a stern look{/i}\n"
             extend "You can go, [fp]"
-            call schoolbuilding_scene
+            call schoolbuilding_scene from _call_schoolbuilding_scene_3
             # call school_finished(True)
             $ after_principal_talk = True
             call sn_detention(True) from _call_sn_detention_1

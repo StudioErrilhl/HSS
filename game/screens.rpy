@@ -1158,8 +1158,10 @@ screen confirm(message, yes_action, no_action):
                 xalign 0.5
                 spacing 150
 
-                textbutton _("Yes") action yes_action
-                textbutton _("No") action no_action
+                textbutton _("Yes") action yes_action:
+                    text_color "#0f0"
+                textbutton _("No") action no_action:
+                    text_color "#f00"
 
     ## Right-click and escape answer "no".
     key "game_menu" action no_action
@@ -1180,6 +1182,7 @@ style confirm_frame:
 style confirm_prompt_text:
     text_align 0.5
     layout "subtitle"
+    color "#fff"
 
 style confirm_button:
     properties gui.button_properties("confirm_button")

@@ -3,18 +3,22 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
     if timeadd:
         $ addtime(False, 30)
     if locname:
-        $ current_location = locname.replace(' ','_')+"_loc"
+        if 'loc' not in locname:
+            $ current_location = locname.replace(' ','_')+"_loc"
+        else:
+            $ current_location = locname.replace(' ','_')
+            $ locname = locname.replace('_loc','')
         $ tmpname = locname.replace(' ','_').replace('_loc','')+"_scene"
         if loctrans:
             $ loctrans = False
-            call expression tmpname pass (False)
+            call expression tmpname pass (False) from _call_expression
         else:
-            call expression tmpname
+            call expression tmpname from _call_expression_1
         show screen location(locname)
         if locname in firstday_talk_list:
             if firstday_talk:
                 if renpy.random.random() > .75:
-                    call fs_talk(True)
+                    call fs_talk(True) from _call_fs_talk_4
         if char and imgname:
             show expression "images/characters/[char]/body/standing/[imgname].png" as character: # at fs_standing_ahead_ani with dissolve:
                 zoom .65
@@ -23,7 +27,7 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
                 xanchor .5
                 yanchor .75
         if sec_call:
-            call expression sec_call pass (True)
+            call expression sec_call pass (True) from _call_expression_2
         call screen empty()
         hide screen empty
         hide screen location
@@ -85,9 +89,9 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
             $ carry_phone = False
             $ loct = True
         if current_time[:2] in morning and not morning_event_done:
-            call fp_morning_content(True)
+            call fp_morning_content(True) from _call_fp_morning_content_1
         else:
-            call change_loc('fp bedroom',loctrans=loct)
+            call change_loc('fp bedroom',loctrans=loct) from _call_change_loc_28
 
 label fs_bedroom_loc(fsl_called=False,trans=False):
     $ current_location = 'fs_bedroom_loc'
@@ -172,7 +176,7 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                     $ statschangenotify('fs_cor',1,True)
                     $ find_pb = True
                     $ loct = True
-        call change_loc('fs bedroom',loctrans=loct)
+        call change_loc('fs bedroom',loctrans=loct) from _call_change_loc_29
 
 label garage_loc(gar_called=False,trans=False):
     $ current_location = 'garage_loc'
@@ -318,18 +322,18 @@ label kitchen_loc(kit_called=False,trans=False):
                     $ loct = True
 
         if int(current_time[:2]) in morning and not morning_event_done:
-            call change_loc('kitchen',sec_call="breakfast_interaction",loctrans=loct)
+            call change_loc('kitchen',sec_call="breakfast_interaction",loctrans=loct) from _call_change_loc_30
         elif 16 <= int(current_time[:2]) <= 18:
             if dinner_event:
-                call change_loc('kitchen',sec_call="dinner_events",loctrans=loct)
+                call change_loc('kitchen',sec_call="dinner_events",loctrans=loct) from _call_change_loc_31
             else:
-                call change_loc('kitchen',loctrans=loct)
+                call change_loc('kitchen',loctrans=loct) from _call_change_loc_32
         if day_week <= 4 and int(current_time[:2]) in fs_present and renpy.random.random() < .5:
-            call change_loc('kitchen',sec_call='fs_talk',loctrans=loct)
+            call change_loc('kitchen',sec_call='fs_talk',loctrans=loct) from _call_change_loc_33
         elif day_week > 4 and int(current_time[:2]) in fs_present_we and renpy.random.random() < .5:
-            call change_loc('kitchen',sec_call='fs_talk',loctrans=loct)
+            call change_loc('kitchen',sec_call='fs_talk',loctrans=loct) from _call_change_loc_34
         else:
-            call change_loc('kitchen',loctrans=loct)
+            call change_loc('kitchen',loctrans=loct) from _call_change_loc_35
 
 label livingroom_loc(lvr_called=False,trans=False):
     $ current_location = 'livingroom_loc'
@@ -339,11 +343,11 @@ label livingroom_loc(lvr_called=False,trans=False):
             $ livingroom_ach = True
             $ update_been_everywhere_achievement()
         if day_week <= 4 and int(current_time[:2]) in fs_present and renpy.random.random() < .5:
-            call change_loc('livingroom',sec_call='fs_talk')
+            call change_loc('livingroom',sec_call='fs_talk') from _call_change_loc_36
         elif day_week > 4 and int(current_time[:2]) in fs_present_we and renpy.random.random() < .5:
-            call change_loc('livingroom',sec_call='fs_talk')
+            call change_loc('livingroom',sec_call='fs_talk') from _call_change_loc_37
         else:
-            call change_loc('livingroom')
+            call change_loc('livingroom') from _call_change_loc_38
 
 label outside_loc(out_called=False,trans=False):
     $ current_location = 'outside_loc'
@@ -353,7 +357,7 @@ label outside_loc(out_called=False,trans=False):
             $ outside_ach = True
             $ update_been_everywhere_achievement()
         if trans:    
-            call outside_scene
+            call outside_scene from _call_outside_scene_1
         if day_week <= 4 and int(current_time[:2]) in morning:
             menu:
                 "Go to school":
@@ -459,7 +463,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
             fp "{i}Good to get the filth off my hands{/i}"
             $ fpsink = False
             $ loct = True
-        call change_loc('upper hallway bathroom',loctrans=loct)
+        call change_loc('upper hallway bathroom',loctrans=loct) from _call_change_loc_39
 
 label tv_games_evening(tvg_called=False,trans=False):
     if tvg_called:

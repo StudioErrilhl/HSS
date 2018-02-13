@@ -597,11 +597,12 @@ screen changelog():
             text _("Version [config.version!t]\n")
 
             if gui.changelog:
-                text "[gui.changelog!t]\n"
+                text "[gui.changelog!t]\n":
+                    color "#555"
 
 
 ## This is redefined in options.rpy to add text to the about screen.
-define gui.changelog = ""
+# define gui.changelog = ""
 
 style about_label is gui_label
 style about_label_text is gui_label_text
@@ -612,7 +613,7 @@ style about_label_text:
 
 screen splash():
     timer 2.0 action Hide("splash",dissolve)
-    add "#000"
+    add "#555"
     text "Errilhl Studios Presents..." size 60 color "#ffffff" yalign .5 xalign .5
 
 screen stat_screen():
@@ -633,9 +634,9 @@ screen stat_screen():
                         if not setstate == i[1]:
                             unhovered SetScreenVariable("stats",False)
                     text "[i[0]]" ypos 25
-                # elif i[1] == "fM":
-                #     imagebutton auto "images/characters/anne/anne_face_%s.png" focus_mask True action SetScreenVariable("stats",i)
-                #     text "[i[0]]" ypos 25
+                elif i[1] == "fm":
+                    imagebutton auto "images/characters/anne/anne_%s.png" focus_mask True action SetScreenVariable("stats",i)
+                    text "[i[0]]" ypos 25
                 elif i[1] == "nk":
                     imagebutton auto "images/characters/karen/karen_%s.png" focus_mask True action [SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
                         hovered SetScreenVariable("stats",i)
@@ -1266,6 +1267,7 @@ screen phone():
                 text "[battery_text]":
                     font "gui/fonts/texgyreheroes_regular.otf"
                     size 13
+                    color "#000"
         hbox: #clock
             if battery_text != 0:
                 xalign .5
@@ -1273,9 +1275,10 @@ screen phone():
                 text "[current_time]":
                     font "gui/fonts/texgyreheroes_regular.otf"
                     size 18
+                    color "#000"
         hbox:
             if battery_text != 0:
-                xalign 0.15
+                xalign 0.2
                 yalign 0.17 
                 spacing 10          
                 if show_icons:
@@ -1283,6 +1286,8 @@ screen phone():
                         tooltip "Open the achievement-screen"
                     imagebutton auto "images/phone_help_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.9):
                         tooltip "Open the in-game help-screen"
+                    imagebutton auto "images/phone_gallery_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_gallery_screen')] at ModZoom(.9):
+                        tooltip "Open the image gallery"
         hbox:
             add "images/phone_white.png" at ModZoom(.85)
             xalign .5
@@ -1304,13 +1309,13 @@ screen phone():
                     imagebutton auto "images/phone_quit_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.9):
                         tooltip "Quit the game"
         hbox:
-            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
             xalign .5
             yalign .5
         hbox:
             if battery_text != 0:
-                imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
+                imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
                     tooltip "Go back to the home-screen"
                 xalign .5
                 yalign .5
@@ -1321,6 +1326,59 @@ screen phone():
             anchor (xval, yval)
             text GetTooltip() style "tooltip_hover"        
 
+screen phone_gallery_screen():
+    zorder 950
+    frame:
+        add "#f00"
+        background None
+        xpadding 0
+        top_padding 40
+        bottom_padding 10
+        xalign .5
+        yalign .44
+        maximum 370,686
+        $ pgsxp = 0
+        $ pgsyp = 0
+        $ pgs = 0
+        viewport:
+            mousewheel True
+            vbox:
+                for file in renpy.list_files():
+                    if file.startswith('images/phone_gallery/') and file.endswith('.png'):
+                        $ name = file.replace('images/phone_gallery/','')
+                        if name in images_unlocked:
+                            imagebutton idle Transform(file,maxsize=(215,215)):
+                                xpos pgsxp
+                                if not 'portrait' in name:
+                                    ypos pgsyp +50
+                                else:
+                                    ypos pgsyp
+                                action NullAction()
+                        else:
+                            imagebutton idle Transform(file,maxsize=(215,215)):
+                                xpos pgsxp
+                                if not 'portrait' in name:
+                                    ypos pgsyp +50
+                                else:
+                                    ypos pgsyp
+                                action NullAction()
+                        if 'portrait' in name:
+                            $ pgsxp += 125
+                        else:
+                            $ pgsxp += 220
+                        if not 'portrait' in name:
+                            $ pgsyp -= 115
+                        else:
+                            $ pgsyp -= 215
+                        if 'portrait' in name:
+                            $ pgs += 1
+                        else:
+                            $ pgs += 2
+                        if pgs >= 3:
+                            $ pgs = 0
+                            $ pgsxp = 0
+                            $ pgsyp += 225
+
 screen phone_info_screen():
     zorder 950
     hbox:
@@ -1328,7 +1386,7 @@ screen phone_info_screen():
             idle "images/phone_white_power_hover.png"
             hover "images/phone_white_power_hover.png"
             focus_mask True
-            action [SetField(persistent,'phone_firstshow',False),SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85)
+            action [SetField(persistent,'phone_firstshow',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85)
             tooltip "Shut off the phone"
         xalign .5
         yalign .5
@@ -1338,7 +1396,7 @@ screen phone_info_screen():
                 idle "images/phone_white_home_hover.png"
                 hover "images/phone_white_home_hover.png"
                 focus_mask True
-                action [SetField(persistent,'phone_firstshow',False),SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements')] at ModZoom(.85)
+                action [SetField(persistent,'phone_firstshow',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements')] at ModZoom(.85)
                 tooltip "Go back to the home-screen"
             xalign .5
             yalign .5
@@ -1403,6 +1461,13 @@ screen phone_info_screen():
                     imagebutton auto "images/phone_help_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.6):
                         yalign .5
                     textbutton "In-game help" action [SetVariable('show_icons',False),Show('phone_info_screen')]:
+                        text_size 22
+                        yalign .5
+                hbox:
+                    xpos .2
+                    imagebutton auto "images/phone_gallery_button_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_gallery_screen')] at ModZoom(.6):
+                        yalign .5
+                    textbutton "Image gallery" action [Hide('phone_info_screen'),Show('phone_gallery_screen')]:
                         text_size 22
                         yalign .5
                 text "\nand more as the game is being developed.\n\nYou close the phone by pressing the power button on the right side of the phone, and you go back to the main menu by pressing the home-button, down below"
@@ -1494,6 +1559,7 @@ screen display_achievements():
             text "[battery_text]":
                 font "gui/fonts/texgyreheroes_regular.otf"
                 size 13
+                color "#000"
     hbox: #clock
         if battery_text != 0:
             xalign .5
@@ -1501,6 +1567,7 @@ screen display_achievements():
             text "[current_time]":
                 font "gui/fonts/texgyreheroes_regular.otf"
                 size 18
+                color "#000"
     frame:
         background None
         xpadding 0
@@ -1665,12 +1732,12 @@ screen display_achievements():
         xalign .5
         yalign .5
         hbox:
-            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
             xalign .5
             yalign .5
         hbox:
-            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
                 tooltip "Go back to the home-screen"
             xalign .5
             yalign .5           
@@ -1970,12 +2037,12 @@ screen custom_preferences():
         xalign .5
         yalign .5
         hbox:
-            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('custom_preferences'),Hide('phone')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('custom_preferences'),Hide('phone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
             xalign .5
             yalign .5
         hbox:
-            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('custom_preferences')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('custom_preferences')] at ModZoom(.85):
                 tooltip "Go back to the home-screen"
             xalign .5
             yalign .5           

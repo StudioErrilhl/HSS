@@ -79,7 +79,7 @@ label fs_talk(fst_called=False):
                                 $ call_nr = True
                                 return
                             "Nah, not today, I'll do it tomorrow instead":
-                                call evening_home(True)
+                                call evening_home(True) from _call_evening_home
             if hacker_2:
                 fp "How you doing today?"
                 fs sad "Okay, I guess. A bit worried about finals"
@@ -143,16 +143,16 @@ label fs_talk(fst_called=False):
                     $ morning_event_done = True
                     $ fdtfs_after = False
                     if int(current_time[:2]) in night: #else:
-                        call end_of_day(True)
+                        call end_of_day(True) from _call_end_of_day_5
                     return
                 else:
                     $ morning_event_done = True
                     $ fdtfs_after = False
                     if int(current_time[:2]) in night: #else:
-                        call end_of_day(True)
+                        call end_of_day(True) from _call_end_of_day_6
                     return
             else:
                 $ settime(22,False,True)
                 fp "{i}Hmm... where did my damn [fsName.role] go?{/i}"
                 fp "{i}Oh, well. I'll find her tomorrow. Time for bed{/i}"
-                call change_loc('fp bedroom')
+                call change_loc('fp bedroom') from _call_change_loc_13
