@@ -53,6 +53,9 @@ Temporary Items
 *.log
 *.swp
 *.txt
+log*.*
+traceback*.*
+!license.txt
 log.txt
 backtrace.txt
 errors.txt
