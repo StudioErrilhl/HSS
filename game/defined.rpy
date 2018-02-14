@@ -656,6 +656,9 @@ image side fm_talkside mad:
 image side fm_talkside sad:
     "images/characters/anne/expressions/sad.png"
     zoom .9
+image side fm_talkside smile:
+    "images/characters/anne/expressions/smile.png"
+    zoom .9    
 
 image side fs_talkside ahead:
     "images/characters/juliette/expressions/ahead.png"

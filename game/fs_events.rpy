@@ -1,9 +1,12 @@
 label fs_talk(fst_called=False):
     if fst_called:
+        $ fst_called = False
         if not fs_mad:
             if fs_si and day_week <= 4:
-                fp "How you doing today?"                        
-                fs sad "Bah. It's a crappy day, and I have to go to school today, and talk to my teacher. Something about maybe not being allowed to take one of my finals"
+                show fs_standing ahead
+                fp "How you doing today?"  
+                show fs_standing annoyed                      
+                fs sad "Bah. It's a crappy day, and I have to go to school and talk to my teacher. Something about maybe not being allowed to take one of my finals"
                 fp "Seriously? That sounds bad"
                 fs annoyed "It's an error on their part, not on mine. I've been good all year, done all my work, behaved. But for some reason their system says I've gotten a written warning, and that I've gotten 3 or 4 calls home. I've gotten [fmName.informal] to come with, so she can tell them in person that it's wrong"
                 fs crying "It's bloody annoying! I've been good. Done everything, behaved, been nice. Nothing to deserve this, not one single thing! And nobody wants to listen to me, claiming that their system is fail-proof. I hope bringing [fmName.informal] will at least make them look over it again."
@@ -79,7 +82,7 @@ label fs_talk(fst_called=False):
                                 $ call_nr = True
                                 return
                             "Nah, not today, I'll do it tomorrow instead":
-                                call evening_home(True) from _call_evening_home
+                                call evening_home(True)
             if hacker_2:
                 fp "How you doing today?"
                 fs sad "Okay, I guess. A bit worried about finals"
@@ -102,7 +105,10 @@ label fs_talk(fst_called=False):
             if firstday_talk or talk_later:
                 show fs_standing annoyed with dissolve
                 if talk_later:
-                    $ addtime(10)
+                    if int(current_time[:2]) < 15:
+                        $ addtime(5)
+                    elif int(current_time[:2]) < 20:
+                        $ settime(20)
                 else:
                     $ addtime(False,30)
                 fp "Hi, [fsName.informal]. Can we talk?"
@@ -133,26 +139,36 @@ label fs_talk(fst_called=False):
                 show fs_standing smile_open with dissolve
                 fs smile "{b}Smiling now...{/b}\nOh, don't you worry. I will ask. You bet on it!"
                 "With that, she picks herself off the couch, and wanders off"
-                $ addtime(1,False)
                 hide fs_standing with dissolve
                 $ statschangenotify("fs_rel",3,True)
                 $ firstday_talk = False
                 $ firstday_after_talk = True
-                if fs_mad:
-                    $ fs_mad = False
-                    $ morning_event_done = True
-                    $ fdtfs_after = False
-                    if int(current_time[:2]) in night: #else:
-                        call end_of_day(True) from _call_end_of_day_5
-                    return
+                $ addtime(1,False,True,seccall='after_talk_events')
+                label after_talk_events(ate_called=False):
+                    if ate_called:
+                        $ ate_called = False
+                        if fs_mad:
+                            $ fs_mad = False
+                            $ morning_event_done = True
+                            $ fdtfs_after = False
+                            if int(current_time[:2]) in night: #else:
+                                call end_of_day(True)
+                            return
+                        else:
+                            $ morning_event_done = True
+                            $ fdtfs_after = False
+                            if int(current_time[:2]) in night: #else:
+                                call end_of_day(True)
+                            return
+            elif day_week <= 4:
+                if int(current_time[:2]) > 17:
+                    $ settime(22,False,True,'fs_where')
+                    label fs_where(fsw_called=False):
+                        if fsw_called:              
+                            fp "{i}Hmm... where did my damn [fsName.role] go?{/i}"
+                            fp "{i}Oh, well. I'll find her tomorrow. Time for bed{/i}"
+                    call change_loc('fp bedroom')
                 else:
-                    $ morning_event_done = True
-                    $ fdtfs_after = False
-                    if int(current_time[:2]) in night: #else:
-                        call end_of_day(True) from _call_end_of_day_6
-                    return
+                    call change_loc(current_location)
             else:
-                $ settime(22,False,True)
-                fp "{i}Hmm... where did my damn [fsName.role] go?{/i}"
-                fp "{i}Oh, well. I'll find her tomorrow. Time for bed{/i}"
-                call change_loc('fp bedroom') from _call_change_loc_13
+                $ settime(22,False,True,'fs_where')

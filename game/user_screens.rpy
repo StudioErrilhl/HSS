@@ -1329,7 +1329,6 @@ screen phone():
 screen phone_gallery_screen():
     zorder 950
     frame:
-        add "#f00"
         background None
         xpadding 0
         top_padding 40
@@ -1353,7 +1352,7 @@ screen phone_gallery_screen():
                                     ypos pgsyp +50
                                 else:
                                     ypos pgsyp
-                                action NullAction()
+                                action [SetVariable('current_file',file),SetVariable('show_icons',False),Hide('phone_gallery_screen'),Show('phone_gallery_show')]
                         else:
                             imagebutton idle Transform(file,maxsize=(215,215)):
                                 xpos pgsxp
@@ -1361,11 +1360,11 @@ screen phone_gallery_screen():
                                     ypos pgsyp +50
                                 else:
                                     ypos pgsyp
-                                action NullAction()
+                                action [SetVariable('current_file',file),SetVariable('show_icons',False),Hide('phone_gallery_screen'),Show('phone_gallery_show')]
                         if 'portrait' in name:
                             $ pgsxp += 125
                         else:
-                            $ pgsxp += 220
+                            $ pgsxp += 215
                         if not 'portrait' in name:
                             $ pgsyp -= 115
                         else:
@@ -1377,7 +1376,54 @@ screen phone_gallery_screen():
                         if pgs >= 3:
                             $ pgs = 0
                             $ pgsxp = 0
-                            $ pgsyp += 225
+                            $ pgsyp += 220
+
+screen phone_gallery_show():
+    zorder 950
+    default x = 500
+    default y = 400
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
+
+    frame:
+        style_prefix "infoscreen"
+        background None
+        xpadding 0
+        top_padding 60
+        bottom_padding 10
+        xalign .5
+        yalign .44
+        maximum 370,686
+        if current_file:
+            $ filename = current_file
+            add filename at Transform(maxsize=(460,810)),ModZoom(.85):
+                xalign .5
+                yalign .5
+                yoffset -5
+            imagebutton auto "images/exit_left_%s.png" focus_mask True action[Hide('phone_gallery_show'),Show('phone_gallery_screen')]
+    hbox:
+        imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
+            tooltip "Shut off the phone"
+        xalign .5
+        yalign .5
+    hbox:
+        if battery_text != 0:
+            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
+                tooltip "Go back to the home-screen"
+            xalign .5
+            yalign .5             
+    hbox:
+        add "images/phone_white.png" at ModZoom(.85)
+        xalign .5
+        yalign .5
+
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"  
 
 screen phone_info_screen():
     zorder 950
@@ -1862,7 +1908,6 @@ screen disclaimer():
 screen custom_save():
     zorder 900
     use custom_file_slots(_("Save"))
-
 
 screen custom_load():
     zorder 900

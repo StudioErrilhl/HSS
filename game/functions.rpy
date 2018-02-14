@@ -28,26 +28,52 @@ init python:
         def _generateText( what, who, f ):
             if f < 0:
                 action = "deteriorated"
+            elif f == 0:
+                action = False
             else:
                 action = "increased" if what in [ "dom", "aro", "cor", "att" ] else "improved"
 
             # Each variables in "format" by their order. So {0} = who, {1} = action, {2} = absolute value of "f".
             if what == "rel":
-                return "Your relationship with {0} has {1} by {2}".format( who, action, abs( f ) )
+                if not action:
+                    return "Your relationship with {0} did not change".format(who)
+                else:
+                    return "Your relationship with {0} has {1} by {2}".format( who, action, abs( f ) )
             elif what == "dom":
-                return "Your dominance over {0} has {1} by {2}".format( who, action, abs( f ) )
+                if not action:
+                    return "Your dominance over {0} did not change".format(who)
+                else:
+                    return "Your dominance over {0} has {1} by {2}".format( who, action, abs( f ) )
             elif what == "aro":
-                return "{0}'s arousal has {1} by {2}".format( who, action, abs( f ) ).capitalize()
+                if not action:
+                    return "{0}'s arousal did not change".format(who)
+                else:
+                    return "{0}'s arousal has {1} by {2}".format( who, action, abs( f ) ).capitalize()
             elif what == "cor":
-                return "{0}'s corruption has {1} by {2}".format( who, action, abs( f ) ).capitalize()
+                if not action:
+                    return "{0}'s corruption did not change".format(who)
+                else:
+                    return "{0}'s corruption has {1} by {2}".format( who, action, abs( f ) ).capitalize()
             elif what == "att":
-                return "{0}'s attitude has {1} by {2}".format( who, action, abs( f ) ).capitalize()
+                if not action:
+                    return "{0}'s attitude did not change".format(who)
+                else:
+                    return "{0}'s attitude has {1} by {2}".format( who, action, abs( f ) ).capitalize()
             elif what == "anal":
-                return "{0}'s acceptance of anal sex has {1} by {2}".format( who, action, abs( f ) ).capitalize()
+                if not action:
+                    return "{0}'s acceptance of anal sex did not change".format(who)
+                else:
+                    return "{0}'s acceptance of anal sex has {1} by {2}".format( who, action, abs( f ) ).capitalize()
             elif what == "pussy":
-                return "{0}'s acceptance of regular sex has {1} by {2}".format( who, action, abs( f ) ).capitalize()
+                if not action:
+                    return "{0}'s acceptance of regular sex did not change".format(who)
+                else:
+                    return "{0}'s acceptance of regular sex has {1} by {2}".format( who, action, abs( f ) ).capitalize()
             elif what == "bj":
-                return "{0}'s acceptance of giving blowjobs has {1} by {2}".format( who, action, abs( f ) ).capitalize()
+                if not action:
+                    return "{0}'s acceptance of giving blowjobs did not change".format(who)
+                else:
+                    return "{0}'s acceptance of giving blowjobs has {1} by {2}".format( who, action, abs( f ) ).capitalize()
             return "Oop's something really weird happen !"
 
         # A single line for all the possible variables, as well as both positive and negative values.
@@ -108,7 +134,7 @@ init python:
         assert False, "Shouldn't get here"
 
 init 10 python:
-    def addtime(hours=False,minutes=False,update_scene=False):
+    def addtime(hours=False,minutes=False,update_scene=False,seccall=False):
         global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text
         local_dw = day_week
         addhour = False
@@ -167,7 +193,8 @@ init 10 python:
                                 current_month_day += 1
                                 day_ahead = True
                     elif int(local_time[:2])+int(hours) > 24:
-                        current_time = str(int(0))+(int(local_time[:2])+int(hours)-24)+local_time[2:]
+                        current_time = str(int(0))+str((int(local_time[:2])+int(hours)-24))+str(local_time[2:])
+                        update_scene = True
                         if len(current_time) == 4:
                             current_time = '0'+current_time
                         setattr(store, 'current_time', current_time)                        
@@ -245,7 +272,10 @@ init 10 python:
                         if current_bg == 'upper_hallway_bathroom_night':
                             setattr(store,"bathroom_light",True)
                         else:
-                            renpy.call("change_loc",current_bg)
+                            if seccall:
+                                renpy.call('change_loc',current_bg,sec_call=seccall)
+                            else:
+                                renpy.call("change_loc",current_bg)
                         indices = [i for i, elem in enumerate(current_imgs) if not '_morning' in elem]
                 elif int(current_time[:2]) >= 6 or int(current_time[:2]) < 22:
                     current_imgs = list(renpy.get_showing_tags())
@@ -256,10 +286,13 @@ init 10 python:
                             current_bg = current_imgs[indices[0]]
                         else:
                             current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
-                        renpy.call("change_loc",current_bg)
+                        if seccall:
+                            renpy.call('change_loc',current_bg,sec_call=seccall)
+                        else:
+                            renpy.call("change_loc",current_bg)
                         indices = [i for i, elem in enumerate(current_imgs) if not '_night' in elem]
 
-    def settime(hours=False,minutes=False,update_scene=False):
+    def settime(hours=False,minutes=False,update_scene=False,seccall=False):
         global current_time
         if int(current_time[:2]) <= hours:
             if hours:
@@ -282,7 +315,10 @@ init 10 python:
                     if current_bg == 'upper_hallway_bathroom_night':
                         setattr(store,"bathroom_light",True)
                     else:
-                        renpy.call("change_loc",current_bg)
+                        if seccall:
+                            renpy.call('change_loc',current_bg,sec_call=seccall)
+                        else:
+                            renpy.call("change_loc",current_bg)
                     indices = [i for i, elem in enumerate(current_imgs) if not '_morning' in elem]
             elif int(current_time[:2]) >= 6 or int(current_time[:2]) < 22:
                 current_imgs = list(renpy.get_showing_tags())
@@ -293,7 +329,10 @@ init 10 python:
                         current_bg = current_imgs[indices[0]]
                     else:
                         current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
-                    renpy.call("change_loc",current_bg)
+                    if seccall:
+                        renpy.call('change_loc',current_bg,sec_call=seccall)
+                    else:
+                        renpy.call("change_loc",current_bg)
                     indices = [i for i, elem in enumerate(current_imgs) if not '_night' in elem]
 
     def inv_list_fetch():

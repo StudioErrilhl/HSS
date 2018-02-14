@@ -5,19 +5,15 @@ label night_events():
             if int(current_time[:2]) not in night:
                 menu:
                     "Sleep the day away":
-                        call sleeping_day_away(True) from _call_sleeping_day_away
+                        call sleeping_day_away(True)
                     "Stay up":
-                        call fp_bedroom_loc(True) from _call_fp_bedroom_loc
+                        call fp_bedroom_loc(True)
             else:
                 menu:
                     "Go to sleep":
-                        call sleeping(True) from _call_sleeping
+                        call sleeping(True)
                     "Stay up a bit longer":
-                        call fp_bedroom_loc(True) from _call_fp_bedroom_loc_1
-            # return
-        # else:
-        #     return
-
+                        call fp_bedroom_loc(True)
 
     label end_of_day(end_called=False):
         if end_called or end_cfs:
@@ -42,11 +38,8 @@ label night_events():
                 else:
                     $ current_month_day += 1
                     $ day_ahead = True
-            call fp_bedroom_scene from _call_fp_bedroom_scene
-            call sleep_the_night(True) from _call_sleep_the_night
-            # return
-        # else:
-        #     return
+            call fp_bedroom_scene
+            call sleep_the_night(True)
 
     label sleeping(sle_called=False):
         if sle_called:
@@ -67,16 +60,9 @@ label night_events():
             $ after_sleep = True
             $ day_ahead = False
             jump day_start
-            # return
-        # else:
-            # return
 
     label sleeping_day_away(sld_called=False):
         if sld_called:
             $ sld_called = False
             $ settime(22,False)
-            # call fp_bedroom_scene
-            call fp_bedroom_loc(True) from _call_fp_bedroom_loc_2
-            # return
-        # else:
-        #     return
+            call fp_bedroom_loc(True)

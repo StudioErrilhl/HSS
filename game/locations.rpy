@@ -11,14 +11,14 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
         $ tmpname = locname.replace(' ','_').replace('_loc','')+"_scene"
         if loctrans:
             $ loctrans = False
-            call expression tmpname pass (False) from _call_expression
+            call expression tmpname pass (False)
         else:
-            call expression tmpname from _call_expression_1
+            call expression tmpname
         show screen location(locname)
         if locname in firstday_talk_list:
             if firstday_talk:
                 if renpy.random.random() > .75:
-                    call fs_talk(True) from _call_fs_talk_4
+                    call fs_talk(True)
         if char and imgname:
             show expression "images/characters/[char]/body/standing/[imgname].png" as character: # at fs_standing_ahead_ani with dissolve:
                 zoom .65
@@ -27,7 +27,7 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
                 xanchor .5
                 yanchor .75
         if sec_call:
-            call expression sec_call pass (True) from _call_expression_2
+            call expression sec_call pass (True)
         call screen empty()
         hide screen empty
         hide screen location
@@ -38,7 +38,7 @@ label entrance_loc(trans=False):
     if not entrance_ach:
         $ entrance_ach = True
         $ update_been_everywhere_achievement()
-    call change_loc('entrance') from _call_change_loc
+    call change_loc('entrance')
 
 label fp_bedroom_loc(fpl_called=False,trans=False):
     $ current_location = 'fp_bedroom_loc'
@@ -89,9 +89,9 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
             $ carry_phone = False
             $ loct = True
         if current_time[:2] in morning and not morning_event_done:
-            call fp_morning_content(True) from _call_fp_morning_content_1
+            call fp_morning_content(True)
         else:
-            call change_loc('fp bedroom',loctrans=loct) from _call_change_loc_28
+            call change_loc('fp bedroom',loctrans=loct)
 
 label fs_bedroom_loc(fsl_called=False,trans=False):
     $ current_location = 'fs_bedroom_loc'
@@ -176,7 +176,7 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                     $ statschangenotify('fs_cor',1,True)
                     $ find_pb = True
                     $ loct = True
-        call change_loc('fs bedroom',loctrans=loct) from _call_change_loc_29
+        call change_loc('fs bedroom',loctrans=loct)
 
 label garage_loc(gar_called=False,trans=False):
     $ current_location = 'garage_loc'
@@ -194,7 +194,7 @@ label garage_loc(gar_called=False,trans=False):
                     $ toolbox_added = False
         else:
             $ renpy.notify("You don't have anywhere to carry this item")
-        call change_loc('garage') from _call_change_loc_3
+        call change_loc('garage')
 
 label kitchen_loc(kit_called=False,trans=False):
     $ current_location = 'kitchen_loc'
@@ -322,18 +322,18 @@ label kitchen_loc(kit_called=False,trans=False):
                     $ loct = True
 
         if int(current_time[:2]) in morning and not morning_event_done:
-            call change_loc('kitchen',sec_call="breakfast_interaction",loctrans=loct) from _call_change_loc_30
+            call change_loc('kitchen',sec_call="breakfast_interaction",loctrans=loct)
         elif 16 <= int(current_time[:2]) <= 18:
             if dinner_event:
-                call change_loc('kitchen',sec_call="dinner_events",loctrans=loct) from _call_change_loc_31
+                call change_loc('kitchen',sec_call="dinner_events",loctrans=loct)
             else:
-                call change_loc('kitchen',loctrans=loct) from _call_change_loc_32
+                call change_loc('kitchen',loctrans=loct)
         if day_week <= 4 and int(current_time[:2]) in fs_present and renpy.random.random() < .5:
-            call change_loc('kitchen',sec_call='fs_talk',loctrans=loct) from _call_change_loc_33
+            call change_loc('kitchen',sec_call='fs_talk',loctrans=loct)
         elif day_week > 4 and int(current_time[:2]) in fs_present_we and renpy.random.random() < .5:
-            call change_loc('kitchen',sec_call='fs_talk',loctrans=loct) from _call_change_loc_34
+            call change_loc('kitchen',sec_call='fs_talk',loctrans=loct)
         else:
-            call change_loc('kitchen',loctrans=loct) from _call_change_loc_35
+            call change_loc('kitchen',loctrans=loct)
 
 label livingroom_loc(lvr_called=False,trans=False):
     $ current_location = 'livingroom_loc'
@@ -343,11 +343,11 @@ label livingroom_loc(lvr_called=False,trans=False):
             $ livingroom_ach = True
             $ update_been_everywhere_achievement()
         if day_week <= 4 and int(current_time[:2]) in fs_present and renpy.random.random() < .5:
-            call change_loc('livingroom',sec_call='fs_talk') from _call_change_loc_36
+            call change_loc('livingroom',sec_call='fs_talk')
         elif day_week > 4 and int(current_time[:2]) in fs_present_we and renpy.random.random() < .5:
-            call change_loc('livingroom',sec_call='fs_talk') from _call_change_loc_37
+            call change_loc('livingroom',sec_call='fs_talk')
         else:
-            call change_loc('livingroom') from _call_change_loc_38
+            call change_loc('livingroom')
 
 label outside_loc(out_called=False,trans=False):
     $ current_location = 'outside_loc'
@@ -357,14 +357,14 @@ label outside_loc(out_called=False,trans=False):
             $ outside_ach = True
             $ update_been_everywhere_achievement()
         if trans:    
-            call outside_scene from _call_outside_scene_1
+            call outside_scene
         if day_week <= 4 and int(current_time[:2]) in morning:
             menu:
                 "Go to school":
-                    call travel_school(True) from _call_travel_school
+                    call travel_school(True)
                 "Stay home":
                     pass
-        call change_loc('outside') from _call_change_loc_7
+        call change_loc('outside')
 
 label upper_hallway_loc(uhl_called=False,trans=False):
     $ current_location = 'upper_hallway_loc'
@@ -374,8 +374,8 @@ label upper_hallway_loc(uhl_called=False,trans=False):
     if uhl_called or uhl_cfs:
         $ uhl_called = uhl_cfs = False
         if backpack.has_item(princessplug_item):
-            call talk_fs(True) from _call_talk_fs   
-        call change_loc('upper hallway') from _call_change_loc_8
+            call talk_fs(True)   
+        call change_loc('upper hallway')
 
 label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
     $ current_location = 'upper_hallway_bathroom_loc'
@@ -463,33 +463,33 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
             fp "{i}Good to get the filth off my hands{/i}"
             $ fpsink = False
             $ loct = True
-        call change_loc('upper hallway bathroom',loctrans=loct) from _call_change_loc_39
+        call change_loc('upper hallway bathroom',loctrans=loct)
 
 label tv_games_evening(tvg_called=False,trans=False):
     if tvg_called:
         $ tvg_called = False
         "This is just a placeholder for this event"
-    call end_of_day() from _call_end_of_day
+    call end_of_day()
 
 label beach_ride(br_called=False):
     if br_called:
         $ br_called = False
         $ addtime(1,30)
-        call change_loc('beach') from _call_change_loc_10
-    call end_of_day() from _call_end_of_day_1
+        call change_loc('beach')
+    call end_of_day()
 
 label next_town_ride(ntr_called=False,trans=False):
     if ntr_called:
         $ ntr_called = False
         "This is just a placeholder for this event"
-    call end_of_day() from _call_end_of_day_2
+    call end_of_day()
 label cabin_ride(cr_called=False,trans=False):
     if cr_called:
         $ cr_called = False
         "This is just a placeholder for this event"
-    call end_of_day() from _call_end_of_day_3
+    call end_of_day()
 label marina_ride(mr_called=False,trans=False):
     if mr_called:
         $ mr_called = False
         "This is just a placeholder for this event"    
-    call end_of_day() from _call_end_of_day_4
+    call end_of_day()

@@ -248,6 +248,7 @@ default tfs_cfs = False
 default end_cfs = False
 default stn_cfs = False
 default wmc_cfs = False
+default current_file = False
 
 default exitdown_event_var = False
 default exitup_event_var = False
