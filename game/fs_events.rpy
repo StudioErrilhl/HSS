@@ -20,11 +20,12 @@ label fs_talk(fst_called=False):
                 $ fs_si_2 = True
                 return
             if fs_si_2:
+                show fs_standing ahead
                 fp "How did it go with the issue you had with the school?"
                 if persistent.first_playthrough:
                     fs ahead "Oh, it was nothing, really. We talked, and ended up going through all the entries made about me the last year. [fmName.Informal] confirmed she hadn't received any of the notes or calls that were registered in the system, which sort of made my teacher go a little pale, and become a little upset."
                     fp "Who?"
-                    fs ahead "Oh, [se]. She can be a real bitch!"
+                    fs annoyed "Oh, [se]. She can be a real bitch!"
                     fp "Oh, yeah, I've heard about her..."
                     fs ahead "Anyway. We ended up going to the principal's office, and talked to one of the clerks there, and she was able to look at the records, and figure out that someone had made a boo-boo, registering complaints for another student on me. She couldn't say for sure who'd done it, though, so they were gonna look into it."
                     fp "But you're off the hook?"
@@ -32,6 +33,7 @@ label fs_talk(fst_called=False):
                     fp "{i}Hmm... sounds weird that they would make so many mistakes, all pertaining to [fsName.myformal]. Either they're completely incompetent, or there is something else going on...{/i}"
                     $ fs_si_2 = False
                     $ hacker = True
+                    hide fs_standing
                     return 
                 else:
                     fs mad "Oh, the damn idiots didn't even wanna listen to me. Or [fmName.informal], for that matter. Just went on about how their system didn't make mistakes."
@@ -43,6 +45,7 @@ label fs_talk(fst_called=False):
                     "{i}Hm... maybe I can score some points with [fsName.myformal], if I figure this out?{/i}"
                     $ fs_si_2 = False
                     $ scs = True
+                    hide fs_standing
                     return
                 return
             label school_hacker_talk(sht_called=False):
@@ -63,7 +66,7 @@ label fs_talk(fst_called=False):
                                 scn "..."
                                 fp "Ah, who am I kidding! I'm definitely gonna be doing it again!"
                                 "{i}[scn] looks pleased, although she's still blushing slightly{/i}"
-                                fp "Oh, and I wanted to ask you about something. I know you're not supposed to talk about other students, but it's about [fmName.myformal]. She was in here the other day, about some issues with her getting written up and such, and I just thought what she told me after the meeting sounded... a bit weird."
+                                fp "Oh, and I wanted to ask you about something. I know you're not supposed to talk about other students, but it's about [fsName.myformal]. She was in here the other day, about some issues with her getting written up and such, and I just thought what she told me after the meeting sounded... a bit weird."
                                 scn "Yeah, I remember. I'm not really supposed to say anything, but... The whole thing is a bit embarrassing, to be honest"
                                 fp "Oh?"
                                 scn "Yeah... {i}She lowers her voice, obviously not wanting to be overheard{/i}\nYou see, it seems that none of the teachers have been making the changes, writing her up. Nothing in the system logs shows any real logins when the changes were made"
@@ -84,6 +87,7 @@ label fs_talk(fst_called=False):
                             "Nah, not today, I'll do it tomorrow instead":
                                 call evening_home(True)
             if hacker_2:
+                show fs_standing ahead with dissolve
                 fp "How you doing today?"
                 fs sad "Okay, I guess. A bit worried about finals"
                 fp "Well, at least you get to take them!"
@@ -91,12 +95,14 @@ label fs_talk(fst_called=False):
                 fp "I know, I know! But unless you had gotten in their face about it, it would've probably not ended well, and you might have had to take summer-school or something to make it up"
                 fs ahead "Yeah. That would have totally sucked!"
                 fp "Well, I'm glad that all you have to worry about now is your exams"
+                show fs_standing smile with dissolve
                 fs smile "You can't help it, can you. Just have to rub it in!"
                 fp "You know me, [fsName.informal]! I love rubbing it in!"
                 $ statschangenotify("fs_aro",.5,True)
                 $ statschangenotify("fs_rel",1)
                 $ hacker_2 = False
                 $ hacker_3 = True
+                hide fs_standing with dissolve
             elif scs_2:
                 fp "How you doing today?"
                 fs ahead "Oh, I'm good. Got a call from school the other day that they've figured out that I was right. No excuses or anything, just... \"You were right, you can take your exams\". Fuck 'em. But I'm happy I don't have to do summer-school or something like that!"

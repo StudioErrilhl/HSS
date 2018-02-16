@@ -27,6 +27,7 @@ default persistent.skipintro = False
 default persistent.splash_screen = False
 default persistent.maininfo = True
 default persistent.phone_firstshow = True
+default persistent.statscreen_infotext = True
 default persistent.backpack_info = True
 
 # character definitions
@@ -189,6 +190,7 @@ default scs_2 = False
 default scs_3 = False
 default clerk_talked_to = scn.name
 default fs_party = False
+default fs_invitation = False
 
 # items
 default fs_pale_pink_panties = False
@@ -213,6 +215,9 @@ default gp_bed = False
 default gp_bath = False
 default br = False
 default backpack_carry = False
+default selecteditem = False
+default selecteditemname = 'Heading'
+default selecteditemamount = False
 
 # tablet
 default fs_tablet_bedroom = False
@@ -249,6 +254,7 @@ default end_cfs = False
 default stn_cfs = False
 default wmc_cfs = False
 default current_file = False
+default keyclose = False
 
 default exitdown_event_var = False
 default exitup_event_var = False
@@ -292,7 +298,8 @@ default beach_ach = False
 default selected_number = 0
 default panties_sniffer = False
 
-# lists 
+# lists
+default hints = []
 default firstday_talk_list = ['livingroom','fp bedroom','fs bedroom','kitchen','entrance','outside']
 default fs_p = ['fs_yellow','fs_light_blue','fs_pale_pink','fs_bright_pink']
 default p_response = ["Hm... "+fsName.formal+"s panties...\n{b}sniffs them{/b}\nShould I take them with me?",

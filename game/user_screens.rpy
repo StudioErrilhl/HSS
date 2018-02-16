@@ -600,10 +600,6 @@ screen changelog():
                 text "[gui.changelog!t]\n":
                     color "#555"
 
-
-## This is redefined in options.rpy to add text to the about screen.
-# define gui.changelog = ""
-
 style about_label is gui_label
 style about_label_text is gui_label_text
 style about_text is gui_text
@@ -614,12 +610,32 @@ style about_label_text:
 screen splash():
     timer 2.0 action Hide("splash",dissolve)
     add "#555"
-    text "Errilhl Studios Presents..." size 60 color "#ffffff" yalign .5 xalign .5
+    text "Errilhl Studios Presents..." size 60 color "#fff" yalign .5 xalign .5
+
+screen statscreen_infotext():
+    modal True
+    zorder 960
+    $ keyclose = True
+    frame:
+        xsize 900
+        ysize 300
+        yalign .5
+        xalign .5
+        text "The statscreen consists of thumbnails for each character. When hovering over an image, it will display the stats for that character. The stats change over time, so you might wanna keep an eye on them. If you click on a character image, the stats for that character will show permanently and revert back to that character if you hover over another character."
+        if cheat:
+            text "If you have enabled the cheat-mode, this will allow you to manipulate stats."
+        imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),SetField(persistent,'statscreen_infotext',False),Hide("statscreen_infotext")]
+        if keyclose:
+            key 'K_ESCAPE' action [SetVariable('keyclose',False),SetField(persistent,'statscreen_infotext',False),Hide("statscreen_infotext")]
 
 screen stat_screen():
     modal True
+    if persistent.statscreen_infotext:
+        on "show" action Show('statscreen_infotext')
     zorder 800
     default stats = None
+    default clicked = None
+    $ keyclose = True
     frame:
         xalign .5 ypos .1
         xsize 800
@@ -629,30 +645,35 @@ screen stat_screen():
             spacing 20
             for i in chars:
                 if i[1] == "fs":
-                    imagebutton auto "images/characters/juliette/juliette_%s.png" focus_mask True action [SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
+                    imagebutton auto "images/characters/juliette/juliette_%s.png" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
                         hovered SetScreenVariable("stats",i)
                         if not setstate == i[1]:
-                            unhovered SetScreenVariable("stats",False)
+                            unhovered SetScreenVariable("stats",clicked)
                     text "[i[0]]" ypos 25
                 elif i[1] == "fm":
-                    imagebutton auto "images/characters/anne/anne_%s.png" focus_mask True action SetScreenVariable("stats",i)
+                    imagebutton auto "images/characters/anne/anne_%s.png" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
+                        hovered SetScreenVariable("stats",i)
+                        if not setstate == i[1]:
+                            unhovered SetScreenVariable("stats",clicked)
                     text "[i[0]]" ypos 25
                 elif i[1] == "nk":
-                    imagebutton auto "images/characters/karen/karen_%s.png" focus_mask True action [SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
+                    imagebutton auto "images/characters/karen/karen_%s.png" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
                         hovered SetScreenVariable("stats",i)
                         if not setstate == i[1]:
-                            unhovered SetScreenVariable("stats",False)
+                            unhovered SetScreenVariable("stats",clicked)
                     text "[i[0]]" ypos 25
                 else:
-                    imagebutton auto "images/question_mark_%s.png" focus_mask True action [SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
+                    imagebutton auto "images/question_mark_%s.png" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
                         hovered SetScreenVariable("stats",i)
                         if not setstate == i[1]:
-                            unhovered SetScreenVariable("stats",False)
+                            unhovered SetScreenVariable("stats",clicked)
                     if i[1] == "sn" or i[1] == "sp":
                         text "[i[0]]" ypos 25
                     else:
                         text "[i[0]]" ypos 35
-        imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetScreenVariable('stats',False),Hide("stat_screen")]
+        imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),SetScreenVariable('stats',False),Hide("stat_screen")]
+        if keyclose:
+            key 'K_ESCAPE' action [SetVariable('keyclose',False),SetScreenVariable('stats',False),Hide("stat_screen")]
 
         if stats:
             vbox:
@@ -719,6 +740,7 @@ screen stat_screen():
 screen inventory_screen():
     zorder 970
     modal True
+    $ keyclose = True
     frame:
         style_prefix "infoscreen"
         background "images/inventory_background.png"
@@ -731,84 +753,149 @@ screen inventory_screen():
         $ xa = 0
         $ ya = 0
         $ i = 0
-        vpgrid:
-            style_prefix "inventory"
-            cols 1
-            scrollbars "vertical"
-            edgescroll 100,500
-            mousewheel True 
-            spacing 5               
-            $ inv_list = inv_list_fetch()
-            for name in sorted(inv_list): 
-                for item in backpack:
-                    $ check_item_name = item.name.replace('fs_','').replace('_',' ').capitalize()
-                    if 'panties' in check_item_name.lower():
-                        $ tempname = check_item_name.replace(' - ',' ').split(' ')
-                        if len(tempname) == 2:
-                            $ check_item_name = tempname[1]+' - '+tempname[0]
-                        else:
-                            $ check_item_name = tempname[1]+' - '+tempname[2]+' '+tempname[0]
-                    if check_item_name.lower() == name:
+        hbox:
+            # ysize 1080
+            xsize 700
+            vpgrid:
+            # viewport:
+                style_prefix "inventory"
+                cols 1
+                scrollbars None
+                edgescroll 100,500
+                mousewheel True 
+                spacing 5               
+                $ inv_list = inv_list_fetch()
+                for name in sorted(inv_list): 
+                    for item in backpack:
+                        $ check_item_name = item.name.replace('fs_','').replace('_',' ').capitalize()
+                        if 'panties' in check_item_name.lower():
+                            $ tempname = check_item_name.replace(' - ',' ').split(' ')
+                            if len(tempname) == 2:
+                                $ check_item_name = tempname[1]+' - '+tempname[0]
+                            else:
+                                $ check_item_name = tempname[1]+' - '+tempname[2]+' '+tempname[0]
+                        if check_item_name.lower() == name:
+                            fixed:
+                                xsize 600
+                                ysize 160
+                                hbox:
+                                    xsize 160
+                                    ysize 160
+                                    # $ current_items = item.name
+                                    $ current_items = check_item_name.lower()
+                                    if name.lower() == 'princessplug':
+                                        add "images/inventory/outer_ring.png":
+                                            xalign .5
+                                            yalign .5
+                                        $ displayname = item.name.capitalize()     
+                                        imagebutton auto "images/inventory/"+item.name+"_%s.png":
+                                            xalign .5
+                                            xoffset -140                                        
+                                            yalign .5
+                                            focus_mask True
+                                            # action [Hide('inventory_screen')]
+                                            action [SetVariable('selecteditemamount',item.amount),SetVariable('selecteditemname',displayname),SetVariable('selecteditem',item.name)]
+                                    elif name.lower() == 'phone' and current_location == 'fp_bedroom_loc':
+                                        add "images/inventory/outer_ring.png":
+                                            xalign .5
+                                            yalign .5                                    
+                                        $ displayname = item.name.capitalize()     
+                                        imagebutton auto "images/inventory/"+item.name+"_%s.png":
+                                            xalign .5
+                                            xoffset -140                                        
+                                            yalign .5
+                                            focus_mask True
+                                            # action [Hide('inventory_screen'),SetVariable('charge_phone',True),SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]
+                                            action [SetVariable('selecteditemamount',item.amount),SetVariable('selecteditemname',displayname),SetVariable('selecteditem',item.name)]
+                                    else:
+                                        add "images/inventory/outer_ring.png":
+                                            xalign .5
+                                            yalign .5                          
+                                        if 'panties' in item.name:
+                                            $ ptmp = item.name.replace('fs_','').replace('_',' ').split(' ')
+                                            if len(ptmp) == 2:
+                                                $ pname = ptmp[1]+' - '+ptmp[0]
+                                            elif len(ptmp) == 3:
+                                                $ pname = str(ptmp[2]+' - '+ptmp[0]+' '+ptmp[1])
+                                            $ displayname = pname.capitalize()
+                                        else:
+                                            $ displayname = item.name.capitalize()                                                      
+                                        imagebutton auto "images/inventory/"+item.name+"_%s.png":
+                                            xalign .5
+                                            xoffset -140
+                                            yalign .5
+                                            focus_mask True 
+                                            # action [Hide("inventory_screen")]
+                                            action [SetVariable('selecteditemamount',item.amount),SetVariable('selecteditemname',displayname),SetVariable('selecteditem',item.name)]
+                                hbox:
+                                    xsize 375
+                                    xpos 160
+                                    ysize 160
+                                    if 'panties' in item.name:
+                                        $ ptmp = item.name.replace('fs_','').replace('_',' ').split(' ')
+                                        if len(ptmp) == 2:
+                                            $ pname = ptmp[1]+' - '+ptmp[0]
+                                        elif len(ptmp) == 3:
+                                            $ pname = str(ptmp[2]+' - '+ptmp[0]+' '+ptmp[1])
+                                        $ displayname = pname.capitalize()
+                                    else:
+                                        $ displayname = item.name.capitalize()
+                                    text "[displayname]":
+                                        xalign 0.0
+                                        xoffset 10
+                                        yalign .5
+                                hbox:
+                                    xsize 65
+                                    xpos 535
+                                    ysize 160
+                                    text "[item.amount]":
+                                        xalign .5
+                                        yalign .5
+                                $ xa += 148
+                                $ i += 1
+                                $ ya -= 148
+                                if (i % 4 == 0):
+                                    $ xa = 0
+                                    $ ya += 173
+                    if not name in current_items:
                         fixed:
                             xsize 600
                             ysize 160
                             hbox:
+                                # add "#f00"
                                 xsize 160
                                 ysize 160
-                                # $ current_items = item.name
-                                $ current_items = check_item_name.lower()
-                                if name.lower() == 'princessplug':
-                                    add "images/inventory/outer_ring.png":
-                                        xalign .5
-                                        yalign .5
-                                    imagebutton auto "images/inventory/"+item.name+"_%s.png":
-                                        xalign .5
-                                        xoffset -140                                        
-                                        yalign .5
-                                        focus_mask True
-                                        action [Hide('inventory_screen')]
-                                elif name.lower() == 'phone' and current_location == 'fp_bedroom_loc':
-                                    add "images/inventory/outer_ring.png":
-                                        xalign .5
-                                        yalign .5                                    
-                                    imagebutton auto "images/inventory/"+item.name+"_%s.png":
-                                        xalign .5
-                                        xoffset -140                                        
-                                        yalign .5
-                                        focus_mask True
-                                        action [Hide('inventory_screen'),SetVariable('charge_phone',True),SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]
+                                if 'panties' in name:
+                                    $ tempname = name.replace(' ','_').replace('_-_','_').lower().split('_')
+                                    if len(tempname) == 2:
+                                        $ imgname = str('fs_'+tempname[1]+'_'+tempname[0])
+                                    elif len(tempname) == 3:
+                                        $ imgname = str('fs_'+tempname[1]+'_'+tempname[2]+'_'+tempname[0])
                                 else:
-                                    add "images/inventory/outer_ring.png":
-                                        xalign .5
-                                        yalign .5                                    
-                                    imagebutton auto "images/inventory/"+item.name+"_%s.png":
-                                        xalign .5
-                                        xoffset -140
-                                        yalign .5
-                                        focus_mask True 
-                                        action [Hide("inventory_screen")]
+                                    $ imgname = str(name.replace(' ','_').replace('_-_','_').lower())
+                                add "images/inventory/outer_ring_insensitive.png":
+                                    xalign .5
+                                    yalign .5                                
+                                add "images/inventory/"+imgname+"_insensitive.png":
+                                    xalign .5
+                                    xoffset -140
+                                    yalign .5
                             hbox:
+                                # add "#0f0"                                
                                 xsize 375
                                 xpos 160
                                 ysize 160
-                                if 'panties' in item.name:
-                                    $ ptmp = item.name.replace('fs_','').replace('_',' ').split(' ')
-                                    if len(ptmp) == 2:
-                                        $ pname = ptmp[1]+' - '+ptmp[0]
-                                    elif len(ptmp) == 3:
-                                        $ pname = str(ptmp[2]+' - '+ptmp[0]+' '+ptmp[1])
-                                    $ displayname = pname.capitalize()
-                                else:
-                                    $ displayname = item.name.capitalize()
+                                $ displayname = name.replace('fs_','').replace('_',' ').capitalize()
                                 text "[displayname]":
                                     xalign 0.0
                                     xoffset 10
-                                    yalign .5
+                                    yalign .5                                        
                             hbox:
+                                # add "#00f"                                 
                                 xsize 65
-                                xpos 535
-                                ysize 160
-                                text "[item.amount]":
+                                xpos 535  
+                                ysize 160                              
+                                text "0":
                                     xalign .5
                                     yalign .5
                             $ xa += 148
@@ -817,56 +904,53 @@ screen inventory_screen():
                             if (i % 4 == 0):
                                 $ xa = 0
                                 $ ya += 173
-                if not name in current_items:
-                    fixed:
-                        xsize 600
-                        ysize 160
-                        hbox:
-                            # add "#f00"
-                            xsize 160
-                            ysize 160
-                            if 'panties' in name:
-                                $ tempname = name.replace(' ','_').replace('_-_','_').lower().split('_')
-                                if len(tempname) == 2:
-                                    $ imgname = str('fs_'+tempname[1]+'_'+tempname[0])
-                                elif len(tempname) == 3:
-                                    $ imgname = str('fs_'+tempname[1]+'_'+tempname[2]+'_'+tempname[0])
-                            else:
-                                $ imgname = str(name.replace(' ','_').replace('_-_','_').lower())
-                            add "images/inventory/outer_ring_insensitive.png":
-                                xalign .5
-                                yalign .5                                
-                            add "images/inventory/"+imgname+"_insensitive.png":
-                                xalign .5
-                                xoffset -140
-                                yalign .5
-                        hbox:
-                            # add "#0f0"                                
-                            xsize 375
-                            xpos 160
-                            ysize 160
-                            $ displayname = name.replace('fs_','').replace('_',' ').capitalize()
-                            text "[displayname]":
-                                xalign 0.0
-                                xoffset 10
-                                yalign .5                                        
-                        hbox:
-                            # add "#00f"                                 
-                            xsize 65
-                            xpos 535  
-                            ysize 160                              
-                            text "0":
+        hbox:
+            xpos 700
+            xsize 1130
+            ysize 600
+            frame:
+                xsize 1130
+                background Frame("images/inventory/outer_ring_large.png")
+                hbox:
+                    xsize 158
+                    vbox:
+                        ysize 158
+                        xsize 158
+                        add "images/inventory/outer_ring.png"
+                    if selecteditem:
+                        vbox:
+                            ysize 158
+                            xsize 158
+                            xpos -158
+                            add "images/inventory/"+selecteditem+"_idle.png":
                                 xalign .5
                                 yalign .5
-                        $ xa += 148
-                        $ i += 1
-                        $ ya -= 148
-                        if (i % 4 == 0):
-                            $ xa = 0
-                            $ ya += 173
-
-        textbutton "Close inventory" action Hide("inventory_screen") xalign .95 yalign 1.0
-        imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action Hide("inventory_screen")                        
+                    vbox:
+                        ysize 50
+                        xsize 158
+                        if selecteditem:
+                            xpos -316
+                        else:
+                            xpos -158
+                        ypos 158
+                        text "{b}Quantity:{/b}"+"{0}".format(selecteditemamount if selecteditemamount else '0') at center
+                hbox:
+                    xsize 925
+                    vbox:
+                        xsize 910
+                        xpos 170
+                        ysize 40
+                        text "{b}{size=30}[selecteditemname]{/size}{/b}" at center
+                    vbox:
+                        xsize 910
+                        xpos -740
+                        ypos 40
+                        text "This is some flavor text for the item currently shown. It will contain mostly completely irrelevant information, and sometimes it might even include something useful about a completely different item...":
+                            justify True
+        textbutton "Close inventory" action [SetVariable('selecteditem',False),SetVariable('selecteditemname',False),SetVariable('selecteditemamount',False),SetVariable('keyclose',False),Hide("inventory_screen")] xalign .95 yalign 1.0
+        imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('selecteditem',False),SetVariable('selecteditemname',False),SetVariable('selecteditemamount',False),SetVariable('keyclose',False),Hide("inventory_screen")]
+        if keyclose:
+            key 'K_ESCAPE' action [SetVariable('keyclose',False),Hide("inventory_screen")]
 
 screen say(who, what):
     style_prefix "say"
@@ -1101,12 +1185,12 @@ screen location(room=False):
     if room == "upper hallway":
             imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_fp_door_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fp_door_morning_%s.png") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]:
                 tooltip "Enter your room"
-            if fs_rel >= 40:
+            if fs_rel >= 40 or fs_invitation:
                 imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_fs_door_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fs_door_morning_%s.png") focus_mask True action [SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]:
                     tooltip "Enter [fsName.yourformal]'s room"
             else:
                 imagebutton idle ("images/backgrounds/interactions_move/upper_hallway_fs_door_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fs_door_morning_idle.png") focus_mask True action NullAction():
-                    tooltip "You need a relationship of 40+ with [fsName.yourformal] to enter her room"
+                    tooltip "You need a relationship of 40+ with [fsName.yourformal], or an invitation, to enter her room"
             imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_bathroom_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_bathroom_morning_%s.png") focus_mask True action [SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]:
                 tooltip "Enter bathroom"
             imagebutton auto ("images/backgrounds/interactions_move/stairs_down_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_down_morning_%s.png") focus_mask True action Jump('entrance_loc'):
@@ -1219,7 +1303,7 @@ screen phone():
 
     if persistent.phone_firstshow:
         on 'show' action [SetVariable('show_icons',False),Show('phone_info_screen')]
-
+    $ keyclose = True
     fixed:
         fit_first True
         xmaximum 500
@@ -1288,6 +1372,8 @@ screen phone():
                         tooltip "Open the in-game help-screen"
                     imagebutton auto "images/phone_gallery_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_gallery_screen')] at ModZoom(.9):
                         tooltip "Open the image gallery"
+                    imagebutton auto "images/phone_help_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen')] at [ModZoom(.9),right]:
+                        tooltip "Open the hint-screen"
         hbox:
             add "images/phone_white.png" at ModZoom(.85)
             xalign .5
@@ -1309,13 +1395,15 @@ screen phone():
                     imagebutton auto "images/phone_quit_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.9):
                         tooltip "Quit the game"
         hbox:
-            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
             xalign .5
             yalign .5
+            if keyclose:
+                key 'K_ESCAPE' action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Hide('phone')]
         hbox:
             if battery_text != 0:
-                imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
+                imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements')] at ModZoom(.85):
                     tooltip "Go back to the home-screen"
                 xalign .5
                 yalign .5
@@ -1328,6 +1416,7 @@ screen phone():
 
 screen phone_gallery_screen():
     zorder 950
+    $ keyclose = True
     frame:
         background None
         xpadding 0
@@ -1377,6 +1466,8 @@ screen phone_gallery_screen():
                             $ pgs = 0
                             $ pgsxp = 0
                             $ pgsyp += 220
+                if keyclose:
+                    key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]                     
 
 screen phone_gallery_show():
     zorder 950
@@ -1386,7 +1477,7 @@ screen phone_gallery_show():
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
         yval = 1.0 if y > config.screen_height/2 else .0
-
+    $ keyclose = True
     frame:
         style_prefix "infoscreen"
         background None
@@ -1404,13 +1495,15 @@ screen phone_gallery_show():
                 yoffset -5
             imagebutton auto "images/exit_left_%s.png" focus_mask True action[Hide('phone_gallery_show'),Show('phone_gallery_screen')]
     hbox:
-        imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
+        imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
             tooltip "Shut off the phone"
         xalign .5
         yalign .5
+        if keyclose:
+            key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',False),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone'),Show('phone_gallery_screen')]      
     hbox:
         if battery_text != 0:
-            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements')] at ModZoom(.85):
                 tooltip "Go back to the home-screen"
             xalign .5
             yalign .5             
@@ -1427,6 +1520,7 @@ screen phone_gallery_show():
 
 screen phone_info_screen():
     zorder 950
+    $ keyclose = True
     hbox:
         imagebutton:
             idle "images/phone_white_power_hover.png"
@@ -1435,14 +1529,14 @@ screen phone_info_screen():
             action [SetField(persistent,'phone_firstshow',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85)
             tooltip "Shut off the phone"
         xalign .5
-        yalign .5
+        yalign .5      
     hbox:
         if battery_text != 0:
             imagebutton:
                 idle "images/phone_white_home_hover.png"
                 hover "images/phone_white_home_hover.png"
                 focus_mask True
-                action [SetField(persistent,'phone_firstshow',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements')] at ModZoom(.85)
+                action [SetVariable('keyclose',False),SetField(persistent,'phone_firstshow',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements')] at ModZoom(.85)
                 tooltip "Go back to the home-screen"
             xalign .5
             yalign .5
@@ -1517,10 +1611,12 @@ screen phone_info_screen():
                         text_size 22
                         yalign .5
                 text "\nand more as the game is being developed.\n\nYou close the phone by pressing the power button on the right side of the phone, and you go back to the main menu by pressing the home-button, down below"
+    if keyclose:
+        key "K_ESCAPE" action [SetVariable('keyclose',False),SetField(persistent,'phone_firstshow',False),Hide('custom_confirm'),Hide('custom_save'),Hide('custom_load'),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('phone_info_screen'),SetVariable('show_icons',True),Show('phone')]
 
 screen custom_confirm(cc_chosen=False):
     zorder 900
-
+    $ keyclose = True
     frame:
         background None
         xpadding 0
@@ -1547,6 +1643,8 @@ screen custom_confirm(cc_chosen=False):
                 xalign 0.5
                 ypos 100
                 action [SetVariable('show_icons',True),Hide('custom_confirm')]
+            if keyclose:        
+                key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')] 
 
 screen display_achievements():
     modal True
@@ -1557,7 +1655,7 @@ screen display_achievements():
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
         yval = 1.0 if y > config.screen_height/2 else .0
-
+    $ keyclose = True
     on 'show' action Function(achievement_trophy_case.update)
 
     use display_achievements_category_panel
@@ -1778,12 +1876,14 @@ screen display_achievements():
         xalign .5
         yalign .5
         hbox:
-            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
             xalign .5
             yalign .5
+            if keyclose:
+                key 'K_ESCAPE' action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]            
         hbox:
-            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
                 tooltip "Go back to the home-screen"
             xalign .5
             yalign .5           
@@ -1808,7 +1908,7 @@ screen display_achievements():
         frame:
             pos(x, y)
             anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"    
+            text GetTooltip() style "tooltip_hover"
 
 
 # This allows the user to view achievements based on their category
@@ -1888,8 +1988,8 @@ screen splash_info():
         at truecenter
         xsize 1200
         vbox:
-            text "{size=30}{color=#ffffff}HSS - High School Shenanigans is a story about a very hot summer, where you'll play as <your name here> (You can name your own character, but the default is \"Marten\", so let's just go with that for now). So, you play as Marten, on his last stretch of high school, aiming to finish school, have some fun, fix his bike, and take his dream cross-country trip on it - but first, there's the exams. And the hot chicks... (among them, his [fmName.role] and [fsName.role], who is both hot, and definitely part of his nighttime jerk-off sessions), the pool, the neighbor girl, and so much more - pretty much like there is in every teenager's life. You control what happens, who you eventually hook up with, what you end up doing with them, and so on and so forth. \n\n{b}Note that this is a very early Alpha-relese, and that quite a lot of the events haven't been added yet, and those that have been, might abruptly end. The game is playable, but you won't reach a fulfilling conclusion as of yet!{/b}{/color}{/size}"
-    textbutton "{size=25}{color=#ffffff}Click to continue{/click}{/size}":
+            text "{size=30}{color=#fff}HSS - High School Shenanigans is a story about a very hot summer, where you'll play as <your name here> (You can name your own character, but the default is \"Marten\", so let's just go with that for now). So, you play as Marten, on his last stretch of high school, aiming to finish school, have some fun, fix his bike, and take his dream cross-country trip on it - but first, there's the exams. And the hot chicks... (among them, his [fmName.role] and [fsName.role], who is both hot, and definitely part of his nighttime jerk-off sessions), the pool, the neighbor girl, and so much more - pretty much like there is in every teenager's life. You control what happens, who you eventually hook up with, what you end up doing with them, and so on and so forth. \n\n{b}Note that this is a very early Alpha-relese, and that quite a lot of the events haven't been added yet, and those that have been, might abruptly end. The game is playable, but you won't reach a fulfilling conclusion as of yet!{/b}{/color}{/size}"
+    textbutton "{size=25}{color=#fff}Click to continue{/click}{/size}":
         xalign .5 
         yalign 0.9
         action Return()
@@ -1902,11 +2002,12 @@ screen disclaimer():
         at truecenter
         xsize 1300
         vbox:
-            text "{size=30}{color=#ffffff}The story is purely fictional, and does not reflect the creator's worldview.\nWe do not condone, nor support the actions and opinions of the characters{/color}{/size}"
+            text "{size=30}{color=#fff}The story is purely fictional, and does not reflect the creator's worldview.\nWe do not condone, nor support the actions and opinions of the characters{/color}{/size}"
 
 
 screen custom_save():
     zorder 900
+    $ keyclose = True
     use custom_file_slots(_("Save"))
 
 screen custom_load():
@@ -1922,7 +2023,7 @@ screen custom_preferences():
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
         yval = 1.0 if y > config.screen_height/2 else .0
-
+    $ keyclose = True
     frame:
         background None
         xpadding 0
@@ -2082,12 +2183,12 @@ screen custom_preferences():
         xalign .5
         yalign .5
         hbox:
-            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('custom_preferences'),Hide('phone')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('custom_preferences'),Hide('phone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
             xalign .5
-            yalign .5
+            yalign .5 
         hbox:
-            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('custom_preferences')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Hide('custom_preferences')] at ModZoom(.85):
                 tooltip "Go back to the home-screen"
             xalign .5
             yalign .5           
@@ -2098,9 +2199,12 @@ screen custom_preferences():
             anchor (xval, yval)
             text GetTooltip() style "tooltip_hover" 
 
+    if keyclose:
+        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('custom_preferences'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]            
+
 screen custom_file_slots(title):
     default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
-
+    $ keyclose = True
     frame:
         background None
         xpadding 0
@@ -2181,6 +2285,8 @@ screen custom_file_slots(title):
             textbutton _(">") action FilePageNext():
                 style "nav_buttons"
                 text_color "#fff"
+    if keyclose:
+        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]            
                                      
 style custom_page_label is gui_label
 style custom_page_label_text is gui_label_text
@@ -2220,6 +2326,7 @@ screen fs_tablet():
     default ic_num_str = 0
     modal True
     zorder 800
+    $ keyclose = True
     fixed:
         fit_first True
         xmaximum 600
@@ -2248,7 +2355,9 @@ screen fs_tablet():
         hbox:
             xalign .5
             yalign .5
-            imagebutton auto "images/tablet_power_%s.png" focus_mask True action [SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()] at ModZoom(.85)
+            imagebutton auto "images/tablet_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()] at ModZoom(.85)
+            if keyclose:
+                key 'K_ESCAPE' action [SetVariable('keyclose',False),Hide('phone_info_screen'),SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()]
 
         if not tablet_code:
             hbox:
@@ -2291,14 +2400,6 @@ screen fs_tablet():
                         hotspot (464, 839, 71, 33) action [SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()]:
                             sensitive True
 
-init python:
-    def dd_cursor_position(st, at):
-        x, y = renpy.get_mouse_pos()
-        return Text("{size=-5}%d-%d" % (x, y)), .1
-
-screen debug_tools():
-    add DynamicDisplayable(dd_cursor_position)
-
 screen maininfo():
     frame:
         if persistent.maininfo:
@@ -2315,6 +2416,7 @@ screen maininfo():
             xalign .5
             yalign .44
             maximum 370,686
+        $ keyclose = True
         viewport:
             mousewheel True
             vbox:
@@ -2357,3 +2459,14 @@ screen maininfo():
                         ypos -180
         if persistent.maininfo:
             imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetField(persistent,'maininfo',False),Hide("maininfo"),Return()]
+            if keyclose:
+                key 'K_ESCAPE' action [SetVariable('keyclose',False),Hide('phone_info_screen'),SetField(persistent,'maininfo',False),Hide("maininfo"),Return()]
+
+init python:
+    def dd_cursor_position(st, at):
+        x, y = renpy.get_mouse_pos()
+        return Text("{size=-5}%d-%d" % (x, y)), .1
+
+screen debug_tools():
+    zorder 999
+    add DynamicDisplayable(dd_cursor_position)

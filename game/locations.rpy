@@ -116,50 +116,58 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                 call screen fs_tablet()
         if panties_added:
             $ current_p = getattr(store,gp_bed+"_panties_item")
-            if not backpack.has_item(current_p):
-                $ r = random.randint(0,3)
-                $ text = p_response[r]
-                if r == 0 or r == 3:
-                    $ panties_sniffer = True
-                    $ update_panties_achievements()
-            else:
-                $ aux = list(p_response)
-                $ del aux[2]
-                $ r = random.randrange(len(aux))
-                $ text = p_response[r]
-                if r == 0 or r == 3:
-                    $ panties_sniffer = True
-                    $ update_panties_achievements()
-            "[text]"
-            menu:
-                "Take panties":
-                    if gp_bed == 'fs_bright_pink':
-                        if not backpack.has_item(fs_bright_pink_panties_item):
-                            $ bright_pink_panties_pickup = True
-                            $ update_all_the_stuff()                        
-                        $ backpack.add_item(fs_bright_pink_panties_item)
-                    elif gp_bed == 'fs_pale_pink':
-                        if not backpack.has_item(fs_pale_pink_panties_item):
-                            $ pale_pink_panties_pickup = True
-                            $ update_all_the_stuff()
-                        $ backpack.add_item(fs_pale_pink_panties_item)
-                    elif gp_bed == 'fs_light_blue':
-                        if not backpack.has_item(fs_light_blue_panties_item):
-                            $ light_blue_panties_pickup = True
-                            $ update_all_the_stuff()
-                        $ backpack.add_item(fs_light_blue_panties_item)
-                    elif gp_bed == 'fs_yellow':
-                        if not backpack.has_item(fs_yellow_panties_item):
-                            $ yellow_panties_pickup = True
-                            $ update_all_the_stuff()                        
-                        $ backpack.add_item(fs_yellow_panties_item)
-                    $ panties_added = False
-                    $ fp_creep += 1
-                    $ update_panties_achievements()
-                "Leave panties":
-                    $ panties_added = False
-                    $ find_panties = True
-                    $ loct = True
+            if backpack_carry:
+                if not backpack.has_item(current_p):
+                    $ r = random.randint(0,3)
+                    $ text = p_response[r]
+                    if r == 0 or r == 3:
+                        $ panties_sniffer = True
+                        $ update_panties_achievements()
+                else:
+                    $ aux = list(p_response)
+                    $ del aux[2]
+                    $ r = random.randrange(len(aux))
+                    $ text = p_response[r]
+                    if r == 0 or r == 3:
+                        $ panties_sniffer = True
+                        $ update_panties_achievements()
+                "[text]"
+                menu:
+                    "Take panties":
+                        if gp_bed == 'fs_bright_pink':
+                            if not backpack.has_item(fs_bright_pink_panties_item):
+                                $ bright_pink_panties_pickup = True
+                                $ update_all_the_stuff()                        
+                            $ backpack.add_item(fs_bright_pink_panties_item)
+                        elif gp_bed == 'fs_pale_pink':
+                            if not backpack.has_item(fs_pale_pink_panties_item):
+                                $ pale_pink_panties_pickup = True
+                                $ update_all_the_stuff()
+                            $ backpack.add_item(fs_pale_pink_panties_item)
+                        elif gp_bed == 'fs_light_blue':
+                            if not backpack.has_item(fs_light_blue_panties_item):
+                                $ light_blue_panties_pickup = True
+                                $ update_all_the_stuff()
+                            $ backpack.add_item(fs_light_blue_panties_item)
+                        elif gp_bed == 'fs_yellow':
+                            if not backpack.has_item(fs_yellow_panties_item):
+                                $ yellow_panties_pickup = True
+                                $ update_all_the_stuff()                        
+                            $ backpack.add_item(fs_yellow_panties_item)
+                        $ panties_added = False
+                        $ fp_creep += 1
+                        $ update_panties_achievements()
+                    "Leave panties":
+                        $ panties_added = False
+                        $ find_panties = True
+                        $ loct = True
+        else:
+            "You do not have anywhere to carry these at the moment"
+            if 'carry all these things' not in hints:
+                $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")            
+            $ panties_added = False
+            $ find_panties = True
+            $ loct = True
         if pb_added:
             "Holy... is that a {b}buttplug{/b}!?"
             menu:
@@ -359,9 +367,12 @@ label outside_loc(out_called=False,trans=False):
         if trans:    
             call outside_scene
         if day_week <= 4 and int(current_time[:2]) in morning:
+            call outside_scene
             menu:
                 "Go to school":
-                    call travel_school(True)
+                    # call travel_school(True)
+                    call travel_events('travel_school')
+                    # call nk_talk(True)
                 "Stay home":
                     pass
         call change_loc('outside')
@@ -395,50 +406,58 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                     $ smallkeys_added = False
         if bathroom_panties_added:
             $ current_p = getattr(store,gp_bath+"_panties_item")
-            if not backpack.has_item(current_p):
-                $ r = random.randint(0,3)
-                $ text = p_response[r]
-                if r == 0 or r == 3:
-                    $ panties_sniffer = True
-                    $ update_panties_achievements()
-            else:
-                $ aux = list(p_response)
-                $ del aux[2]
-                $ r = random.randrange(len(aux))
-                $ text = p_response[r]
-                if r == 0 or r == 3:
-                    $ panties_sniffer = True
-                    $ update_panties_achievements()
-            "[text]"            
-            menu:
-                "Take panties":
-                    if gp_bath == 'fs_bright_pink':
-                        if not backpack.has_item(fs_bright_pink_panties_item):
-                            $ bright_pink_panties_pickup = True
-                            $ update_all_the_stuff()
-                        $ backpack.add_item(fs_bright_pink_panties_item)
-                    elif gp_bath == 'fs_pale_pink':
-                        if not backpack.has_item(fs_pale_pink_panties_item):
-                            $ pale_pink_panties_pickup = True
-                            $ update_all_the_stuff()
-                        $ backpack.add_item(fs_pale_pink_panties_item)
-                    elif gp_bath == 'fs_light_blue':
-                        if not backpack.has_item(fs_light_blue_panties_item):
-                            $ light_blue_panties_pickup = True
-                            $ update_all_the_stuff()
-                        $ backpack.add_item(fs_light_blue_panties_item)
-                    elif gp_bath == 'fs_yellow':
-                        if not backpack.has_item(fs_yellow_panties_item):
-                            $ yellow_panties_pickup = True
-                            $ update_all_the_stuff()                        
-                        $ backpack.add_item(fs_yellow_panties_item)
-                    $ bathroom_panties_added = False
-                    $ fp_creep += 1
-                    $ update_panties_achievements()
-                "Leave panties":
-                    $ bathroom_panties_added = False
-                    $ bathroom_find_panties = True
-                    $ loct = True               
+            if backpack_carry:
+                if not backpack.has_item(current_p):
+                    $ r = random.randint(0,3)
+                    $ text = p_response[r]
+                    if r == 0 or r == 3:
+                        $ panties_sniffer = True
+                        $ update_panties_achievements()
+                else:
+                    $ aux = list(p_response)
+                    $ del aux[2]
+                    $ r = random.randrange(len(aux))
+                    $ text = p_response[r]
+                    if r == 0 or r == 3:
+                        $ panties_sniffer = True
+                        $ update_panties_achievements()
+                "[text]"            
+                menu:
+                    "Take panties":
+                        if gp_bath == 'fs_bright_pink':
+                            if not backpack.has_item(fs_bright_pink_panties_item):
+                                $ bright_pink_panties_pickup = True
+                                $ update_all_the_stuff()
+                            $ backpack.add_item(fs_bright_pink_panties_item)
+                        elif gp_bath == 'fs_pale_pink':
+                            if not backpack.has_item(fs_pale_pink_panties_item):
+                                $ pale_pink_panties_pickup = True
+                                $ update_all_the_stuff()
+                            $ backpack.add_item(fs_pale_pink_panties_item)
+                        elif gp_bath == 'fs_light_blue':
+                            if not backpack.has_item(fs_light_blue_panties_item):
+                                $ light_blue_panties_pickup = True
+                                $ update_all_the_stuff()
+                            $ backpack.add_item(fs_light_blue_panties_item)
+                        elif gp_bath == 'fs_yellow':
+                            if not backpack.has_item(fs_yellow_panties_item):
+                                $ yellow_panties_pickup = True
+                                $ update_all_the_stuff()                        
+                            $ backpack.add_item(fs_yellow_panties_item)
+                        $ bathroom_panties_added = False
+                        $ fp_creep += 1
+                        $ update_panties_achievements()
+                    "Leave panties":
+                        $ bathroom_panties_added = False
+                        $ bathroom_find_panties = True
+                        $ loct = True               
+        else:
+            "You have nowhere to keep those panties at the moment"
+            if 'carry all these things' not in hints:
+                $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+            $ bathroom_panties_added = False
+            $ bathroom_find_panties = True
+            $ loct = True
         if fpshower:
             if filth_val == 0:
                 fp "I don't need to take a shower right now"

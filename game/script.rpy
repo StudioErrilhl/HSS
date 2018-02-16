@@ -118,7 +118,7 @@ label start:
         fp "So. Quick recap: I woke up on April 1st, tried to somewhat remotely function and seem awake, and figure out what to with the day. Then, a little later, shellshocked, and trying to figure out how to get the image of my naked [fsName.role] off my mind, I decided spending the day working on my bike would be as good a way as any..."
         $ skip_breakfast = True
         $ resolved = breakfast_nice_att = breakfast_nice_mod = breakfast_mean_att1 = breakfast_mean_att2 = breakfast_mean_mod1 = breakfaste_mean_mod2 = False
-        # $ breakfast_food = False
+        $ breakfast_food = False
         # $ breakfast_reply = False
         # $ breakfast_mod = False
         # $ breakfast_att = False
