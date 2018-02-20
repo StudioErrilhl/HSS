@@ -3,8 +3,6 @@ label nk_talk(event=False):
         $ text1 = text2 = False
         $ nktr = renpy.random.random()
         if event == 'ride':
-        # if nktr < .5 and day_week <= 4 and shitty_morning:
-        # if afsmm_r < .5 and shitty_morning and day_week <= 4:
             if int(current_time[:2]) <= 7:
                 nk ahead "Hi [fp]! You wanna ride to school?"
                 if not nk_driving:
@@ -15,7 +13,6 @@ label nk_talk(event=False):
                     fp "Hi [nk]"
                 if bad_weather and rainstorm:
                     $ text1 = "Sure! That way I won't be late, not to mention drowning by the time I get there!\n{i}Damn, she saved my scrawny ass. Don't understand why she gets so much flak at school, she's nice...{/i}"
-                    # $ text2 = "No thanks, [nk]. I've got a buddy picking me up, he'll be here soon.\n{i}Even in this weather I'm not gonna get in a car with her... I'd never hear the end of it at school{/i}"
                 else:
                     $ text1 = "Sure! Then I won't be late!\n{i}Who cares if [nk] is not one of the popular kids - her offer is nice{/i}"
                     $ text2 = "No thanks! I'll just walk. Don't really wanna trust my life to your driving!\n{i}Don't wanna be caught dead in the same car as [nk]...{/i}"
