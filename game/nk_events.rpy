@@ -1,15 +1,9 @@
-# label after_fs_mad_morning(afs_mad=False):
-label nk_talk(nkt_called=False):
-    # if afs_mad:
-    if nkt_called:
-        $ nkt_called = False
-        # $ afs_mad = False
+label nk_talk(event=False):
+    if event:
         $ text1 = text2 = False
         $ nktr = renpy.random.random()
-        # $ afsmm_r = renpy.random.random()
-        # if debug:
-        #     $ renpy.watch(str(afsm_r))
-        if nktr < .5 and day_week <= 4 and shitty_morning:
+        if event == 'ride':
+        # if nktr < .5 and day_week <= 4 and shitty_morning:
         # if afsmm_r < .5 and shitty_morning and day_week <= 4:
             if int(current_time[:2]) <= 7:
                 nk ahead "Hi [fp]! You wanna ride to school?"
@@ -30,19 +24,19 @@ label nk_talk(nkt_called=False):
                         "[text1]" if text1:
                             $ statschangenotify("nk_rel",1.5)                                    
                             $ renpy.pause(.25)
-                            call school_on_time(True)
+                            call travel_events('arrive_school')
                         "[text2]" if text2:
                             if bad_weather and rainstorm:
                                 $ statschangenotify('nk_rel',-3)
                                 $ renpy.pause(.25)
-                                call sn_punishment_late(True)
+                                call school_events('sn_punishment_late')
                             else:
                                 $ statschangenotify("nk_rel",-1)
                                 $ renpy.pause(.25)
                                 if renpy.random.random() < .35:
-                                    call school_walk_late(True)
+                                    call travel_events('arrive_school')
                                 else:
-                                    call sn_punishment_late(True)
+                                    call school_events('sn_punishment_late')
         elif nktr < .5 and day_week <= 4 and not shitty_morning:
             show nk_standing ahead with dissolve
             nk ahead "Hi [fp]! Wanna walk to school with me?"
@@ -58,7 +52,7 @@ label nk_talk(nkt_called=False):
                 "Nah... I just wanna go by myself today, I got a lot on my mind, need to think a little bit":
                     show nk_standing annoyed with dissolve
                     $ renpy.pause(.5)
-                    call school_on_time(True)
+                    call travel_events('arrive_school')
                 "No thanks, [nk]":
                     show nk_standing mad with dissolve
                     if nk_rel < 15:
@@ -67,4 +61,4 @@ label nk_talk(nkt_called=False):
                         $ nkrel = -.25
                     $ statschangenotify("nk_rel",nkrel)
                     $ renpy.pause(.5)
-                    call school_on_time(True)
+                    call travel_events('arrive_school')

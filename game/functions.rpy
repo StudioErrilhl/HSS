@@ -264,6 +264,7 @@ init 10 python:
                         battery_text = 100
 
             if update_scene:
+                print('update_scene')
                 if int(current_time[:2]) >= 22 or int(current_time[:2]) < 6:
                     current_imgs = list(renpy.get_showing_tags())
                     indices = [i for i, elem in enumerate(current_imgs) if '_morning' in elem]
@@ -273,13 +274,20 @@ init 10 python:
                             setattr(store,"bathroom_light",True)
                         else:
                             if seccall:
+                                print('seccall 1')
                                 renpy.call('change_loc',current_bg,sec_call=seccall)
                             else:
                                 renpy.call("change_loc",current_bg)
                         indices = [i for i, elem in enumerate(current_imgs) if not '_morning' in elem]
+                    else:
+                        if seccall:
+                            renpy.call('change_loc',current_location,sec_call=seccall)
+                        else:
+                            renpy.call("change_loc",current_location)
                 elif int(current_time[:2]) >= 6 or int(current_time[:2]) < 22:
                     current_imgs = list(renpy.get_showing_tags())
                     indices = [i for i, elem in enumerate(current_imgs) if '_night' in elem]
+                    print(indices)
                     mn_check = False
                     if indices:
                         if mn_check:
@@ -287,10 +295,16 @@ init 10 python:
                         else:
                             current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
                         if seccall:
+                            print('seccall 2')
                             renpy.call('change_loc',current_bg,sec_call=seccall)
                         else:
                             renpy.call("change_loc",current_bg)
                         indices = [i for i, elem in enumerate(current_imgs) if not '_night' in elem]
+                    else:
+                        if seccall:
+                            renpy.call('change_loc',current_location,sec_call=seccall)
+                        else:
+                            renpy.call("change_loc",current_location)
 
     def settime(hours=False,minutes=False,update_scene=False,seccall=False):
         global current_time
@@ -386,6 +400,40 @@ init 10 python:
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+    def hide_phone_screens():
+        renpy.hide_screen('phonescreen')
+
+    def read_hint(hint=False):
+        global hints,read_hints
+        if hint:
+            read_hints.append(hint)
+            hints.remove(hint)
+    
+    def disable_hint(hint=False):
+        global read_hints,disabled_hints
+        if hint:
+            disabled_hints.append(hint)
+            read_hints.remove(hint)
+
+    def delete_hint(hint=False):
+        global hints,read_hints,disabled_hints
+        if hint in hints:
+            hints.remove(hint)
+        if hint in read_hints:
+            read_hints.remove(hint)
+        if hint in disabled_hints:
+            deleted_hints.append(hint)
+            disabled_hints.remove(hint)
+
+    def restore_hints():
+        global hints,disabled_hints
+        for hint in disabled_hints:
+            if hint not in hints:
+                hints.append(hint)
+                disabled_hints.remove(hint)
+            else:
+                disabled_hints.remove(hint)
 
 
 init python hide:

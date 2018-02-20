@@ -155,17 +155,18 @@ label fs_talk(fst_called=False):
                         $ ate_called = False
                         if fs_mad:
                             $ fs_mad = False
+                            $ print(fs_mad)
                             $ morning_event_done = True
                             $ fdtfs_after = False
                             if int(current_time[:2]) in night: #else:
                                 call end_of_day(True)
-                            return
+                            # return
                         else:
                             $ morning_event_done = True
                             $ fdtfs_after = False
                             if int(current_time[:2]) in night: #else:
                                 call end_of_day(True)
-                            return
+                            # return
             elif day_week <= 4:
                 if int(current_time[:2]) > 17:
                     $ settime(22,False,True,'fs_where')

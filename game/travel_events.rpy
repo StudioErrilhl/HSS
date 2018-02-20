@@ -30,9 +30,9 @@ label travel_events(event=False):
                                     $ statschangenotify("nk_rel",-1)
                                     $ renpy.pause(.25)
                                     if renpy.random.random() < .35:
-                                        call school_walk_late(True)
+                                        call travel_events('arrive_school')
                                     else:
-                                        call sn_punishment_late(True)
+                                        call school_events('sn_punishment_late')
                 elif not shitty_morning and int(current_time[:2]) <= 7 and renpy.random.random() < .4:
                     show nk_standing ahead with dissolve
                     nk ahead "Hi [fp]! Wanna walk to school with me?"
@@ -48,7 +48,7 @@ label travel_events(event=False):
                         "Nah... I just wanna go by myself today, I got a lot on my mind, need to think a little bit":
                             show nk_standing annoyed with dissolve
                             $ renpy.pause(.5)
-                            call school_on_time(True)
+                            call travel_events('arrive_school')
                         "No thanks, [nk]":
                             show nk_standing mad with dissolve
                             if nk_rel < 15:
@@ -57,7 +57,7 @@ label travel_events(event=False):
                                 $ nkrel = -.25
                             $ statschangenotify("nk_rel",nkrel)
                             $ renpy.pause(.5)
-                            call school_on_time(True)
+                            call travel_events('arrive_school')
                 elif not shitty_morning and renpy.random.random() > .6:
                     $ t_w = [(0,6),(1,6),(2,1),(3,3)] # travel events weights
                     $ t_e = [ # travel events
@@ -114,8 +114,10 @@ label travel_events(event=False):
                         "You arrive a little too late, but fortunately, you manage to sneak into class without anyone spotting you"
                         call school_events('finished')
                 else:
-                    if int(current_time[3:]) < 55:
+                    if int(current_time[2:]) == 7 and int(current_time[4:]) < 55:
                         "You arrive with plenty of time to spare before the bell rings"
+                    elif int(current_time[2:]) < 7:
+                        "You arrive way too early, but decide to just hang around and wait for school to start"
                     else:
                         "You barely arrive on time, but you're still in the door before the bell rings"
                     call school_events('finished')

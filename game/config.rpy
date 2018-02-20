@@ -300,6 +300,10 @@ default panties_sniffer = False
 
 # lists
 default hints = []
+default read_hints = []
+default disabled_hints = []
+default deleted_hints = []
+default hintselect = 'new'
 default firstday_talk_list = ['livingroom','fp bedroom','fs bedroom','kitchen','entrance','outside']
 default fs_p = ['fs_yellow','fs_light_blue','fs_pale_pink','fs_bright_pink']
 default p_response = ["Hm... "+fsName.formal+"s panties...\n{b}sniffs them{/b}\nShould I take them with me?",

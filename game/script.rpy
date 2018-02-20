@@ -69,11 +69,7 @@ label start:
         show screen debug_tools()
 
     ## intro - this is shown only once, when starting the game from the beginning
-    # python:
     $ fpinput = (renpy.input("First, we'll need to know your name (default, Marten):") or "Marten").strip()
-        # fpinput = fpinput.strip()
-        # if not fpinput:
-        #     fpinput = "Marten" 
 
     if persistent.skipintro:
         menu:
@@ -109,8 +105,8 @@ label start:
         "So... the coming days, weeks and months, you'll be trying to pass your exams, finish your bike, getting some action, and generally being a high school senior going on freedom!"
         $ persistent.skipintro = True
         $ fs_mad = True        
-        # return
-    label skippedintro:
+
+    label skippedintro():
         $ fs_mad = True
         show screen ingame_menu_display()
         if persistent.maininfo:
@@ -119,9 +115,6 @@ label start:
         $ skip_breakfast = True
         $ resolved = breakfast_nice_att = breakfast_nice_mod = breakfast_mean_att1 = breakfast_mean_att2 = breakfast_mean_mod1 = breakfaste_mean_mod2 = False
         $ breakfast_food = False
-        # $ breakfast_reply = False
-        # $ breakfast_mod = False
-        # $ breakfast_att = False
         $ dinner_food = False
         $ dinner_reply = False
         $ dinner_comeback = False

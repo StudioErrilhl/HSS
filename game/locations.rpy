@@ -45,19 +45,21 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
     $ loct = False
     if not fp_bedroom_ach:
         $ fp_bedroom_ach = True
-        $ update_been_everywhere_achievement()    
+        $ update_been_everywhere_achievement()
     if fpl_called or uhl_fpb_cfs:
         $ fpl_called = uhl_fpb_cfs = False
         if schoolbooks_added:
             if backpack_carry:
                 if not backpack.has_item(schoolbooks_item):
                     $ schoolbooks_pickup = True
-                    $ update_all_the_stuff()                        
+                    $ update_all_the_stuff()
                 $ backpack.add_item(schoolbooks_item)
                 $ schoolbooks_added = False
                 $ loct = True
             else:
-                $ renpy.notify("You don't have anything to carry the books in")
+                $ renpy.notify("You don't have anywhere to carry the books")
+                if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
+                    $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                 $ schoolbooks_added = False
                 $ loct = True
         if phone_added:
@@ -67,7 +69,7 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
                     "Do you want to grab the phone?":
                         if not backpack.has_item(phone_item):
                             $ phone_pickup = True
-                            $ update_all_the_stuff()                        
+                            $ update_all_the_stuff()
                         $ backpack.add_item(phone_item)
                         $ phone_added = False
                         $ carry_phone = True
@@ -76,10 +78,10 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
                     "Leave the phone to charge":
                         $ phone_added = False
                         $ loct = True
-            else:                                
+            else:
                 if not backpack.has_item(phone_item):
                     $ phone_pickup = True
-                    $ update_all_the_stuff()                        
+                    $ update_all_the_stuff()
                 $ backpack.add_item(phone_item)
                 $ phone_added = False
                 $ carry_phone = True
@@ -89,7 +91,8 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
             $ carry_phone = False
             $ loct = True
         if current_time[:2] in morning and not morning_event_done:
-            call fp_morning_content(True)
+            # call fp_morning_content(True)
+            call morning_events()
         else:
             call change_loc('fp bedroom',loctrans=loct)
 
@@ -98,7 +101,7 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
     $ loct = False
     if not fs_bedroom_ach:
         $ fs_bedroom_ach = True
-        $ update_been_everywhere_achievement()        
+        $ update_been_everywhere_achievement()
     if fsl_called or uhl_fsb_cfs:
         $ fsl_called = uhl_fsb_cfs = False
         if tablet_added:
@@ -137,7 +140,7 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                         if gp_bed == 'fs_bright_pink':
                             if not backpack.has_item(fs_bright_pink_panties_item):
                                 $ bright_pink_panties_pickup = True
-                                $ update_all_the_stuff()                        
+                                $ update_all_the_stuff()
                             $ backpack.add_item(fs_bright_pink_panties_item)
                         elif gp_bed == 'fs_pale_pink':
                             if not backpack.has_item(fs_pale_pink_panties_item):
@@ -152,7 +155,7 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                         elif gp_bed == 'fs_yellow':
                             if not backpack.has_item(fs_yellow_panties_item):
                                 $ yellow_panties_pickup = True
-                                $ update_all_the_stuff()                        
+                                $ update_all_the_stuff()
                             $ backpack.add_item(fs_yellow_panties_item)
                         $ panties_added = False
                         $ fp_creep += 1
@@ -161,23 +164,23 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                         $ panties_added = False
                         $ find_panties = True
                         $ loct = True
-        else:
-            "You do not have anywhere to carry these at the moment"
-            if 'carry all these things' not in hints:
-                $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")            
-            $ panties_added = False
-            $ find_panties = True
-            $ loct = True
+            else:
+                $ renpy.notify("You don't have anywhere to carry the panties")
+                if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
+                    $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                $ panties_added = False
+                $ find_panties = True
+                $ loct = True
         if pb_added:
             "Holy... is that a {b}buttplug{/b}!?"
             menu:
                 "Take the buttplug":
                     if not backpack.has_item(princessplug_item):
                         $ princessplug_pickup = True
-                        $ update_all_the_stuff()                                        
+                        $ update_all_the_stuff()
                     $ pb_added = False
                     $ statschangenotify('fs_cor',1,True)
-                    $ statschangenotify('fs_anal',3)                    
+                    $ statschangenotify('fs_anal',3)
                     $ backpack.add_item(princessplug_item)
                 "Leave the buttplug":
                     $ pb_added = False
@@ -201,7 +204,9 @@ label garage_loc(gar_called=False,trans=False):
                     $ backpack.add_item(toolbox_item)
                     $ toolbox_added = False
         else:
-            $ renpy.notify("You don't have anywhere to carry this item")
+            $ renpy.notify("You don't have anywhere to carry the toolbox")
+            if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
+                $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
         call change_loc('garage')
 
 label kitchen_loc(kit_called=False,trans=False):
@@ -227,57 +232,63 @@ label kitchen_loc(kit_called=False,trans=False):
                         $ achievement_wine_collector.update()
                         $ achievement_all_the_wine.update()
                         $ achievement_even_more_wine.update()
-                        $ loct = True                        
+                        $ loct = True
                     else:
-                        $ renpy.notify("You have no way of carrying this")
+                        $ renpy.notify("You don't have anywhere to carry a winebottle")
+                        if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
+                            $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
-                        $ loct = True                        
+                        $ loct = True
                 "Leave the bottle" if bottles == 1:
                     $ wine_added = False
-                    $ loct = True                    
+                    $ loct = True
                 "Take one bottle" if bottles == 2:
                     if backpack_carry:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
-                            $ update_all_the_stuff()                
+                            $ update_all_the_stuff()
                         $ backpack.add_item(wine_item)
                         $ bottles = 1
                         $ br = 1
                         $ wine_added = False
-                        $ achievement_wine_collector.update()                    
+                        $ achievement_wine_collector.update()
                         $ achievement_all_the_wine.update()
                         $ achievement_even_more_wine.update()
-                        $ loct = True                        
+                        $ loct = True
                     else:
-                        $ renpy.notify("You have no way of carrying this")
+                        $ renpy.notify("You don't have anywhere to carry a winebottle")
+                        if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
+                            $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
-                        $ loct = True                                              
+                        $ loct = True
                 "Take both bottles" if bottles == 2:
                     if backpack_carry:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
-                            $ update_all_the_stuff()                
+                            $ update_all_the_stuff()
                         $ backpack.add_item(wine_item,2)
                         $ bottles = 0
                         $ br = 0
                         $ wcount = 0
                         $ wine_added = False
-                        $ achievement_wine_collector.update(2)                                        
+                        $ achievement_wine_collector.update(2)
                         $ achievement_all_the_wine.update(2)
                         $ achievement_even_more_wine.update(2)
-                        $ loct = True                        
+                        $ loct = True
                     else:
-                        $ renpy.notify("You have no way of carrying this")
+                        $ renpy.notify("You don't have anywhere to carry winebottles")
+                        if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
+                            $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
-                        $ loct = True                        
+                        $ loct = True
                 "Leave the bottles" if bottles == 2:
                     $ wine_added = False
-                    $ loct = True                    
+                    $ loct = True
                 "Take one bottle" if bottles == 3:
                     if backpack_carry:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
-                            $ update_all_the_stuff()                
+                            $ update_all_the_stuff()
                         $ backpack.add_item(wine_item)
                         $ bottles = 2
                         $ br = 2
@@ -285,45 +296,51 @@ label kitchen_loc(kit_called=False,trans=False):
                         $ achievement_wine_collector.update()
                         $ achievement_all_the_wine.update()
                         $ achievement_even_more_wine.update()
-                        $ loct = True                        
+                        $ loct = True
                     else:
-                        $ renpy.notify("You have no way of carrying this")
+                        $ renpy.notify("You don't have anywhere to carry a winebottle")
+                        if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
+                            $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
-                        $ loct = True                        
+                        $ loct = True
                 "Take two bottles" if bottles == 3:
                     if backpack_carry:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
-                            $ update_all_the_stuff()                
+                            $ update_all_the_stuff()
                         $ backpack.add_item(wine_item,2)
                         $ bottles = 1
                         $ br = 1
                         $ wine_added = False
-                        $ achievement_wine_collector.update(2)                    
+                        $ achievement_wine_collector.update(2)
                         $ achievement_all_the_wine.update(2)
                         $ achievement_even_more_wine.update(2)
-                        $ loct = True                        
+                        $ loct = True
                     else:
-                        $ renpy.notify("You have no way of carrying this")
-                        $ wine_added = False                        
-                        $ loct = True                        
+                        $ renpy.notify("You don't have anywhere to carry winebottles")
+                        if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
+                            $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                        $ wine_added = False
+                        $ loct = True
                 "Take all three bottles" if bottles == 3:
                     if backpack_carry:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
-                            $ update_all_the_stuff()                
+                            $ update_all_the_stuff()
                         $ backpack.add_item(wine_item,3)
                         $ bottles = 0
                         $ br = 0
                         $ wcount = 0
                         $ wine_added = False
-                        $ achievement_wine_collector.update(3)                    
+                        $ achievement_wine_collector.update(3)
                         $ achievement_all_the_wine.update(3)
                         $ achievement_even_more_wine.update(3)
-                        $ loct = True                        
+                        $ loct = True
                     else:
-                        $ renpy.notify("You have no way of carrying this")
-                        $ wine_added = False                        
+                        $ renpy.notify("You don't have anywhere to carry winebottles")
+                        if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
+                            $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                        $ wine_added = False
                         $ loct = True
                 "Leave the bottles" if bottles == 3:
                     $ wine_added = False
@@ -364,7 +381,7 @@ label outside_loc(out_called=False,trans=False):
         if not outside_ach:
             $ outside_ach = True
             $ update_been_everywhere_achievement()
-        if trans:    
+        if trans:
             call outside_scene
         if day_week <= 4 and int(current_time[:2]) in morning:
             call outside_scene
@@ -381,11 +398,11 @@ label upper_hallway_loc(uhl_called=False,trans=False):
     $ current_location = 'upper_hallway_loc'
     if not uhl_ach:
         $ uhl_ach = True
-        $ update_been_everywhere_achievement()        
+        $ update_been_everywhere_achievement()
     if uhl_called or uhl_cfs:
         $ uhl_called = uhl_cfs = False
         if backpack.has_item(princessplug_item):
-            call talk_fs(True)   
+            call talk_fs(True)
         call change_loc('upper hallway')
 
 label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
@@ -393,7 +410,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
     $ loct = False
     if not uhl_bathroom_ach:
         $ uhl_bathroom_ach = True
-        $ update_been_everywhere_achievement()        
+        $ update_been_everywhere_achievement()
     if uhl_bl_called or uhl_bl_cfs:
         $ uhl_bl_called = uhl_bl_cfs = False
         if smallkeys_added:
@@ -421,7 +438,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                     if r == 0 or r == 3:
                         $ panties_sniffer = True
                         $ update_panties_achievements()
-                "[text]"            
+                "[text]"
                 menu:
                     "Take panties":
                         if gp_bath == 'fs_bright_pink':
@@ -442,7 +459,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                         elif gp_bath == 'fs_yellow':
                             if not backpack.has_item(fs_yellow_panties_item):
                                 $ yellow_panties_pickup = True
-                                $ update_all_the_stuff()                        
+                                $ update_all_the_stuff()
                             $ backpack.add_item(fs_yellow_panties_item)
                         $ bathroom_panties_added = False
                         $ fp_creep += 1
@@ -450,14 +467,14 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                     "Leave panties":
                         $ bathroom_panties_added = False
                         $ bathroom_find_panties = True
-                        $ loct = True               
-        else:
-            "You have nowhere to keep those panties at the moment"
-            if 'carry all these things' not in hints:
-                $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
-            $ bathroom_panties_added = False
-            $ bathroom_find_panties = True
-            $ loct = True
+                        $ loct = True
+            else:
+                $ renpy.notify("You don't have anywhere to carry the panties")
+                if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
+                    $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                $ bathroom_panties_added = False
+                $ bathroom_find_panties = True
+                $ loct = True
         if fpshower:
             if filth_val == 0:
                 fp "I don't need to take a shower right now"
@@ -510,5 +527,5 @@ label cabin_ride(cr_called=False,trans=False):
 label marina_ride(mr_called=False,trans=False):
     if mr_called:
         $ mr_called = False
-        "This is just a placeholder for this event"    
+        "This is just a placeholder for this event"
     call end_of_day()

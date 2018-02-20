@@ -17,6 +17,17 @@ style red_color:
 style inventory_text:
     color "#fff"
 
+style category_button_text:
+    color "#fff"
+    hover_color "#0cf"
+    selected_color "#0cf"
+    xalign .5
+
+style contacts_button_text:
+    color "#888"
+    hover_color "#0cf"
+    selected_color "#0cf"
+
 screen empty()
 
 screen choice(items):
@@ -35,8 +46,8 @@ screen choice(items):
                     button:
                         action action
                         style "choice_button"
-                        text caption style "choice_button"                 
-            else:                       
+                        text caption style "choice_button"
+            else:
                 frame:
                     background "gui/textbox_top.png"
                     xalign .5
@@ -71,7 +82,7 @@ init -2:
 
     style choice_button_disabled is default:
         properties gui.button_text_properties("choice_button_disabled")
-        color "#aaaaaa"        
+        color "#aaaaaa"
     style menu_window is default
 
     style menu_choice_button is button:
@@ -108,7 +119,7 @@ screen nvl:
                 for caption, action, chosen in items:
 
                     if action:
-                        if conditions.check(caption):                            
+                        if conditions.check(caption):
                             button:
                                 style "nvl_menu_choice_button"
                                 text conditions.text(caption) style "nvl_menu_choice"
@@ -142,7 +153,7 @@ screen navigation():
         textbutton _("Preferences") action ShowMenu("preferences")
         textbutton _("History") action ShowMenu("history")
         textbutton _("About") action ShowMenu("about")
-        textbutton _("Changelog") action [Show ("changelog")]        
+        textbutton _("Changelog") action [Show ("changelog")]
 
         if _in_replay:
             textbutton _("End Replay") action EndReplay(confirm=True)
@@ -174,7 +185,7 @@ screen main_menu():
             hotspot (44, 320, 392, 110) action ShowMenu("preferences")
             hotspot (44, 430, 400, 110) action ShowMenu("about")
             hotspot (44, 540, 396, 110) action ShowMenu("changelog")
-            hotspot (44, 650, 381, 110) 
+            hotspot (44, 650, 381, 110)
             hotspot (44, 760, 356, 110) action ShowMenu("help")
             hotspot (44, 870, 324, 110) action Quit(confirm=not main_menu)
 
@@ -413,31 +424,31 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                 if filth_val < 10:
                     at alpha_transform(.1)
                     tooltip "Might be time to wash your hands ("+str(filth_val)+"% dirty)"
-                    action NullAction()                        
+                    action NullAction()
                 elif filth_val < 20:
                     at alpha_transform(.2)
                     tooltip "Cleanliness is a virtue ("+str(filth_val)+"% dirty)"
-                    action NullAction()                        
+                    action NullAction()
                 elif filth_val < 30:
                     at alpha_transform(.3)
                     tooltip "You pick your nose with those hands? Yuck! ("+str(filth_val)+"% dirty)"
-                    action NullAction()                        
+                    action NullAction()
                 elif filth_val < 40:
                     at alpha_transform(.4)
                     tooltip "Okay, a bit of grime under the fingernails isn't that bad... but seriously ("+str(filth_val)+"% dirty)"
-                    action NullAction()                        
+                    action NullAction()
                 elif filth_val < 50:
                     at alpha_transform(.5)
                     tooltip "There is dirty, and then there is you ("+str(filth_val)+"% dirty)"
-                    action NullAction()                        
+                    action NullAction()
                 elif filth_val < 60:
                     at alpha_transform(.6)
                     tooltip "Have you been digging up the entire back yard? ("+str(filth_val)+"% dirty)"
-                    action NullAction()                        
+                    action NullAction()
                 elif filth_val < 70:
                     at alpha_transform(.7)
                     tooltip "Seriously, have you ever heard of soap? ("+str(filth_val)+"% dirty)"
-                    action NullAction()                        
+                    action NullAction()
                 elif filth_val < 80:
                     at alpha_transform(.8)
                     tooltip "Sometimes, one wonders why we even invented showers, or soap ("+str(filth_val)+"% dirty)"
@@ -455,7 +466,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             imagebutton auto "images/backpack_%s.png":
                 xalign 0.8
                 ypos 100
-                focus_mask True 
+                focus_mask True
                 action [Show("inventory_screen")]
                 tooltip "Here you'll be able to see what you have in your backpack"
             add "images/backpack_overlay.png":
@@ -472,9 +483,15 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
         background None
         vbox:
             if carry_phone:
-                imagebutton auto "images/menu_phone_%s.png" focus_mask True action Show('phone') at ModZoom(.65):
-                    ypos -15
-                    tooltip "Here's your phone. Here you will be able to load, save and view galleries and more"
+                if not hints:
+                    imagebutton auto "images/menu_phone_%s.png" focus_mask True action Show('phone') at ModZoom(.65):
+                        ypos -15
+                        tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more"
+                else:
+                    imagebutton auto "images/menu_phone_redglow_%s.png" focus_mask True action Show('phone') at ModZoom(.65):
+                        ypos -15
+                        tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new hints"
+
                 add "images/menu_phone_overlay.png" at ModZoom(.65):
                     xpos -340
                     ypos -15
@@ -506,11 +523,11 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             if bad_weather and rainstorm and int(current_time[:2]) in night:
                 add "images/night_rain_icon.png":
                     xalign .5
-                    ypos -15               
+                    ypos -15
             elif bad_weather and rainstorm:
                 add "images/morning_rain_icon.png":
                     xalign .5
-                    ypos -15                
+                    ypos -15
             elif int(current_time[:2]) in night:
                 add "images/night_icon.png":
                     xalign .5
@@ -547,7 +564,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             textbutton "[hour]":
                 text_color "#ffffff"
                 xalign .5
-                ypos -20
+                ypos -10
                 text_font "gui/fonts/digital_dismay.otf"
                 text_size 25
                 action Function(addtime,1,False,True)
@@ -567,10 +584,10 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             textbutton "[minute]":
                 text_color "#ffffff"
                 xalign .5
-                ypos -20
-                text_font "gui/fonts/digital_dismay.otf"                
-                text_size 25                
-                action Function(addtime,False,30,True)                
+                ypos -10
+                text_font "gui/fonts/digital_dismay.otf"
+                text_size 25
+                action Function(addtime,False,30,True)
 
         add "images/clock_overlay.png":
             if int(current_time[:2]) not in night:
@@ -582,7 +599,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
         frame:
             pos(x, y)
             anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"        
+            text GetTooltip() style "tooltip_hover"
 
 screen changelog():
     tag menu
@@ -712,7 +729,7 @@ screen stat_screen():
                             text "Rel:"
                             text "["+stats[1]+"_rel]":
                                 xpos 20
-                        if cheat:                                
+                        if cheat:
                             imagebutton auto "images/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")-1)):
                                 ypos 5
                                 xpos 40
@@ -725,7 +742,7 @@ screen stat_screen():
                             text "Aro:"
                             text "["+stats[1]+"_aro]":
                                 xpos 20
-                        if cheat:                                
+                        if cheat:
                             imagebutton auto "images/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")-1)):
                                 ypos 5
                                 xpos 40
@@ -762,10 +779,10 @@ screen inventory_screen():
                 cols 1
                 scrollbars None
                 edgescroll 100,500
-                mousewheel True 
-                spacing 5               
+                mousewheel True
+                spacing 5
                 $ inv_list = inv_list_fetch()
-                for name in sorted(inv_list): 
+                for name in sorted(inv_list):
                     for item in backpack:
                         $ check_item_name = item.name.replace('fs_','').replace('_',' ').capitalize()
                         if 'panties' in check_item_name.lower():
@@ -773,7 +790,7 @@ screen inventory_screen():
                             if len(tempname) == 2:
                                 $ check_item_name = tempname[1]+' - '+tempname[0]
                             else:
-                                $ check_item_name = tempname[1]+' - '+tempname[2]+' '+tempname[0]
+                                $ check_item_name = tempname[2]+' - '+tempname[0]+' '+tempname[1]
                         if check_item_name.lower() == name:
                             fixed:
                                 xsize 600
@@ -787,10 +804,10 @@ screen inventory_screen():
                                         add "images/inventory/outer_ring.png":
                                             xalign .5
                                             yalign .5
-                                        $ displayname = item.name.capitalize()     
+                                        $ displayname = item.name.capitalize()
                                         imagebutton auto "images/inventory/"+item.name+"_%s.png":
                                             xalign .5
-                                            xoffset -140                                        
+                                            xoffset -140
                                             yalign .5
                                             focus_mask True
                                             # action [Hide('inventory_screen')]
@@ -798,11 +815,11 @@ screen inventory_screen():
                                     elif name.lower() == 'phone' and current_location == 'fp_bedroom_loc':
                                         add "images/inventory/outer_ring.png":
                                             xalign .5
-                                            yalign .5                                    
-                                        $ displayname = item.name.capitalize()     
+                                            yalign .5
+                                        $ displayname = item.name.capitalize()
                                         imagebutton auto "images/inventory/"+item.name+"_%s.png":
                                             xalign .5
-                                            xoffset -140                                        
+                                            xoffset -140
                                             yalign .5
                                             focus_mask True
                                             # action [Hide('inventory_screen'),SetVariable('charge_phone',True),SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]
@@ -810,7 +827,7 @@ screen inventory_screen():
                                     else:
                                         add "images/inventory/outer_ring.png":
                                             xalign .5
-                                            yalign .5                          
+                                            yalign .5
                                         if 'panties' in item.name:
                                             $ ptmp = item.name.replace('fs_','').replace('_',' ').split(' ')
                                             if len(ptmp) == 2:
@@ -819,12 +836,12 @@ screen inventory_screen():
                                                 $ pname = str(ptmp[2]+' - '+ptmp[0]+' '+ptmp[1])
                                             $ displayname = pname.capitalize()
                                         else:
-                                            $ displayname = item.name.capitalize()                                                      
+                                            $ displayname = item.name.capitalize()
                                         imagebutton auto "images/inventory/"+item.name+"_%s.png":
                                             xalign .5
                                             xoffset -140
                                             yalign .5
-                                            focus_mask True 
+                                            focus_mask True
                                             # action [Hide("inventory_screen")]
                                             action [SetVariable('selecteditemamount',item.amount),SetVariable('selecteditemname',displayname),SetVariable('selecteditem',item.name)]
                                 hbox:
@@ -875,13 +892,13 @@ screen inventory_screen():
                                     $ imgname = str(name.replace(' ','_').replace('_-_','_').lower())
                                 add "images/inventory/outer_ring_insensitive.png":
                                     xalign .5
-                                    yalign .5                                
+                                    yalign .5
                                 add "images/inventory/"+imgname+"_insensitive.png":
                                     xalign .5
                                     xoffset -140
                                     yalign .5
                             hbox:
-                                # add "#0f0"                                
+                                # add "#0f0"
                                 xsize 375
                                 xpos 160
                                 ysize 160
@@ -889,12 +906,12 @@ screen inventory_screen():
                                 text "[displayname]":
                                     xalign 0.0
                                     xoffset 10
-                                    yalign .5                                        
+                                    yalign .5
                             hbox:
-                                # add "#00f"                                 
+                                # add "#00f"
                                 xsize 65
-                                xpos 535  
-                                ysize 160                              
+                                xpos 535
+                                ysize 160
                                 text "0":
                                     xalign .5
                                     yalign .5
@@ -969,25 +986,25 @@ screen say(who, what):
                     style "namebox_char"
                     background Frame("gui/namebox_fm.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == fsName.formal.upper():
-                    style "namebox_char"                    
+                    style "namebox_char"
                     background Frame("gui/namebox_fs.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == nb.name.upper():
-                    style "namebox_char"                    
+                    style "namebox_char"
                     background Frame("gui/namebox_nb.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == nk.name.upper():
-                    style "namebox_char"                    
+                    style "namebox_char"
                     background Frame("gui/namebox_nk.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == nr.name.upper():
-                    style "namebox_char"                    
+                    style "namebox_char"
                     background Frame("gui/namebox_nr.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == sn.name.upper():
-                    style "namebox_char"                    
+                    style "namebox_char"
                     background Frame("gui/namebox_sn.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == sp.name.upper():
                     style "namebox_char"
                     background Frame("gui/namebox_sp.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == sj.name.upper():
-                    style "namebox_char"                    
+                    style "namebox_char"
                     background Frame("gui/namebox_sj.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
         if who is not None and what:
             background Image("gui/textbox_cutout.png", xalign=0.5, yalign=1.0)
@@ -1087,7 +1104,7 @@ screen location(room=False):
                 else:
                     imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_morning_dresser_%s.png" focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('schoolbooks_added',True),Jump('fp_bedroom_loc')]
         if not backpack_carry:
-            imagebutton auto "images/backpack_%s.png" focus_mask True action [SetVariable('backpack_carry',True)]:
+            imagebutton auto "images/backpack_fp_bedroom_%s.png" focus_mask True action [SetVariable('backpack_carry',True),Function(delete_hint,"You should perhaps try to get something to carry all these things you seem to be able to pick up...")]:
                 yalign .7
                 xalign .7
         if int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or current_time[:2] == 0 or int(current_time[:2]) == 1:
@@ -1095,7 +1112,7 @@ screen location(room=False):
         else:
             imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_bed_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_morning_bed_%s.png") focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
 
-        if not carry_phone:    
+        if not carry_phone:
             imagebutton auto ("images/backgrounds/interactions_item/phone_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/phone_morning_%s.png") focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]
 
         $ exitdown_event_var = "uhl_cfs"
@@ -1107,12 +1124,12 @@ screen location(room=False):
                 imagebutton auto ("images/backgrounds/interactions_item/bedroom_panties_"+gp_bed+"_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/bedroom_panties_"+gp_bed+"_morning_%s.png") focus_mask True action [SetVariable('find_panties',False),SetVariable('panties_added',True),SetVariable('gp_bed',gp_bed),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
         if find_tablet:
             imagebutton auto ("images/backgrounds/interactions_item/fs_tablet_bedroom_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fs_tablet_bedroom_morning_%s.png") focus_mask True action [SetVariable('find_tablet',False),SetVariable('tablet_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
-        if find_pb:             
-            if not backpack.has_item(princessplug_item):   
+        if find_pb:
+            if not backpack.has_item(princessplug_item):
                 imagebutton auto ("images/backgrounds/interactions_item/pink_buttplug_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/pink_buttplug_morning_%s.png") focus_mask True action [SetVariable('find_pb',False),SetVariable('pb_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
         $ exitdown_event_var = "uhl_cfs"
         $ exitdown_event = "upper_hallway_loc"
-        $ exitdown = "Upper hallway"       
+        $ exitdown = "Upper hallway"
 
     if room == "garage":
         if not backpack.has_item(toolbox_item):
@@ -1131,9 +1148,9 @@ screen location(room=False):
         $ exitleft_event = "entrance_loc"
         $ exitleft = "Upstairs / Entrance"
 
-        $ exitdown_event_var = "out_cfs"            
+        $ exitdown_event_var = "out_cfs"
         $ exitdown_event = "outside_loc"
-        $ exitdown = "Go outside"        
+        $ exitdown = "Go outside"
 
     if room == "livingroom":
         $ exitright_event_var = "kit_cfs"
@@ -1151,24 +1168,24 @@ screen location(room=False):
             elif bottles == 2 or br == 2:
                 imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                     ypos .485
-                    xpos .31       
+                    xpos .31
                 imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
-                        xpos .325                    
+                        xpos .325
             elif bottles == 3 or br == 3:
                     imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .480
-                        xpos .315                    
+                        xpos .315
                     imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
-                        xpos .31                                        
+                        xpos .31
                     imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
-                        xpos .325                    
+                        xpos .325
 
         $ exitleft_event_var = "lvr_cfs"
         $ exitleft_event = "livingroom_loc"
-        $ exitleft = "Livingroom"                   
+        $ exitleft = "Livingroom"
         $ exitdown_event = "entrance_loc"
         $ exitdown = "Entrance"
 
@@ -1204,14 +1221,14 @@ screen location(room=False):
             # imagebutton auto "images/backgrounds/upper_hallway_bathroom_shower_night_%s.png" focus_mask True action [SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
             imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]
             if bathroom_light:
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_light_on_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]    
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_light_on_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
             else:
                 imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
         else:
             if bathroom_find_panties:
                 imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.png" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]            
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]                        
+            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
+            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]
             add "images/backgrounds/interactions_item/bathroom_lightswitch_morning_off_idle.png"
 
         $ exitdown_event_var = "uhl_cfs"
@@ -1247,21 +1264,39 @@ screen location(room=False):
                     yalign 1.0
                     tooltip exitdown
         else:
-            imagebutton auto "images/exit_down_%s.png" focus_mask True action Jump(exitdown_event):
-                xalign .5
-                yalign 1.0
-                tooltip exitdown
+            if current_location == 'kitchen_loc' and wine_added:
+                imagebutton auto "images/exit_down_%s.png" focus_mask True action [SetVariable('wine_added',False),Jump(exitdown_event)]:
+                    xalign .5
+                    yalign 1.0
+                    tooltip exitdown
+            else:
+                imagebutton auto "images/exit_down_%s.png" focus_mask True action Jump(exitdown_event):
+                    xalign .5
+                    yalign 1.0
+                    tooltip exitdown
     if exitleft:
         if exitleft_event_var:
-            imagebutton auto "images/exit_left_%s.png" focus_mask True action [SetVariable(exitleft_event_var,True),Jump(exitleft_event)]:
-                xalign 0.0
-                yalign .5
-                tooltip exitleft
+            if current_location == 'kitchen_loc' and wine_added:
+                imagebutton auto "images/exit_left_%s.png" focus_mask True action [SetVariable('wine_added',False),SetVariable(exitleft_event_var,True),Jump(exitleft_event)]:
+                    xalign 0.0
+                    yalign .5
+                    tooltip exitleft
+            else:
+                imagebutton auto "images/exit_left_%s.png" focus_mask True action [SetVariable(exitleft_event_var,True),Jump(exitleft_event)]:
+                    xalign 0.0
+                    yalign .5
+                    tooltip exitleft
         else:
-            imagebutton auto "images/exit_left_%s.png" focus_mask True action Jump(exitleft_event):
-                xalign 0.0
-                yalign .5
-                tooltip exitleft
+            if current_location == 'kitchen_loc' and wine_added:
+                imagebutton auto "images/exit_left_%s.png" focus_mask True action [SetVariable('wine_added',False),Jump(exitleft_event)]:
+                    xalign 0.0
+                    yalign .5
+                    tooltip exitleft
+            else:            
+                imagebutton auto "images/exit_left_%s.png" focus_mask True action Jump(exitleft_event):
+                    xalign 0.0
+                    yalign .5
+                    tooltip exitleft
     if exitup:
         if exitup_event_var:
             imagebutton auto "images/exit_up_%s.png" focus_mask True action [SetVariable(exitup_event_var,True),Jump(exitup_event)]:
@@ -1289,7 +1324,7 @@ screen location(room=False):
         frame:
             pos(x, y)
             anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"        
+            text GetTooltip() style "tooltip_hover"
 
 screen phone():
     modal True
@@ -1307,11 +1342,11 @@ screen phone():
     fixed:
         fit_first True
         xmaximum 500
-        ymaximum 800  
+        ymaximum 800
         xalign .5
-        yalign .5   
+        yalign .5
         add "images/phone_background_black.png" at ModZoom(.85)
-         
+
         hbox: #notification-bar
             if battery_text != 0:
                 add "images/phone_notification_bar.png" at ModZoom(.85)
@@ -1340,7 +1375,7 @@ screen phone():
                 elif battery_text < 20 and battery_text >= 10:
                     add "images/phone_battery_10.png"
                 else:
-                    add "images/phone_battery_0.png"                
+                    add "images/phone_battery_0.png"
                 at ModZoom(.85)
                 xalign .5
                 yalign 0.0
@@ -1355,25 +1390,35 @@ screen phone():
         hbox: #clock
             if battery_text != 0:
                 xalign .5
-                yalign 0.118 
+                yalign 0.118
                 text "[current_time]":
                     font "gui/fonts/texgyreheroes_regular.otf"
                     size 18
                     color "#000"
         hbox:
             if battery_text != 0:
-                xalign 0.2
-                yalign 0.17 
-                spacing 10          
+                xalign 0.5
+                yalign 0.17
+                spacing 10
                 if show_icons:
-                    imagebutton auto "images/phone_achievement_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.9):
+                    imagebutton auto "images/phone_button_achievement_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.9):
                         tooltip "Open the achievement-screen"
-                    imagebutton auto "images/phone_help_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.9):
-                        tooltip "Open the in-game help-screen"
-                    imagebutton auto "images/phone_gallery_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_gallery_screen')] at ModZoom(.9):
+                    imagebutton auto "images/phone_button_gallery_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_gallery_screen')] at ModZoom(.9):
                         tooltip "Open the image gallery"
-                    imagebutton auto "images/phone_help_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen')] at [ModZoom(.9),right]:
-                        tooltip "Open the hint-screen"
+                    imagebutton auto "images/phone_button_call_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_call_screen')] at ModZoom(.9):
+                        tooltip "Phonecalls happen here"
+                    imagebutton auto "images/phone_button_help_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.9):
+                        tooltip "Open the in-game help-screen"
+                    if len(hints) > 0:
+                        imagebutton auto "images/phone_button_hint_redglow_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen')] at ModZoom(.9):
+                            tooltip "New hints available"
+                    elif len(read_hints) > 0:
+                        imagebutton auto "images/phone_button_hint_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen',None,'read')] at ModZoom(.9):
+                            tooltip "No new hints available"
+                    else:
+                        imagebutton idle "images/phone_button_hint_insensitive.png" focus_mask True action NullAction() at ModZoom(.9):
+                            tooltip "No hints available at the current time"
+
         hbox:
             add "images/phone_white.png" at ModZoom(.85)
             xalign .5
@@ -1384,26 +1429,29 @@ screen phone():
                 yalign .83
                 spacing 10
                 if show_icons:
-                    imagebutton auto "images/phone_main_menu_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.9):
+                    imagebutton auto "images/phone_button_menu_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.9):
                         tooltip "Go to the main menu"
-                    imagebutton auto "images/phone_save_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.9):
+                    imagebutton auto "images/phone_button_save_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.9):
                         tooltip "Save your game"
-                    imagebutton auto "images/phone_load_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.9):
+                    imagebutton auto "images/phone_button_load_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.9):
                         tooltip "Load your game"
-                    imagebutton auto "images/phone_settings_button_%s.png" focus_mask True action [SetVariable('pref_screen',True),SetVariable('show_icons',False),Show('custom_preferences')] at ModZoom(.9):
+                    imagebutton auto "images/phone_button_preferences_%s.png" focus_mask True action [SetVariable('pref_screen',True),SetVariable('show_icons',False),Show('custom_preferences')] at ModZoom(.9):
                         tooltip "Show preferences screen"
-                    imagebutton auto "images/phone_quit_button_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.9):
+                    imagebutton auto "images/phone_button_quit_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.9):
                         tooltip "Quit the game"
         hbox:
-            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
+            # imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
             xalign .5
             yalign .5
             if keyclose:
-                key 'K_ESCAPE' action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Hide('phone')]
+                # key 'K_ESCAPE' action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Hide('phone')]
+                key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
         hbox:
             if battery_text != 0:
-                imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements')] at ModZoom(.85):
+                # imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements')] at ModZoom(.85):
+                imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
                     tooltip "Go back to the home-screen"
                 xalign .5
                 yalign .5
@@ -1412,9 +1460,227 @@ screen phone():
         frame:
             pos(x, y)
             anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"        
+            text GetTooltip() style "tooltip_hover"
+
+screen phone_hint_screen(hintselect='new'):
+    tag phonescreen
+    zorder 950
+    $ keyclose = True
+    frame:
+        style_prefix "category"
+        background None
+        xpadding 0
+        top_padding 35
+        bottom_padding 10
+        xalign .5
+        yalign .44
+        maximum 370,686
+        hbox:
+            textbutton "New" action [Show('phone_hint_screen',None,'new')]:
+                xsize 185
+                text_size 18
+                # text_align .5
+                # xalign .5
+                selected hintselect == 'new'
+        # hbox:
+            textbutton "Read" action [Show('phone_hint_screen',None,'read')]:
+                xsize 185
+                text_size 18
+                # text_align .5
+                # xalign .5
+                selected hintselect == 'read'
+        viewport:
+            mousewheel True
+            ypos 40
+            vbox:
+                if hintselect == 'new':
+                    for hint in hints:
+                        textbutton "[hint]" action Function(read_hint,hint):
+                            text_color "#fff"
+                            text_size 18
+                elif hintselect == 'read':
+                    for read_hint in read_hints:
+                        textbutton "[read_hint]" action Function(disable_hint,read_hint):
+                            text_color "#fff"
+                            text_size 18
+    if keyclose:
+        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
+
+screen phone_call_screen():
+    tag phonescreen
+    modal True
+    zorder 800
+    default x = 500
+    default y = 400
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
+    $ keyclose = True
+    default stats = None
+    default clicked = None
+
+    hbox:
+        xalign .5
+        yalign .5
+        add "images/phone_background_contacts.png" at ModZoom(.85)
+    hbox: #notification-bar
+        if battery_text != 0:
+            add "images/phone_notification_bar.png" at ModZoom(.85)
+            xalign .5
+            yalign .5
+    hbox: #battery-indicator
+        if battery_text != 0:
+            if battery_text == 100:
+                add "images/phone_battery_100.png"
+            elif battery_text < 100 and battery_text >= 90:
+                add "images/phone_battery_90.png"
+            elif battery_text < 90 and battery_text >= 80:
+                add "images/phone_battery_80.png"
+            elif battery_text < 80 and battery_text >= 70:
+                add "images/phone_battery_70.png"
+            elif battery_text < 70 and battery_text >= 60:
+                add "images/phone_battery_60.png"
+            elif battery_text < 60 and battery_text >= 50:
+                add "images/phone_battery_50.png"
+            elif battery_text < 50 and battery_text >= 40:
+                add "images/phone_battery_40.png"
+            elif battery_text < 40 and battery_text >= 30:
+                add "images/phone_battery_30.png"
+            elif battery_text < 30 and battery_text >= 20:
+                add "images/phone_battery_20.png"
+            elif battery_text < 20 and battery_text >= 10:
+                add "images/phone_battery_10.png"
+            else:
+                add "images/phone_battery_0.png"
+            at ModZoom(.85)
+            xalign .5
+            yalign .5
+    hbox: #battery-text
+        if battery_text != 0:
+            xalign .575
+            yalign .18
+            text "[battery_text]":
+                font "gui/fonts/texgyreheroes_regular.otf"
+                size 13
+                color "#000"
+    hbox: #clock
+        if battery_text != 0:
+            xalign .5
+            yalign .177
+            text "[current_time]":
+                font "gui/fonts/texgyreheroes_regular.otf"
+                size 18
+                color "#000"
+    frame:
+        background None
+        xpadding 0
+        top_padding 40
+        bottom_padding 40
+        xalign .5
+        yalign .44
+        maximum 370,666
+        hbox:
+            ysize 30
+            xsize 370
+            text "All Contacts":
+                text_align .5
+                xalign .5
+                color "#fff"
+                size 20
+                ypos -5
+        viewport:
+            mousewheel True
+            # spacing 10
+            ypos 28
+            vbox:
+                style_prefix "contacts"
+                for i in chars:
+                    if not i[1] == 'fp':
+                        if i[1] == 'fm':
+                            $ charimg = "images/characters/anne/anne_idle.png"
+                            $ charimg_hover = "images/characters/anne/anne_hover.png"
+                        elif i[1] == 'fs':
+                            $ charimg = "images/characters/juliette/juliette_idle.png"
+                            $ charimg_hover = "images/characters/juliette/juliette_hover.png"
+                        elif i[1] == 'nk':
+                            $ charimg = "images/characters/karen/karen_idle.png"
+                            $ charimg_hover = "images/characters/karen/karen_hover.png"
+                        else:
+                            $ charimg = "images/question_mark_idle.png"
+                            $ charimg_hover = "images/question_mark_hover.png"
+
+                        button:
+                            background None
+                            hover_background "#fff"
+                            ysize 80
+                            xsize 370
+                            hbox:
+                                # ysize 80
+                                spacing 20
+                                if stats == i:
+                                    add charimg_hover at ModZoom(.65):
+                                        yalign .5
+                                    text "[i[0]]":
+                                        ysize 80
+                                        yalign .5
+                                        color "#0cf"
+                                else:
+                                    add charimg at ModZoom(.65):
+                                        yalign .5
+                                    text "[i[0]]":
+                                        ysize 80
+                                        yalign .5
+                                        color "#777"
+                            hovered SetScreenVariable("stats",i)
+                            unhovered SetScreenVariable("stats",False)
+                            action NullAction()
+
+    frame:
+        background None
+        xalign .5
+        yalign .5
+        hbox:
+            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
+                tooltip "Shut off the phone"
+            xalign .5
+            yalign .5
+            if keyclose:
+                key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
+        hbox:
+            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
+                tooltip "Go back to the home-screen"
+            xalign .5
+            yalign .5
+        hbox:
+            xalign .5
+            yalign .5
+            add "images/phone_bottom_overlay.png" at ModZoom(.85)
+        hbox:
+            xalign .5
+            yalign .818
+            imagebutton idle "phone_unlock.png":
+                action ToggleVariable('hide_unlocked_achievements')
+                xpos -100
+            imagebutton idle "phone_lock.png":
+                action ToggleVariable('hide_locked_achievements')
+                xalign .5
+            imagebutton idle "phone_hidden.png":
+                action ToggleVariable('hide_hidden_achievements')
+                xpos 100
+
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"
+
+    if keyclose:
+        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
+
 
 screen phone_gallery_screen():
+    tag phonescreen
     zorder 950
     $ keyclose = True
     frame:
@@ -1467,9 +1733,11 @@ screen phone_gallery_screen():
                             $ pgsxp = 0
                             $ pgsyp += 220
                 if keyclose:
-                    key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]                     
+                    # key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]
+                    key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
 
 screen phone_gallery_show():
+    tag phonescreen
     zorder 950
     default x = 500
     default y = 400
@@ -1495,18 +1763,22 @@ screen phone_gallery_show():
                 yoffset -5
             imagebutton auto "images/exit_left_%s.png" focus_mask True action[Hide('phone_gallery_show'),Show('phone_gallery_screen')]
     hbox:
-        imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
+        # imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
+        imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
             tooltip "Shut off the phone"
         xalign .5
         yalign .5
         if keyclose:
-            key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',False),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone'),Show('phone_gallery_screen')]      
+            # key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',False),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone'),Show('phone_gallery_screen')]
+            key "K_ESCAPE" action [SetVariable('keyclose',False),Function(hide_phone_screens),Show('phone'),Show('phone_gallery_screen')]
     hbox:
         if battery_text != 0:
-            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements')] at ModZoom(.85):
+            # imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements')] at ModZoom(.85):
+            #     tooltip "Go back to the home-screen"
+            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),Function(hide_phone_screens),Show('phone_gallery_show')] at ModZoom(.85):
                 tooltip "Go back to the home-screen"
             xalign .5
-            yalign .5             
+            yalign .5
     hbox:
         add "images/phone_white.png" at ModZoom(.85)
         xalign .5
@@ -1516,30 +1788,32 @@ screen phone_gallery_show():
         frame:
             pos(x, y)
             anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"  
+            text GetTooltip() style "tooltip_hover"
 
 screen phone_info_screen():
+    tag phonescreen
     zorder 950
     $ keyclose = True
-    hbox:
-        imagebutton:
-            idle "images/phone_white_power_hover.png"
-            hover "images/phone_white_power_hover.png"
-            focus_mask True
-            action [SetField(persistent,'phone_firstshow',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85)
-            tooltip "Shut off the phone"
-        xalign .5
-        yalign .5      
-    hbox:
-        if battery_text != 0:
+    if persistent.phone_firstshow:
+        hbox:
             imagebutton:
-                idle "images/phone_white_home_hover.png"
-                hover "images/phone_white_home_hover.png"
+                idle "images/phone_white_power_hover.png"
+                hover "images/phone_white_power_hover.png"
                 focus_mask True
-                action [SetVariable('keyclose',False),SetField(persistent,'phone_firstshow',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements')] at ModZoom(.85)
-                tooltip "Go back to the home-screen"
+                action [SetField(persistent,'phone_firstshow',False),SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85)
+                tooltip "Shut off the phone"
             xalign .5
             yalign .5
+        hbox:
+            if battery_text != 0:
+                imagebutton:
+                    idle "images/phone_white_home_hover.png"
+                    hover "images/phone_white_home_hover.png"
+                    focus_mask True
+                    action [SetField(persistent,'phone_firstshow',False),SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85)
+                    tooltip "Go back to the home-screen"
+                xalign .5
+                yalign .5
     frame:
         style_prefix "infoscreen"
         background None
@@ -1555,35 +1829,35 @@ screen phone_info_screen():
                 text "This is the phone-screen. Here you'll find all the game-menus:\n"
                 hbox:
                     xpos .2
-                    imagebutton auto "images/phone_main_menu_button_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.6):
+                    imagebutton auto "images/phone_button_menu_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.6):
                         yalign .5
                     textbutton "Main menu" action [Hide('phone_info_screen'),Show('custom_confirm',None,'mainmenu')]:
-                        text_size 22                    
+                        text_size 22
                         yalign .5
                 hbox:
                     xpos .2
-                    imagebutton auto "images/phone_save_button_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.6):
+                    imagebutton auto "images/phone_button_save_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.6):
                         yalign .5
                     textbutton "Save" action [Hide('phone_info_screen'),Show('custom_save')]:
                         text_size 22
                         yalign .5
                 hbox:
                     xpos .2
-                    imagebutton auto "images/phone_load_button_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.6):
+                    imagebutton auto "images/phone_button_load_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.6):
                         yalign .5
                     textbutton "Load" action [Hide('phone_info_screen'),Show('custom_load')]:
                         text_size 22
                         yalign .5
                 hbox:
                     xpos .2
-                    imagebutton auto "images/phone_settings_button_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('pref_screen',True),SetVariable('show_icons',False),Show('custom_preferences')] at ModZoom(.6):
+                    imagebutton auto "images/phone_button_preferences_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('pref_screen',True),SetVariable('show_icons',False),Show('custom_preferences')] at ModZoom(.6):
                         yalign .5
                     textbutton "Preferences" action [Hide('phone_info_screen'),Show('custom_preferences')]:
                         text_size 22
                         yalign .5
                 hbox:
                     xpos .2
-                    imagebutton auto "images/phone_quit_button_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.6):
+                    imagebutton auto "images/phone_button_quit_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.6):
                         yalign .5
                     textbutton "Quit game" action [Hide('phone_info_screen'),Show('custom_confirm',None,'quit')]:
                         text_size 22
@@ -1591,30 +1865,47 @@ screen phone_info_screen():
                 text "\nand also different other screens, like the:\n"
                 hbox:
                     xpos .2
-                    imagebutton auto "images/phone_achievement_button_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.6):
+                    imagebutton auto "images/phone_button_achievement_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.6):
                         yalign .5
                     textbutton "Achievement screen" action [Hide('phone_info_screen'),Show('display_achievements')]:
                         text_size 22
                         yalign .5
                 hbox:
                     xpos .2
-                    imagebutton auto "images/phone_help_button_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.6):
+                    imagebutton auto "images/phone_button_gallery_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_gallery_screen')] at ModZoom(.6):
+                        yalign .5
+                    textbutton "Image gallery" action [Hide('phone_info_screen'),Show('phone_gallery_screen')]:
+                        text_size 22
+                        yalign .5
+                hbox:
+                    xpos .2
+                    imagebutton auto "images/phone_button_call_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_call_screen')] at ModZoom(.6):
+                        yalign .5
+                    textbutton "Call screen" action [Hide('phone_info_screen'),Show('phone_call_screen')]:
+                        text_size 22
+                        yalign .5
+                hbox:
+                    xpos .2
+                    imagebutton auto "images/phone_button_help_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.6):
                         yalign .5
                     textbutton "In-game help" action [SetVariable('show_icons',False),Show('phone_info_screen')]:
                         text_size 22
                         yalign .5
                 hbox:
                     xpos .2
-                    imagebutton auto "images/phone_gallery_button_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_gallery_screen')] at ModZoom(.6):
+                    imagebutton auto "images/phone_button_hint_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen')] at ModZoom(.6):
                         yalign .5
-                    textbutton "Image gallery" action [Hide('phone_info_screen'),Show('phone_gallery_screen')]:
+                    textbutton "Game-hints" action [SetVariable('show_icons',False),Show('phone_hint_screen')]:
                         text_size 22
                         yalign .5
+
                 text "\nand more as the game is being developed.\n\nYou close the phone by pressing the power button on the right side of the phone, and you go back to the main menu by pressing the home-button, down below"
     if keyclose:
-        key "K_ESCAPE" action [SetVariable('keyclose',False),SetField(persistent,'phone_firstshow',False),Hide('custom_confirm'),Hide('custom_save'),Hide('custom_load'),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('phone_info_screen'),SetVariable('show_icons',True),Show('phone')]
+        # key "K_ESCAPE" action [SetVariable('keyclose',False),SetField(persistent,'phone_firstshow',False),Hide('custom_confirm'),Hide('custom_save'),Hide('custom_load'),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('phone_info_screen'),SetVariable('show_icons',True),Show('phone')]
+        key "K_ESCAPE" action [SetVariable('keyclose',False),SetField(persistent,'phone_firstshow',False),Function(hide_phone_screens),SetVariable('show_icons',True),Show('phone')]
 
 screen custom_confirm(cc_chosen=False):
+    tag phonescreen
     zorder 900
     $ keyclose = True
     frame:
@@ -1636,17 +1927,19 @@ screen custom_confirm(cc_chosen=False):
                 xalign 0.5
                 ypos 100
                 if cc_chosen == 'quit':
-                    action Function(renpy.quit)                
+                    action Function(renpy.quit)
                 elif cc_chosen == 'mainmenu':
                     action MainMenu(confirm=False)
             textbutton "{color=#f00}No{/color}\n":
                 xalign 0.5
                 ypos 100
                 action [SetVariable('show_icons',True),Hide('custom_confirm')]
-            if keyclose:        
-                key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')] 
+            if keyclose:
+                # key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]
+                key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
 
 screen display_achievements():
+    tag phonescreen
     modal True
     zorder 800
     default x = 500
@@ -1692,7 +1985,7 @@ screen display_achievements():
             elif battery_text < 20 and battery_text >= 10:
                 add "images/phone_battery_10.png"
             else:
-                add "images/phone_battery_0.png"                
+                add "images/phone_battery_0.png"
             at ModZoom(.85)
             xalign .5
             yalign .5
@@ -1736,16 +2029,16 @@ screen display_achievements():
                                         if selected_achievement != achievement_hidden:
                                             action [SetVariable('selected_number',i),SetVariable('selected_achievement', achievement_hidden)]
                                         elif selected_achievement == achievement_hidden and selected_number != i:
-                                            action [SetVariable('selected_number',i),SetVariable('selected_achievement', achievement_hidden)]                                            
-                                        else:                                
+                                            action [SetVariable('selected_number',i),SetVariable('selected_achievement', achievement_hidden)]
+                                        else:
                                             action SetVariable('selected_achievement',False)
                                         selected selected_achievement == achievement_hidden
                                     add achievement.hidden_image at ModZoom(.5):
                                         ypos 14
                                         xalign .1
                                     text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
-                                        xpos 100  
-                                        ypos 38  
+                                        xpos 100
+                                        ypos 38
                                     add "images/phone_hidden.png":
                                         xpos 300
                                         ypos 35
@@ -1760,7 +2053,7 @@ screen display_achievements():
                                             text "{b}"+selected_achievement.name+"{/b}" size 16 xalign 0.5 text_align 0.5
                                             text selected_achievement.description size 14 xalign 0.5 text_align 0.5
                                             if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
-                                                text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5                                  
+                                                text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
                         else:
                             if hide_unlocked_achievements and hide_locked_achievements:
                                 pass
@@ -1768,19 +2061,19 @@ screen display_achievements():
                                 if not achievement.unlocked:
                                     fixed:
                                         xsize 370
-                                        ysize 100                           
-                                        imagebutton auto "images/achievement_%s.png" focus_mask True:                                   
+                                        ysize 100
+                                        imagebutton auto "images/achievement_%s.png" focus_mask True:
                                             if selected_achievement != achievement:
                                                 action SetVariable('selected_achievement', achievement)
-                                            else:                                
+                                            else:
                                                 action SetVariable('selected_achievement',False)
                                             selected selected_achievement == achievement
                                         add achievement.image at ModZoom(.5):
                                             ypos 14
                                             xalign .1
                                         text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
-                                            xpos 100 
-                                            ypos 38                                        
+                                            xpos 100
+                                            ypos 38
                                         add "images/phone_lock.png":
                                             xpos 300
                                             ypos 35
@@ -1795,30 +2088,30 @@ screen display_achievements():
                                                 text "{b}"+selected_achievement.name+"{/b}" size 16 xalign 0.5 text_align 0.5
                                                 text selected_achievement.description size 14 xalign 0.5 text_align 0.5
                                                 if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
-                                                    text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5                                  
+                                                    text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
 
                             elif hide_locked_achievements:
                                 if achievement.unlocked:
                                     fixed:
                                         xsize 370
                                         ysize 100
-                                        imagebutton auto "images/achievement_%s.png" focus_mask True:                                 
+                                        imagebutton auto "images/achievement_%s.png" focus_mask True:
                                             if selected_achievement != achievement:
                                                 action SetVariable('selected_achievement', achievement)
-                                            else:                                
+                                            else:
                                                 action SetVariable('selected_achievement',False)
-                                            selected selected_achievement == achievement                                                
+                                            selected selected_achievement == achievement
                                         add achievement.image at ModZoom(.5):
                                             ypos 14
                                             xalign .1
                                         text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
-                                            xpos 100  
-                                            ypos 38     
-                                        add "images/phone_unlock.png":                               
+                                            xpos 100
+                                            ypos 38
+                                        add "images/phone_unlock.png":
                                             xpos 300
                                             ypos 35
                                         if selected_achievement == achievement:
-                                            ysize 160                                            
+                                            ysize 160
                                             vbox:
                                                 xsize 370
                                                 xalign .5
@@ -1828,17 +2121,17 @@ screen display_achievements():
                                                 text "{b}{color=#fff}"+selected_achievement.name+"{/color}{/b}" size 16 xalign 0.5 text_align 0.5
                                                 text selected_achievement.description size 14 xalign 0.5 text_align 0.5
                                                 if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
-                                                    text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5                                  
+                                                    text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
                             else:
                                 fixed:
                                     xsize 370
-                                    ysize 100         
-                                    imagebutton auto "images/achievement_%s.png" focus_mask True:                                
+                                    ysize 100
+                                    imagebutton auto "images/achievement_%s.png" focus_mask True:
                                         if selected_achievement != achievement:
                                             action SetVariable('selected_achievement', achievement)
-                                        else:                                
+                                        else:
                                             action SetVariable('selected_achievement',False)
-                                        selected selected_achievement == achievement                                            
+                                        selected selected_achievement == achievement
                                     add achievement.image at ModZoom(.5):
                                         ypos 14
                                         xalign .1
@@ -1868,25 +2161,29 @@ screen display_achievements():
                                             text "{b}"+selected_achievement.name+"{/b}" size 16 xalign 0.5 text_align 0.5
                                             text selected_achievement.description size 14 xalign 0.5 text_align 0.5
                                             if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
-                                                text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 12 xalign 0.5 text_align 0.5   
-                    $ i += 1                               
+                                                text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 12 xalign 0.5 text_align 0.5
+                    $ i += 1
 
     frame:
         background None
         xalign .5
         yalign .5
         hbox:
-            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
+            # imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
             xalign .5
             yalign .5
             if keyclose:
-                key 'K_ESCAPE' action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]            
+                # key 'K_ESCAPE' action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]
+                key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
         hbox:
-            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
+            # imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements')] at ModZoom(.85):
+            #     tooltip "Go back to the home-screen"
+            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
                 tooltip "Go back to the home-screen"
             xalign .5
-            yalign .5           
+            yalign .5
         hbox:
             xalign .5
             yalign .5
@@ -1901,7 +2198,7 @@ screen display_achievements():
                 action ToggleVariable('hide_locked_achievements')
                 xalign .5
             imagebutton idle "phone_hidden.png":
-                action ToggleVariable('hide_hidden_achievements')        
+                action ToggleVariable('hide_hidden_achievements')
                 xpos 100
 
     if GetTooltip() is not None:
@@ -1913,11 +2210,12 @@ screen display_achievements():
 
 # This allows the user to view achievements based on their category
 screen display_achievements_category_panel():
+    tag phonescreen
     frame:
         style_prefix "category"
         padding 15, 15
         align 0.03, 0.13
-        vbox:                 
+        vbox:
             spacing 5
             text "Category" xalign 0.5 underline True size 26 color "#fff"
             textbutton "All":
@@ -1928,19 +2226,15 @@ screen display_achievements_category_panel():
                     action SetVariable('selected_category', category.lower())
                     selected selected_category == category.lower()
 
-style category_button_text:
-    color "#fff"
-    selected_color "#0cf"
-                    
 # This is the achievement notification
 screen display_achievement_unlocked():
     python:
-        show_length = len(achievement_notification_queue[0].name + achievement_notification_queue[0].description) * 0.1            
-        if show_length < 3.0: 
-            show_length = 3.0 
-        elif show_length > 7.0: 
+        show_length = len(achievement_notification_queue[0].name + achievement_notification_queue[0].description) * 0.1
+        if show_length < 3.0:
+            show_length = 3.0
+        elif show_length > 7.0:
             show_length = 7.0
-                                                    
+
     frame:
         at achievement_transform
         padding 15,15
@@ -1954,12 +2248,12 @@ screen display_achievement_unlocked():
                 spacing 5
                 text "Achievement Unlocked!" xalign 0.5 size 14 color "#fff"
                 text achievement_notification_queue[0].name size 20 xalign 0.5 text_align 0.5 color "#fff"
-                text achievement_notification_queue[0].description size 16 xalign 0.5 text_align 0.5 color "#fff"        
+                text achievement_notification_queue[0].description size 16 xalign 0.5 text_align 0.5 color "#fff"
 
-    timer show_length action If(len(achievement_notification_queue) > 1, 
-                                true=[Hide('display_achievement_unlocked'), RemoveFromSet(achievement_notification_queue, achievement_notification_queue[0]), Show('display_achievement_unlocked')], 
+    timer show_length action If(len(achievement_notification_queue) > 1,
+                                true=[Hide('display_achievement_unlocked'), RemoveFromSet(achievement_notification_queue, achievement_notification_queue[0]), Show('display_achievement_unlocked')],
                                 false=[Hide('display_achievement_unlocked'), RemoveFromSet(achievement_notification_queue, achievement_notification_queue[0])]
-                                )      
+                                )
 
 screen confirm_age():
     frame:
@@ -1968,10 +2262,10 @@ screen confirm_age():
         padding 15,15
         at truecenter
         xsize 1200
-        vbox:            
+        vbox:
             text "\n{i}{color=#fff}AGE-RESTRICTED CONTENT WARNING{/color}{/i}\n" xalign 0.5
             text "{b}{color=#fff}You must be 18 years of age or older to play this game{/color}{/b}\n" xalign 0.5
-            text "{color=#fff}I confirm that I am over 18 years of age, and understand that this game contains material featuring nudity and/or sexually-explicit material and/or adult themes that are age-restricted, and I confirm that by clicking 'ENTER' I agree that I am not offended by viewing such material.{/color}\n" xalign 0.5 
+            text "{color=#fff}I confirm that I am over 18 years of age, and understand that this game contains material featuring nudity and/or sexually-explicit material and/or adult themes that are age-restricted, and I confirm that by clicking 'ENTER' I agree that I am not offended by viewing such material.{/color}\n" xalign 0.5
             textbutton "{color=#0f0}ENTER{/color}\n":
                 xalign 0.5
                 action Return()
@@ -1988,9 +2282,9 @@ screen splash_info():
         at truecenter
         xsize 1200
         vbox:
-            text "{size=30}{color=#fff}HSS - High School Shenanigans is a story about a very hot summer, where you'll play as <your name here> (You can name your own character, but the default is \"Marten\", so let's just go with that for now). So, you play as Marten, on his last stretch of high school, aiming to finish school, have some fun, fix his bike, and take his dream cross-country trip on it - but first, there's the exams. And the hot chicks... (among them, his [fmName.role] and [fsName.role], who is both hot, and definitely part of his nighttime jerk-off sessions), the pool, the neighbor girl, and so much more - pretty much like there is in every teenager's life. You control what happens, who you eventually hook up with, what you end up doing with them, and so on and so forth. \n\n{b}Note that this is a very early Alpha-relese, and that quite a lot of the events haven't been added yet, and those that have been, might abruptly end. The game is playable, but you won't reach a fulfilling conclusion as of yet!{/b}{/color}{/size}"
+            text "{size=30}{color=#fff}HSS - High School Shenanigans is a story about a very hot summer, where you'll play as <your name here> (You can name your own character, but the default is \"Marten\", so let's just go with that for now). So, you play as Marten, on his last stretch of high school, aiming to finish school, have some fun, fix his bike, and take his dream cross-country trip on it - but first, there's the exams. And the hot chicks... (among them, his [fmName.role] and [fsName.role], who is both hot, and definitely part of his nighttime jerk-off sessions), the pool, the neighbor girl, and so much more - pretty much like there is in every teenager's life. You control what happens, who you eventually hook up with, what you end up doing with them, and so on and so forth. \n\n{b}Note that this is a very early Alpha-release, and that quite a lot of the events haven't been added yet, and those that have been, might abruptly end. The game is playable, but you won't reach a fulfilling conclusion as of yet!{/b}{/color}{/size}"
     textbutton "{size=25}{color=#fff}Click to continue{/click}{/size}":
-        xalign .5 
+        xalign .5
         yalign 0.9
         action Return()
 
@@ -2006,15 +2300,18 @@ screen disclaimer():
 
 
 screen custom_save():
+    tag phonescreen
     zorder 900
     $ keyclose = True
     use custom_file_slots(_("Save"))
 
 screen custom_load():
+    tag phonescreen
     zorder 900
     use custom_file_slots(_("Load"))
 
 screen custom_preferences():
+    tag phonescreen
     modal True
     zorder 800
     default x = 500
@@ -2049,11 +2346,11 @@ screen custom_preferences():
                         hbox:
                             ypos 40
                             textbutton _("Window") action Preference("display", "window"):
-                                foreground "gui/button/check_[prefix_]foreground_white.png"                            
+                                foreground "gui/button/check_[prefix_]foreground_white.png"
                         hbox:
                             ypos 80
                             textbutton _("Fullscreen") action Preference("display", "fullscreen"):
-                                foreground "gui/button/check_[prefix_]foreground_white.png"                            
+                                foreground "gui/button/check_[prefix_]foreground_white.png"
 
                 fixed:
                     xsize 370
@@ -2089,15 +2386,15 @@ screen custom_preferences():
                     hbox:
                         ypos 40
                         textbutton _("Unseen Text") action Preference("skip", "toggle"):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"                        
+                            foreground "gui/button/check_[prefix_]foreground_white.png"
                     hbox:
                         ypos 80
                         textbutton _("After Choices") action Preference("after choices", "toggle"):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"                        
+                            foreground "gui/button/check_[prefix_]foreground_white.png"
                     hbox:
                         ypos 120
                         textbutton _("Transitions") action InvertSelected(Preference("transitions", "toggle")):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"                        
+                            foreground "gui/button/check_[prefix_]foreground_white.png"
 
                 fixed:
                     xsize 370
@@ -2112,7 +2409,7 @@ screen custom_preferences():
                         bar value Preference("text speed")
                 fixed:
                     xsize 370
-                    ysize 200                
+                    ysize 200
                     hbox:
                         yalign 0.0
                         xalign .5
@@ -2124,7 +2421,7 @@ screen custom_preferences():
                 if config.has_music:
                     fixed:
                         xsize 370
-                        ysize 200                 
+                        ysize 200
                         hbox:
                             yalign 0.0
                             xalign .5
@@ -2137,7 +2434,7 @@ screen custom_preferences():
                 if config.has_sound:
                     fixed:
                         xsize 370
-                        ysize 200                               
+                        ysize 200
                         hbox:
                             yalign 0.0
                             xalign .5
@@ -2152,7 +2449,7 @@ screen custom_preferences():
                 if config.has_voice:
                     fixed:
                         xsize 370
-                        ysize 200                              
+                        ysize 200
                         hbox:
                             yalign 0.0
                             xalign .5
@@ -2168,7 +2465,7 @@ screen custom_preferences():
                 if config.has_music or config.has_sound or config.has_voice:
                     fixed:
                         xsize 370
-                        ysize 200                        
+                        ysize 200
                         hbox:
                             yalign 0.0
                             xalign .5
@@ -2178,31 +2475,48 @@ screen custom_preferences():
                                 text_color "#fff"
                                 foreground "gui/button/check_[prefix_]foreground_white.png"
 
+                if disabled_hints:
+                    fixed:
+                        xsize 370
+                        ysize 200
+                        hbox:
+                            yalign 0.0
+                            xalign .5
+                            textbutton _("Restore hints"):
+                                action Function(restore_hints)
+                                style "mute_all_button"
+                                text_color "#fff"
+                                foreground "gui/button/check_[prefix_]foreground_white.png"
     frame:
         background None
         xalign .5
         yalign .5
         hbox:
-            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('custom_preferences'),Hide('phone')] at ModZoom(.85):
+            # imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('custom_preferences'),Hide('phone')] at ModZoom(.85):
+            imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
             xalign .5
-            yalign .5 
+            yalign .5
         hbox:
-            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Hide('custom_preferences')] at ModZoom(.85):
+            # imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Hide('custom_preferences')] at ModZoom(.85):
+            #     tooltip "Go back to the home-screen"
+            imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
                 tooltip "Go back to the home-screen"
             xalign .5
-            yalign .5           
+            yalign .5
 
     if GetTooltip() is not None:
         frame:
             pos(x, y)
             anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover" 
+            text GetTooltip() style "tooltip_hover"
 
     if keyclose:
-        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('custom_preferences'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]            
+        # key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('custom_preferences'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]
+        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
 
 screen custom_file_slots(title):
+    tag phonescreen
     default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
     $ keyclose = True
     frame:
@@ -2268,7 +2582,7 @@ screen custom_file_slots(title):
             spacing gui.page_spacing
             textbutton _("<") action FilePagePrevious():
                 style "nav_buttons"
-                text_color "#fff"                
+                text_color "#fff"
             if config.has_autosave:
                 textbutton _("{#auto_page}A") action FilePage("auto"):
                     style "nav_buttons"
@@ -2286,8 +2600,9 @@ screen custom_file_slots(title):
                 style "nav_buttons"
                 text_color "#fff"
     if keyclose:
-        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]            
-                                     
+        # key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]
+        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
+
 style custom_page_label is gui_label
 style custom_page_label_text is gui_label_text
 style custom_page_button is gui_button
@@ -2351,7 +2666,7 @@ screen fs_tablet():
                 else:
                     $ ic_num = []
             elif tablet_code:
-                add "images/tablet_background.png" at ModZoom(.85)                
+                add "images/tablet_background.png" at ModZoom(.85)
         hbox:
             xalign .5
             yalign .5
