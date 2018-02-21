@@ -18,7 +18,7 @@ label travel_events(event=False):
                     if text1 or text2:
                         menu:
                             "[text1]" if text1:
-                                $ statschangenotify("nk_rel",1.5)                                    
+                                $ statschangenotify("nk_rel",1.5)
                                 $ renpy.pause(.25)
                                 call travel_events('arrive_school')
                             "[text2]" if text2:
@@ -99,7 +99,7 @@ label travel_events(event=False):
                 $ addtime(False,25)
                 if int(current_time[:2]) >= 8 and int(current_time[4:]) >= 0:
                     # call school_walk_late_arrival_event(True)
-                    if (int(current_time[3:]) <= 5 and renpy.random.random() < .25) or int(current_time[3:]) > 5:
+                    if (int(current_time[4:]) <= 5 and renpy.random.random() < .25) or int(current_time[4:]) > 5:
                         "{i}Arriving at school, you can see that you're late{/i}\nYou hurry up the stairs, trying to get to your classroom as fast as humanly possible"
                         sn "Greetings, [fp]!"
                         "[sn]s voice sneaks up on you as you hurry through the hallways"

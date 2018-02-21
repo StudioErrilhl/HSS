@@ -97,7 +97,7 @@ screen nvl:
         has vbox:
             style "nvl_vbox"
 
-        # Display dialogue.
+        ## Display dialogue.
         for who, what, who_id, what_id, window_id in dialogue:
             window:
                 id window_id
@@ -110,7 +110,7 @@ screen nvl:
 
                 text what id what_id
 
-        # Display a menu, if given.
+        ## Display a menu, if given.
         if items:
 
             vbox:
@@ -393,7 +393,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
     zorder 300
     default x = 500
     default y = 400
-    # Get mouse coords:
+    ## Get mouse coords:
     python:
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
@@ -601,6 +601,9 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             anchor (xval, yval)
             text GetTooltip() style "tooltip_hover"
 
+    key "meta_K_q" action [Show('phone'),SetVariable('show_icons',False),Show('custom_confirm',None,'quit')]
+
+
 screen changelog():
     tag menu
 
@@ -771,10 +774,8 @@ screen inventory_screen():
         $ ya = 0
         $ i = 0
         hbox:
-            # ysize 1080
             xsize 700
             vpgrid:
-            # viewport:
                 style_prefix "inventory"
                 cols 1
                 scrollbars None
@@ -798,7 +799,6 @@ screen inventory_screen():
                                 hbox:
                                     xsize 160
                                     ysize 160
-                                    # $ current_items = item.name
                                     $ current_items = check_item_name.lower()
                                     if name.lower() == 'princessplug':
                                         add "images/inventory/outer_ring.png":
@@ -810,7 +810,6 @@ screen inventory_screen():
                                             xoffset -140
                                             yalign .5
                                             focus_mask True
-                                            # action [Hide('inventory_screen')]
                                             action [SetVariable('selecteditemamount',item.amount),SetVariable('selecteditemname',displayname),SetVariable('selecteditem',item.name)]
                                     elif name.lower() == 'phone' and current_location == 'fp_bedroom_loc':
                                         add "images/inventory/outer_ring.png":
@@ -822,7 +821,6 @@ screen inventory_screen():
                                             xoffset -140
                                             yalign .5
                                             focus_mask True
-                                            # action [Hide('inventory_screen'),SetVariable('charge_phone',True),SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]
                                             action [SetVariable('selecteditemamount',item.amount),SetVariable('selecteditemname',displayname),SetVariable('selecteditem',item.name)]
                                     else:
                                         add "images/inventory/outer_ring.png":
@@ -842,7 +840,6 @@ screen inventory_screen():
                                             xoffset -140
                                             yalign .5
                                             focus_mask True
-                                            # action [Hide("inventory_screen")]
                                             action [SetVariable('selecteditemamount',item.amount),SetVariable('selecteditemname',displayname),SetVariable('selecteditem',item.name)]
                                 hbox:
                                     xsize 375
@@ -957,13 +954,22 @@ screen inventory_screen():
                         xsize 910
                         xpos 170
                         ysize 40
-                        text "{b}{size=30}[selecteditemname]{/size}{/b}" at center
+                        if selecteditemname:
+                            text "{b}{size=30}[selecteditemname]{/size}{/b}" at center
                     vbox:
                         xsize 910
                         xpos -740
                         ypos 40
-                        text "This is some flavor text for the item currently shown. It will contain mostly completely irrelevant information, and sometimes it might even include something useful about a completely different item...":
-                            justify True
+                        if selecteditemdesc:
+                            text "This is some flavor text for the item currently shown. It will contain mostly completely irrelevant information, and sometimes it might even include something useful about a completely different item...":
+                                justify True
+                        if selecteditemname and selecteditemname.lower() == 'phone':
+                            textbutton "Charge phone":
+                                xalign .5
+                                ypos 400
+                                action [SetVariable('selecteditem',False),SetVariable('selecteditemname',False),SetVariable('selecteditemamount',False),SetVariable('charge_phone',True),SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]
+
+
         textbutton "Close inventory" action [SetVariable('selecteditem',False),SetVariable('selecteditemname',False),SetVariable('selecteditemamount',False),SetVariable('keyclose',False),Hide("inventory_screen")] xalign .95 yalign 1.0
         imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('selecteditem',False),SetVariable('selecteditemname',False),SetVariable('selecteditemamount',False),SetVariable('keyclose',False),Hide("inventory_screen")]
         if keyclose:
@@ -982,10 +988,10 @@ screen say(who, what):
                 if who.upper() == fpinput.upper():
                     style "namebox_char"
                     background Frame("gui/namebox_fp.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
-                elif who.upper() == fmName.formal.upper():
+                elif who.upper() == fmName.name.upper():
                     style "namebox_char"
                     background Frame("gui/namebox_fm.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
-                elif who.upper() == fsName.formal.upper():
+                elif who.upper() == fsName.name.upper():
                     style "namebox_char"
                     background Frame("gui/namebox_fs.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == nb.name.upper():
@@ -1096,6 +1102,7 @@ screen location(room=False):
                 tooltip "Bedrooms / Bathroom"
             imagebutton auto ("images/backgrounds/interactions_move/stairs_basement_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_basement_morning_%s.png") focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]:
                 tooltip "Downstairs / Garage"
+
     if room == "fp bedroom":
         if day_week <= 4:
             if not backpack.has_item(schoolbooks_item):
@@ -1104,7 +1111,7 @@ screen location(room=False):
                 else:
                     imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_morning_dresser_%s.png" focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('schoolbooks_added',True),Jump('fp_bedroom_loc')]
         if not backpack_carry:
-            imagebutton auto "images/backpack_fp_bedroom_%s.png" focus_mask True action [SetVariable('backpack_carry',True),Function(delete_hint,"You should perhaps try to get something to carry all these things you seem to be able to pick up...")]:
+            imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_backpack_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_day_backpack_%s.png") focus_mask True action [SetVariable('backpack_carry',True),SetVariable('uhl_fpb_cfs',True),Function(delete_hint,"You should perhaps try to get something to carry all these things you seem to be able to pick up..."),Jump('fp_bedroom_loc')]:
                 yalign .7
                 xalign .7
         if int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or current_time[:2] == 0 or int(current_time[:2]) == 1:
@@ -1113,7 +1120,13 @@ screen location(room=False):
             imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_bed_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_morning_bed_%s.png") focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
 
         if not carry_phone:
-            imagebutton auto ("images/backgrounds/interactions_item/phone_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/phone_morning_%s.png") focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]
+            if int(current_time[:2]) in night:
+                $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_%s.png"
+            elif int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or current_time[:2] == 0 or int(current_time[:2]) == 1:
+                $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_glow_%s.png"
+            else:
+                $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_morning_phone_%s.png"
+            imagebutton auto phoneimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]
 
         $ exitdown_event_var = "uhl_cfs"
         $ exitdown_event = "upper_hallway_loc"
@@ -1292,7 +1305,7 @@ screen location(room=False):
                     xalign 0.0
                     yalign .5
                     tooltip exitleft
-            else:            
+            else:
                 imagebutton auto "images/exit_left_%s.png" focus_mask True action Jump(exitleft_event):
                     xalign 0.0
                     yalign .5
@@ -1451,10 +1464,15 @@ screen phone():
         hbox:
             if battery_text != 0:
                 # imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements')] at ModZoom(.85):
-                imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
-                    tooltip "Go back to the home-screen"
-                xalign .5
-                yalign .5
+                imagebutton auto "images/phone_white_home_%s.png" focus_mask True:
+                    xalign .5
+                    yalign .5
+                    if renpy.get_screen('phonescreen'):
+                        action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85)
+                        tooltip "Go back to the home-screen"
+                    else:
+                        action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85)
+                        tooltip "Turn off the phone"
 
     if GetTooltip() is not None:
         frame:
@@ -1709,13 +1727,14 @@ screen phone_gallery_screen():
                                     ypos pgsyp
                                 action [SetVariable('current_file',file),SetVariable('show_icons',False),Hide('phone_gallery_screen'),Show('phone_gallery_show')]
                         else:
-                            imagebutton idle Transform(file,maxsize=(215,215)):
+                            imagebutton idle Transform(file,maxsize=(215,215),alpha=.2):
                                 xpos pgsxp
                                 if not 'portrait' in name:
                                     ypos pgsyp +50
                                 else:
                                     ypos pgsyp
-                                action [SetVariable('current_file',file),SetVariable('show_icons',False),Hide('phone_gallery_screen'),Show('phone_gallery_show')]
+                                # action [SetVariable('current_file',file),SetVariable('show_icons',False),Hide('phone_gallery_screen'),Show('phone_gallery_show')]
+                                action NullAction()
                         if 'portrait' in name:
                             $ pgsxp += 125
                         else:
@@ -1757,11 +1776,21 @@ screen phone_gallery_show():
         maximum 370,686
         if current_file:
             $ filename = current_file
-            add filename at Transform(maxsize=(460,810)),ModZoom(.85):
-                xalign .5
-                yalign .5
-                yoffset -5
-            imagebutton auto "images/exit_left_%s.png" focus_mask True action[Hide('phone_gallery_show'),Show('phone_gallery_screen')]
+            button:
+                add filename at Transform(maxsize=(410,700)):
+                    xalign .5
+                    yalign .5
+                if imggal_showbuttons:
+                    imagebutton auto "gui/imggal_close_%s.png" focus_mask None action[Hide('phone_gallery_show'),Show('phone_gallery_screen')] at ModZoom(.65):
+                        ypos -30
+                else:
+                    imagebutton idle "gui/imggal_transparent_idle.png" focus_mask None action NullAction() at ModZoom(.65):
+                        ypos -30
+                action NullAction()
+            if imggal_showbuttons:
+                key "K_h" action SetVariable('imggal_showbuttons',False)
+            else:
+                key "K_h" action SetVariable('imggal_showbuttons',True)
     hbox:
         # imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('phone')] at ModZoom(.85):
         imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
@@ -1878,6 +1907,11 @@ screen phone_info_screen():
                         text_size 22
                         yalign .5
                 hbox:
+                    # xpos .2
+                    text "While in the gallery, you can click on images to show them in full screen on the phone. While viewing the full-screen image, there will be buttons to navigate and close (depending on amount of images) - to hide/show them, you can press \"h\"":
+                        size 22
+                        yalign .5
+                hbox:
                     xpos .2
                     imagebutton auto "images/phone_button_call_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_call_screen')] at ModZoom(.6):
                         yalign .5
@@ -1899,7 +1933,7 @@ screen phone_info_screen():
                         text_size 22
                         yalign .5
 
-                text "\nand more as the game is being developed.\n\nYou close the phone by pressing the power button on the right side of the phone, and you go back to the main menu by pressing the home-button, down below"
+                text "\nand more as the game is being developed.\n\nYou close the phone by pressing the power button on the right side of the phone, or by clicking the home-button when on the main screen. If there is an app / screen showing on the phone, the home button takes you back to the main screen. You can also use \"ESC\" to close screens, and the phone itself, if you're on the home-screen"
     if keyclose:
         # key "K_ESCAPE" action [SetVariable('keyclose',False),SetField(persistent,'phone_firstshow',False),Hide('custom_confirm'),Hide('custom_save'),Hide('custom_load'),Hide('phone_gallery_screen'),Hide('phone_gallery_show'),Hide('phone_info_screen'),SetVariable('show_icons',True),Show('phone')]
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetField(persistent,'phone_firstshow',False),Function(hide_phone_screens),SetVariable('show_icons',True),Show('phone')]
@@ -2492,14 +2526,11 @@ screen custom_preferences():
         xalign .5
         yalign .5
         hbox:
-            # imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('display_achievements'),Hide('custom_preferences'),Hide('phone')] at ModZoom(.85):
             imagebutton auto "images/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
             xalign .5
             yalign .5
         hbox:
-            # imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Hide('custom_preferences')] at ModZoom(.85):
-            #     tooltip "Go back to the home-screen"
             imagebutton auto "images/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
                 tooltip "Go back to the home-screen"
             xalign .5
@@ -2512,7 +2543,6 @@ screen custom_preferences():
             text GetTooltip() style "tooltip_hover"
 
     if keyclose:
-        # key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('custom_preferences'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
 
 screen custom_file_slots(title):
@@ -2574,7 +2604,7 @@ screen custom_file_slots(title):
                                     color "#fff"
                             key "save_delete" action FileDelete(slot)
 
-        # Buttons to access other pages.
+        ## Buttons to access other pages.
         hbox:
             xalign 0.5
             yalign 1.0
@@ -2591,7 +2621,7 @@ screen custom_file_slots(title):
                 textbutton _("{#quick_page}Q") action FilePage("quick"):
                     style "nav_buttons"
                     text_color "#fff"
-            # range(1, 10) gives the numbers from 1 to 9.
+            ## range(1, 10) gives the numbers from 1 to 9.
             for page in range(1, 10):
                 textbutton "[page]" action FilePage(page):
                     style "nav_buttons"
@@ -2600,7 +2630,6 @@ screen custom_file_slots(title):
                 style "nav_buttons"
                 text_color "#fff"
     if keyclose:
-        # key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Hide('phone_gallery_screen'),Hide('custom_save'),Hide('custom_load'),Hide('custom_confirm'),Hide('phone_info_screen'),Hide('display_achievements'),Show('phone')]
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
 
 style custom_page_label is gui_label

@@ -135,11 +135,17 @@ init python:
 
 init 10 python:
     def addtime(hours=False,minutes=False,update_scene=False,seccall=False):
-        global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text
+        global bathroom_occupied_fs,bathroom_occupied_fm,current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text
+        bathroom_occupied_fs = bathroom_occupied_fm = False        
         local_dw = day_week
         addhour = False
         sethour = hours
         starthour = current_time[:2]
+        if renpy.random.random() > .65:
+            setattr(store,'bathroom_occupied_fs',True)
+            if not getattr(store,'bathroom_occupied_fs'):
+                if renpy.random.random() > .65:
+                    setattr(store,'bathroom_occupied_fm',True)
         if hours or minutes:
             local_time = current_time
             if hours:
@@ -484,10 +490,17 @@ python early:
                 if not isinstance( v, tuple ): v = ( v, )
                 self._alls[k] = v
                 self._alls[k[:1].upper() + k[1:]] = v
+                self._alls[k[:1].upper() + k[1:].upper()] = v
 
         def __getattr__( self, aName ):
             if     aName == "_alls":    return super( DynamicNames, self).__getattribute__( aName )
             if not aName in self._alls: return "I FORGET TO SET THIS"
             aValue = ""
             for atom in self._alls[aName]: aValue += atom() if callable( atom ) else atom
-            return aValue if ord( aName[:1] ) >= 97 else aValue[:1].upper() + aValue[1:]    
+            if ord(aName[:1]) >= 97:
+                return aValue
+            elif (65 < ord(aName[:1]) < 90) and (65 < ord(aName[-1:]) < 90):
+                return aValue.upper()
+            else:
+                return aValue[:1].upper() + aValue[1:]
+            # return aValue if ord( aName[:1] ) >= 97 else aValue[:1].upper() + aValue[1:]

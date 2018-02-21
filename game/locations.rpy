@@ -408,98 +408,149 @@ label upper_hallway_loc(uhl_called=False,trans=False):
 label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
     $ current_location = 'upper_hallway_bathroom_loc'
     $ loct = False
-    if not uhl_bathroom_ach:
-        $ uhl_bathroom_ach = True
-        $ update_been_everywhere_achievement()
-    if uhl_bl_called or uhl_bl_cfs:
+    if (bathroom_occupied_fs or bathroom_occupied_fm) and not_entered:
         $ uhl_bl_called = uhl_bl_cfs = False
-        if smallkeys_added:
-            "{i}Hmm... a pair of keys. Haven't seen them before. Wonder what they open?\nShould I take them?{/i}"
-            menu:
-                "Take keys":
-                    $ backpack.add_item(small_keys_item)
-                    $ smallkeys_added = False
-                "Leave keys":
-                    $ smallkeys_added = False
-        if bathroom_panties_added:
-            $ current_p = getattr(store,gp_bath+"_panties_item")
-            if backpack_carry:
-                if not backpack.has_item(current_p):
-                    $ r = random.randint(0,3)
-                    $ text = p_response[r]
-                    if r == 0 or r == 3:
-                        $ panties_sniffer = True
-                        $ update_panties_achievements()
-                else:
-                    $ aux = list(p_response)
-                    $ del aux[2]
-                    $ r = random.randrange(len(aux))
-                    $ text = p_response[r]
-                    if r == 0 or r == 3:
-                        $ panties_sniffer = True
-                        $ update_panties_achievements()
-                "[text]"
+        "The bathroom is occupied"
+        menu:
+            "Sneak a peek":
+                "This has unfortunately not been implemented yet (due to lack of art assets)"
+                call change_loc('upper hallway')
+            "Knock on the door":
+                # pass
+                if bathroom_occupied_fs:
+                    if fs_mad:
+                        fs "What?!?"
+                        fp "Hey, [fsName.informal] - I really need to pee, you think I could..."
+                        fs "Fuck off, [fp]!"
+                        fp "{i}Okay,then...{/i}"            
+                        call change_loc('upper hallway')
+                    else:
+                        fs "I'm in here, you'll have to come back later"
+                        fp "I really need to pee, [fsName.informal]!"
+                        if fs_rel > 40:
+                            fs "{i}Teasing now...{/i}\nSorry, [fp], I'm not at all decent!"
+                            fp "I don't care! I need to pee!"
+                            fs "Fine! Come in, but no oogling!"
+                            "{b}Click!{/b}"
+                            call change_loc('upper hallway bathroom',loctrans=True,sec_call="first_bathroom_occupied_label")
+                            label first_bathroom_occupied_label(True):
+                                fs "Lemme get back into the tub, okay?"
+                                fs "Okay, you can come in!"
+                                fp "{i}Running to the toilet{/i}\nOh....\nThanks, sis!"
+                                $ not_entered = False
+                                call change_loc('upper hallway bathroom',loctrans=True)
+                        else:
+                            fs "I'm not decent! Use the downstairs bathroom!"
+                            fp "I'll never make it! Please let me in?"
+                            fs "Fine! Damn it, [fp]!"
+                            fs "So, get in there and do your thing!"
+                            call change_loc('upper hallway bathroom',loctrans=True,sec_call="second_bathroom_occupied_label")
+                            label second_bathroom_occupied_label(True):                            
+                                fp "{i}Running to the toilet{/i}\nOh...\n{i}Damn... she looks {b}hot{/b} with nothing but that towel on...{/i}"
+                                $ not_entered = False
+                                call change_loc('upper hallway bathroom',loctrans=True)
+                if bathroom_occupied_fm:
+                    fm "I'm in here, [fp]"
+                    fp "I'm sorry, [fmName.informal], but I really, really need to pee!"
+                    fm "But... I'm not decent!"
+                    fp "[fmName.INFORMAL]! I need to go NOW!"
+                    $ not_entered = False
+                    call change_loc('upper hallway bathroom',loctrans=True) 
+            "Leave and come back later":
+                call change_loc('upper hallway')
+    else:
+        if not uhl_bathroom_ach:
+            $ uhl_bathroom_ach = True
+            $ update_been_everywhere_achievement()
+        if uhl_bl_called or uhl_bl_cfs:
+            $ uhl_bl_called = uhl_bl_cfs = False
+            if smallkeys_added:
+                "{i}Hmm... a pair of keys. Haven't seen them before. Wonder what they open?\nShould I take them?{/i}"
                 menu:
-                    "Take panties":
-                        if gp_bath == 'fs_bright_pink':
-                            if not backpack.has_item(fs_bright_pink_panties_item):
-                                $ bright_pink_panties_pickup = True
-                                $ update_all_the_stuff()
-                            $ backpack.add_item(fs_bright_pink_panties_item)
-                        elif gp_bath == 'fs_pale_pink':
-                            if not backpack.has_item(fs_pale_pink_panties_item):
-                                $ pale_pink_panties_pickup = True
-                                $ update_all_the_stuff()
-                            $ backpack.add_item(fs_pale_pink_panties_item)
-                        elif gp_bath == 'fs_light_blue':
-                            if not backpack.has_item(fs_light_blue_panties_item):
-                                $ light_blue_panties_pickup = True
-                                $ update_all_the_stuff()
-                            $ backpack.add_item(fs_light_blue_panties_item)
-                        elif gp_bath == 'fs_yellow':
-                            if not backpack.has_item(fs_yellow_panties_item):
-                                $ yellow_panties_pickup = True
-                                $ update_all_the_stuff()
-                            $ backpack.add_item(fs_yellow_panties_item)
-                        $ bathroom_panties_added = False
-                        $ fp_creep += 1
-                        $ update_panties_achievements()
-                    "Leave panties":
-                        $ bathroom_panties_added = False
-                        $ bathroom_find_panties = True
-                        $ loct = True
-            else:
-                $ renpy.notify("You don't have anywhere to carry the panties")
-                if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
-                    $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
-                $ bathroom_panties_added = False
-                $ bathroom_find_panties = True
-                $ loct = True
-        if fpshower:
-            if filth_val == 0:
-                fp "I don't need to take a shower right now"
-            else:
-                if day_week <= 4 and int(current_time[:2]) < 8:
-                    $ addtime(False,30)
+                    "Take keys":
+                        $ backpack.add_item(small_keys_item)
+                        $ smallkeys_added = False
+                    "Leave keys":
+                        $ smallkeys_added = False
+            if bathroom_panties_added:
+                $ current_p = getattr(store,gp_bath+"_panties_item")
+                if backpack_carry:
+                    if not backpack.has_item(current_p):
+                        $ r = random.randint(0,3)
+                        $ text = p_response[r]
+                        if r == 0 or r == 3:
+                            $ panties_sniffer = True
+                            $ update_panties_achievements()
+                    else:
+                        $ aux = list(p_response)
+                        $ del aux[2]
+                        $ r = random.randrange(len(aux))
+                        $ text = p_response[r]
+                        if r == 0 or r == 3:
+                            $ panties_sniffer = True
+                            $ update_panties_achievements()
+                    "[text]"
+                    menu:
+                        "Take panties":
+                            if gp_bath == 'fs_bright_pink':
+                                if not backpack.has_item(fs_bright_pink_panties_item):
+                                    $ bright_pink_panties_pickup = True
+                                    $ update_all_the_stuff()
+                                $ backpack.add_item(fs_bright_pink_panties_item)
+                            elif gp_bath == 'fs_pale_pink':
+                                if not backpack.has_item(fs_pale_pink_panties_item):
+                                    $ pale_pink_panties_pickup = True
+                                    $ update_all_the_stuff()
+                                $ backpack.add_item(fs_pale_pink_panties_item)
+                            elif gp_bath == 'fs_light_blue':
+                                if not backpack.has_item(fs_light_blue_panties_item):
+                                    $ light_blue_panties_pickup = True
+                                    $ update_all_the_stuff()
+                                $ backpack.add_item(fs_light_blue_panties_item)
+                            elif gp_bath == 'fs_yellow':
+                                if not backpack.has_item(fs_yellow_panties_item):
+                                    $ yellow_panties_pickup = True
+                                    $ update_all_the_stuff()
+                                $ backpack.add_item(fs_yellow_panties_item)
+                            $ bathroom_panties_added = False
+                            $ fp_creep += 1
+                            $ update_panties_achievements()
+                        "Leave panties":
+                            $ bathroom_panties_added = False
+                            $ bathroom_find_panties = True
+                            $ loct = True
                 else:
-                    $ addtime(1, False)
+                    $ renpy.notify("You don't have anywhere to carry the panties")
+                    if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
+                        $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                    $ bathroom_panties_added = False
+                    $ bathroom_find_panties = True
+                    $ loct = True
+            if fpshower:
+                if filth_val == 0:
+                    fp "I don't need to take a shower right now"
+                else:
+                    if day_week <= 4 and int(current_time[:2]) < 8:
+                        $ addtime(False,30)
+                    else:
+                        $ addtime(1, False)
+                    if filth_val != 0:
+                        $ filth_val -= 20
+                        if filth_val < 0:
+                            $ filth_val = 0
+                    fp "{i}Ah, that was refreshing{/i}"
+                $ fpshower = False
+                $ loct = True
+            if fpsink:
+                $ addtime(False,15)
                 if filth_val != 0:
-                    $ filth_val -= 20
-                    if filth_val < 0:
+                    $ filth_val -= 5
+                    if filth_val <0:
                         $ filth_val = 0
-                fp "{i}Ah, that was refreshing{/i}"
-            $ fpshower = False
-            $ loct = True
-        if fpsink:
-            $ addtime(False,15)
-            if filth_val != 0:
-                $ filth_val -= 5
-                if filth_val <0:
-                    $ filth_val = 0
-            fp "{i}Good to get the filth off my hands{/i}"
-            $ fpsink = False
-            $ loct = True
-        call change_loc('upper hallway bathroom',loctrans=loct)
+                fp "{i}Good to get the filth off my hands{/i}"
+                $ fpsink = False
+                $ loct = True
+            call change_loc('upper hallway bathroom',loctrans=loct)
 
 label tv_games_evening(tvg_called=False,trans=False):
     if tvg_called:

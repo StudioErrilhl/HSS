@@ -1,7 +1,7 @@
 label beach_scene:
     if not beach_ach:
         $ beach_ach = True
-        $ update_been_everywhere_achievement()        
+        $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         scene beach_night with Dissolve(.25)
         return
@@ -13,7 +13,7 @@ label beach_scene:
 label entrance_scene:
     if not entrance_ach:
         $ entrance_ach = True
-        $ update_been_everywhere_achievement()        
+        $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         scene entrance_night with Dissolve(.25)
     else:
@@ -26,44 +26,74 @@ label fp_bedroom_scene(trans=True): #this is the starting scene, and the one tha
         $ update_been_everywhere_achievement()
     $ hours = [0,1,22,23]
     if int(current_time[:2]) in hours:
-        if backpack.has_item(phone_item):
+        if not backpack_carry and not carry_phone:
             if trans:
-                scene fp_bedroom_night_glow with Dissolve(.25)
+                scene fp_bedroom_night_glow_phone_backpack with Dissolve(.25)
             else:
-                scene fp_bedroom_night_glow
-        else:
+                scene fp_bedroom_night_glow_phone_backpack
+        elif not backpack_carry and carry_phone:
+            if trans:
+                scene fp_bedroom_night_glow_backpack with Dissolve(.25)
+            else:
+                scene fp_bedroom_night_glow_backpack
+        elif backpack_carry and not carry_phone:
             if trans:
                 scene fp_bedroom_night_glow_phone with Dissolve(.25)
             else:
                 scene fp_bedroom_night_glow_phone
-    elif int(current_time[:2]) in night:
-        if backpack.has_item(phone_item):
-            if trans:
-                scene fp_bedroom_night with Dissolve(.25)
-            else:
-                scene fp_bedroom_night
         else:
+            if trans:
+                scene fp_bedroom_night_glow with Dissolve(.25)
+            else:
+                scene fp_bedroom_night_glow
+    elif int(current_time[:2]) in night:
+        if not backpack_carry and not carry_phone:
+            if trans:
+                scene fp_bedroom_night_phone_backpack with Dissolve(.25)
+            else:
+                scene fp_bedroom_night_phone_backpack
+        elif not backpack_carry and carry_phone:
+            if trans:
+                scene fp_bedroom_night_backpack with Dissolve(.25)
+            else:
+                scene fp_bedroom_night_backpack
+        elif backpack_carry and not carry_phone:
             if trans:
                 scene fp_bedroom_night_phone with Dissolve(.25)
             else:
                 scene fp_bedroom_night_phone
-    else:
-        if backpack.has_item(phone_item):
-            if trans:
-                scene fp_bedroom_morning with Dissolve(.25)
-            else:
-                scene fp_bedroom_morning
         else:
+            if trans:
+                scene fp_bedroom_night with Dissolve(.25)
+            else:
+                scene fp_bedroom_night
+    else:
+        if not backpack_carry and not carry_phone:
+            if trans:
+                scene fp_bedroom_morning_phone_backpack with Dissolve(.25)
+            else:
+                scene fp_bedroom_morning_phone_backpack
+        elif not backpack_carry and carry_phone:
+            if trans:
+                scene fp_bedroom_morning_backpack with Dissolve(.25)
+            else:
+                scene fp_bedroom_morning_backpack
+        elif backpack_carry and not carry_phone:
             if trans:
                 scene fp_bedroom_morning_phone with Dissolve(.25)
             else:
                 scene fp_bedroom_morning_phone
+        else:
+            if trans:
+                scene fp_bedroom_morning with Dissolve(.25)
+            else:
+                scene fp_bedroom_morning
     return
 
 label fs_bedroom_scene(trans=True):
     if not fs_bedroom_ach:
         $ fs_bedroom_ach = True
-        $ update_been_everywhere_achievement()        
+        $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         if trans:
             scene fs_bedroom_night with Dissolve(.25)
@@ -86,7 +116,7 @@ label fs_intro_scene:
 label garage_scene:
     if not garage_ach:
         $ garage_ach = True
-        $ update_been_everywhere_achievement()        
+        $ update_been_everywhere_achievement()
     if mc_f:
         if int(current_time[:2]) in night:
             scene honda_cx_500_finished_night with Dissolve(.25)
@@ -102,7 +132,7 @@ label garage_scene:
 label kitchen_scene(trans=True):
     if not kitchen_ach:
         $ kitchen_ach = True
-        $ update_been_everywhere_achievement()        
+        $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         if trans:
             scene kitchen_night with Dissolve(.25)
@@ -113,7 +143,7 @@ label kitchen_scene(trans=True):
             scene kitchen_morning with Dissolve(.25)
         else:
             scene kitchen_morning
-    return   
+    return
 
 label livingroom_scene:
     if not livingroom_ach:
@@ -128,7 +158,7 @@ label livingroom_scene:
 label outside_scene:
     if not outside_ach:
         $ outside_ach = True
-        $ update_been_everywhere_achievement()        
+        $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         if bad_weather and rainstorm:
             scene neighborhood_night
@@ -178,7 +208,7 @@ label school_po_scene:
 label upper_hallway_scene:
     if not uhl_ach:
         $ uhl_ach = True
-        $ update_been_everywhere_achievement()        
+        $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         scene upper_hallway_night with Dissolve(.25)
     else:
@@ -188,7 +218,7 @@ label upper_hallway_scene:
 label upper_hallway_bathroom_scene(trans=True):
     if not uhl_bathroom_ach:
         $ uhl_bathroom_ach = True
-        $ update_been_everywhere_achievement()        
+        $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night and bathroom_light:
         if trans:
             scene upper_hallway_bathroom_night_light with Dissolve(.25)
