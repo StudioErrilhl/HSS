@@ -24,9 +24,7 @@ label day_events():
                 $ sat_event = False
                 call change_loc('livingroom')
             $ sat_event = False
-            # return
-        # else:
-            # return
+
     label weekend_sun(wsun_called=False):
         if wsun_called:
             $ wsun_called = False
@@ -47,87 +45,11 @@ label day_events():
                             $ statschangenotify("fm_rel",-.5)
                 $ sun_event = False
                 hide fm_standing
-        # return
-            # call livingroom_scene
-            # call change_loc('livingroom')
-            # return
-        # else:
-            # return
-
-    # label school_finished(sf_called = False):
-    #     if sf_called:
-    #         $ sf_called = False
-    #         if detention_served:
-    #             $ current_time = "17:00"
-    #         else:
-    #             $ current_time = "15:05"
-    #             call school_hacker_talk(True)
-    #             # if school_hacker:
-    #             #     if school_hacker_first_thought:
-    #             #         "{i}You've been thinking about what happened with [fsName.yourformal], and you were almost sure that it wouldn't be possible to manage that many mistakes by accident. Also, they hadn't found out who had updated the records... that's usually registered...{/i}"
-    #             #         $ school_hacker_first_thought = False
-    #             #     fp "I should go talk to [scn]. She loves me, I'm sure I'll be able to get some answers from her!"
-    #             #     menu:
-    #             #         "Go talk to [scn], try to find out more about what happened to [fsName.yourformal]":
-    #             #             fp "Hi, [scn]!"
-    #             #             scn "Hi, [fp] - did you have an appointment today? I don't have anything on screen, it seems?"
-    #             #             fp "Nah, [scn] - I just swung by to say hi! {i}You give [scn] a quick wink{/i}"
-    #             #             "{i}[scn] is blushing a bit{/i}"
-    #             #             #"Oh, you silly boy, you'll make a cradle snatcher out of me! I'm more than twice your age, you know!" 
-    #             #             scn "Oh, you silly boy! You shouldn't flirt with women more than twice your age, [fp]! {i}She's trying to sound scolding, but she's not very successful. Her slight smile gives away that she's mostly pleased with the situation{/i}"
-    #             #             fp "{i}Trying to look sad and apologetic{/i}\nOkay, [scn]. I promise I won't do it again!"
-    #             #             scn "..."
-    #             #             fp "Ah, who am I kidding! I will definitely be doing it again!"
-    #             #             "[scn] looks pleased, although she's still blushing slightly"
-    #             #             fp "Oh, and I wanted to ask you about something. I know you're not supposed to talk about other students, but it's about [fmName.myformal]. She was in here the other day, and I thought what she told me after sounded... a bit weird."
-    #             #             scn "Yeah, I remember. The whole thing is a bit embarrassing, to be honest"
-    #             #             fp "Oh?"
-    #             #             scn "Yeah... {i}She lowers her voice, obviously not wanting to be overheard{/i}\nYou see, there is evidence that none of the teachers did this, whether by accident or by malice"
-    #             #             fp "Oh... kay? So, none of the teachers, huh?"
-    #             #             scn "Yeah... interprete that as you will"
-    #             #             fp "{i}So, there {b}is{/b} a chance someone did this on purpose - or, maybe even just by accident, messing with the internal systems. Damn, I wish I was a little bit more knowledgeable about computers... I have no idea what kind of knowledge this would take, nor if anyone here at school would be capable. Maybe I could ask [nr]. He's pretty geeky, and probably knows who is able to do something like this...{/i}"
-    #             #             $ school_hacker = False
-    #             #             $ school_hacker_2 = True                         
-    #             #             $ call_nr = True
-    #             #             call evening_home(True)
-    #             #         "Nah, not today, I'll do it tomorrow instead":
-    #             #             call evening_home(True)
-    #         "After school, you decide to just trek back home. No plans for today, and not that much interesting happening in town anyway"
-    #         # call evening_home(True)
-    #         call change_loc('livingroom',sec_call='evening_home')
-
-    #     label sn_punishment_late(snp_called=False):
-    #         if snp_called:
-    #             $ snp_called = False
-    #             call schoolbuilding_scene
-    #             $ addtime(False,25)
-    #             sn "You're late! This will not be tolerated, [fp]. You will be on time, or I will be forced to reduce your grades for this semester! For now, you have detention, come meet me here after you're done with classes for today."
-            
-    #     label sn_respond_detention(snr_called = False):
-    #         if snr_called:
-    #             $ snr_called = False
-    #             menu:
-    #                 "Yes, [sn]!":
-    #                     $ statschangenotify("sn_dom",-1,True)
-    #                     $ statschangenotify("sn_rel",1)
-    #                     call sn_detention(True)
-    #                 "Mouth off to [sn]":
-    #                     fp "Oh, shut it! I'm a few minutes late. It's not like I do this often, and it wasn't like I tried to arrive late. Damn, \"reduce my grades\" - you know you'll have to give me a warning first, and even a letter that I might receive a reduced grade... and I have definitely not deserved that, yet"
-    #                     sn "How dare you talk to me like that? Go see [sp] right now! I will not have a student talk to me like this!"
-    #                     fp "Oh, stop pretending! You're not a bad-ass, [sn]. You never will be."
-    #                     sn "{b}NOW!{/b}"
-    #                     fp "Fine, fine..."
-    #                     "You head to [sp]s office"
-    #                     $ statschangenotify("sn_dom",1.5,True)
-    #                     $ statschangenotify("sn_rel",-1,True)
-    #                     $ statschangenotify("sn_aro",1)
-    #                     call principal_after_punishment_late(True)
     
     label dinner_events(de_called=False):
         if de_called:
             $ de_called = False
             if dinner_event:
-                # if day_week <= 4:
                 if fs_mad:
                     show fm_standing smile with dissolve
                     fm smile "Hey [fp]. It's dinnertime soon, do you wanna go see if you can find [fsName.name], and tell her to get ready?"
@@ -140,7 +62,6 @@ label day_events():
                     $ dinner_event = False
                     $ talk_later = True
                     hide fm_standing
-                    # call kitchen_loc(True)
                 elif dinner_food:
                     show fm_standing smile with dissolve
                     fm smile "Hey [fp]. Dinner is ready soon"
@@ -155,17 +76,11 @@ label day_events():
                         show fm_standing smile with dissolve
                     else:
                         show fm_standing ahead with dissolve
-                    # $ setattr( store, dinner_att, getattr( store, dinner_att ) + dinner_mod )
                     $ statschangenotify(dinner_att,dinner_mod)
                     $ dinner_event = False
                     $ renpy.pause(.25)
                     hide fm_standing with dissolve
-                    # call kitchen_loc(True)
                 call change_loc('kitchen',loctrans=True)
-                # if day_week >= 5:
-                #     $ dinner_event = False
-                #     call kitchen_loc(True)
-
 
     label evening_home(evh_called=False):
         if evh_called:
@@ -181,7 +96,7 @@ label day_events():
                         ["When you arrive home, the door is locked, and you realise you've forgotten your key. Noone is answering the door when you try the doorbell, so both "+fmName.yourinformal+" and "+fmName.yourinformal+" must be out. You weren't really that keen on sitting outside all day, waiting for them, so you're pondering what else you can do instead",False],
                         ["Arriving home, you see "+fmName.yourinformal+"'s car in the driveway.",False],
                         ["When you arrive home, you catch a glimpse of "+fsName.yourformal+" by the pool, but "+fmName.yourformal+" is nowhere to be seen. Her car is still here, though.",True]
-                    ] # create more events here
+                    ] ## create more events here
                     if n == 1:
                         call change_loc('outside',seccall="harsh_homecoming")
                     else:
@@ -193,179 +108,59 @@ label day_events():
                     if home_events[n][1] and fs_mad:
                         call fs_talk(True)
                 
-                if renpy.random.random() > .5 and not hacker_3:
-                    if  current_month >= 5 and current_month <= 8 and not detention_served:
-                        # call outside_scene
+            if renpy.random.random() > .5 and not hacker_3:
+                if  current_month >= 5 and current_month <= 8 and not detention_served:
+                    call change_loc('outside',sec_call='lounge_pool')
+                    label lounge_pool(True):
                         "You decide to just lounge by the pool for a while, trying to stand the heat"
-                    else:
-                        # call livingroom_scene
-                        "You decide to just slouch on the couch for a bit, chilling in front of the TV"
-                        call change_loc('livingroom')
+                elif int(current_time[:2]) <= 19:
+                    "You decide that you can spend a few more hours on your bike today"
+                    call change_loc('garage',sec_call='after_evening_bike_repair')
+                    label after_evening_bike_repair(True):
+                        "After putting in a few more hours on the bike, you decide that the rest of the evening should be spent doing less arduous tasks, and head inside to watch some TV, maybe play some games"
+                        call change_loc('livingroom',sec_call='tv_games_evening')
+                elif int(current_time[:2]) > 19:
+                    "You're feeling a bit tired, after school, and working on your bike, so you decide taking a shower will be a nice relief right now"
+                    call change_loc('upper hallway bathroom',sec_call='taking_shower_evening')
                 else:
-                    if not detention_served:
-                        if not mc_f:
-                            if hacker_3 and call_nr:
-                                menu:
-                                    "So... you can either work a bit on your bike, or call up [nr] and see if he can give you some info about [fsName.yourformal]s problems"
-                                    "Go work on bike":
-                                        # call garage_scene
-                                        call change_loc('garage')
-                                        # call w_mc(True)
-                                    "Call [nr]":
-                                        # call livingroom_scene
-                                        "We're waiting for the UI-update to the phone, to make calls with - this is the end of this storyline for this version of the game"
-                                        call change_loc(current_location,sec_call="nr_talk")
-                            else:
-                                "You decide that you can spend a few more hours on your bike today"
-                                # call garage_scene
-                                call change_loc('garage')
-                                # call w_mc(True)
-                            if current_time[:2] > 19:
-                                "You're feeling a bit tired, after school, and working on your bike, so you decide taking a shower will be a nice relief right now"
-                                call taking_shower_evening(True)
-                            else:
-                                # call garage_scene
-                                call change_loc('garage')
-                                # call w_mc(True)
-                                "After putting in a few more hours on the bike, you decide that the rest of the evening should be spent doing less arduous tasks, and head inside to watch some TV, maybe play some games"
-                                call tv_games_evening(True)
-                        else:
-                            if renpy.random.random() > .65 and current_time[:2] < 17:
-                                "You decide to take a ride"
-                                if (renpy.random.random() > .65 and nk_rel > 15) or (renpy.random.random() > .5 and nk_rel > 20):
-                                    "You decide to call up [nk] to see if she wants to come with"
-                                    nk ahead "Hi, [fp]"
-                                    fp "Hi, [nk]. I was wondering if you wanted to come for a ride with me today? Was thinking we could"
-                                    $ conditions.addcondition("Go to the cabin","current_month >= 9 and current_month <= 3 and has_cabin")
-                                    $ conditions.addcondition("Go to the marina","boat_at_marina")
-                                    menu:
-                                        "Go to the beach":
-                                            jump beach_ride
-                                        "Ride to the next town over":
-                                            jump next_town_ride
-                                        "Go to the cabin":
-                                            jump cabin_ride
-                                        "Go to the marina":
-                                            jump marina_ride
-                                else:
-                                    "No answer. Oh well, you'll call her again some other time"
-                            else:
-                                "It's just not the day for outdoors activities, you decide to stay inside and just watch some TV instead"
-                                if fp_sts > 0:
-                                    $ statschangenotify("fp_sts",-1)
-                    else:
-                        $ evening_event = True
+                    call change_loc('livingroom',sec_call='lounge_livingroom')
+                    label lounge_livingroom(True):
+                        "You decide to just slouch on the couch for a bit, chilling in front of the TV"
+            elif not detention_served and hacker_3 and call_nr:
+                $ hacker_3 = False
+                $ call_nr = False
+                $ hacker_4 = True
+                call nr_talk('nr_intro')
+                
+            if mc_f and renpy.random.random() > .65 and current_time[:2] < 17:
+                "You decide to take a ride"
+                "You decide to call up [nk] to see if she wants to come with"
+                if (renpy.random.random() > .65 and nk_rel > 15) or (renpy.random.random() > .5 and nk_rel > 20) or (renpy.random.random() > .35 and nk_rel > 30):
+                    nk ahead "Hi, [fp]"
+                    fp "Hi, [nk]. I was wondering if you wanted to come for a ride with me today? Was thinking we could"
+                    $ conditions.addcondition("Go to the cabin","current_month >= 9 and current_month <= 3 and has_cabin")
+                    $ conditions.addcondition("Go to the marina","boat_at_marina")
+                    menu:
+                        "Go to the beach":
+                            jump beach_ride
+                        "Ride to the next town over":
+                            jump next_town_ride
+                        "Go to the cabin":
+                            jump cabin_ride
+                        "Go to the marina":
+                            jump marina_ride
+                else:
+                    "No answer. Oh well, you'll call her again some other time"
+            else:
+                "It's just not the day for outdoors activities, you decide to stay inside and just watch some TV instead"
+                if fp_sts > 0:
+                    $ statschangenotify("fp_sts",-1)
+                else:
+                    $ evening_event = True
                 if not evening_event:
                     call end_of_day(True)
                 else:
                     call evening_event_label(True)
-
-    # label principal_after_punishment_late(pap_called=False):
-    #     if pap_called:
-    #         $ pap_called = False
-    #         $ addtime(1, False)
-    #         call school_po_scene
-    #         sp "[fp]! What have you done, to be sent to me?"
-    #         fp "I mouthed off to Miss Novak."
-    #         fp "She was yelling at me for being late, and I just lost it."
-    #         fp "I'm sorry."
-    #         sp "You need to control your temper, son."
-    #         sp "You have a tendency to end up in these situations, and I don't think we can ignore it much longer."
-    #         $ statschangenotify("fp_att",.5,True)
-    #         $ statschangenotify("punishment_late",1)
-    #         if punishment_late >= 5:
-    #             sp "I will need to call your parents, and tell them about this."
-    #             $ statschangenotify("fm_rel",-2.5)
-    #         sp "You will report to [sn] after your regular hours today."
-    #         sp "I'm sure she already informed you that you would serve detention today..."
-    #         fp "Well..."
-    #         sp "{i}Your principal shoots you a stern look{/i}\n"
-    #         extend "You can go, [fp]"
-    #         call schoolbuilding_scene
-    #         # call school_finished(True)
-    #         $ after_principal_talk = True
-    #         call sn_detention(True)
-
-    # label sn_detention(snd_called = False):
-    #     if snd_called:
-    #         $ snd_called = False
-    #         if after_principal_talk:
-    #             "You go about your daily tasks as normal, but come end of day, you know you have to go meet [sn] for your detention. You head off towards your classroom..."
-    #         else:
-    #             "After having dealth with [sn]s blow-out, you go about your day as normal - attending classes, avoiding freshmen, trying to catch a glance of the cheerleaders rehearsing..."
-    #             "But, come end of day, you need to get your ass to [sn]s classroom, and serve detention."
-    #         $ settime(15,5)
-    #         $ detention_served = True
-    #         if sn_rel > 15 or sn_aro > 10:
-    #             if renpy.random.random() > .5:
-    #                 "Arriving at room 603, you see [sn] standing by her desk, looking sternly at you. Her top two buttons are unbuttoned, showing a hint of cleavage. You have to do a double take, forcing yourself not to stare"
-    #                 menu:
-    #                     "Stare":
-    #                         if sn_aro > 15:
-    #                             "You notice [sn] catching you staring, but she just lets you know, giving you a long look, but doesn't do anything about it"
-    #                             $ statschangenotify("sn_aro",1)
-    #                             "You are pondering if you should try to catch a better view..."
-    #                             menu:
-    #                                 "Sit down, and try looking up her skirt":
-    #                                     $ snd_r = renpy.random.random()
-    #                                     if sn_aro > 15 and sn_rel > 10 and snd_r > .5:
-    #                                         "You notice [sn] again catching your glance, but this time she just slides her legs a little further apart, making you shift a little uncomfortably in your chair"
-    #                                         $ statschangenotify("sn_aro",1)
-    #                                     else:
-    #                                         "[sn] abruptly stands up, and marches over to where you're sitting."
-    #                                         sn "Have you had your fill for today, [fp]? Do you think you might wanna keep your eyes to yourself? If not, I'm sure we can find some kind of punishment you'll appreciate! Or, rather, that {i}I{/i} will appreciate!"
-    #                                         fp "That... won't be necessary, [sn]"
-    #                                         $ statschangenotify("sn_aro",.5,True)
-    #                                         $ statschangenotify("sn_rel",-.5)
-    #                                     call school_finished(True)
-    #                                 "Sit down, but refrain from peeping up her skirt":
-    #                                     call sn_lookaway_detention()
-    #                         else:
-    #                             "You notice [sn] catching your glance, and feel her ice-cold stare as she haughtily asks you if you're done undressing her with your eyes"
-    #                             sn "You're gonna get another punishment for that, [fp]. Meet here after school tomorrow, for another round of detention!"
-    #                             $ statschangenotify("sn_aro",.5,True)
-    #                             $ statschangenotify("sn_rel",-1)
-    #                     "Manage to look away":
-    #                         call sn_lookaway_detention()
-    #                 label sn_lookaway_detention():
-    #                     "You decide to play it cool, and just get the detention done with, so you can go home"
-    #                     call school_finished(True)
-    #             else:
-    #                 "Arriving at room 603, you see [sn] standing by her desk, clearly waiting for the last arrival for today."
-    #                 sn "Glad you could make it, [fp]. Sit down and get out your books. I'm assuming you have homework or studying to do?"
-    #                 fp "I do, [sn]."
-    #                 if not backpack.has_item(schoolbooks_item):
-    #                     sn "What are you waiting for, [fp]? I told you to get your books out!"
-    #                     fp "I... I seem to have forgotten them at home..."
-    #                     sn "What?!"
-    #                     sn "Can't you even remember something basic, like your books?"
-    #                     sn "Fine! Go to the library, and do your studying there! And don't forget your books again!"
-    #                     fp "Okay..."
-    #                     $ statschangenotify('sn_rel',-1,True)
-    #                     $ statschangenotify('fp_att',-1)
-    #                     "You head over to the library, to see if you can find a copy of your books there, and actually get some stuff done today"
-    #                     call school_finished(True)
-    #                 else:
-    #                     "You get out your books, and start studying for next weeks algebra-test"
-    #                     call school_finished(True)
-    #         else:
-    #             "Arriving at room 603, you see [sn] standing by her desk, clearly waiting for the last arrival for today."
-    #             sn "Glad you could make it, [fp]. Sit down and get out your books. I'm assuming you have homework or studying to do?"
-    #             fp "I do, [sn]."
-    #             if not backpack.has_item(schoolbooks_item):
-    #                 sn "What are you waiting for, [fp]? I told you to get your books out!"
-    #                 fp "I... I seem to have forgotten them at home..."
-    #                 sn "What?!"
-    #                 sn "Can't you even remember something basic, like your books?"
-    #                 sn "Fine! Go to the library, and do your studying there! And don't forget your books again!"
-    #                 fp "Okay..."
-    #                 $ statschangenotify('sn_rel',-1,True)
-    #                 $ statschangenotify('fp_att',-1)
-    #                 "You head over to the library, to see if you can find a copy of your books there, and actually get some stuff done today"
-    #                 call school_finished(True)
-    #             else:
-    #                 "You get out your books, and start studying for next weeks algebra-test"
-    #                 call school_finished(True)
 
     label taking_shower_evening(tse_called=False):
         if tse_called:
@@ -430,7 +225,6 @@ label day_events():
                 else:
                     fs "That's actually refreshing. Truth!"
             hide fs_standing with dissolve
-            # $ renpy.watch(result)
             $ renpy.pause()
             return
 

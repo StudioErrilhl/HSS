@@ -4,19 +4,24 @@ init -1 python:
     from operator import attrgetter # we need this for sorting items
 
     class Item(store.object):
-        def __init__(self, name, weight,amount=1):
+        def __init__(self, name, displayname, weight, desc, amount=1):
             self.name = name
+            self.displayname = displayname
             self.weight = weight
             self.amount = amount
+            self.desc = desc
 
     class InvItem(store.object):
         def __init__(self, item, amount):
             self.item = item
             self.name = item.name
+            self.displayname = item.displayname
+            self.weight = item.weight
             self.amount = amount
+            self.desc = item.desc
 
     class Container(store.object):
-        def __init__(self, weight_max=1000):
+        def __init__(self, weight_max=75):
             self.inventory = []
             self.weight_max = weight_max
 
@@ -25,7 +30,7 @@ init -1 python:
 
         def finditem(self, item):
             return(self.inventory[[i.item for i in self.inventory].index(item)])
-            
+
         def add_item(self, item, amount=1): #remember to use the item-assignment, not anything else, to add to inventory
             if item.weight * amount > self.weight_max - sum(i.item.weight * i.amount for i in self.inventory):
                 name = item.name.lower().replace('fs','').replace('fm','').replace('_',' ').title()
@@ -76,4 +81,15 @@ init -1 python:
                 if 'hover' in file:
                     name = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.png','')
                     if not hasattr( store, ""+name+"_item" ):
-                        setattr(store,""+name+"_item",Item(name,5))
+                        weight = item_weights[name]
+                        desc = item_desc[name]
+                        if 'panties' in name:
+                            ptmp = name.replace('fs_','').replace('_',' ').split(' ')
+                            if len(ptmp) == 2:
+                                pname = ptmp[1]+' - '+ptmp[0]
+                            elif len(ptmp) == 3:
+                                pname = str(ptmp[2]+' - '+ptmp[0]+' '+ptmp[1])
+                            displayname = pname.capitalize()
+                        else:
+                            displayname = name.capitalize()
+                        setattr(store,""+name+"_item",Item(name,displayname,weight,desc))

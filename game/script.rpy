@@ -3,7 +3,7 @@
         define config.screenshot_pattern = "D:\Dropbox\RenPy-games\Screenshots\HSS-screenshot%04d.png"
 
 label splashscreen:
-    scene black 
+    scene black
     $ renpy.pause(1)
     show text "{size=60}{color=#ffffff}Studio Errilhl Presents ... {/color}{/size}" with dissolve
     $ renpy.pause(2)
@@ -16,20 +16,20 @@ label splashscreen:
         hide image "images/hss-logo.png" with dissolve
         $ renpy.pause(.75)
         if not persistent.accepted_splashscreen:
-            call screen confirm_age()   
+            call screen confirm_age()
             $ renpy.block_rollback()
         $ persistent.accepted_splashscreen = True
         call screen splash_info()
         $ renpy.block_rollback()
         show screen disclaimer()
-        $ renpy.block_rollback()        
+        $ renpy.block_rollback()
         $ renpy.pause(4)
-        hide screen disclaimer        
+        hide screen disclaimer
         show text "{size=30}{color=#ffffff}Code / story by Studio Errilhl\nCharacter art by DivineChihaya{/color}{/size}"
         $ renpy.block_rollback()
         $ renpy.pause(4)
         $ persistent.splash_screen = True
-        $ renpy.block_rollback()        
+        $ renpy.block_rollback()
     return
 
 label after_load:
@@ -57,11 +57,12 @@ init 1:
         yourinformal "your housemate"
 
 label start:
+    $ updateInventory()
     $ conditions = Conditions() ## enables the conditions-parameter used for assigning conditions to disable / enable choice-items
     $ backpack = Container()
     $ updateInventory()
     $ gp_bed = random.choice(fs_p)
-    $ gp_bath = random.choice(fs_p)    
+    $ gp_bath = random.choice(fs_p)
     $ current_time = "09:00"
     call fp_bedroom_scene
 
@@ -104,7 +105,7 @@ label start:
         fp "{i}Okay... that might have been a bit TMI. I'm sorry. I just wanted you to understand what happened. And how that sort of led to... other things that happened as well. During that summer. You know... spring. Summer. End of high-school. The time I had all planned out. The plans that really didn't happen. Like... at all.{/i}"
         "So... the coming days, weeks and months, you'll be trying to pass your exams, finish your bike, getting some action, and generally being a high school senior going on freedom!"
         $ persistent.skipintro = True
-        $ fs_mad = True        
+        $ fs_mad = True
 
     label skippedintro():
         $ fs_mad = True
@@ -127,7 +128,7 @@ label start:
         $ find_pb_mod = .65 if fs_aro > 10 else .90
         $ find_pb = True if renpy.random.random() > find_pb_mod else False
         $ bathroom_find_panties = True if renpy.random.random() > .60 else False
-        $ find_tablet = True if renpy.random.random() > .65 else False        
+        $ find_tablet = True if renpy.random.random() > .65 else False
         $ gp_bed = random.choice(fs_p)
         $ gp_bath = random.choice(fs_p)
         $ br = random.choice([0,1,2,3])
@@ -190,7 +191,7 @@ label start:
                 $ mm = format(renpy.random.randint(00,59),"02d")
                 $ settime(mh,mm)
                 if int(current_time[:2]) == 6:
-                    $ addtime(1, False) 
+                    $ addtime(1, False)
 
         call day_wrapper()
 
@@ -226,7 +227,7 @@ label start:
                 elif int(current_time[:2]) < 7 and day_week >= 5 and event not in outside_events:
                     $ choice1 = "Hm... I have at least an hour before anyone else is out of bed. I can probably get a bit done before breakfast"
                     $ choice2 = "Or... I could go back inside, take a shower, get some breakfast, and get back out here later"
-                    if not event or event == 0:                    
+                    if not event or event == 0:
                         $ event = 7
                 elif int(current_time[:2]) in morning and day_week <= 4 and event not in outside_events+events:
                     $ choice1 = False
@@ -236,12 +237,12 @@ label start:
                 elif 3 and 14 < int(current_time[:2]) < 20 and event not in outside_events and event != 5 and day_week <= 4:
                     $ choice1 = "I can probably do at least a couple hours of bike repair today"
                     $ choice2 = "Or I could go back in the house, see if there's anything on TV, or play a game..."
-                    if not event or event == 0:                    
+                    if not event or event == 0:
                         $ event = 4
                 elif sc <= 3 and day_week >= 5 and event not in outside_events:
                     $ choice1 = "I have the entire day off. Maybe I could spend some time on the bike, see if I can get some traction on the rebuild"
                     $ choice2 = "Or, I could just slack off today, and work on the bike another day"
-                    if not event or event == 0:                    
+                    if not event or event == 0:
                         $ event = 5
 
                 if event in events:
@@ -262,25 +263,25 @@ label start:
                                     $ mc_p = "{0:.2f}".format(mc_p)
                                     if mc_t == 0:
                                         $ renpy.notify("You did not improve the status of the bike this time")
-                                    else:                                    
+                                    else:
                                         $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")
                                     call repeat_event(77)
                                 elif c <= maxc:
                                     $ addtime(1, False)
-                                    $ filth_val += 10                                
+                                    $ filth_val += 10
                                     if renpy.random.random() > modifier:
                                         if backpack.has_item(toolbox_item):
                                             $ mc_t = 2
                                         else:
-                                            $ mc_t = 1                                        
+                                            $ mc_t = 1
                                     $ c += 1
                                     $ mc_b += mc_t
                                     $ mc_p = (float(mc_b)/float(mc_b_max))*100
                                     $ mc_p = "{0:.2f}".format(mc_p)
                                     if mc_t == 0:
                                         $ renpy.notify("You did not improve the status of the bike this time")
-                                    else:                                    
-                                        $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")                               
+                                    else:
+                                        $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")
                                     if c == (maxc):
                                         call repeat_event(88)
                                     else:

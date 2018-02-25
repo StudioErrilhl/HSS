@@ -33,12 +33,13 @@ default persistent.statscreen_infotext = True
 default persistent.backpack_info = True
 
 # character definitions
-define fp = Character("[fpinput]")
+define fp = Character("[fpinput]",image="fp_talkside")
 define fm = Character("[fmName.Name]",image="fm_talkside")
 define fs = Character("[fsName.Name]",image="fs_talkside")
 define nb = Character("Bridget")
-define nr = Character("Ron")
+define nr = Character("Ron",image="nr_talkside")
 define nk = Character("Karen",image="nk_talkside")
+define nc = Character("Catherina") # needs a character namebox - also needs a character image
 define sn = Character("Miss Novak")
 define se = Character("Miss Elliot")
 define sp = Character("Principal Hudson")
@@ -47,7 +48,7 @@ define scn = Character("Natalie")
 define scm = Character("Mattie")
 #remember to add default color="#000000" if the character do not have a namebox_charname.png in the gui/-directory
 
-default chars = [[fp,"fp"],[fm,"fm"],[fs,"fs"],[nb,"nb"],[nr,"nr"],[nk,"nk"],[sn,"sn"],[sp,"sp"],[sj,"sj"]]
+default chars = [[fp,"fp"],[fm,"fm"],[fs,"fs"],[nb,"nb"],[nr,"nr"],[nk,"nk"],[nc,"nc"],[sn,"sn"],[se,"se"],[sp,"sp"],[sj,"sj"],[scn,"scn"],[scm,"scm"]]
 default atts = ['rel','dom','aro','cor','att']
 
 #fp
@@ -98,6 +99,19 @@ default nk_lvl = 0
 default nk_school_assignment_evening = False
 default nk_school_assignment_evening_first = True
 default nk_driving = False
+default nk_sa_status = False
+
+#nc
+default nc_dom = 0
+default nc_rel = 4
+default nc_aro = 0
+default nc_cor = 0
+default nc_anal = 0
+default nc_pussy = 0
+default nc_bj = 0
+default nc_sex_pref = "BJ"
+default nc_lvl = 0
+default nc_number = '111-555-3369'
 
 #nb
 default nb_dom = 0
@@ -125,6 +139,10 @@ default sn_bj = 0
 default sn_sex_pref = "BJ"
 default sn_lvl = 0
 
+#se
+default se_rel = 0
+default se_lvl = 0
+
 #sp
 default sp_rel = 0
 default sp_lvl = 0
@@ -132,6 +150,14 @@ default sp_lvl = 0
 #sj
 default sj_rel = 0
 default sj_lvl = 0
+
+#scn
+default scn_rel = 0
+default scn_lvl = 0
+
+#scm
+default scm_rel = 0
+default scm_lvl = 0
 
 #sex-stats
 default total_anal = fm_anal + fs_anal + nk_anal + nb_anal + sn_anal
@@ -186,6 +212,7 @@ default fs_si_2 = False
 default hacker = False
 default hacker_2 = False
 default hacker_3 = False
+default hacker_4 = False
 default hacker_first_thought = True
 default scs = False
 default scs_2 = False
@@ -225,7 +252,9 @@ default backpack_carry = False
 default selecteditem = False
 default selecteditemname = False
 default selecteditemamount = False
+default selecteditemweight = False
 default selecteditemdesc = False
+default total_weight = 0
 
 # tablet
 default fs_tablet_bedroom = False
@@ -358,6 +387,29 @@ default dinner = [ # food, reply, comeback, modifier, stat, weight-mod
             ["I went vegetarian today","Oh...","You will try it before you go all mopey!",-1,"fm_rel",.25]
         ]
 default images_unlocked = []
+
+default text_msg_received = []
+
+default item_weights = {'beer':2,'carkeys':.2,'fs_bright_pink_panties':.1,'fs_pale_pink_panties':.1,'fs_yellow_panties':.1,'fs_light_blue_panties':.1,'gin':1,'phone':.3,'princessplug':.4,'roses':.5,'schoolbooks':5,'small_keys':.2,'toolbox':10,'vodka':1,'whiskey':1,'wine':1}
+
+default item_desc = {
+            'beer':'What a tasty, delicious beverage! Exactly what you need to kick off a party, slacking on the couch, or just getting slightly wasted. One beer won\'t do much damage, but as soon as you drink a few...',
+            'carkeys':'Keys to the car out front.',
+            'fs_bright_pink_panties':'Bright pink panties. Smelling of [fsName.yourformal]! Definitely worth hanging on to!',
+            'fs_pale_pink_panties':'Pale pink panties. These are cute and wonderful, and you\'re definitely gonna hang on to these.',
+            'fs_yellow_panties':'Yellow panties. Bright colored, fun and cute.',
+            'fs_light_blue_panties':'Light blue panties. Innocent and cute. Not very representative of the owner...',
+            'gin':'Time to hit it off with a bit of G&T.',
+            'phone':'Your dayplanner, your internet-connection, your contact-list, your camera, your pretty much everything. Oh, and a phone, too!',
+            'princessplug':'This thing has actually been up [fsName.yourformal]\'s butt...',
+            'roses':'Beautiful roses. You should give this to someone!',
+            'schoolbooks':'The books you need for school. They should really think of putting up some lockers at school, so you didn\'t have to drag these with you all the time',
+            'small_keys':'A set of small keys. What they unlock, you have no idea...',
+            'toolbox':'Essential tools for fixing your bike',
+            'vodka':'{b}This{/b} is the right tool for getting utterly, completely wasted. Not that you have any need for that, of course... not right now, anyway...',
+            'whiskey':'Ah! The grown man\'s drink. One sip of this, and you\re pretty sure your throat\'s on fire!',
+            'wine':'The preferred drinks of any posh girl out there. You should keep some on hand!'
+}
 
 default fs_present = [0,1,2,3,4,5,6,7,8,15,16,17,18,19,20,21,22,23]
 default fs_present_we = [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19] if fs_party else [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]

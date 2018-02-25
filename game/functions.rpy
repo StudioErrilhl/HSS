@@ -135,17 +135,11 @@ init python:
 
 init 10 python:
     def addtime(hours=False,minutes=False,update_scene=False,seccall=False):
-        global bathroom_occupied_fs,bathroom_occupied_fm,current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text
-        bathroom_occupied_fs = bathroom_occupied_fm = False        
+        global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text
         local_dw = day_week
         addhour = False
         sethour = hours
         starthour = current_time[:2]
-        if renpy.random.random() > .65:
-            setattr(store,'bathroom_occupied_fs',True)
-            if not getattr(store,'bathroom_occupied_fs'):
-                if renpy.random.random() > .65:
-                    setattr(store,'bathroom_occupied_fm',True)
         if hours or minutes:
             local_time = current_time
             if hours:
@@ -168,7 +162,7 @@ init 10 python:
                         current_time = str(int(0))+(int(local_time[:2])+int(hours)-24)+local_time[2:]
                         if len(current_time) == 4:
                             current_time = '0'+current_time
-                        setattr(store, 'current_time', current_time)                        
+                        setattr(store, 'current_time', current_time)
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:
                             if current_month_day == months_days[current_month][1]:
@@ -182,13 +176,13 @@ init 10 python:
                         current_time = str(int(local_time[:2])+int(hours))+local_time[2:]
                         if len(current_time) == 4:
                             current_time = '0'+current_time
-                        setattr(store, 'current_time', current_time)                        
+                        setattr(store, 'current_time', current_time)
                 else:
                     if int(local_time[:2])+int(hours) == 24:
                         current_time = str(int(0))+local_time[2:]
                         if len(current_time) == 4:
                             current_time = '0'+current_time
-                        setattr(store, 'current_time', current_time)                        
+                        setattr(store, 'current_time', current_time)
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:
                             if current_month_day == months_days[current_month][1]:
@@ -203,7 +197,7 @@ init 10 python:
                         update_scene = True
                         if len(current_time) == 4:
                             current_time = '0'+current_time
-                        setattr(store, 'current_time', current_time)                        
+                        setattr(store, 'current_time', current_time)
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:
                             if current_month_day == months_days[current_month][1]:
@@ -232,9 +226,9 @@ init 10 python:
                                 current_month_text = months_days[current_month][0]
                                 current_month_day = 1
                             else:
-                        
+
                                 current_month_day += 1
-                                day_ahead = True                        
+                                day_ahead = True
                     else:
                         current_time = str(int(local_time[:2])+1)+':'+str(update_minutes)
                     if len(current_time) == 4:
@@ -250,14 +244,14 @@ init 10 python:
                                 current_month_text = months_days[current_month][0]
                                 current_month_day = 1
                             else:
-                        
+
                                 current_month_day += 1
-                                day_ahead = True                        
+                                day_ahead = True
                     else:
                         current_time = str(local_time[:2])+':'+str(int(local_time[3:])+minutes)
                     if len(current_time) == 4:
                         current_time = '0'+current_time
-                    setattr(store, 'current_time', current_time)                
+                    setattr(store, 'current_time', current_time)
 
             if charge_phone:
                 total = (int(sethour)+int(starthour))-int(starthour)
@@ -275,7 +269,8 @@ init 10 python:
                     current_imgs = list(renpy.get_showing_tags())
                     indices = [i for i, elem in enumerate(current_imgs) if '_morning' in elem]
                     if indices:
-                        current_bg = current_imgs[indices[0]].replace('_morning','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
+                        current_bg = current_imgs[indices[0]].replace('_morning','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_backpack','').replace('_',' ')
+                        print(current_bg)
                         if current_bg == 'upper_hallway_bathroom_night':
                             setattr(store,"bathroom_light",True)
                         else:
@@ -299,7 +294,7 @@ init 10 python:
                         if mn_check:
                             current_bg = current_imgs[indices[0]]
                         else:
-                            current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
+                            current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_backpack','').replace('_',' ')
                         if seccall:
                             print('seccall 2')
                             renpy.call('change_loc',current_bg,sec_call=seccall)
@@ -319,13 +314,13 @@ init 10 python:
                 if len(str(hours)) == 1:
                     hours = '0'+str(hours)
                 current_time = str(hours)+str(current_time[2:])
-                setattr(store, 'current_time', current_time)   
+                setattr(store, 'current_time', current_time)
         if int(current_time[3:]) < minutes:
             if minutes:
                 if len(str(minutes)) == 1:
                     minutes = '0'+str(minutes)
                 current_time = str(current_time[:3])+str(minutes)
-                setattr(store, 'current_time', current_time)   
+                setattr(store, 'current_time', current_time)
         if update_scene:
             if int(current_time[:2]) >= 22 or int(current_time[:2]) < 6:
                 current_imgs = list(renpy.get_showing_tags())
@@ -370,7 +365,7 @@ init 10 python:
                         inv_list.append(temp)
                     else:
                         inv_list.append(file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.png','').replace('fs_','').replace('_',' '))
-        # print(inv_list)                        
+        # print(inv_list)
         return inv_list
 
     # if day_week <= 4:
@@ -415,7 +410,7 @@ init 10 python:
         if hint:
             read_hints.append(hint)
             hints.remove(hint)
-    
+
     def disable_hint(hint=False):
         global read_hints,disabled_hints
         if hint:
@@ -441,6 +436,11 @@ init 10 python:
             else:
                 disabled_hints.remove(hint)
 
+    def set_hint(hint=False):
+        global hints,read_hints,default_hints
+        if hint:
+            if hint not in hints+read_hints+disabled_hints:
+                hints.append(hint)
 
 init python hide:
     notice = """
@@ -490,17 +490,10 @@ python early:
                 if not isinstance( v, tuple ): v = ( v, )
                 self._alls[k] = v
                 self._alls[k[:1].upper() + k[1:]] = v
-                self._alls[k[:1].upper() + k[1:].upper()] = v
 
         def __getattr__( self, aName ):
             if     aName == "_alls":    return super( DynamicNames, self).__getattribute__( aName )
             if not aName in self._alls: return "I FORGET TO SET THIS"
             aValue = ""
             for atom in self._alls[aName]: aValue += atom() if callable( atom ) else atom
-            if ord(aName[:1]) >= 97:
-                return aValue
-            elif (65 < ord(aName[:1]) < 90) and (65 < ord(aName[-1:]) < 90):
-                return aValue.upper()
-            else:
-                return aValue[:1].upper() + aValue[1:]
-            # return aValue if ord( aName[:1] ) >= 97 else aValue[:1].upper() + aValue[1:]
+            return aValue if ord( aName[:1] ) >= 97 else aValue[:1].upper() + aValue[1:]

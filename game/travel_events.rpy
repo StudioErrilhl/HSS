@@ -20,15 +20,18 @@ label travel_events(event=False):
                             "[text1]" if text1:
                                 $ statschangenotify("nk_rel",1.5)
                                 $ renpy.pause(.25)
+                                $ nk_sa_status = ['happy','drive']
                                 call travel_events('arrive_school')
                             "[text2]" if text2:
                                 if bad_weather and rainstorm:
                                     $ statschangenotify('nk_rel',-3)
                                     $ renpy.pause(.25)
+                                    $ nk_sa_status = ['mad','drive']
                                     call travel_events('arrive_school')
                                 else:
                                     $ statschangenotify("nk_rel",-1)
                                     $ renpy.pause(.25)
+                                    $ nk_sa_status = ['annoyed','drive']
                                     if renpy.random.random() < .35:
                                         call travel_events('arrive_school')
                                     else:
@@ -97,9 +100,9 @@ label travel_events(event=False):
                 "Barely, but on time. Close call indeed!"
             else:
                 $ addtime(False,25)
-                if int(current_time[:2]) >= 8 and int(current_time[4:]) >= 0:
+                if int(current_time[:2]) >= 8 and int(current_time[3:]) >= 0:
                     # call school_walk_late_arrival_event(True)
-                    if (int(current_time[4:]) <= 5 and renpy.random.random() < .25) or int(current_time[4:]) > 5:
+                    if (int(current_time[3:]) <= 5 and renpy.random.random() < .25) or int(current_time[3:]) > 5:
                         "{i}Arriving at school, you can see that you're late{/i}\nYou hurry up the stairs, trying to get to your classroom as fast as humanly possible"
                         sn "Greetings, [fp]!"
                         "[sn]s voice sneaks up on you as you hurry through the hallways"
@@ -114,10 +117,79 @@ label travel_events(event=False):
                         "You arrive a little too late, but fortunately, you manage to sneak into class without anyone spotting you"
                         call school_events('finished')
                 else:
-                    if int(current_time[2:]) == 7 and int(current_time[4:]) < 55:
-                        "You arrive with plenty of time to spare before the bell rings"
-                    elif int(current_time[2:]) < 7:
+                    if int(current_time[:2]) == 7 and int(current_time[3:]) < 55:
+                        if int(current_time[3:]) < 45:
+                            "You arrive with plenty of time to spare before the bell rings"
+                            if nk_sa_status and nk_sa_status[0] == 'happy' and nk_sa_status[1] == 'drive':
+                                if nk_rel > 20:
+                                    nk "So... {i}She's sitting there, a bit nervous, it seems...\n\nSuddenly, she leans over the gearshift, and, catching you entirely by surprise, french-kisses you for about 2 minutes{/i}"
+                                    menu:
+                                        "Kiss her back":
+                                            $ statschangenotify('nk_rel',2)
+                                        "Tell her to get off":
+                                            $ statschangenotify('nk_rel',-4)
+                                        "Push her away, gently":
+                                            $ statschangenotify('nk_rel',0)
+                                    call school_events('finished')
+                                else:
+                                    if rainstorm:
+                                        fp "Thanks, [nk]! I would've drowned out there on my own"
+                                        nk smile "Oh, no, you wouldn't, you doofus. You're just lazy, and happy someone drove you!"
+                                        menu:
+                                            "Compliment her":
+                                                pass
+                                            "Tease her":
+                                                pass
+                                            "Dismiss her":
+                                                pass
+                                    else:
+                                        fp "Thanks for the ride, [nk]!"
+                                        nk "You're welcome, [fp]!"
+                                    call school_events('finished')
+                        else:
+                            "You arrive, with just a few minutes left before the bell rings"
+                    elif int(current_time[:2]) < 7:
                         "You arrive way too early, but decide to just hang around and wait for school to start"
                     else:
                         "You barely arrive on time, but you're still in the door before the bell rings"
                     call school_events('finished')
+
+
+
+label nk_walk_with(nkww_called=False):
+    if nkww_called:
+        $ nkww_called = False
+        show nk_standing smile with dissolve
+        "[fp] starts walking with [nk] towards their school, talking about everything and nothing. It's a nice day, and [nk] is, as always, nice to be around"
+        if nk_rel > 5:
+            fp "So, did you finish the assignment yet?"
+            if renpy.random.random() > .5:
+                nk ahead "Yeah, I did. Wasn't that much work, so I finished it last night. Why?"
+                fp "Well... I was hoping you'd lemme look at your assignment, maybe gimme a few pointers. I'm a bit lost"
+                if nk_rel > 15:
+                    show nk_standing smile_open with dissolve
+                    nk smile_open "Sure. How about I come over after school, and we can look at it together?"
+                    fp "That would be awesome, [nk]! Thanks a million"
+                    nk devious "Oh, you'll make it up to me... ;)"
+                    $ nk_sa_status = ['happy','walk']
+                    call travel_events('arrive_school')
+                else:
+                    show nk_standing annoyed with dissolve
+                    nk annoyed "I don't think so, [fp]. Wouldn't feel right you looking at my work..."
+                    "Seems your relationship with [nk] isn't strong enough to ask her for help yet"
+                    $ nk_sa_status = ['annoyed','walk']
+                    call travel_events('arrive_school')
+            else:
+                show nk_standing sad with dissolve
+                nk sad "No, I haven't even started yet. There is so much schoolwork, and I'm behind on studying for finals... {i}she trails off, looking a bit troubled{/i}"
+                fp "How about you come over to my house this evening, and we can work on it together?"
+                show nk_standing smile with dissolve
+                nk smile "Oh, that would be nice. Sure, I can do that. Let's say around seven?"
+                fp "Sure, that works for me. I'll be working on my bike till then"
+                $ statschangenotify("nk_rel",.5)
+                $ nk_sa_status = ['happy','walk']
+                $ evening_event = True
+                $ nk_school_assignment_evening = True
+                call travel_events('arrive_school')
+        else:
+            call travel_events('arrive_school')

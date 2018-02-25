@@ -5,11 +5,11 @@ label morning_events():
         $ fpmc_r = renpy.random.random()
         if (fpmc_r < .35 and day_week <= 4 and overslept) or (int(current_time[:2]) > 7 and day_week <= 4):
             $ overslept = False
-            show fm_standing mad with dissolve                
+            show fm_standing mad with dissolve
             fm mad "[fp]! Wake UP!"
             fp "uuuhh..."
             fm mad "[fp]! Get out of bed THIS INSTANT!"
-            $ conditions.addcondition("[fmName.Informal]! Shut up! I'm awake, and getting up!","fm_rel >= 15 and fm_dom >= 20")            
+            $ conditions.addcondition("[fmName.Informal]! Shut up! I'm awake, and getting up!","fm_rel >= 15 and fm_dom >= 20")
             $ conditions.addcondition("Yeez, [fmName.informal]! Stop nagging me, will you? I'm gonna get up in a second","fm_rel >= 5")
             menu:
                 "[fmName.Informal]! Shut up! I'm awake, and getting up!":
@@ -19,17 +19,17 @@ label morning_events():
                 "Okay, [fmName.informal]... I'm up, I'm up. Please don't yell":
                     call fm_morningchoice_rel(True)
             $ conditions.clear()
-            
+
             label fm_morningchoice_dom(called=False):
                 if called:
-                    if fm_dom < 25: 
+                    if fm_dom < 25:
                         $ statschangenotify("fm_dom",2)
-                        pass 
+                        pass
                     if fm_dom >= 25:
-                        $ statschangenotify("fm_dom",.5)                
+                        $ statschangenotify("fm_dom",.5)
                         pass
                     else:
-                        $ statschangenotify("fm_dom",-.5)                                
+                        $ statschangenotify("fm_dom",-.5)
                         pass
                     $ fm_choice1_choice = "dom"
                     $ addtime(False, 10)
@@ -93,7 +93,7 @@ label morning_events():
                                             call morning_bj()
                                         "How about both?":
                                             call morning_pussy_bj()
-                                else:                            
+                                else:
                                     "You watch as [fmName.yourshort] hitches her thumbs under her panties and swiftly pulls them down over her thighs. She's got shapely legs, not at all bad for a woman in her forties. She pulls up her skirt, and sits back on the bed, spreading her legs as she does so."
                                     fm ahead "Happy now? {i}There's still a bit of defiance in her voice, some residual want to fight you, to stand up for herself{/i}"
                                     fp "Not quite. I would love to introduce my cock to your pussy, but I don't have time. Start masturbating!"
@@ -123,27 +123,27 @@ label morning_events():
                                             call morning_pussyfuck()
                                         "How about both?":
                                             call morning_pussy_bj()
-                                else:                            
+                                else:
                                     "This is a placeholder for the morning event for fm_dom above 45"
                     elif fm_dom >= 30:
                         fp "Hell no, [fmName.informal]! You've lost that. I'm the one in charge here now."
                         fm ahead_eyes_closed "... Yes, [fp] ... "
                         "{i}[yourCapsfM] looks down at the floor, a slight blush on her cheeks, clearly uncomfortable with the situation. Maybe also a little afraid. Not really of you, but that she's excited, just a slight stirring in her loins, by all this...{/i}"
-                        $ statschangenotify("fm_aro",1)                    
+                        $ statschangenotify("fm_aro",1)
                         fm ahead_eyes_closed "... You're in charge. What will you have me do?"
                         menu:
                             "Screw school, I can be late for once. Strip!":
                                 $ statschangenotify("fm_dom",1,True)
                                 $ statschangenotify("fm_cor",1,True)
                                 $ statschangenotify("fm_rel",-5)
-                                hide fm_standing                                    
+                                hide fm_standing
                                 call morning_strip()
                             "{b}I'll be late for school{/b}":
-                                hide fm_standing                                
+                                hide fm_standing
                                 call late_morning()
                             "Have your mom drive you to school, and make sure you're not late":
                                 $ statschangenotify("fm_dom",.5)
-                                hide fm_standing                                    
+                                hide fm_standing
                                 call drive_to_school()
                     elif fm_dom >= 20:
                         fp "Oh, shut it, [fmName.name]. \"Respect\". Don't make me laugh!"
@@ -155,16 +155,16 @@ label morning_events():
                         $ fm_apologize = True
                         $ addtime(False,10)
                         "[yourCapsfM] walks out of the room"
-                        $ morning_event_done = True                            
-                        hide fm_standing                            
+                        $ morning_event_done = True
+                        hide fm_standing
                         call late_morning()
-            
+
             label fm_morningchoice_reldom(called=False):
                 if called:
                     $ called = False
                     if fm_dom < 25:
-                        $ statschangenotify("fm_dom",.5,True)                
-                        $ statschangenotify("fm_rel",.5)    
+                        $ statschangenotify("fm_dom",.5,True)
+                        $ statschangenotify("fm_rel",.5)
                     $ fm_choice1_choice = "reldom"
                     if int(current_time[3:]) == 0:
                         $ already_late = True
@@ -186,7 +186,7 @@ label morning_events():
                     fm ahead "Fine! I'm going to work. Make sure you lock the door when you leave!"
                     $ morning_event_done = True
                     call change_loc('fp bedroom')
-                
+
             label fm_morningchoice_rel(called=False):
                 if called:
                     $ called = False
@@ -380,7 +380,7 @@ label morning_events():
                         fs ahead "Good morning, [fp]"
                         fp "Hi, [fsName.informal]"
                         if renpy.random.random() > .90:
-                            fp "How you doing today?"                    
+                            fp "How you doing today?"
                             fs smile "I'm doing great! I have the day off, so I'm gonna go with [fmName.name] and check out some summer clothes, maybe a new bikini"
                             if fs_rel > 15 and fs_aro > 10:
                                 fp "Cool. {i}In a whisper: Buy something sexy to wear at home ;){/i}"
@@ -415,7 +415,7 @@ label morning_events():
                                 call change_loc('livingroom')
                             "Continue the day, and try to talk to [fsName.yourformal] later":
                                 $ shitty_morning = True
-                                $ morning_event_done = True                                
+                                $ morning_event_done = True
                                 call change_loc(current_location)
                     if not breakfast_jump:
                         if late_oh_shit:
@@ -436,7 +436,7 @@ label morning_events():
                                     call travel_events('travel_school')
                         else:
                             $ late_oh_shit = False
-                            $ morning_event_done = True                            
+                            $ morning_event_done = True
                             $ shitty_morning = False
                     if day_week <= 4:
                         if debug:
@@ -446,7 +446,7 @@ label morning_events():
                 else:
                     if debug:
                         "renpy random below 5"
-                    $ morning_event_done = True                    
+                    $ morning_event_done = True
                     call change_loc('outside',sec_call="outside_loc")
             else:
                 if debug:
@@ -461,7 +461,7 @@ label morning_events():
                         fs ahead "Good morning, [fp]"
                         fp "Hi, [fsName.informal]"
                         if renpy.random.random() > .5:
-                            fp "How you doing today?"                    
+                            fp "How you doing today?"
                             fs smile "I'm doing great! I have the day off, so I'm gonna go with [fmName.name] and check out some summer clothes, maybe a new bikini"
                             if fs_rel > 15 and fs_aro > 10:
                                 fp "Cool. {i}In a whisper: Buy something sexy to wear at home ;){/i}"
@@ -472,7 +472,7 @@ label morning_events():
                                 fs blushing "I'll see what I can manage, [fp]"
                             else:
                                 fp "Cool"
-                                $ morning_event_done = True                                
+                                $ morning_event_done = True
                                 call kitchen_loc(True)
                         else:
                             $ morning_event_done = True
@@ -495,15 +495,15 @@ label morning_events():
                         menu:
                             "Skip the day, and talk to [fsName.yourformal]":
                                 $ talk_later = True
-                                $ morning_event_done = True                                
+                                $ morning_event_done = True
                                 call fs_talk(True)
                             "Continue the day, and try to talk to [fsName.yourformal] later":
                                 $ shitty_morning = True
-                                $ morning_event_done = True                                
+                                $ morning_event_done = True
                                 call change_loc(current_location)
                 else:
                     $ morning_event_done = True
-                    if debug:                    
+                    if debug:
                         if renpy.random.random() > .1:
                             $ sun_event = True
                             call weekend_sun(True)
@@ -515,41 +515,3 @@ label morning_events():
                             call weekend_sun(True)
                         else:
                             call kitchen_loc(True)
-    
-
-    label nk_walk_with(nkww_called=False):
-        if nkww_called:
-            $ nkww_called = False
-            show nk_standing smile with dissolve
-            "[fp] starts walking with [nk] towards their school, talking about everything and nothing. It's a nice day, and [nk] is, as always, nice to be around"
-            if nk_rel > 5:
-                fp "So, did you finish the assignment yet?"
-                if renpy.random.random() > .5:
-                    nk ahead "Yeah, I did. Wasn't that much work, so I finished it last night. Why?"
-                    fp "Well... I was hoping you'd lemme look at your assignment, maybe gimme a few pointers. I'm a bit lost"
-                    if nk_rel > 15:
-                        show nk_standing smile_open with dissolve
-                        nk smile_open "Sure. How about I come over after school, and we can look at it together?"
-                        fp "That would be awesome, [nk]! Thanks a million"
-                        nk devious "Oh, you'll make it up to me... ;)"
-                        call travel_events('arrive_school')
-                    else:
-                        show nk_standing annoyed with dissolve
-                        nk annoyed "I don't think so, [fp]. Wouldn't feel right you looking at my work..."
-                        "Seems your relationship with [nk] isn't strong enough to ask her for help yet"
-                        call travel_events('arrive_school')
-                else:
-                    show nk_standing sad with dissolve
-                    nk sad "No, I haven't even started yet. There is so much schoolwork, and I'm behind on studying for finals... {i}she trails off, looking a bit troubled{/i}"
-                    fp "How about you come over to my house this evening, and we can work on it together?"
-                    show nk_standing smile with dissolve
-                    nk smile "Oh, that would be nice. Sure, I can do that. Let's say around seven?"
-                    fp "Sure, that works for me. I'll be working on my bike till then"
-                    $ statschangenotify("nk_rel",.5)  
-                    $ evening_event = True
-                    $ nk_school_assignment_evening = True
-                    call travel_events('arrive_school')
-            else:
-                call travel_events('arrive_school')
-
-    

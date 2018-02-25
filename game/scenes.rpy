@@ -113,20 +113,32 @@ label fs_intro_scene:
         scene fs_intro_scene with Dissolve(.25)
     return
 
-label garage_scene:
+label garage_scene(trans=True):
     if not garage_ach:
         $ garage_ach = True
         $ update_been_everywhere_achievement()
     if mc_f:
         if int(current_time[:2]) in night:
-            scene honda_cx_500_finished_night with Dissolve(.25)
+            if trans:
+                scene honda_cx_500_finished_night with Dissolve(.25)
+            else:
+                scene honda_cx_500_finished_night
         else:
-            scene honda_cx_500_finished_morning with Dissolve(.25)
+            if trans:
+                scene honda_cx_500_finished_morning with Dissolve(.25)
+            else:
+                scene honda_cx_500_finished_morning
     else:
         if int(current_time[:2]) in night:
-            scene honda_cx_500_build_night with Dissolve(.25)
+            if trans:
+                scene honda_cx_500_build_night with Dissolve(.25)
+            else:
+                scene honda_cx_500_build_night
         else:
-            scene honda_cx_500_build_morning with Dissolve(.25)
+            if trans:
+                scene honda_cx_500_build_morning with Dissolve(.25)
+            else:
+                scene honda_cx_500_build_morning
     return
 
 label kitchen_scene(trans=True):
@@ -213,6 +225,19 @@ label upper_hallway_scene:
         scene upper_hallway_night with Dissolve(.25)
     else:
         scene upper_hallway_morning with Dissolve(.25)
+    return
+
+label upper_hallway_bathroom_peek_scene(trans=True):
+    if not uhl_bathroom_ach:
+        $ uhl_bathroom_ach = True
+        $ update_been_everywhere_achievement()
+    if trans:
+        scene upper_hallway_bathroom_morning
+        show upper_hallway_bathroom_juliette_shower_bubbles
+        with Dissolve(.25)
+    else:
+        scene upper_hallway_bathroom_morning
+        show upper_hallway_bathroom_juliette_shower_bubbles
     return
 
 label upper_hallway_bathroom_scene(trans=True):

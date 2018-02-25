@@ -4,9 +4,10 @@ label fs_talk(fst_called=False):
         if not fs_mad:
             if fs_si and day_week <= 4:
                 show fs_standing ahead
-                fp "How you doing today?"  
-                show fs_standing annoyed                      
-                fs sad "Bah. It's a crappy day, and I have to go to school and talk to my teacher. Something about maybe not being allowed to take one of my finals"
+                fp "How you doing today?"
+                show fs_standing annoyed
+                $ text = "Bah. It's a crappy day, and I have to go to school {0}and talk to my teacher. Something about maybe not being allowed to take one of my finals".format('tomorrow ' if int(current_time[:2]) > 15 else '')
+                fs sad "[text]"
                 fp "Seriously? That sounds bad"
                 fs annoyed "It's an error on their part, not on mine. I've been good all year, done all my work, behaved. But for some reason their system says I've gotten a written warning, and that I've gotten 3 or 4 calls home. I've gotten [fmName.informal] to come with, so she can tell them in person that it's wrong"
                 fs crying "It's bloody annoying! I've been good. Done everything, behaved, been nice. Nothing to deserve this, not one single thing! And nobody wants to listen to me, claiming that their system is fail-proof. I hope bringing [fmName.informal] will at least make them look over it again."
@@ -34,7 +35,7 @@ label fs_talk(fst_called=False):
                     $ fs_si_2 = False
                     $ hacker = True
                     hide fs_standing
-                    return 
+                    return
                 else:
                     fs mad "Oh, the damn idiots didn't even wanna listen to me. Or [fmName.informal], for that matter. Just went on about how their system didn't make mistakes."
                     fp "Okay...? So, they're still threathening with disallowing you for your finals?"
@@ -77,12 +78,11 @@ label fs_talk(fst_called=False):
                                 fp "Thanks, [scn]. I know you're breaking some rules by telling me. {i}You lean across the counter and kisses her forehead{/i}"
                                 scn "[fp]!\n{i}She looks around{/i}\n Don't do that, please? I could get in trouble"
                                 fp "Sorry, [scn]. I didn't think. Still grateful, though!"
-                                # scn smiles                 
+                                # scn smiles
                                 # scene change to outside school?
                                 fp "{i}So, there {b}is{/b} a chance someone did this on purpose - or, maybe even just by accident, messing with the internal systems. Damn, I wish I was a computer geek... No idea how this could be done. I need to talk to [nr]. If he doesn't know, I'm sure he'll know someone who does.{/i}"
                                 $ hacker = False
-                                $ hacker_2 = True                         
-                                $ call_nr = True
+                                $ hacker_2 = True
                                 return
                             "Nah, not today, I'll do it tomorrow instead":
                                 call evening_home(True)
@@ -102,6 +102,7 @@ label fs_talk(fst_called=False):
                 $ statschangenotify("fs_rel",1)
                 $ hacker_2 = False
                 $ hacker_3 = True
+                $ call_nr = True
                 hide fs_standing with dissolve
             elif scs_2:
                 fp "How you doing today?"
@@ -121,7 +122,7 @@ label fs_talk(fst_called=False):
                 show fs_standing mad with dissolve
                 fs mad "{b}Fuck you!{/b}"
                 show fs_standing ahead with dissolve
-                $ text = "Look, I'm really sorry about {0}! I didn't mean to perv on you, {1}.".format("this morning" if first_day else "the other day", fsName.informal )                                    
+                $ text = "Look, I'm really sorry about {0}! I didn't mean to perv on you, {1}.".format("this morning" if first_day else "the other day", fsName.informal )
                 fp "[text]"
                 show fs_standing mad with dissolve
                 fs mad "So, you just happened to be leaning against my door because...?"
@@ -131,7 +132,7 @@ label fs_talk(fst_called=False):
                 fp "Yeah...\n{b}you muster a foolish grin{/b}\nWhen you put it like that, it sounds sort of stupid..."
                 show fs_standing ahead with dissolve
                 $ addtime(False, 30)
-                fs ahead "Can we just agree that unless I'm screaming bloody murder... and even if I am, {i}check first!{/i}, that you do not go creeping about my door?"                                    
+                fs ahead "Can we just agree that unless I'm screaming bloody murder... and even if I am, {i}check first!{/i}, that you do not go creeping about my door?"
                 fp "Sure, [fsName.informal]. I am really sorry!"
                 fs ahead_eyes_closed "Yeah, yeah... not as sorry as me..."
                 fp "Huh?"
@@ -171,7 +172,7 @@ label fs_talk(fst_called=False):
                 if int(current_time[:2]) > 17:
                     $ settime(22,False,True,'fs_where')
                     label fs_where(fsw_called=False):
-                        if fsw_called:              
+                        if fsw_called:
                             fp "{i}Hmm... where did my damn [fsName.role] go?{/i}"
                             fp "{i}Oh, well. I'll find her tomorrow. Time for bed{/i}"
                     call change_loc('fp bedroom')

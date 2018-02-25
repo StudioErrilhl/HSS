@@ -11,7 +11,7 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
         $ tmpname = locname.replace(' ','_').replace('_loc','')+"_scene"
         if loctrans:
             $ loctrans = False
-            call expression tmpname pass (False)
+            call expression tmpname pass (trans=False)
         else:
             call expression tmpname
         show screen location(locname)
@@ -413,8 +413,8 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
         "The bathroom is occupied"
         menu:
             "Sneak a peek":
-                "This has unfortunately not been implemented yet (due to lack of art assets)"
-                call change_loc('upper hallway')
+                $ images_unlocked.append('DCIM00002_portrait.png')
+                call change_loc('upper hallway bathroom peek')
             "Knock on the door":
                 # pass
                 if bathroom_occupied_fs:
@@ -422,7 +422,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                         fs "What?!?"
                         fp "Hey, [fsName.informal] - I really need to pee, you think I could..."
                         fs "Fuck off, [fp]!"
-                        fp "{i}Okay,then...{/i}"            
+                        fp "{i}Okay,then...{/i}"
                         call change_loc('upper hallway')
                     else:
                         fs "I'm in here, you'll have to come back later"
@@ -445,7 +445,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                             fs "Fine! Damn it, [fp]!"
                             fs "So, get in there and do your thing!"
                             call change_loc('upper hallway bathroom',loctrans=True,sec_call="second_bathroom_occupied_label")
-                            label second_bathroom_occupied_label(True):                            
+                            label second_bathroom_occupied_label(True):
                                 fp "{i}Running to the toilet{/i}\nOh...\n{i}Damn... she looks {b}hot{/b} with nothing but that towel on...{/i}"
                                 $ not_entered = False
                                 call change_loc('upper hallway bathroom',loctrans=True)
@@ -455,7 +455,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                     fm "But... I'm not decent!"
                     fp "[fmName.INFORMAL]! I need to go NOW!"
                     $ not_entered = False
-                    call change_loc('upper hallway bathroom',loctrans=True) 
+                    call change_loc('upper hallway bathroom',loctrans=True)
             "Leave and come back later":
                 call change_loc('upper hallway')
     else:
