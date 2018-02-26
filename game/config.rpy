@@ -21,7 +21,7 @@ init -10 python:
         persistent.patch_first_time = False
         persistent.patch_enabled = False
 # defined config-variables
-define config.quit_action = Show('custom_confirm',None,'quit')
+define config.quit_action = [Show('phone'),Show('custom_confirm',None,'quit')]
 
 # persistent variables
 default persistent.first_playthrough = True
@@ -204,6 +204,7 @@ default dinner_event = True
 default after_principal_talk = False
 default shitty_morning = False
 default call_nr = False
+default home_from_school = False
 # default nr_involved = False #not in use atm
 
 # fs events

@@ -85,7 +85,7 @@ label fs_talk(fst_called=False):
                                 $ hacker_2 = True
                                 return
                             "Nah, not today, I'll do it tomorrow instead":
-                                call evening_home(True)
+                                call evening_home(True) from _call_evening_home
             if hacker_2:
                 show fs_standing ahead with dissolve
                 fp "How you doing today?"
@@ -150,23 +150,23 @@ label fs_talk(fst_called=False):
                 $ statschangenotify("fs_rel",3,True)
                 $ firstday_talk = False
                 $ firstday_after_talk = True
-                $ addtime(1,False,True,seccall='after_talk_events')
+                $ addtime(1,False,True,sec_call='after_talk_events')
                 label after_talk_events(ate_called=False):
                     if ate_called:
                         $ ate_called = False
                         if fs_mad:
                             $ fs_mad = False
-                            $ print(fs_mad)
+                            # $ print(fs_mad)
                             $ morning_event_done = True
                             $ fdtfs_after = False
                             if int(current_time[:2]) in night: #else:
-                                call end_of_day(True)
+                                call end_of_day(True) from _call_end_of_day
                             # return
                         else:
                             $ morning_event_done = True
                             $ fdtfs_after = False
                             if int(current_time[:2]) in night: #else:
-                                call end_of_day(True)
+                                call end_of_day(True) from _call_end_of_day_1
                             # return
             elif day_week <= 4:
                 if int(current_time[:2]) > 17:
@@ -175,8 +175,8 @@ label fs_talk(fst_called=False):
                         if fsw_called:
                             fp "{i}Hmm... where did my damn [fsName.role] go?{/i}"
                             fp "{i}Oh, well. I'll find her tomorrow. Time for bed{/i}"
-                    call change_loc('fp bedroom')
+                    call change_loc('fp bedroom') from _call_change_loc
                 else:
-                    call change_loc(current_location)
+                    call change_loc(current_location) from _call_change_loc_1
             else:
                 $ settime(22,False,True,'fs_where')

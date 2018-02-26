@@ -11,11 +11,11 @@ label nr_talk(event=False):
         $ text = "Okay. See you {0}".format('soon' if int(current_time[:2]) > 20 else 'tomorrow')
         nr "[text]"
         $ hacker_4 = True
-        call change_loc(current_location)
+        call change_loc(current_location) from _call_change_loc_27
 
     if event == 'nr_first_visit':
         if current_location != 'garage':
-            call change_loc('garage',sec_call='nr_first_talk')
+            call change_loc('garage',sec_call='nr_first_talk') from _call_change_loc_28
         label nr_first_talk(True):
             nr "Hey, [fp]!"
             fp "Hey!"
@@ -71,5 +71,5 @@ label nr_talk(event=False):
             if "You need to wait for "+nr.name+" to send you "+nc.name+"'s info" not in hints+read_hints+disabled_hints:
                 $ hints.append("You need to wait for "+nr.name+" to send you "+nc.name+"'s info")
             $ text_msg_received.append(('nr',nr,"The number for "+nc.name+" is "+nc_number+""))
-            call change_loc(current_location,loctrans=True)
+            call change_loc(current_location,loctrans=True) from _call_change_loc_29
 

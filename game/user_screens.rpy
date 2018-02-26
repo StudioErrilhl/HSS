@@ -994,6 +994,55 @@ screen inventory_screen():
             anchor (xval, yval)
             text GetTooltip() style "tooltip_hover"
 
+screen skip_indicator():
+
+    zorder 100
+    style_prefix "skip"
+
+    frame:
+        hbox:
+            spacing 9
+
+            text _("Skipping")
+            text "▸" at delayed_blink(0.0, 1.0) style "skip_triangle"
+            text "▸" at delayed_blink(0.2, 1.0) style "skip_triangle"
+            text "▸" at delayed_blink(0.4, 1.0) style "skip_triangle"
+
+
+## This transform is used to blink the arrows one after another.
+transform delayed_blink(delay, cycle):
+    alpha .5
+
+    pause delay
+
+    block:
+        linear .2 alpha 1.0
+        pause .2
+        linear .2 alpha 0.5
+        pause (cycle - .4)
+        repeat
+
+
+style skip_frame is empty
+style skip_text is gui_text
+style skip_triangle is skip_text
+
+style skip_frame:
+    # ypos gui.skip_ypos
+    yalign .2
+    background Frame("gui/skip.png", gui.skip_frame_borders, tile=gui.frame_tile)
+    padding gui.skip_frame_borders.padding
+
+style skip_text:
+    size gui.notify_text_size
+    color "#fff"
+
+style skip_triangle:
+    ## We have to use a font that has the BLACK RIGHT-POINTING SMALL TRIANGLE
+    ## glyph in it.
+    font "DejaVuSans.ttf"
+    color "#fff"
+
 screen say(who, what):
     style_prefix "say"
     # default side_xalign = 0.0
@@ -1505,6 +1554,9 @@ screen phone():
                 if show_icons:
                     imagebutton auto "gui/phone_button_text_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_text_screen')] at ModZoom(.9):
                         tooltip "Read your messages"
+                        xalign .5
+                        xoffset 4
+
         hbox:
             if battery_text != 0:
                 xalign 0.5
@@ -1773,6 +1825,16 @@ screen phone_text_screen():
                                         background "#0cf"
                                         text "[msg]"
                         $ c += 1
+                    if not text_msg_received:
+                        hbox:
+                            xsize 370
+                            xalign .5
+                            yalign .5
+                            text "No text-messages received yet":
+                                color "#444"
+                                xalign .5
+                                text_align .5
+                                size 20
         vbox:
             add "gui/phone_white.png" at ModZoom(.85)
             xalign .5
@@ -1978,7 +2040,8 @@ screen phone_call_screen():
                                             color "#777"
                                 hovered SetScreenVariable("stats",i)
                                 unhovered SetScreenVariable("stats",False)
-                                action NullAction()
+                                # action NullAction()
+                                action Show('warning_screen',None,300,370,"There are no functionality for the call-screen at the current time")
                         $ c += 1
         vbox:
             add "gui/phone_white.png" at ModZoom(.85)
@@ -2013,6 +2076,20 @@ screen phone_call_screen():
 
     if keyclose:
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
+
+
+screen warning_screen(height=0,width=0,txt=False):
+    zorder 980
+    if txt:
+        frame:
+            xalign .5
+            yalign .5
+            xsize width
+            ysize height
+            text txt:
+                color "#fff"
+                yalign .5
+                xalign .5
 
 
 screen phone_gallery_screen():
@@ -2234,6 +2311,13 @@ screen phone_info_screen():
                         yalign .5
                 hbox:
                     xpos .2
+                    imagebutton auto "gui/phone_button_text_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_text_screen')] at ModZoom(.6):
+                        yalign .5
+                    textbutton "Message screen" action [Hide('phone_info_screen'),Show('phone_text_screen')]:
+                        text_size 22
+                        yalign .5
+                hbox:
+                    xpos .2
                     imagebutton auto "gui/phone_button_help_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.6):
                         yalign .5
                     textbutton "In-game help" action [SetVariable('show_icons',False),Show('phone_info_screen')]:
@@ -2367,7 +2451,7 @@ screen display_achievements():
                 for achievement in achievements:
                     if achievement.category in selected_category:
                         if achievement.hidden:
-                            if not hide_hidden_achievements:
+                            if show_hidden_achievements:
                                 fixed:
                                     xsize 370
                                     ysize 100
@@ -2385,7 +2469,7 @@ screen display_achievements():
                                     text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
                                         xpos 100
                                         ypos 38
-                                    add "gui/phone_hidden.png":
+                                    add "gui/phone_hidden_idle.png":
                                         xpos 300
                                         ypos 35
                                     if selected_achievement == achievement_hidden and i == selected_number:
@@ -2400,75 +2484,13 @@ screen display_achievements():
                                             text selected_achievement.description size 14 xalign 0.5 text_align 0.5
                                             if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
                                                 text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
-                        else:
-                            if hide_unlocked_achievements and hide_locked_achievements:
-                                pass
-                            elif hide_unlocked_achievements:
-                                if not achievement.unlocked:
-                                    fixed:
-                                        xsize 370
-                                        ysize 100
-                                        imagebutton auto "gui/achievement_%s.png" focus_mask True:
-                                            if selected_achievement != achievement:
-                                                action SetVariable('selected_achievement', achievement)
-                                            else:
-                                                action SetVariable('selected_achievement',False)
-                                            selected selected_achievement == achievement
-                                        add achievement.image at ModZoom(.5):
-                                            ypos 14
-                                            xalign .1
-                                        text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
-                                            xpos 100
-                                            ypos 38
-                                        add "gui/phone_lock.png":
-                                            xpos 300
-                                            ypos 35
-                                        if selected_achievement == achievement:
-                                            ysize 160
-                                            vbox:
-                                                xsize 370
-                                                xalign .5
-                                                yalign .9
-                                                if selected_achievement.unlocked:
-                                                    text "Achievement Unlocked!" xalign 0.5 yalign 0.5 size 14
-                                                text "{b}"+selected_achievement.name+"{/b}" size 16 xalign 0.5 text_align 0.5
-                                                text selected_achievement.description size 14 xalign 0.5 text_align 0.5
-                                                if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
-                                                    text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
-
-                            elif hide_locked_achievements:
-                                if achievement.unlocked:
-                                    fixed:
-                                        xsize 370
-                                        ysize 100
-                                        imagebutton auto "gui/achievement_%s.png" focus_mask True:
-                                            if selected_achievement != achievement:
-                                                action SetVariable('selected_achievement', achievement)
-                                            else:
-                                                action SetVariable('selected_achievement',False)
-                                            selected selected_achievement == achievement
-                                        add achievement.image at ModZoom(.5):
-                                            ypos 14
-                                            xalign .1
-                                        text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
-                                            xpos 100
-                                            ypos 38
-                                        add "gui/phone_unlock.png":
-                                            xpos 300
-                                            ypos 35
-                                        if selected_achievement == achievement:
-                                            ysize 160
-                                            vbox:
-                                                xsize 370
-                                                xalign .5
-                                                yalign .9
-                                                if selected_achievement.unlocked:
-                                                    text "Achievement Unlocked!" xalign 0.5 yalign 0.5 size 14
-                                                text "{b}{color=#fff}"+selected_achievement.name+"{/color}{/b}" size 16 xalign 0.5 text_align 0.5
-                                                text selected_achievement.description size 14 xalign 0.5 text_align 0.5
-                                                if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
-                                                    text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
-                            else:
+                        # else:
+                        elif not achievement.unlocked:
+                            # if show_unlocked_achievements and show_locked_achievements:
+                                # pass
+                            # el
+                            if show_unlocked_achievements: # or (show_unlocked_achievements and show_locked_achievements):
+                                # if not achievement.unlocked:
                                 fixed:
                                     xsize 370
                                     ysize 100
@@ -2484,18 +2506,9 @@ screen display_achievements():
                                     text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
                                         xpos 100
                                         ypos 38
-                                    if achievement.unlocked:
-                                        add "gui/phone_unlock.png":
-                                            xpos 300
-                                            ypos 35
-                                    elif not achievement.unlocked:
-                                        add "gui/phone_lock.png":
-                                            xpos 300
-                                            ypos 35
-                                    elif achievement.hidden:
-                                        add "gui/phone_hidden.png":
-                                            xpos 300
-                                            ypos 35
+                                    add "gui/phone_lock_idle.png":
+                                        xpos 300
+                                        ypos 35
                                     if selected_achievement == achievement:
                                         ysize 160
                                         vbox:
@@ -2507,7 +2520,81 @@ screen display_achievements():
                                             text "{b}"+selected_achievement.name+"{/b}" size 16 xalign 0.5 text_align 0.5
                                             text selected_achievement.description size 14 xalign 0.5 text_align 0.5
                                             if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
-                                                text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 12 xalign 0.5 text_align 0.5
+                                                text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
+
+                        elif achievement.unlocked:
+                            if show_locked_achievements: # or (show_unlocked_achievements and show_locked_achievements):
+                                # if achievement.unlocked:
+                                fixed:
+                                    xsize 370
+                                    ysize 100
+                                    imagebutton auto "gui/achievement_%s.png" focus_mask True:
+                                        if selected_achievement != achievement:
+                                            action SetVariable('selected_achievement', achievement)
+                                        else:
+                                            action SetVariable('selected_achievement',False)
+                                        selected selected_achievement == achievement
+                                    add achievement.image at ModZoom(.5):
+                                        ypos 14
+                                        xalign .1
+                                    text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
+                                        xpos 100
+                                        ypos 38
+                                    add "gui/phone_unlock_idle.png":
+                                        xpos 300
+                                        ypos 35
+                                    if selected_achievement == achievement:
+                                        ysize 160
+                                        vbox:
+                                            xsize 370
+                                            xalign .5
+                                            yalign .9
+                                            if selected_achievement.unlocked:
+                                                text "Achievement Unlocked!" xalign 0.5 yalign 0.5 size 14
+                                            text "{b}{color=#fff}"+selected_achievement.name+"{/color}{/b}" size 16 xalign 0.5 text_align 0.5
+                                            text selected_achievement.description size 14 xalign 0.5 text_align 0.5
+                                            if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
+                                                text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
+                        else:
+                            fixed:
+                                xsize 370
+                                ysize 100
+                                imagebutton auto "gui/achievement_%s.png" focus_mask True:
+                                    if selected_achievement != achievement:
+                                        action SetVariable('selected_achievement', achievement)
+                                    else:
+                                        action SetVariable('selected_achievement',False)
+                                    selected selected_achievement == achievement
+                                add achievement.image at ModZoom(.5):
+                                    ypos 14
+                                    xalign .1
+                                text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
+                                    xpos 100
+                                    ypos 38
+                                if achievement.unlocked:
+                                    add "gui/phone_unlock_idle.png":
+                                        xpos 300
+                                        ypos 35
+                                elif not achievement.unlocked:
+                                    add "gui/phone_lock_idle.png":
+                                        xpos 300
+                                        ypos 35
+                                elif achievement.hidden:
+                                    add "gui/phone_hidden_idle.png":
+                                        xpos 300
+                                        ypos 35
+                                if selected_achievement == achievement:
+                                    ysize 160
+                                    vbox:
+                                        xsize 370
+                                        xalign .5
+                                        yalign .9
+                                        if selected_achievement.unlocked:
+                                            text "Achievement Unlocked!" xalign 0.5 yalign 0.5 size 14
+                                        text "{b}"+selected_achievement.name+"{/b}" size 16 xalign 0.5 text_align 0.5
+                                        text selected_achievement.description size 14 xalign 0.5 text_align 0.5
+                                        if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
+                                            text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 12 xalign 0.5 text_align 0.5
                     $ i += 1
 
     frame:
@@ -2534,14 +2621,14 @@ screen display_achievements():
         hbox:
             xalign .5
             yalign .818
-            imagebutton idle "gui/phone_unlock.png":
-                action ToggleVariable('hide_unlocked_achievements')
+            imagebutton auto "gui/phone_lock_%s.png":
+                action ToggleVariable('show_unlocked_achievements')
                 xpos -100
-            imagebutton idle "gui/phone_lock.png":
-                action ToggleVariable('hide_locked_achievements')
+            imagebutton auto "gui/phone_unlock_%s.png":
+                action ToggleVariable('show_locked_achievements')
                 xalign .5
-            imagebutton idle "gui/phone_hidden.png":
-                action ToggleVariable('hide_hidden_achievements')
+            imagebutton auto "gui/phone_hidden_%s.png":
+                action ToggleVariable('show_hidden_achievements')
                 xpos 100
 
     if GetTooltip() is not None:
@@ -3080,33 +3167,33 @@ screen maininfo():
                 text "You will need to apply some adventure-game playstyles - first of all, there are outlines on everything you can pick up, look at and otherwise interact with - it will light up blue when hovered if you can interact with it. If you're stuck in a screen, or can't find anything worth doing, revisit and make sure you check every item.\n"
                 text "{b}The regular quick menu and even the regular right-click menu / ESC-menu has been disabled. They have been replaced by an in-game menu (which you will have to find the appropriate item to be able to use). The same goes for the inventory (also an item you need to pick up to be able to use).{/b}\n"
                 text "There will be short info-screens for the different objects you can pick up and use in particular ways as well, as the game progresses.\n"
-                text "Up left you have a button for ":
+                text "Up left you have a button for\n ":
                     justify True
                 textbutton "{u}stats for each NPC{/u}":
                     text_size 20
-                    ypos -43
+                    ypos -58
                     xpos 318
                     action NullAction()
                     hovered Function(info_hover,"stats_hover","show")
                     unhovered Function(info_hover,"stats_hover")
                 text " you meet in-game":
-                    ypos -90
+                    ypos -94
                     xpos 520
                     justify True
                 text "and a":
-                    ypos -90
+                    ypos -94
                 textbutton "{u}t-shirt{/u}":
                     text_size 20
-                    ypos -133
+                    ypos -128
                     xpos 58
                     action NullAction()
                     hovered Function(info_hover,"tshirt_overlay","show")
                     unhovered Function(info_hover,"tshirt_overlay")
                 text "which changes color based on how dirty you are. If you get too dirty, you will not be able to interact with some of the people in game, and you will have to clean up to progress the story and events.\n":
-                    ypos -179
+                    ypos -164
                     first_indent 130
                 text "Up to the right there is a calendar, showing month, date, weather, day and time. {b}The time / clock is clickable, to advance time - clicking on the hour advances time by 1 hour, clicking on the minutes advances time by 30 minutes{/b}\n":
-                    ypos -183
+                    ypos -170
                 if persistent.maininfo:
                     text "{color=#f00}{size=28}Once closed, this infoscreen will not show again like this, but the info will be available via the help-screen in-game.{/size}{/color}":
                         xalign .5

@@ -134,7 +134,7 @@ init python:
         assert False, "Shouldn't get here"
 
 init 10 python:
-    def addtime(hours=False,minutes=False,update_scene=False,seccall=False):
+    def addtime(hours=False,minutes=False,update_scene=False,sec_call=False):
         global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text
         local_dw = day_week
         addhour = False
@@ -264,50 +264,47 @@ init 10 python:
                         battery_text = 100
 
             if update_scene:
-                print('update_scene')
                 if int(current_time[:2]) >= 22 or int(current_time[:2]) < 6:
                     current_imgs = list(renpy.get_showing_tags())
                     indices = [i for i, elem in enumerate(current_imgs) if '_morning' in elem]
                     if indices:
                         current_bg = current_imgs[indices[0]].replace('_morning','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_backpack','').replace('_',' ')
-                        print(current_bg)
                         if current_bg == 'upper_hallway_bathroom_night':
                             setattr(store,"bathroom_light",True)
                         else:
-                            if seccall:
-                                print('seccall 1')
-                                renpy.call('change_loc',current_bg,sec_call=seccall)
-                            else:
+                            if sec_call:
+                                renpy.call('change_loc',current_bg,sec_call=sec_call)
+                            elif current_bg:
                                 renpy.call("change_loc",current_bg)
+                            else:
+                                renpy.call('change_loc',current_location)
                         indices = [i for i, elem in enumerate(current_imgs) if not '_morning' in elem]
                     else:
-                        if seccall:
-                            renpy.call('change_loc',current_location,sec_call=seccall)
+                        if sec_call:
+                            renpy.call('change_loc',current_location,sec_call=sec_call)
                         else:
                             renpy.call("change_loc",current_location)
                 elif int(current_time[:2]) >= 6 or int(current_time[:2]) < 22:
                     current_imgs = list(renpy.get_showing_tags())
                     indices = [i for i, elem in enumerate(current_imgs) if '_night' in elem]
-                    print(indices)
                     mn_check = False
                     if indices:
                         if mn_check:
                             current_bg = current_imgs[indices[0]]
                         else:
                             current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_backpack','').replace('_',' ')
-                        if seccall:
-                            print('seccall 2')
-                            renpy.call('change_loc',current_bg,sec_call=seccall)
+                        if sec_call:
+                            renpy.call('change_loc',current_bg,sec_call=sec_call)
                         else:
                             renpy.call("change_loc",current_bg)
                         indices = [i for i, elem in enumerate(current_imgs) if not '_night' in elem]
                     else:
-                        if seccall:
-                            renpy.call('change_loc',current_location,sec_call=seccall)
+                        if sec_call:
+                            renpy.call('change_loc',current_location,sec_call=sec_call)
                         else:
                             renpy.call("change_loc",current_location)
 
-    def settime(hours=False,minutes=False,update_scene=False,seccall=False):
+    def settime(hours=False,minutes=False,update_scene=False,sec_call=False):
         global current_time
         if int(current_time[:2]) <= hours:
             if hours:
@@ -330,8 +327,8 @@ init 10 python:
                     if current_bg == 'upper_hallway_bathroom_night':
                         setattr(store,"bathroom_light",True)
                     else:
-                        if seccall:
-                            renpy.call('change_loc',current_bg,sec_call=seccall)
+                        if sec_call:
+                            renpy.call('change_loc',current_bg,sec_call=sec_call)
                         else:
                             renpy.call("change_loc",current_bg)
                     indices = [i for i, elem in enumerate(current_imgs) if not '_morning' in elem]
@@ -344,8 +341,8 @@ init 10 python:
                         current_bg = current_imgs[indices[0]]
                     else:
                         current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
-                    if seccall:
-                        renpy.call('change_loc',current_bg,sec_call=seccall)
+                    if sec_call:
+                        renpy.call('change_loc',current_bg,sec_call=sec_call)
                     else:
                         renpy.call("change_loc",current_bg)
                     indices = [i for i, elem in enumerate(current_imgs) if not '_night' in elem]
@@ -404,6 +401,7 @@ init 10 python:
 
     def hide_phone_screens():
         renpy.hide_screen('phonescreen')
+        renpy.hide_screen('warning_screen')
 
     def read_hint(hint=False):
         global hints,read_hints
@@ -496,4 +494,10 @@ python early:
             if not aName in self._alls: return "I FORGET TO SET THIS"
             aValue = ""
             for atom in self._alls[aName]: aValue += atom() if callable( atom ) else atom
-            return aValue if ord( aName[:1] ) >= 97 else aValue[:1].upper() + aValue[1:]
+            # return aValue if ord( aName[:1] ) >= 97 else aValue[:1].upper() + aValue[1:]
+            if ord(aName[:1]) >= 97:
+                return aValue
+            elif (65 < ord(aName[:1]) < 90) and (65 < ord(aName[-1:]) < 90):
+                return aValue.upper()
+            else:
+                return aValue[:1].upper() + aValue[1:]

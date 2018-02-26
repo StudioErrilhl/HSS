@@ -6,9 +6,9 @@ default achievement_notification_queue = [] # A list of achievements which the u
 default selected_achievement = False # Used for achievement screen to remember the last selected achievement
 define achievement_categories = ['Exploration','Lewdness','Other']
 define selected_category = [category.lower() for category in achievement_categories]
-default hide_unlocked_achievements = False
-default hide_locked_achievements = False
-default hide_hidden_achievements = True
+default show_unlocked_achievements = True
+default show_locked_achievements = True
+default show_hidden_achievements = False
 
 ### Achievements ###
 

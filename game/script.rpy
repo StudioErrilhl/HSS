@@ -10,10 +10,10 @@ label splashscreen:
     hide text with dissolve
     $ renpy.block_rollback()
     if not persistent.splash_screen:
-        show image "images/hss-logo.png" with dissolve:
+        show image "gui/hss-logo.png" with dissolve:
             xalign .5 yalign .5
         $ renpy.pause(2)
-        hide image "images/hss-logo.png" with dissolve
+        hide image "gui/hss-logo.png" with dissolve
         $ renpy.pause(.75)
         if not persistent.accepted_splashscreen:
             call screen confirm_age()
@@ -64,7 +64,7 @@ label start:
     $ gp_bed = random.choice(fs_p)
     $ gp_bath = random.choice(fs_p)
     $ current_time = "09:00"
-    call fp_bedroom_scene
+    call fp_bedroom_scene from _call_fp_bedroom_scene_1
 
     if config.developer:
         show screen debug_tools()
@@ -85,9 +85,9 @@ label start:
         fp "{i}I was planning on starting more or less were I've grown up, on the East coast, and just drive - visiting as many states, online friends and aquaintances, landmarks and interesting spots I could possibly manage over the 3-4 months I was planning to spend. That was basically what was on my mind those last couple months of high school. \"What to do AFTER high school\". I completely failed to take into account what would happen BEFORE I finished...{/i}"
         fp "{i}So, there we are. April 1st, a Saturday, if I'm not mistaken. I'd just woken up, and was on my way downstairs to the kitchen when I heard noises coming from [fsName.formal]'s room. Usually I wouldn't care, but those sounds sounded... muffled. Like she was trying to keep it down, but failing. And I was curious what the hell she was doing. So, I walked up to her door, thinking I would just try to listen in, see if I could figure out what was going on.{/i}"
         fp "{i}Unfortunately, spying has never been my strong suit, and the door wasn't closed all the way... so when I leaned against it, I suddenly found myself tumbling into her room. Not very elegantly, mind. Quite ungracefully, in fact. But... that wasn't what was on my mind AT ALL.{/i}"
-        call fs_intro_scene
+        call fs_intro_scene from _call_fs_intro_scene
         fp "{i}[fsName.Myformal]'s room has the bed opposed the door. So right in front of my prone body, on her bed... well, half off her bed, was [fsName.informal], naked from the waist down, with most of her right hand buried between her legs, which, mind you, was spread quite wide over the edge of the bed. I couldn't really have had a better viewpoint even if I was sitting right in front of a porn-shoot.{/i}"
-        call upper_hallway_scene
+        call upper_hallway_scene from _call_upper_hallway_scene
         show juliette_reflection
         show juliette_mad_pantless:
             zoom .74
@@ -100,7 +100,7 @@ label start:
         hide juliette_mad_pantless
         hide juliette_reflection
         with dissolve
-        call upper_hallway_bathroom_scene
+        call upper_hallway_bathroom_scene from _call_upper_hallway_bathroom_scene
         fp "{i}Me... I went to the bathroom and jerked off. Yes, I know she's [fsName.myformal], and all that, but DAMN. She's HOT!{/i}"
         fp "{i}Okay... that might have been a bit TMI. I'm sorry. I just wanted you to understand what happened. And how that sort of led to... other things that happened as well. During that summer. You know... spring. Summer. End of high-school. The time I had all planned out. The plans that really didn't happen. Like... at all.{/i}"
         "So... the coming days, weeks and months, you'll be trying to pass your exams, finish your bike, getting some action, and generally being a high school senior going on freedom!"
@@ -121,7 +121,7 @@ label start:
         $ dinner_comeback = False
         $ dinner_mod = False
         $ dinner_att = False
-        call skip_breakfast(True)
+        call skip_breakfast(True) from _call_skip_breakfast
 
     label day_start():
         $ find_panties = True if renpy.random.random() > .75 else False
@@ -132,6 +132,9 @@ label start:
         $ gp_bed = random.choice(fs_p)
         $ gp_bath = random.choice(fs_p)
         $ br = random.choice([0,1,2,3])
+        $ bathroom_occupied_fs = False
+        $ bathroom_occupied_fm = False
+        $ home_from_school = False
 
         $ breakfast_jump = False
         $ had_breakfast = False
@@ -193,11 +196,11 @@ label start:
                 if int(current_time[:2]) == 6:
                     $ addtime(1, False)
 
-        call day_wrapper()
+        call day_wrapper() from _call_day_wrapper
 
         label day_wrapper():
             if int(current_time[:2]) in morning:
-                call morning_events()
+                call morning_events() from _call_morning_events_1
             elif int(current_time[:2]) in day:
                 # call day_events()
                 "this is the day time"
@@ -244,6 +247,11 @@ label start:
                     $ choice2 = "Or, I could just slack off today, and work on the bike another day"
                     if not event or event == 0:
                         $ event = 5
+                elif sc <= 3 and day_week <= 4 and event not in outside_events and home_from_school:
+                    $ choice1 = "Since I stayed home today, I can get some work done on the bike"
+                    $ choice2 = "Or, I could just slack off in front of the TV, or something..."
+                    if not event or event == 0:
+                        $ event = 5
 
                 if event in events:
                     if choice1 or choice2:
@@ -265,7 +273,7 @@ label start:
                                         $ renpy.notify("You did not improve the status of the bike this time")
                                     else:
                                         $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")
-                                    call repeat_event(77)
+                                    call repeat_event(77) from _call_repeat_event
                                 elif c <= maxc:
                                     $ addtime(1, False)
                                     $ filth_val += 10
@@ -283,35 +291,38 @@ label start:
                                     else:
                                         $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")
                                     if c == (maxc):
-                                        call repeat_event(88)
+                                        call repeat_event(88) from _call_repeat_event_1
                                     else:
-                                        call repeat_event()
+                                        call repeat_event() from _call_repeat_event_2
                                 else:
                                     $ event = 88
-                                    call repeat_event(88)
+                                    call repeat_event(88) from _call_repeat_event_3
                             "[choice2]" if choice2:
                                 $ event = 99
-                                call repeat_event(99)
+                                call repeat_event(99) from _call_repeat_event_4
                     else:
                         $ event = 77
-                        call repeat_event(77)
+                        call repeat_event(77) from _call_repeat_event_5
                 elif event == 77:
-                    $ text = "I should go in, {0} and {1}".format("take a shower","have breakfast and get ready for school" if day_week <= 4 else "have breakfast")
-                    "[text]"
-                    call change_loc('upper hallway bathroom')
+                    if not home_from_school:
+                        $ text = "I should go in, {0} and {1}".format("take a shower","have breakfast and get ready for school" if day_week <= 4 else "have breakfast")
+                        "[text]"
+                        call change_loc('upper hallway bathroom') from _call_change_loc_30
+                    else:
+                        call repeat_event(6)
                 elif event == 88:
                     "You're done working on the bike today"
                     $ end_bike_repair = True
                     if bad_weather:
-                        call entrance_loc()
+                        call entrance_loc() from _call_entrance_loc
                     else:
-                        call change_loc('garage')
+                        call change_loc('garage') from _call_change_loc_31
                 elif event == 99:
                     "You don't really wanna work on the bike right now"
                     if bad_weather:
-                        call entrance_loc()
+                        call entrance_loc() from _call_entrance_loc_1
                     else:
-                        call change_loc('garage')
+                        call change_loc('garage') from _call_change_loc_32
 
 if end_game:
     return

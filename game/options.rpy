@@ -23,7 +23,7 @@ define gui.show_name = False
 
 ## The version of the game.
 
-define config.version = "0.023-(Alpha)"
+define config.version = "0.023-(Alpha)-DEVTEST"
 
 
 ## Text that is placed on the game's about screen. To insert a blank line
@@ -37,7 +37,7 @@ define gui.changelog = _("{b}0.023:{/b}\n• ")
 ## distribution. This must be ASCII-only, and must not contain spaces, colons,
 ## or semicolons.
 
-define build.name = "HSS"
+define build.name = "HSS_Alpha_0023_TEST"
 
 
 ## Sounds and music ############################################################
@@ -190,35 +190,35 @@ init python:
     build.classify('saves/**.**',None)
     build.classify('cache/**.**',None)
 
-    ## To archive files, classify them as 'archive'.
+    # ## To archive files, classify them as 'archive'.
 
-    build.classify('game/**.png', 'archive')
-    build.classify('game/**.jpg', 'archive')
-    build.archive('scripts','all')
-    build.archive('images','all')
-    build.archive('backgrounds','all')
-    build.archive('characters','all')
-    build.archive('fonts','all')
-    build.archive('classes','all')
+    # build.classify('game/**.png', 'archive')
+    # build.classify('game/**.jpg', 'archive')
+    # build.archive('scripts','all')
+    # build.archive('images','all')
+    # build.archive('backgrounds','all')
+    # build.archive('characters','all')
+    # build.archive('fonts','all')
+    # build.archive('classes','all')
 
-    build.classify('game/images/backgrounds/**.jpg', 'backgrounds')
-    build.classify('game/images/backgrounds/**.jpeg','backgrounds')
-    build.classify('game/images/backgrounds/**.mkv', 'backgrounds')
-    build.classify('game/images/backgrounds/**.png', 'backgrounds')
-    build.classify('game/images/characters/**.jpg', 'characters')
-    build.classify('game/images/characters/**.jpeg','characters')
-    build.classify('game/images/characters/**.mkv', 'characters')
-    build.classify('game/images/characters/**.png', 'characters')
-    build.classify('game/images/**.jpg', 'images')
-    build.classify('game/images/**.jpeg','images')
-    build.classify('game/images/**.mkv', 'images')
-    build.classify('game/images/**.png', 'images')
-    build.classify('game/classes/**.rpy','classes')
-    build.classify('game/classes/**.rpyc','classes')
-    build.classify('game/**.rpy', 'scripts')
-    build.classify('game/**.rpyc', 'scripts')
-    build.classify('game/gui/fonts/**.otf','fonts')
-    build.classify('game/gui/fonts/**.ttf','fonts')
+    # build.classify('game/images/backgrounds/**.jpg', 'backgrounds')
+    # build.classify('game/images/backgrounds/**.jpeg','backgrounds')
+    # build.classify('game/images/backgrounds/**.mkv', 'backgrounds')
+    # build.classify('game/images/backgrounds/**.png', 'backgrounds')
+    # build.classify('game/images/characters/**.jpg', 'characters')
+    # build.classify('game/images/characters/**.jpeg','characters')
+    # build.classify('game/images/characters/**.mkv', 'characters')
+    # build.classify('game/images/characters/**.png', 'characters')
+    # build.classify('game/images/**.jpg', 'images')
+    # build.classify('game/images/**.jpeg','images')
+    # build.classify('game/images/**.mkv', 'images')
+    # build.classify('game/images/**.png', 'images')
+    # build.classify('game/classes/**.rpy','classes')
+    # build.classify('game/classes/**.rpyc','classes')
+    # build.classify('game/**.rpy', 'scripts')
+    # build.classify('game/**.rpyc', 'scripts')
+    # build.classify('game/gui/fonts/**.otf','fonts')
+    # build.classify('game/gui/fonts/**.ttf','fonts')
 
     ## Files matching documentation patterns are duplicated in a mac app build,
     ## so they appear in both the app and the zip file.

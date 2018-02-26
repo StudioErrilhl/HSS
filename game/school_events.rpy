@@ -5,9 +5,9 @@ label school_events(event=False):
                 $ current_time = "17:00"
             else:
                 $ current_time = "15:05"
-                call school_hacker_talk(True)
+                call school_hacker_talk(True) from _call_school_hacker_talk
             "After school, you decide to just trek back home. No plans for today, and not that much interesting happening in town anyway"
-            call change_loc('livingroom',sec_call='evening_home')
+            call change_loc('livingroom',sec_call='evening_home') from _call_change_loc_54
 
         if event == 'sn_punishment_late':
             $ addtime(False,25)
@@ -17,7 +17,7 @@ label school_events(event=False):
                     "Yes, [sn]!":
                         $ statschangenotify("sn_dom",-1,True)
                         $ statschangenotify("sn_rel",1)
-                        call school_events('detention')
+                        call school_events('detention') from _call_school_events_7
                     "Mouth off to [sn]":
                         fp "Oh, shut it! I'm a few minutes late. It's not like I do this often, and it wasn't like I tried to arrive late. Damn, \"reduce my grades\" - you know you'll have to give me a warning first, and even a letter that I might receive a reduced grade... and I have definitely not deserved that, yet"
                         sn "How dare you talk to me like that? Go see [sp] right now! I will not have a student talk to me like this!"
@@ -28,11 +28,11 @@ label school_events(event=False):
                         $ statschangenotify("sn_dom",1.5,True)
                         $ statschangenotify("sn_rel",-1,True)
                         $ statschangenotify("sn_aro",1)
-                        call school_events('punishment')
+                        call school_events('punishment') from _call_school_events_8
 
         if event == 'punishment':
             $ addtime(1, False)
-            call school_po_scene
+            call school_po_scene from _call_school_po_scene
             sp "[fp]! What have you done, to be sent to me?"
             fp "I mouthed off to Miss Novak."
             fp "She was yelling at me for being late, and I just lost it."
@@ -49,9 +49,9 @@ label school_events(event=False):
             fp "Well..."
             sp "{i}Your principal shoots you a stern look{/i}\n"
             extend "You can go, [fp]"
-            call schoolbuilding_scene
+            call schoolbuilding_scene from _call_schoolbuilding_scene_1
             $ after_principal_talk = True
-            call school_events('detention')
+            call school_events('detention') from _call_school_events_9
 
         if event == 'detention':
             if after_principal_talk:
@@ -82,7 +82,7 @@ label school_events(event=False):
                                             fp "That... won't be necessary, [sn]"
                                             $ statschangenotify("sn_aro",.5,True)
                                             $ statschangenotify("sn_rel",-.5)
-                                        call school_events('finished')
+                                        call school_events('finished') from _call_school_events_10
                                     "Sit down, but refrain from peeping up her skirt":
                                         jump sn_lookaway_detention
                             else:
@@ -94,7 +94,7 @@ label school_events(event=False):
                             jump sn_lookaway_detention
                     label sn_lookaway_detention():
                         "You decide to play it cool, and just get the detention done with, so you can go home"
-                        call school_events('finished')
+                        call school_events('finished') from _call_school_events_11
                 else:
                     "Arriving at room 603, you see [sn] standing by her desk, clearly waiting for the last arrival for today."
                     sn "Glad you could make it, [fp]. Sit down and get out your books. I'm assuming you have homework or studying to do?"
@@ -109,10 +109,10 @@ label school_events(event=False):
                         $ statschangenotify('sn_rel',-1,True)
                         $ statschangenotify('fp_att',-1)
                         "You head over to the library, to see if you can find a copy of your books there, and actually get some stuff done today"
-                        call school_events('finished')
+                        call school_events('finished') from _call_school_events_12
                     else:
                         "You get out your books, and start studying for next weeks algebra-test"
-                        call school_events('finished')
+                        call school_events('finished') from _call_school_events_13
             else:
                 "Arriving at room 603, you see [sn] standing by her desk, clearly waiting for the last arrival for today."
                 sn "Glad you could make it, [fp]. Sit down and get out your books. I'm assuming you have homework or studying to do?"
@@ -127,7 +127,7 @@ label school_events(event=False):
                     $ statschangenotify('sn_rel',-1,True)
                     $ statschangenotify('fp_att',-1)
                     "You head over to the library, to see if you can find a copy of your books there, and actually get some stuff done today"
-                    call school_events('finished')
+                    call school_events('finished') from _call_school_events_14
                 else:
                     "You get out your books, and start studying for next weeks algebra-test"
-                    call school_events('finished')
+                    call school_events('finished') from _call_school_events_15

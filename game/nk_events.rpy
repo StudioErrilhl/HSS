@@ -21,19 +21,19 @@ label nk_talk(event=False):
                         "[text1]" if text1:
                             $ statschangenotify("nk_rel",1.5)                                    
                             $ renpy.pause(.25)
-                            call travel_events('arrive_school')
+                            call travel_events('arrive_school') from _call_travel_events_1
                         "[text2]" if text2:
                             if bad_weather and rainstorm:
                                 $ statschangenotify('nk_rel',-3)
                                 $ renpy.pause(.25)
-                                call school_events('sn_punishment_late')
+                                call school_events('sn_punishment_late') from _call_school_events
                             else:
                                 $ statschangenotify("nk_rel",-1)
                                 $ renpy.pause(.25)
                                 if renpy.random.random() < .35:
-                                    call travel_events('arrive_school')
+                                    call travel_events('arrive_school') from _call_travel_events_2
                                 else:
-                                    call school_events('sn_punishment_late')
+                                    call school_events('sn_punishment_late') from _call_school_events_1
         elif nktr < .5 and day_week <= 4 and not shitty_morning:
             show nk_standing ahead with dissolve
             nk ahead "Hi [fp]! Wanna walk to school with me?"
@@ -45,11 +45,11 @@ label nk_talk(event=False):
                     else:
                         $ nkrel = .5
                     $ statschangenotify("nk_rel",nkrel)
-                    call nk_walk_with(True)
+                    call nk_walk_with(True) from _call_nk_walk_with
                 "Nah... I just wanna go by myself today, I got a lot on my mind, need to think a little bit":
                     show nk_standing annoyed with dissolve
                     $ renpy.pause(.5)
-                    call travel_events('arrive_school')
+                    call travel_events('arrive_school') from _call_travel_events_3
                 "No thanks, [nk]":
                     show nk_standing mad with dissolve
                     if nk_rel < 15:
@@ -58,4 +58,4 @@ label nk_talk(event=False):
                         $ nkrel = -.25
                     $ statschangenotify("nk_rel",nkrel)
                     $ renpy.pause(.5)
-                    call travel_events('arrive_school')
+                    call travel_events('arrive_school') from _call_travel_events_4
