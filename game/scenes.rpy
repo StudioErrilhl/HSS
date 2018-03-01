@@ -240,23 +240,44 @@ label upper_hallway_bathroom_peek_scene(trans=True):
         show upper_hallway_bathroom_juliette_shower_bubbles
     return
 
-label upper_hallway_bathroom_scene(trans=True):
+label upper_hallway_bathroom_scene(trans=True,wetshower=False):
+    $ print(str(wetshower))
     if not uhl_bathroom_ach:
         $ uhl_bathroom_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night and bathroom_light:
         if trans:
-            scene upper_hallway_bathroom_night_light with Dissolve(.25)
+            if wetshower:
+                scene upper_hallway_bathroom_night_after_shower_light with Dissolve(.25)
+            else:
+                scene upper_hallway_bathroom_night_light with Dissolve(.25)
         else:
-            scene upper_hallway_bathroom_night_light
+            if wetshower:
+                scene upper_hallway_bathroom_night_after_shower_light
+            else:
+                scene upper_hallway_bathroom_night_light
     elif int(current_time[:2]) in night:
         if trans:
-            scene upper_hallway_bathroom_night with Dissolve(.25)
+            if wetshower:
+                scene upper_hallway_bathroom_night_after_shower with Dissolve(.25)
+            else:
+                scene upper_hallway_bathroom_night with Dissolve(.25)
         else:
-            scene upper_hallway_bathroom_night
+            if wetshower:
+                scene upper_hallway_bathroom_night_after_shower
+            else:
+                scene upper_hallway_bathroom_night
     else:
         if trans:
-            scene upper_hallway_bathroom_morning with Dissolve(.25)
+            if wetshower:
+                scene upper_hallway_bathroom_morning_after_shower with Dissolve(.25)
+                return
+            else:
+                scene upper_hallway_bathroom_morning with Dissolve(.25)
         else:
-            scene upper_hallway_bathroom_morning
+            if wetshower:
+                scene upper_hallway_bathroom_morning_after_shower
+                return
+            else:
+                scene upper_hallway_bathroom_morning
     return

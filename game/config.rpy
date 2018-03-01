@@ -187,7 +187,7 @@ default firstday_talk = False
 default firstday_after_talk = False
 default cheat = False
 default light_on = False
-default hallway_pot_enable = False
+# default hallway_pot_enable = False
 default day_ahead = False
 default shopping_with_fm = False
 default bathroom_light = False
@@ -206,6 +206,7 @@ default shitty_morning = False
 default call_nr = False
 default home_from_school = False
 # default nr_involved = False #not in use atm
+default wetshower = False
 
 # fs events
 default fs_si = True
@@ -278,6 +279,8 @@ default charge_phone_now = False
 default battery_text = 100
 default charge_phone = False
 default imggal_showbuttons = True
+default textmsg = False
+default textchar = False
 
 #call locations from other screens
 default uhl_fpb_cfs = False
@@ -320,6 +323,7 @@ default wine_pickup = False
 default pref_screen = False
 default trans = False
 default fdtfs_after = True
+default occupied_bath = True
 
 default fp_bedroom_ach = False
 default fs_bedroom_ach = False
@@ -391,18 +395,20 @@ default images_unlocked = []
 
 default text_msg_received = []
 
+default not_in_contacts = ['fp','nc']
+
 default item_weights = {'beer':2,'carkeys':.2,'fs_bright_pink_panties':.1,'fs_pale_pink_panties':.1,'fs_yellow_panties':.1,'fs_light_blue_panties':.1,'gin':1,'phone':.3,'princessplug':.4,'roses':.5,'schoolbooks':5,'small_keys':.2,'toolbox':10,'vodka':1,'whiskey':1,'wine':1}
 
 default item_desc = {
             'beer':'What a tasty, delicious beverage! Exactly what you need to kick off a party, slacking on the couch, or just getting slightly wasted. One beer won\'t do much damage, but as soon as you drink a few...',
             'carkeys':'Keys to the car out front.',
-            'fs_bright_pink_panties':'Bright pink panties. Smelling of [fsName.yourformal]! Definitely worth hanging on to!',
+            'fs_bright_pink_panties':'Bright pink panties. Smelling of '+fsName.yourformal+'! Definitely worth hanging on to!',
             'fs_pale_pink_panties':'Pale pink panties. These are cute and wonderful, and you\'re definitely gonna hang on to these.',
             'fs_yellow_panties':'Yellow panties. Bright colored, fun and cute.',
             'fs_light_blue_panties':'Light blue panties. Innocent and cute. Not very representative of the owner...',
             'gin':'Time to hit it off with a bit of G&T.',
             'phone':'Your dayplanner, your internet-connection, your contact-list, your camera, your pretty much everything. Oh, and a phone, too!',
-            'princessplug':'This thing has actually been up [fsName.yourformal]\'s butt...',
+            'princessplug':'This thing has actually been up '+fsName.yourformal+'\'s butt...',
             'roses':'Beautiful roses. You should give this to someone!',
             'schoolbooks':'The books you need for school. They should really think of putting up some lockers at school, so you didn\'t have to drag these with you all the time',
             'small_keys':'A set of small keys. What they unlock, you have no idea...',

@@ -3,7 +3,7 @@ label morning_events():
     if int(current_time[:2]) in morning and not morning_event_done:
         call fp_bedroom_scene from _call_fp_bedroom_scene_2
         $ fpmc_r = renpy.random.random()
-        if (fpmc_r < .35 and day_week <= 4 and overslept) or (int(current_time[:2]) > 7 and day_week <= 4):
+        if (fpmc_r < .35 and day_week <= 4 and overslept and int(current_time[:2]) > 7) or (int(current_time[:2]) > 7 and day_week <= 4):
             $ overslept = False
             show fm_standing mad with dissolve
             fm mad "[fp]! Wake UP!"

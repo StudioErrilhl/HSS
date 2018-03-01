@@ -1,5 +1,6 @@
 # location changer
-label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=False,sec_call=False):
+label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=False,sec_call=False,showerstat=False):
+    # $ print(str('test')+str(showerstat))
     if timeadd:
         $ addtime(False, 30)
     if locname:
@@ -9,11 +10,22 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
             $ current_location = locname.replace(' ','_')
             $ locname = locname.replace('_loc','').replace('_',' ')
         $ tmpname = locname.replace(' ','_').replace('_loc','')+"_scene"
+        # $ print(tmpname)
         if loctrans:
             $ loctrans = False
-            call expression tmpname pass (trans=False) from _call_expression
+            if showerstat:
+                $ print('showerstat and loctrans')
+                $ print('call expression '+tmpname+' pass trans=False, wetshower='+str(showerstat))
+                call expression tmpname pass (trans=False,wetshower=showerstat)
+            else:
+                call expression tmpname pass (trans=False)
         else:
-            call expression tmpname from _call_expression_1
+            if showerstat:
+                $ print('showerstat')
+                call expression tmpname pass (wetshower=showerstat)
+            else:
+                call expression tmpname
+        $ print(locname)
         show screen location(locname)
         if locname in firstday_talk_list:
             if firstday_talk:
@@ -24,6 +36,7 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
                 zoom .65
                 xpos .7
                 ypos 1.0
+                xanchor .5
                 xanchor .5
                 yanchor .75
         if sec_call:
@@ -402,39 +415,52 @@ label upper_hallway_loc(uhl_called=False,trans=False):
         $ update_been_everywhere_achievement()
     if uhl_called or uhl_cfs:
         $ uhl_called = uhl_cfs = False
-        if backpack.has_item(princessplug_item):
-            call talk_fs(True) from _call_talk_fs
+        # if backpack.has_item(princessplug_item):
+        #     call change_loc('upper hallway',sec_call='talk_fs')
         call change_loc('upper hallway') from _call_change_loc_16
 
 label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
     $ current_location = 'upper_hallway_bathroom_loc'
     $ loct = False
-    if not bathroom_occupied_fs or not bathroom_occupied_fm:
-        if int(current_time[:2]) < 9:
-            if renpy.random.random() > .5:
-                $ bathroom_occupied_fs = True
-                $ bathroom_occupied_fm = False
-            elif renpy.random.random() < .15:
-                $ bathroom_occupied_fs = False
-                $ bathroom_occupied_fm = True
-        elif int(current_time[:2]) >= 9 and int(current_time[:2]) <= 15:
-            if renpy.random.random() > .80:
-                $ bathroom_occupied_fs = False
-                $ bathroom_occupied_fm = True
-        elif int(current_time[:2]) >= 17:
-            if renpy.random.random() > .65:
-                $ bathroom_occupied_fs = True
-                $ bathroom_occupied_fm = False
-            elif renpy.random.random() < .20:
-                $ bathroom_occupied_fs = False
-                $ bathroom_occupied_fm = True
+    # $ wetshower = False
+    if occupied_bath:
+        if not bathroom_occupied_fs or not bathroom_occupied_fm:
+            if int(current_time[:2]) < 9:
+                if renpy.random.random() > .5:
+                    $ bathroom_occupied_fs = True
+                    $ bathroom_occupied_fm = False
+                elif renpy.random.random() < .15:
+                    $ bathroom_occupied_fs = False
+                    $ bathroom_occupied_fm = True
+            elif int(current_time[:2]) >= 9 and int(current_time[:2]) <= 15:
+                if renpy.random.random() > .80:
+                    $ bathroom_occupied_fs = False
+                    $ bathroom_occupied_fm = True
+            elif int(current_time[:2]) >= 17:
+                if renpy.random.random() > .65:
+                    $ bathroom_occupied_fs = True
+                    $ bathroom_occupied_fm = False
+                elif renpy.random.random() < .20:
+                    $ bathroom_occupied_fs = False
+                    $ bathroom_occupied_fm = True
+    else:
+        $ bathroom_occupied_fs = bathroom_occupied_fm = False
     if (bathroom_occupied_fs or bathroom_occupied_fm) and not_entered:
         $ uhl_bl_called = uhl_bl_cfs = False
         "The bathroom is occupied"
         menu:
             "Sneak a peek":
                 $ images_unlocked.append('DCIM00002_portrait.png')
-                call change_loc('upper hallway bathroom peek') from _call_change_loc_17
+                call change_loc('upper hallway bathroom peek',sec_call='peek_scene_happening') from _call_change_loc_17
+                label peek_scene_happening(True):
+                    fp "{i}Oh {b}SHIT{/b}! That is definitely something worth getting thwapped for! But... maybe I should get the hell outta here before I get caught!"
+                    $ conditions.addcondition("Stay and watch","fs_rel >= 30 and fs_aro >= 10")
+                    menu:
+                        "Stay and watch":
+                            #call change_loc('upper hallway bathroom peek')
+                            pass
+                        "Get the hell outta here":
+                            call change_loc('upper hallway')
             "Knock on the door":
                 # pass
                 if bathroom_occupied_fs:
@@ -477,6 +503,12 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                     $ not_entered = False
                     call change_loc('upper hallway bathroom',loctrans=True) from _call_change_loc_23
             "Leave and come back later":
+                $ occupied_bath = False
+                $ hour = renpy.random.randint(0,1)
+                if hour:
+                    $ addtime(hour,False)
+                else:
+                    $ addtime(False, 30)
                 call change_loc('upper hallway') from _call_change_loc_24
     else:
         if not uhl_bathroom_ach:
@@ -548,19 +580,28 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                     $ loct = True
             if fpshower:
                 if filth_val == 0:
-                    fp "I don't need to take a shower right now"
+                    $ renpy.notify("I don't need to take a shower right now")
                 else:
-                    if day_week <= 4 and int(current_time[:2]) < 8:
-                        $ addtime(False,30)
-                    else:
-                        $ addtime(1, False)
-                    if filth_val != 0:
-                        $ filth_val -= 20
-                        if filth_val < 0:
-                            $ filth_val = 0
+                    menu:
+                        "Take a short shower - 15 minutes / 10\% cleaner":
+                            $ addtime(False, 15)
+                            if filth_val != 0:
+                                $ filth_val -= 10
+                                if filth_val < 0:
+                                    $ filth_val = 0
+                            $ fpshower = False
+                            $ loct = True
+                            $ wetshower = True
+                        "Take a long shower - 30 minutes / 20\% cleaner":
+                            $ addtime(False, 30)
+                            if filth_val != 0:
+                                $ filth_val -= 20
+                                if filth_val < 0:
+                                    $ filth_val = 0
+                            $ fpshower = False
+                            $ loct = True
+                            $ wetshower = True
                     fp "{i}Ah, that was refreshing{/i}"
-                $ fpshower = False
-                $ loct = True
             if fpsink:
                 $ addtime(False,15)
                 if filth_val != 0:
@@ -570,7 +611,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                 fp "{i}Good to get the filth off my hands{/i}"
                 $ fpsink = False
                 $ loct = True
-            call change_loc('upper hallway bathroom',loctrans=loct) from _call_change_loc_25
+            call change_loc('upper hallway bathroom',loctrans=loct,showerstat=wetshower)
 
 label tv_games_evening(tvg_called=False,trans=False):
     if tvg_called:

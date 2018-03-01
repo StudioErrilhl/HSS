@@ -414,6 +414,13 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                 ypos 10
                 tooltip "You're clean as a whistle"
                 action NullAction()
+            add "gui/tshirt_overlay.png":
+                ypos 10
+                xpos -250
+                if int(current_time[:2]) not in night:
+                    alpha 0.0
+                else:
+                    alpha .5
         else:
             add "gui/tshirt.png":
                 xpos -150
@@ -460,6 +467,13 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                 else:
                     tooltip "You're filthy! Go wash up! ("+str(filth_val)+"% dirty)"
                     action NullAction()
+            add "gui/tshirt_overlay.png":
+                ypos 10
+                xpos -350
+                if int(current_time[:2]) not in night:
+                    alpha 0.0
+                else:
+                    alpha .5
 
     if not backpack_carry:
         add "gui/backpack_outline.png"
@@ -494,7 +508,8 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new hints"
 
                 add "gui/menu_phone_overlay.png" at ModZoom(.8):
-                    xpos -340
+                    # xpos -340
+                    ypos -119
                     if int(current_time[:2]) not in night:
                         alpha 0.0
                     else:
@@ -1028,7 +1043,6 @@ style skip_text is gui_text
 style skip_triangle is skip_text
 
 style skip_frame:
-    # ypos gui.skip_ypos
     yalign .2
     background Frame("gui/skip.png", gui.skip_frame_borders, tile=gui.frame_tile)
     padding gui.skip_frame_borders.padding
@@ -1045,7 +1059,6 @@ style skip_triangle:
 
 screen say(who, what):
     style_prefix "say"
-    # default side_xalign = 0.0
     window:
         id "window"
 
@@ -1200,7 +1213,7 @@ screen location(room=False):
             else:
                 $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_morning_phone_%s.png"
             imagebutton auto phoneimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]
-        if not renpy.get_screen('say'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
             $ exitdown_event_var = "uhl_cfs"
             $ exitdown_event = "upper_hallway_loc"
             $ exitdown = "Upper hallway"
@@ -1213,7 +1226,7 @@ screen location(room=False):
         if find_pb:
             if not backpack.has_item(princessplug_item):
                 imagebutton auto ("images/backgrounds/interactions_item/pink_buttplug_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/pink_buttplug_morning_%s.png") focus_mask True action [SetVariable('find_pb',False),SetVariable('pb_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
-        if not renpy.get_screen('say'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
             $ exitdown_event_var = "uhl_cfs"
             $ exitdown_event = "upper_hallway_loc"
             $ exitdown = "Upper hallway"
@@ -1223,12 +1236,12 @@ screen location(room=False):
             if int(current_time[:2]) in night:
                 add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_night_idle.png"
             elif not end_bike_repair:
-                if not renpy.get_screen('say'):
+                if not renpy.get_screen('say') and not renpy.get_screen('choice'):
                     imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('toolbox_added',True),Jump('garage_loc')]
                 else:
                     add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_idle.png"
             else:
-                if not renpy.get_screen('say'):
+                if not renpy.get_screen('say') and not renpy.get_screen('choice'):
                     imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]
                 else:
                     add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_idle.png"
@@ -1241,7 +1254,7 @@ screen location(room=False):
         $ exitleft_event = "entrance_loc"
         $ exitleft = "Upstairs / Entrance"
 
-        if not renpy.get_screen('say'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
             $ exitdown_event_var = "out_cfs"
             $ exitdown_event = "outside_loc"
             $ exitdown = "Go outside"
@@ -1250,7 +1263,7 @@ screen location(room=False):
         $ exitright_event_var = "kit_cfs"
         $ exitright_event = "kitchen_loc"
         $ exitright = "Kitchen"
-        if not renpy.get_screen('say'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
             $ exitdown_event = "entrance_loc"
             $ exitdown = "Entrance"
 
@@ -1281,12 +1294,12 @@ screen location(room=False):
         $ exitleft_event_var = "lvr_cfs"
         $ exitleft_event = "livingroom_loc"
         $ exitleft = "Livingroom"
-        if not renpy.get_screen('say'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
             $ exitdown_event = "entrance_loc"
             $ exitdown = "Entrance"
 
     if room == "outside":
-        if not renpy.get_screen('say'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
             $ exitdown_event = "entrance_loc"
             $ exitdown = "Back into the house"
         $ exitleft_event_var = "gar_cfs"
@@ -1299,7 +1312,7 @@ screen location(room=False):
     if room == "upper hallway":
             imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_fp_door_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fp_door_morning_%s.png") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]:
                 tooltip "Enter your room"
-            if fs_rel >= 40 or fs_invitation:
+            if fs_rel >= 30 or fs_invitation:
                 imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_fs_door_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fs_door_morning_%s.png") focus_mask True action [SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]:
                     tooltip "Enter [fsName.yourformal]'s room"
             else:
@@ -1312,31 +1325,41 @@ screen location(room=False):
 
     if room == "upper hallway bathroom" or room == "upper hallway bathroom peek":
         if int(current_time[:2]) >= 6 and int(current_time[:2]) <= 14 and not backpack.has_item(small_keys_item) and keys_mentioned:
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_keys_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("smallkeys_added",True),Jump('upper_hallway_bathroom_loc')]
+            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_keys_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable('occupied_bath',False),SetVariable("smallkeys_added",True),Jump('upper_hallway_bathroom_loc')]
 
         if int(current_time[:2]) in night:
             # imagebutton auto "images/backgrounds/upper_hallway_bathroom_shower_night_%s.png" focus_mask True action [SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]
+            imagebutton auto ("images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_light_%s.png" if bathroom_light else "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_%s.png") focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable('occupied_bath',False),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]
             if bathroom_light:
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_light_on_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_light_on_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
             else:
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
         else:
-            if bathroom_find_panties:
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.png" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
-            if room == "upper hallway bathroom":
-                imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
-                imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]
+            if bathroom_find_panties and not room == 'upper hallway bathroom peek':
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.png" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('occupied_bath',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
+            # if room == "upper hallway bathroom":
+            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable('occupied_bath',False),SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
+            if wetshower:
+                add "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_wet_glass.png"
+            if room == 'upper hallway bathroom peek':
+                add "images/backgrounds/upper_hallway_bathroom_juliette_shower_bubbles.png"
+            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable('occupied_bath',False),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]
             add "images/backgrounds/interactions_item/bathroom_lightswitch_morning_off_idle.png"
-        if not renpy.get_screen('say'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
             $ exitdown_event_var = "uhl_cfs"
             $ exitdown_event = "upper_hallway_loc"
             $ exitdown = "Upper hallway"
 
     if exitdown:
         if exitdown_event_var:
-            if current_location == 'upper_hallway_bathroom_loc' and (bathroom_panties_added or fpshower):
-                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+            if current_location == 'upper_hallway_bathroom_loc' and (bathroom_panties_added or fpshower) or not occupied_bath:
+                $ randomchoice = random.choice([True,False])
+                if int(current_time[:2]) in night:
+                    if renpy.random.random() > .9:
+                        $ randomchoice = True
+                    else:
+                        $ randomchoice = False
+                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('occupied_bath',randomchoice),SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
                     xalign .5
                     yalign 1.0
                     tooltip exitdown
@@ -1444,79 +1467,7 @@ screen phone():
         add "gui/phone_background_black.png" at ModZoom(.85):
             yalign .5
             xalign .5
-        vbox: #notification-bar
-            xalign .5
-            yalign .5
-            if battery_text != 0:
-                add "gui/phone_notification_bar.png" at ModZoom(.85)
-        hbox: #battery-indicator
-            xalign .5
-            yalign .5
-            if battery_text != 0:
-                if battery_text == 100:
-                    add "gui/phone_battery_100.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 100 and battery_text >= 90:
-                    add "gui/phone_battery_90.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 90 and battery_text >= 80:
-                    add "gui/phone_battery_80.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 80 and battery_text >= 70:
-                    add "gui/phone_battery_70.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 70 and battery_text >= 60:
-                    add "gui/phone_battery_60.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 60 and battery_text >= 50:
-                    add "gui/phone_battery_50.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 50 and battery_text >= 40:
-                    add "gui/phone_battery_40.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 40 and battery_text >= 30:
-                    add "gui/phone_battery_30.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 30 and battery_text >= 20:
-                    add "gui/phone_battery_20.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 20 and battery_text >= 10:
-                    add "gui/phone_battery_10.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                else:
-                    add "gui/phone_battery_0.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
 
-        hbox: #clock
-            if battery_text != 0:
-                xalign .5
-                yalign 0.0
-                yoffset -10
-                text "[current_time]":
-                    font "gui/fonts/texgyreheroes_regular.otf"
-                    size 18
-                    color "#000"
-        hbox: #battery-text
-            if battery_text != 0:
-                xalign 1.0
-                xoffset -34
-                yalign 0.0
-                yoffset -6
-                text "[battery_text]":
-                    font "gui/fonts/texgyreheroes_regular.otf"
-                    size 13
-                    color "#000"
         hbox:
             if battery_text != 0:
                 xalign .5
@@ -1575,30 +1526,8 @@ screen phone():
                         tooltip "Show preferences screen"
                     imagebutton auto "gui/phone_button_quit_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.9):
                         tooltip "Quit the game"
-        vbox:
-            add "gui/phone_white.png" at ModZoom(.85)
-            xalign .5
-            yalign .5
-        vbox:
-            xalign .5
-            yalign .5
-            imagebutton auto "gui/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
-                tooltip "Shut off the phone"
-            if keyclose:
-                key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-        vbox:
-            xalign .5
-            yalign .5
-            if battery_text != 0:
-                imagebutton auto "gui/phone_white_home_%s.png" focus_mask True:
-                    at ModZoom(.85)
-                    alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-                    if renpy.get_screen('phonescreen'):
-                        action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)]
-                        tooltip "Go back to the home-screen"
-                    else:
-                        action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-                        tooltip "Turn off the phone"
+
+    use phone_overlay
 
     if GetTooltip() is not None:
         frame:
@@ -1651,6 +1580,7 @@ screen phone_text_screen():
     zorder 800
     default x = 500
     default y = 400
+    default temp_msg_char = []
     python:
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
@@ -1667,79 +1597,7 @@ screen phone_text_screen():
             yalign .5
             yoffset 20
             add "gui/phone_background_contacts.png" at ModZoom(.85)
-        vbox: #notification-bar
-            xalign .5
-            yalign .5
-            if battery_text != 0:
-                add "gui/phone_notification_bar.png" at ModZoom(.85)
-        hbox: #battery-indicator
-            xalign .5
-            yalign .5
-            if battery_text != 0:
-                if battery_text == 100:
-                    add "gui/phone_battery_100.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 100 and battery_text >= 90:
-                    add "gui/phone_battery_90.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 90 and battery_text >= 80:
-                    add "gui/phone_battery_80.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 80 and battery_text >= 70:
-                    add "gui/phone_battery_70.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 70 and battery_text >= 60:
-                    add "gui/phone_battery_60.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 60 and battery_text >= 50:
-                    add "gui/phone_battery_50.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 50 and battery_text >= 40:
-                    add "gui/phone_battery_40.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 40 and battery_text >= 30:
-                    add "gui/phone_battery_30.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 30 and battery_text >= 20:
-                    add "gui/phone_battery_20.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 20 and battery_text >= 10:
-                    add "gui/phone_battery_10.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                else:
-                    add "gui/phone_battery_0.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
 
-        hbox: #clock
-            if battery_text != 0:
-                xalign .5
-                yalign 0.0
-                yoffset -10
-                text "[current_time]":
-                    font "gui/fonts/texgyreheroes_regular.otf"
-                    size 18
-                    color "#000"
-        hbox: #battery-text
-            if battery_text != 0:
-                xalign 1.0
-                xoffset -34
-                yalign 0.0
-                yoffset -6
-                text "[battery_text]":
-                    font "gui/fonts/texgyreheroes_regular.otf"
-                    size 13
-                    color "#000"
         frame:
             background None
             xpadding 0
@@ -1765,12 +1623,137 @@ screen phone_text_screen():
                 vbox:
                     $ c = 0
                     style_prefix "contacts"
+                    $ unique = set(x[0] for x in text_msg_received)
                     for k,b,v in text_msg_received:
-                        if c % 2:
-                            $ bg_color_text = '#ddd'
-                        else:
-                            $ bg_color_text = '#ccc'
-                        if not k == 'fp':
+                        if k in unique:
+                            if c % 2:
+                                $ bg_color_text = '#ddd'
+                            else:
+                                $ bg_color_text = '#ccc'
+                            if not k == 'fp':
+                                if k == 'fm':
+                                    $ charimg = "images/characters/anne/anne_idle.png"
+                                    $ charimg_hover = "images/characters/anne/anne_hover.png"
+                                elif k == 'fs':
+                                    $ charimg = "images/characters/juliette/juliette_idle.png"
+                                    $ charimg_hover = "images/characters/juliette/juliette_hover.png"
+                                elif k == 'nk':
+                                    $ charimg = "images/characters/karen/karen_idle.png"
+                                    $ charimg_hover = "images/characters/karen/karen_hover.png"
+                                elif k == 'nr':
+                                    $ charimg = "images/characters/ron/ron_idle.png"
+                                    $ charimg_hover = "images/characters/ron/ron_hover.png"
+                                else:
+                                    $ charimg = "gui/question_mark_idle.png"
+                                    $ charimg_hover = "gui/question_mark_hover.png"
+                                button:
+                                    if char == k:
+                                        background "#fff"
+                                    else:
+                                        background bg_color_text
+                                    hover_background "#fff"
+                                    ysize 50
+                                    xsize 370
+                                    xpadding 0
+                                    hbox:
+                                        if char == k:
+                                            add charimg_hover at ModZoom(.40):
+                                                yalign .5
+                                        else:
+                                            add charimg at ModZoom(.40):
+                                                yalign .5
+                                        text "[b]":
+                                            ysize 50
+                                            yalign .5
+                                            if char == k:
+                                                color "#0cf"
+                                            else:
+                                                color "#444"
+                                            hover_color "#0cf"
+                                    if char and msg:
+                                        action [SetScreenVariable('char',False),SetScreenVariable('msg',False),Hide('show_text_msg')]
+                                    else:
+                                        action [SetScreenVariable('char',k),SetScreenVariable('msg',v),Hide('phone_text_screen'),Show('show_text_msg',None,k,b),Function(set_hint,"You've gotten the info from "+nr.name+" - unfortunately, that's as far as this storyline goes for now")]
+                                        # hovered [SetScreenVariable("char",k),SetScreenVariable('msg',False)]
+                                        # unhovered [SetScreenVariable("char",False),SetScreenVariable('msg',False)]
+                            $ unique.remove(k)
+                            $ c += 1
+                    if not text_msg_received:
+                        hbox:
+                            xsize 370
+                            xalign .5
+                            yalign .5
+                            text "No text-messages received yet":
+                                color "#444"
+                                xalign .5
+                                text_align .5
+                                size 20
+
+    use phone_overlay
+
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"
+
+    if keyclose:
+        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
+
+screen show_text_msg(compchar=False,char=False):
+    tag phonescreen
+    modal True
+    zorder 800
+    default x = 500
+    default y = 400
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
+    $ keyclose = True
+    default char = False
+    default msg = False
+    fixed:
+        maximum 370,686
+        xalign .5
+        yalign .5
+        vbox:
+            xalign .5
+            yalign .5
+            yoffset 20
+            add "gui/phone_background_contacts.png" at ModZoom(.85)
+        frame:
+            background None
+            xpadding 0
+            top_padding 50
+            bottom_padding 40
+            xalign .5
+            yalign .5
+            maximum 370,686
+            minimum 370,686
+            vbox:
+                ysize 20
+                xsize 370
+                yalign 0.0
+                yoffset -20
+                text "{b}All Messages from [char]{/b}":
+                    text_align .5
+                    xalign .5
+                    color "#fff"
+                    size 20
+            viewport:
+                mousewheel True
+                ypos 28
+                vbox:
+                    spacing 10
+                    $ c = 0
+                    style_prefix "contacts"
+                    for k,b,v in text_msg_received:
+                        # if c % 2:
+                        #     $ bg_color_text = '#ddd'
+                        # else:
+                        #     $ bg_color_text = '#ccc'
+                        if k == compchar:
                             if k == 'fm':
                                 $ charimg = "images/characters/anne/anne_idle.png"
                                 $ charimg_hover = "images/characters/anne/anne_hover.png"
@@ -1786,88 +1769,19 @@ screen phone_text_screen():
                             else:
                                 $ charimg = "gui/question_mark_idle.png"
                                 $ charimg_hover = "gui/question_mark_hover.png"
-
                             button:
-                                if char == k:
-                                    background "#fff"
-                                else:
-                                    background bg_color_text
-                                hover_background "#fff"
-                                ysize 50
+                                background "#0cf"
                                 xsize 370
-                                xpadding 0
-                                hbox:
-                                    if char == k:
-                                        add charimg_hover at ModZoom(.40):
-                                            yalign .5
-                                    else:
-                                        add charimg at ModZoom(.40):
-                                            yalign .5
-                                    text "[b]":
-                                        ysize 50
-                                        yalign .5
-                                        if char == k:
-                                            color "#0cf"
-                                        else:
-                                            color "#444"
-                                        hover_color "#0cf"
-                                if char and msg:
-                                    action [SetScreenVariable('char',False),SetScreenVariable('msg',False)]
-                                else:
-                                    action [SetScreenVariable("char",k),SetScreenVariable('msg',v),Function(set_hint,"You've gotten the info from "+nr.name+" - unfortunately, that's as far as this storyline goes for now")]
-                                    hovered [SetScreenVariable("char",k),SetScreenVariable('msg',False)]
-                                    unhovered [SetScreenVariable("char",False),SetScreenVariable('msg',False)]
-                                if msg:
-                                    frame:
-                                        xsize 390
-                                        xalign .5
-                                        ypos 40
-                                        background "#0cf"
-                                        text "[msg]"
-                        $ c += 1
-                    if not text_msg_received:
-                        hbox:
-                            xsize 370
-                            xalign .5
-                            yalign .5
-                            text "No text-messages received yet":
-                                color "#444"
-                                xalign .5
-                                text_align .5
-                                size 20
-        vbox:
-            add "gui/phone_white.png" at ModZoom(.85)
-            xalign .5
-            yalign .5
-        vbox:
-            xalign .5
-            yalign .5
-            imagebutton auto "gui/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
-                tooltip "Shut off the phone"
-            if keyclose:
-                key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-        vbox:
-            xalign .5
-            yalign .5
-            if battery_text != 0:
-                imagebutton auto "gui/phone_white_home_%s.png" focus_mask True:
-                    at ModZoom(.85)
-                    alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-                    if renpy.get_screen('phonescreen'):
-                        action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)]
-                        tooltip "Go back to the home-screen"
-                    else:
-                        action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-                        tooltip "Turn off the phone"
+                                text "[v]"
+                                action [Hide('show_text_msg'),Show('phone_text_screen')]
+
+    use phone_overlay
 
     if GetTooltip() is not None:
         frame:
             pos(x, y)
             anchor (xval, yval)
             text GetTooltip() style "tooltip_hover"
-
-    if keyclose:
-        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
 
 
 screen phone_call_screen():
@@ -1892,79 +1806,6 @@ screen phone_call_screen():
             yalign .5
             yoffset 20
             add "gui/phone_background_contacts.png" at ModZoom(.85)
-        vbox: #notification-bar
-            xalign .5
-            yalign .5
-            if battery_text != 0:
-                add "gui/phone_notification_bar.png" at ModZoom(.85)
-        hbox: #battery-indicator
-            xalign .5
-            yalign .5
-            if battery_text != 0:
-                if battery_text == 100:
-                    add "gui/phone_battery_100.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 100 and battery_text >= 90:
-                    add "gui/phone_battery_90.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 90 and battery_text >= 80:
-                    add "gui/phone_battery_80.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 80 and battery_text >= 70:
-                    add "gui/phone_battery_70.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 70 and battery_text >= 60:
-                    add "gui/phone_battery_60.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 60 and battery_text >= 50:
-                    add "gui/phone_battery_50.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 50 and battery_text >= 40:
-                    add "gui/phone_battery_40.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 40 and battery_text >= 30:
-                    add "gui/phone_battery_30.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 30 and battery_text >= 20:
-                    add "gui/phone_battery_20.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                elif battery_text < 20 and battery_text >= 10:
-                    add "gui/phone_battery_10.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-                else:
-                    add "gui/phone_battery_0.png" at ModZoom(.85):
-                        xalign .5
-                        yalign .5
-
-        hbox: #clock
-            if battery_text != 0:
-                xalign .5
-                yalign 0.0
-                yoffset -10
-                text "[current_time]":
-                    font "gui/fonts/texgyreheroes_regular.otf"
-                    size 18
-                    color "#000"
-        hbox: #battery-text
-            if battery_text != 0:
-                xalign 1.0
-                xoffset -34
-                yalign 0.0
-                yoffset -6
-                text "[battery_text]":
-                    font "gui/fonts/texgyreheroes_regular.otf"
-                    size 13
-                    color "#000"
         frame:
             background None
             xpadding 0
@@ -1995,7 +1836,7 @@ screen phone_call_screen():
                             $ bg_color_contacts = '#ddd'
                         else:
                             $ bg_color_contacts = '#ccc'
-                        if not i[1] == 'fp':
+                        if not i[1] in not_in_contacts:
                             if i[1] == 'fm':
                                 $ charimg = "images/characters/anne/anne_idle.png"
                                 $ charimg_hover = "images/characters/anne/anne_hover.png"
@@ -2040,34 +1881,9 @@ screen phone_call_screen():
                                             color "#777"
                                 hovered SetScreenVariable("stats",i)
                                 unhovered SetScreenVariable("stats",False)
-                                # action NullAction()
                                 action Show('warning_screen',None,300,370,"There are no functionality for the call-screen at the current time")
-                        $ c += 1
-        vbox:
-            add "gui/phone_white.png" at ModZoom(.85)
-            xalign .5
-            yalign .5
-        vbox:
-            xalign .5
-            yalign .5
-            imagebutton auto "gui/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
-                tooltip "Shut off the phone"
-            if keyclose:
-                key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-        vbox:
-            xalign .5
-            yalign .5
-            if battery_text != 0:
-                imagebutton auto "gui/phone_white_home_%s.png" focus_mask True:
-                    at ModZoom(.85)
-                    alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-                    if renpy.get_screen('phonescreen'):
-                        action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)]
-                        tooltip "Go back to the home-screen"
-                    else:
-                        action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-                        tooltip "Turn off the phone"
-
+                            $ c += 1
+    use phone_overlay
     if GetTooltip() is not None:
         frame:
             pos(x, y)
@@ -2090,7 +1906,6 @@ screen warning_screen(height=0,width=0,txt=False):
                 color "#fff"
                 yalign .5
                 xalign .5
-
 
 screen phone_gallery_screen():
     tag phonescreen
@@ -2378,63 +2193,14 @@ screen display_achievements():
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
         yval = 1.0 if y > config.screen_height/2 else .0
-    $ keyclose = True
+
     on 'show' action Function(achievement_trophy_case.update)
 
     use display_achievements_category_panel
 
-    hbox:
-        xalign .5
-        yalign .5
-        add "gui/phone_background_light.png" at ModZoom(.85)
-    hbox: #notification-bar
-        if battery_text != 0:
-            add "gui/phone_notification_bar.png" at ModZoom(.85)
-            xalign .5
-            yalign .5
-    hbox: #battery-indicator
-        if battery_text != 0:
-            if battery_text == 100:
-                add "gui/phone_battery_100.png"
-            elif battery_text < 100 and battery_text >= 90:
-                add "gui/phone_battery_90.png"
-            elif battery_text < 90 and battery_text >= 80:
-                add "gui/phone_battery_80.png"
-            elif battery_text < 80 and battery_text >= 70:
-                add "gui/phone_battery_70.png"
-            elif battery_text < 70 and battery_text >= 60:
-                add "gui/phone_battery_60.png"
-            elif battery_text < 60 and battery_text >= 50:
-                add "gui/phone_battery_50.png"
-            elif battery_text < 50 and battery_text >= 40:
-                add "gui/phone_battery_40.png"
-            elif battery_text < 40 and battery_text >= 30:
-                add "gui/phone_battery_30.png"
-            elif battery_text < 30 and battery_text >= 20:
-                add "gui/phone_battery_20.png"
-            elif battery_text < 20 and battery_text >= 10:
-                add "gui/phone_battery_10.png"
-            else:
-                add "gui/phone_battery_0.png"
-            at ModZoom(.85)
-            xalign .5
-            yalign .5
-    hbox: #battery-text
-        if battery_text != 0:
-            xalign .575
-            yalign .18
-            text "[battery_text]":
-                font "gui/fonts/texgyreheroes_regular.otf"
-                size 13
-                color "#000"
-    hbox: #clock
-        if battery_text != 0:
-            xalign .5
-            yalign .177
-            text "[current_time]":
-                font "gui/fonts/texgyreheroes_regular.otf"
-                size 18
-                color "#000"
+    use phone_light_background
+
+    $ keyclose = True
     frame:
         background None
         xpadding 0
@@ -2484,13 +2250,8 @@ screen display_achievements():
                                             text selected_achievement.description size 14 xalign 0.5 text_align 0.5
                                             if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
                                                 text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
-                        # else:
                         elif not achievement.unlocked:
-                            # if show_unlocked_achievements and show_locked_achievements:
-                                # pass
-                            # el
-                            if show_unlocked_achievements: # or (show_unlocked_achievements and show_locked_achievements):
-                                # if not achievement.unlocked:
+                            if show_unlocked_achievements:
                                 fixed:
                                     xsize 370
                                     ysize 100
@@ -2523,8 +2284,7 @@ screen display_achievements():
                                                 text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
 
                         elif achievement.unlocked:
-                            if show_locked_achievements: # or (show_unlocked_achievements and show_locked_achievements):
-                                # if achievement.unlocked:
+                            if show_locked_achievements:
                                 fixed:
                                     xsize 370
                                     ysize 100
@@ -2597,39 +2357,7 @@ screen display_achievements():
                                             text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 12 xalign 0.5 text_align 0.5
                     $ i += 1
 
-    frame:
-        background None
-        xalign .5
-        yalign .5
-        hbox:
-            imagebutton auto "gui/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
-                tooltip "Shut off the phone"
-            xalign .5
-            yalign .5
-            if keyclose:
-                key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
-        hbox:
-            imagebutton auto "gui/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
-                tooltip "Go back to the home-screen"
-                alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-            xalign .5
-            yalign .5
-        hbox:
-            xalign .5
-            yalign .5
-            add "gui/phone_bottom_overlay.png" at ModZoom(.85)
-        hbox:
-            xalign .5
-            yalign .818
-            imagebutton auto "gui/phone_lock_%s.png":
-                action ToggleVariable('show_unlocked_achievements')
-                xpos -100
-            imagebutton auto "gui/phone_unlock_%s.png":
-                action ToggleVariable('show_locked_achievements')
-                xalign .5
-            imagebutton auto "gui/phone_hidden_%s.png":
-                action ToggleVariable('show_hidden_achievements')
-                xpos 100
+    use phone_overlay
 
     if GetTooltip() is not None:
         frame:
@@ -2941,6 +2669,128 @@ screen custom_preferences():
 
     if keyclose:
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
+
+
+screen phone_light_background():
+    hbox:
+        xalign .5
+        yalign .5
+        add "gui/phone_background_light.png" at ModZoom(.85)
+
+screen phone_overlay():
+    $ keyclose = True
+    hbox: #notification-bar
+        if battery_text != 0:
+            add "gui/phone_notification_bar.png" at ModZoom(.85)
+            xalign .5
+            yalign .5
+    hbox: #battery-indicator
+        if battery_text != 0:
+            if battery_text == 100:
+                add "gui/phone_battery_100.png"
+            elif battery_text < 100 and battery_text >= 90:
+                add "gui/phone_battery_90.png"
+            elif battery_text < 90 and battery_text >= 80:
+                add "gui/phone_battery_80.png"
+            elif battery_text < 80 and battery_text >= 70:
+                add "gui/phone_battery_70.png"
+            elif battery_text < 70 and battery_text >= 60:
+                add "gui/phone_battery_60.png"
+            elif battery_text < 60 and battery_text >= 50:
+                add "gui/phone_battery_50.png"
+            elif battery_text < 50 and battery_text >= 40:
+                add "gui/phone_battery_40.png"
+            elif battery_text < 40 and battery_text >= 30:
+                add "gui/phone_battery_30.png"
+            elif battery_text < 30 and battery_text >= 20:
+                add "gui/phone_battery_20.png"
+            elif battery_text < 20 and battery_text >= 10:
+                add "gui/phone_battery_10.png"
+            else:
+                add "gui/phone_battery_0.png"
+            at ModZoom(.85)
+            xalign .5
+            yalign .5
+    hbox: #battery-text
+        if battery_text != 0:
+            xalign .575
+            yalign .18
+            text "[battery_text]":
+                font "gui/fonts/texgyreheroes_regular.otf"
+                size 13
+                color "#000"
+    hbox: #clock
+        if battery_text != 0:
+            xalign .5
+            yalign .177
+            text "[current_time]":
+                font "gui/fonts/texgyreheroes_regular.otf"
+                size 18
+                color "#000"
+
+    frame:
+        background None
+        xalign .5
+        yalign .5
+        # hbox:
+        #     imagebutton auto "gui/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
+        #         tooltip "Shut off the phone"
+        #     xalign .5
+        #     yalign .5
+        #     if keyclose:
+        #         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
+        # hbox:
+        #     imagebutton auto "gui/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
+        #         tooltip "Go back to the home-screen"
+        #         alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
+        #     xalign .5
+        #     yalign .5
+        # hbox:
+        #     xalign .5
+        #     yalign .5
+        #     add "gui/phone_bottom_overlay.png" at ModZoom(.85)
+        # hbox:
+        #     xalign .5
+        #     yalign .818
+        #     imagebutton auto "gui/phone_lock_%s.png":
+        #         action ToggleVariable('show_unlocked_achievements')
+        #         xpos -100
+        #     imagebutton auto "gui/phone_unlock_%s.png":
+        #         action ToggleVariable('show_locked_achievements')
+        #         xalign .5
+        #     imagebutton auto "gui/phone_hidden_%s.png":
+        #         action ToggleVariable('show_hidden_achievements')
+        #         xpos 100
+        vbox:
+            add "gui/phone_white.png" at ModZoom(.85)
+            xalign .5
+            yalign .5
+        vbox:
+            xalign .5
+            yalign .5
+            imagebutton auto "gui/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
+                tooltip "Shut off the phone"
+        vbox:
+            xalign .5
+            yalign .5
+            if battery_text != 0:
+                imagebutton auto "gui/phone_white_home_%s.png" focus_mask True:
+                    at ModZoom(.85)
+                    alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
+                    if renpy.get_screen('phonescreen'):
+                        action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)]
+                        tooltip "Go back to the home-screen"
+                    else:
+                        action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
+                        tooltip "Turn off the phone"
+
+    if keyclose and renpy.get_screen('phonescreen'):
+        if renpy.get_screen('show_text_msg'):
+            key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone_text_screen')]
+        else:
+            key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)]
+    else:
+        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
 
 screen custom_file_slots(title):
     tag phonescreen

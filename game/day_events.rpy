@@ -19,7 +19,7 @@ label day_events():
                 "this is a beach scene on saturday"
                 call beach_scene from _call_beach_scene
                 call change_loc('beach') from _call_change_loc_43
-                $ renpy.pause()    
+                $ renpy.pause()
             label sat_end():
                 $ sat_event = False
                 call change_loc('livingroom') from _call_change_loc_44
@@ -45,7 +45,7 @@ label day_events():
                             $ statschangenotify("fm_rel",-.5)
                 $ sun_event = False
                 hide fm_standing
-    
+
     label dinner_events(de_called=False):
         if de_called:
             $ de_called = False
@@ -99,15 +99,15 @@ label day_events():
                     ] ## create more events here
                     if n == 1:
                         call change_loc('outside',sec_call="harsh_homecoming") from _call_change_loc_46
+                        label harsh_homecoming(True):
+                            $ text = home_events[n][0]
+                            "[text]"
                     else:
                         call livingroom_scene from _call_livingroom_scene_2
-                    label harsh_homecoming():                        
-                        $ text = home_events[n][0]
-                        "[text]"
                     call change_loc('livingroom') from _call_change_loc_47
                     if home_events[n][1] and fs_mad:
                         call fs_talk(True) from _call_fs_talk_4
-                
+
             if renpy.random.random() > .5 and not hacker_3:
                 if  current_month >= 5 and current_month <= 8 and not detention_served:
                     call change_loc('outside',sec_call='lounge_pool') from _call_change_loc_48
@@ -131,7 +131,7 @@ label day_events():
                 $ call_nr = False
                 $ hacker_4 = True
                 call nr_talk('nr_intro') from _call_nr_talk
-                
+
             if mc_f and renpy.random.random() > .65 and current_time[:2] < 17:
                 "You decide to take a ride"
                 "You decide to call up [nk] to see if she wants to come with"
@@ -169,70 +169,70 @@ label day_events():
             $ fpshower = True
             call change_loc('bathroom_loc') from _call_change_loc_53
 
-    label talk_fs(tfs_called=False):
-        if tfs_called or tfs_cfs:
-            $ tfs_called = tfs_cfs = False
-            show fs_standing ahead with dissolve
-            if not pb_return:
-                fs ahead "Hey [fp]!"
-                fp "Hey, [fsName.informal] - what's up?"
-                if fs_aro > 10 and backpack.has_item(princessplug_item):
-                    fs "Have you taken my buttplug?"
-                else:
-                    fs "Have you been in my room?"
-                if fs_bedroom_ach:
-                    menu:
-                        "Yes (offer no explanation)":
-                            $ result = "true_1"
-                        "Yes, I went in there looking for you the other day, when I wanted to talk to you":
-                            $ result = "lie_(white)_1"
-                        "You mean except when I stumbled in on you earlier?":
-                            $ result = "question"
-                        "No (lie)":
-                            $ result = "lie_1"
-                else:
-                    menu:
-                        "Yes (lie)":
-                            $ result = "lie_2"
-                        "Yes - I went in there looking for you the other day, when I wanted to talk to you":
-                            $ result = "lie_(white)_2"
-                        "You mean except when I stumbled in on you earlier?":
-                            $ resule = "question"
-                        "No (tell the truth)":
-                            $ result = "true_2"
-                if result == "lie_1":
-                    fs "You're lying"
-                    if backpack.has_item(princessplug_item) and fs_aro > 10:
-                        fs "I know you went in my room. There is no need to deny it, I know you did, and I know you took something!"
-                        fp "Took what?"
-                        fs "What I asked you about, dummy!"
-                        fp "Oh..."
-                        $ item = backpack.has_item(princessplug_item,returnname=True)
-                        menu:
-                            "Return the [item] to [fsName.yourformal]":
-                                $ pb_return = True
-                                $ backpack.remove_item(princessplug_item,sec_reply=True)
-                            "Keep the [item]":
-                                $ pb_return = False
-                elif result == "question":
-                    fs "Answering with a question of your own, huh? I guess you're hiding {i}something{/i}!"
-                    fp "I'm not hiding anything, I promise!"
-                    fs "I don't believe you. I really don't!"
-                    fp "Well, I can't do anything about that, now can I?"
-                    fs "Jerk!"
-                    $ statschangenotify('fs_aro',-1,True)
-                    $ statschangenotify('fs_rel',-1)
-                else:
-                    fs "That's actually refreshing. Truth!"
-            hide fs_standing with dissolve
-            $ renpy.pause()
-            return
+    # label talk_fs(tfs_called=False):
+    #     if tfs_called or tfs_cfs:
+    #         $ tfs_called = tfs_cfs = False
+    #         show fs_standing ahead with dissolve
+    #         if not pb_return:
+    #             fs ahead "Hey [fp]!"
+    #             fp "Hey, [fsName.informal] - what's up?"
+    #             if fs_aro > 10 and backpack.has_item(princessplug_item):
+    #                 fs "Have you taken my buttplug?"
+    #             else:
+    #                 fs "Have you been in my room?"
+    #             if fs_bedroom_ach:
+    #                 menu:
+    #                     "Yes (offer no explanation)":
+    #                         $ result = "true_1"
+    #                     "Yes, I went in there looking for you the other day, when I wanted to talk to you":
+    #                         $ result = "lie_(white)_1"
+    #                     "You mean except when I stumbled in on you earlier?":
+    #                         $ result = "question"
+    #                     "No (lie)":
+    #                         $ result = "lie_1"
+    #             else:
+    #                 menu:
+    #                     "Yes (lie)":
+    #                         $ result = "lie_2"
+    #                     "Yes - I went in there looking for you the other day, when I wanted to talk to you":
+    #                         $ result = "lie_(white)_2"
+    #                     "You mean except when I stumbled in on you earlier?":
+    #                         $ resule = "question"
+    #                     "No (tell the truth)":
+    #                         $ result = "true_2"
+    #             if result == "lie_1":
+    #                 fs "You're lying"
+    #                 if backpack.has_item(princessplug_item) and fs_aro > 10:
+    #                     fs "I know you went in my room. There is no need to deny it, I know you did, and I know you took something!"
+    #                     fp "Took what?"
+    #                     fs "What I asked you about, dummy!"
+    #                     fp "Oh..."
+    #                     $ item = backpack.has_item(princessplug_item,returnname=True)
+    #                     menu:
+    #                         "Return the [item] to [fsName.yourformal]":
+    #                             $ pb_return = True
+    #                             $ backpack.remove_item(princessplug_item,sec_reply=True)
+    #                         "Keep the [item]":
+    #                             $ pb_return = False
+    #             elif result == "question":
+    #                 fs "Answering with a question of your own, huh? I guess you're hiding {i}something{/i}!"
+    #                 fp "I'm not hiding anything, I promise!"
+    #                 fs "I don't believe you. I really don't!"
+    #                 fp "Well, I can't do anything about that, now can I?"
+    #                 fs "Jerk!"
+    #                 $ statschangenotify('fs_aro',-1,True)
+    #                 $ statschangenotify('fs_rel',-1)
+    #             else:
+    #                 fs "That's actually refreshing. Truth!"
+    #         hide fs_standing with dissolve
+    #         $ renpy.pause()
+    #         return
 
     label evening_event_label(ee_called=False):
         if ee_called:
             $ ee_called = False
             if nk_school_assignment_evening and day_week <= 4:
-                $ nk_school_assignment_evening = False            
+                $ nk_school_assignment_evening = False
                 "{b}*ding dong*{/b}"
                 fm ahead "{b}[fp], can you get that?{/b}"
                 call entrance_scene from _call_entrance_scene

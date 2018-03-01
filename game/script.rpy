@@ -135,6 +135,7 @@ label start:
         $ bathroom_occupied_fs = False
         $ bathroom_occupied_fm = False
         $ home_from_school = False
+        $ not_entered = True
 
         $ breakfast_jump = False
         $ had_breakfast = False

@@ -156,7 +156,6 @@ label fs_talk(fst_called=False):
                         $ ate_called = False
                         if fs_mad:
                             $ fs_mad = False
-                            # $ print(fs_mad)
                             $ morning_event_done = True
                             $ fdtfs_after = False
                             if int(current_time[:2]) in night: #else:

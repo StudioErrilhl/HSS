@@ -135,9 +135,11 @@ init python:
 
 init 10 python:
     def addtime(hours=False,minutes=False,update_scene=False,sec_call=False):
-        global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text
+        global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text,wetshower,not_entered
         local_dw = day_week
         addhour = False
+        wetshower = False
+        not_entered = True
         sethour = hours
         starthour = current_time[:2]
         if hours or minutes:
@@ -263,6 +265,9 @@ init 10 python:
                     if battery_text > 100:
                         battery_text = 100
 
+            if hacker_4 and int(current_time[:2]) >= 18:
+                renpy.call("nr_talk",'nr_first_visit')
+
             if update_scene:
                 if int(current_time[:2]) >= 22 or int(current_time[:2]) < 6:
                     current_imgs = list(renpy.get_showing_tags())
@@ -305,7 +310,9 @@ init 10 python:
                             renpy.call("change_loc",current_location)
 
     def settime(hours=False,minutes=False,update_scene=False,sec_call=False):
-        global current_time
+        global current_time,wetshower,not_entered
+        wetshower = False
+        not_entered = True
         if int(current_time[:2]) <= hours:
             if hours:
                 if len(str(hours)) == 1:
@@ -362,7 +369,6 @@ init 10 python:
                         inv_list.append(temp)
                     else:
                         inv_list.append(file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.png','').replace('fs_','').replace('_',' '))
-        # print(inv_list)
         return inv_list
 
     # if day_week <= 4:
@@ -480,7 +486,6 @@ python early:
     renpy.register_statement( 'dynamic_name', parse=dynamicNamesParse, execute=dynamicNamesExecute, block=True )
 
     class DynamicNames( object ):
-
         def __init__( self, **kwargs ):
             self._alls = {}
             for k in kwargs:
@@ -488,6 +493,7 @@ python early:
                 if not isinstance( v, tuple ): v = ( v, )
                 self._alls[k] = v
                 self._alls[k[:1].upper() + k[1:]] = v
+                self._alls[k.upper()] = v
 
         def __getattr__( self, aName ):
             if     aName == "_alls":    return super( DynamicNames, self).__getattribute__( aName )
