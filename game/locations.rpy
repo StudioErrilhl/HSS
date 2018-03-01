@@ -453,7 +453,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                 $ images_unlocked.append('DCIM00002_portrait.png')
                 call change_loc('upper hallway bathroom peek',sec_call='peek_scene_happening') from _call_change_loc_17
                 label peek_scene_happening(True):
-                    fp "{i}Oh {b}SHIT{/b}! That is definitely something worth getting thwapped for! But... maybe I should get the hell outta here before I get caught!"
+                    fp "{i}Oh {b}SHIT{/b}! That is definitely something worth getting thwapped for! But... maybe I should get the hell outta here before I get caught!{/i}"
                     $ conditions.addcondition("Stay and watch","fs_rel >= 30 and fs_aro >= 10")
                     menu:
                         "Stay and watch":
