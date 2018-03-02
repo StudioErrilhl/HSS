@@ -23,7 +23,7 @@ define gui.show_name = False
 
 ## The version of the game.
 
-define config.version = "0.023-(Alpha)"
+define config.version = "0.024-rc1-(Alpha)"
 
 
 ## Text that is placed on the game's about screen. To insert a blank line
@@ -31,13 +31,13 @@ define config.version = "0.023-(Alpha)"
 
 define gui.about = _("{b}HSS (or HighSchool Shenanigans){/b} is an adult-themed visual novel, with some randomness, and a lot of sexy content. You're playing as <player> (pick your name, or default to Marten), an 18 year old boy who's finishing high school, and is mildly anxious about his exams, the lack of a girlfriend, noone to take to the dance, and how to get his motorcycle rebuilt properly. Add to this an abundance of hot girls in his vicinity, and you got most of the plot right there. At least if you only knew what opportunities you have right at your feet.\n\nThe game is about discovering those opportunities, and realising what you can do, not to mention WHO you can do!\n\nThe game is in very early development, and currently we're working on the game mechanics, how to modify relationships, how to build a believeable story, and how to decide which characters get to do what with whom.\n\n")
 #••••••
-define gui.changelog = _("{b}0.023:{/b}\n•Added Anne's image to the stats-screen\n•Added an image-gallery to the phone (WIP)\n•Added an icon for the .exe (and hopefully for the .app as well)\n•Added a total-weight (per item) for the inventory\n•Added the first side-image of Marten\n•Added side-image of Ron (and stats-image)\n•Added a description for each item in the inventory\n•Added a list-color for every other list-item (so the list is alternating background colors per item)\n•Added a small event to the bathroom\n•Added a way to close the phone with the home-button if on main screen\n•Added more background-images of Marten's bedroom, to cater for backpack and phone being present simultaneously, or separate\n•Added some more functionality for the full-size image view in gallery\n•Added a preference in the custom preference menu on the phone to restore deleted hints\n•Added new icons to the phone\n•Added a call-button to the phone\n•Added a contact-list to the phone, which pops up when you click the call-button\n•Added more hints to the game, which will be shown on the phone\n•Added ESC-key closing for screens \n•Added nr_events.rpy (Ron's events goes here)\n•Added a few conditionals to help with development\n•Changed the phone-icon on the main phone-screen\n•Closed #2 - todo - expand on Juliette's issues with school\n•Closed #4 - todo - in-game menu (performed by the Preference menu on the phone)\n•Closed #7 - todo - Marten's side-image on right\n•Closed #61 - todo - clean up image folder\n•Closed #65 - todo - modify story-logic / interactions in game\n•Closed #67 - todo - get Natalie a namebox\n•Closed #70 - todo - set hover-state for achievements selectors\n•Closed #72 - todo - adding Anne's sprites to game\n•Closed #82 - todo - fix the arriving late to school\n•Closed #92 - todo - add outlines of the phone and backpack when they're not picked up\n•Closed #102 - todo - new charge-phone icon in inventory\n•Closed #103 - todo - bathroom-events\n•Closed #106 - todo - change color and position of skip-message\n•Closed #110 - todo - set up text-messaging on the phone\n•Closed #111 - todo - finish the first shower-scene\n•Closed #112 - todo - finish the first talk with Ron\n•Closed #113 - todo - add second image to gallery\n•Closed #114 - todo - size of Ron's blushing side-image\n•Closed #115 - todo - check all events / dialogues so no buttons are available to be clicked during\n•Closed #117 - todo - polish the message / text screen\n•Closed #118 - todo - menu for short / long shower\n•Closed #130 - bug - hint from Ron triggering prematurely (not able to recreate)\n•Continued #2, #4, #56, #57, #72 in project 0.023\n•Continued #3, #6, #39, #56, #57, #70, #72 in 0.024\n•Continued work on the inventory screen\n•Decided to rebuild a bit of logic (moving stuff together into fewer labels / using fewer files)\n•Did more work on the image-gallery in-game\n•Added function to show the image full-screen\n•Added a \"back to gallery\"-button\n•Fixed a minor bug in the descriptions for inventory items where the names weren't being parsed\n•Fixed that Catherina is in your contact list before having gotten her number / info\n•Fixed a few minor GFX-bugs in different locations\n•Fixed overlays on the tshirt and phone in the menu during night-time\n•Fixed a bug in the first play intro where images where in the wrong place\n•Fixed a bug where shower-scene never happens\n•Fixed a bug with the first info-screen, where text overlapped\n•Fixed an issue where hints from the text-message screen kept coming without stop\n•Fixed a bug with the ingame phone gallery\n•Fixed some issues with buttons behind say-screens getting triggered\n•Fixed a minor issue with the skip-background (it was still the old style)\n•Fixed the gallery on the phone, so only the correct image is available to click/view\n•Fixed an issue with calling scenes via addtime() (they didn't update unless there was a specific index present)\n•Fixed a minor bug with the Karen-dialogue in the morning (nk showed instead of Karen)\n•Fixed a name-bug in the fs-events file, naming Anne instead of Juliette while talking to Natalie\n•Fixed a minor issue with the fixed breakfast-lists\n•Fixed an issue with skipping time when Juliette is still mad at you\n•Fixed an issue with Juliette's talk, and her still being mad at you afterwards\n•Fixed a bug where the clock and battery-percentage didn't show on the phone notification bar\n•Fixed #40 - todo - ending up outside garage after finishing working on bike\n•Fixed #69 - todo - add proper images for backpack in Martens bedroom\n•Fixed #74 - todo - help screen on phone\n•Fixed #75 - bug - the confirm-box text nearly unreadable\n•Fixed #76 - bug - after_fs_mad_morning no longer working in game\n•Fixed #77 - todo - new icons for save and load on phone\n•Fixed #79 - todo - new close-button for full-screen image view on the phone\n•Fixed #83 - bug - side-images not showing\n•Fixed #84 - todo - change stat-screen so clicked characters stays selected\n•Fixed #86 - bug - travel to and from school events\n•Fixed #88 - bug - panties not showing up in inventory\n•Fixed #89 - todo - create backpack images for backgrounds when Anne is talking in Marten's bedroom\n•Fixed #90 - bug - picking up one bottle in the kitchen crashed the game\n•Fixed #91 - bug - school_on_time called\n•Fixed #93 - todo - night version of Marten's backpack\n•Fixed #94 - todo - make the phone always possible to pick up\n•Fixed #100 - bug - call to non-existing labels\n•Fixed #101 - todo - make it possible to put phone on charge from inventory\n•Fixed #104 - bug - advancing time with scene-changes triggered an error (missing replacement for _background in filename)\n•Fixed #119 - bug - inventory duplicating items in list\n•Fixed #120 - bug - custom confirm doesn't show up correctly when using Alt+F4 or X on UI to close game\n•Fixed #123 - bug - info-screen having overlapping text\n•Fixed #124 - bug - staying home from school and working on the bike triggers the \"shower and get ready for school\" choice\n•Fixed #127 - bug - advancing time removes buttons / doors / movement on upper level\n•Fixed #128 - bug - clicking lightswitch in bathroom potentially triggered the \"bathroom occupied\"\n•Fixed #129 - bug - wrong color for the lights on bathroom during nighttime\n•Fixed #131 - bug - wrong size for second image in phone gallery\n•Fixed #132 - bug - all-caps names (switch) is not working\n•Lowered the limit for when you can enter Juliettes bedroom\n•Modified the user_screens.rpy to utilize more use-statements for repeated screens\n•Modified the quit-screen to load the custom phone-quit screen instead of the default\n•Modified the phone-screens to use a tag-system for hiding (makes it a lot easier to hide screens when opening new ones)\n•Modified the statschangenotify-function to provide a separate notification if no change in stats occurred\n•Moved quite a bit of images around, mostly from images/ to gui/\n•Moved #3, #5, #6, #7, #8, #22, #28, #34, #39, #40, #61, #63, #67, #73 to the project for 0.023\n•Removed char_images.rpy (replaced by defined_images.rpy)\n•Rewrote the breakfast-event, so you can now chose to be mean or nice\n•Started #3 - todo - expand on driving with Karen to school (WIP)\n•Started #57 - todo - fix / finish the inventory (weight limits etc)\n•Started work on #103 - todo - create bathroom events\n•Started on a hints-screen (on the phone)\n•Updated the help-text on the phone")
+define gui.changelog = _("{b}0.024-rc1:{/b}\n•Added pagekeys to all scrollable displayables\n•Closed #81 - todo - fullscreen image from image-gallery\n•Closed #109 - todo - move stats to contacts on phone (as wontfix, due to not being needed)\n•Closed #122 - todo - create a way to get a contact into the contact list\n•Closed #135 - todo - implement cheat-option in the preferences screen\n•Fixed a few minor config-issues (disabling the console and such for releases)\n•Fixed #137 - bug - bottles in kitchen possible to click during dialogue / choices\n•Fixed a minor bug with the custom quit-screen")
 
 ## A short name for the game used for executables and directories in the built
 ## distribution. This must be ASCII-only, and must not contain spaces, colons,
 ## or semicolons.
 
-define build.name = "HSS0.023"
+define build.name = "HSS0.024"
 
 
 ## Sounds and music ############################################################
@@ -117,7 +117,7 @@ define config.window_hide_transition = Dissolve(.2)
 
 ## Preference defaults #########################################################
 
-define config.developer = True
+# define config.developer = True
 
 ## Controls the default text speed. The default, 0, is infinite, while any other
 ## number is the number of characters per second to type out.
@@ -192,33 +192,33 @@ init python:
 
     # ## To archive files, classify them as 'archive'.
 
-    # build.classify('game/**.png', 'archive')
-    # build.classify('game/**.jpg', 'archive')
-    # build.archive('scripts','all')
-    # build.archive('images','all')
-    # build.archive('backgrounds','all')
-    # build.archive('characters','all')
-    # build.archive('fonts','all')
-    # build.archive('classes','all')
+    build.classify('game/**.png', 'archive')
+    build.classify('game/**.jpg', 'archive')
+    build.archive('scripts','all')
+    build.archive('images','all')
+    build.archive('backgrounds','all')
+    build.archive('characters','all')
+    build.archive('fonts','all')
+    build.archive('classes','all')
 
-    # build.classify('game/images/backgrounds/**.jpg', 'backgrounds')
-    # build.classify('game/images/backgrounds/**.jpeg','backgrounds')
-    # build.classify('game/images/backgrounds/**.mkv', 'backgrounds')
-    # build.classify('game/images/backgrounds/**.png', 'backgrounds')
-    # build.classify('game/images/characters/**.jpg', 'characters')
-    # build.classify('game/images/characters/**.jpeg','characters')
-    # build.classify('game/images/characters/**.mkv', 'characters')
-    # build.classify('game/images/characters/**.png', 'characters')
-    # build.classify('game/images/**.jpg', 'images')
-    # build.classify('game/images/**.jpeg','images')
-    # build.classify('game/images/**.mkv', 'images')
-    # build.classify('game/images/**.png', 'images')
-    # build.classify('game/classes/**.rpy','classes')
-    # build.classify('game/classes/**.rpyc','classes')
-    # build.classify('game/**.rpy', 'scripts')
-    # build.classify('game/**.rpyc', 'scripts')
-    # build.classify('game/gui/fonts/**.otf','fonts')
-    # build.classify('game/gui/fonts/**.ttf','fonts')
+    build.classify('game/images/backgrounds/**.jpg', 'backgrounds')
+    build.classify('game/images/backgrounds/**.jpeg','backgrounds')
+    build.classify('game/images/backgrounds/**.mkv', 'backgrounds')
+    build.classify('game/images/backgrounds/**.png', 'backgrounds')
+    build.classify('game/images/characters/**.jpg', 'characters')
+    build.classify('game/images/characters/**.jpeg','characters')
+    build.classify('game/images/characters/**.mkv', 'characters')
+    build.classify('game/images/characters/**.png', 'characters')
+    build.classify('game/images/**.jpg', 'images')
+    build.classify('game/images/**.jpeg','images')
+    build.classify('game/images/**.mkv', 'images')
+    build.classify('game/images/**.png', 'images')
+    build.classify('game/classes/**.rpy','classes')
+    build.classify('game/classes/**.rpyc','classes')
+    build.classify('game/**.rpy', 'scripts')
+    build.classify('game/**.rpyc', 'scripts')
+    build.classify('game/gui/fonts/**.otf','fonts')
+    build.classify('game/gui/fonts/**.ttf','fonts')
 
     ## Files matching documentation patterns are duplicated in a mac app build,
     ## so they appear in both the app and the zip file.

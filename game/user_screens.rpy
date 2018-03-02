@@ -254,6 +254,7 @@ screen game_menu(title, scroll=None, yinitial=0.0):
                         yinitial yinitial
                         scrollbars "vertical"
                         mousewheel True
+                        pagekeys True
                         draggable True
 
                         side_yfill True
@@ -269,6 +270,7 @@ screen game_menu(title, scroll=None, yinitial=0.0):
 
                         scrollbars "vertical"
                         mousewheel True
+                        pagekeys True
                         draggable True
 
                         side_yfill True
@@ -338,8 +340,9 @@ style gm_label_text:
     xoffset -40
 
 style return_button:
-    xpos gui.navigation_xpos
+    xpos .040
     yalign 1.0
+    yoffset -15
 
 style white_color:
     color "#fff"
@@ -659,7 +662,7 @@ screen statscreen_infotext():
         yalign .5
         xalign .5
         text "The statscreen consists of thumbnails for each character. When hovering over an image, it will display the stats for that character. The stats change over time, so you might wanna keep an eye on them. If you click on a character image, the stats for that character will show permanently and revert back to that character if you hover over another character."
-        if cheat:
+        if persistent.cheat:
             text "If you have enabled the cheat-mode, this will allow you to manipulate stats."
         imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),SetField(persistent,'statscreen_infotext',False),Hide("statscreen_infotext")]
         if keyclose:
@@ -680,6 +683,7 @@ screen stat_screen():
         padding 40,40
         viewport:
             mousewheel True
+            pagekeys True
             ysize 500
             vpgrid:
                 cols 6
@@ -752,7 +756,7 @@ screen stat_screen():
                             text "Dom:"
                             text "["+stats[1]+"_dom]":
                                 xpos 10
-                        if cheat:
+                        if persistent.cheat:
                             imagebutton auto "gui/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_dom",math.floor(getattr(store,stats[1]+"_dom")-1)):
                                 ypos 5
                                 xpos 40
@@ -765,7 +769,7 @@ screen stat_screen():
                             text "Rel:"
                             text "["+stats[1]+"_rel]":
                                 xpos 20
-                        if cheat:
+                        if persistent.cheat:
                             imagebutton auto "gui/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")-1)):
                                 ypos 5
                                 xpos 40
@@ -778,7 +782,7 @@ screen stat_screen():
                             text "Aro:"
                             text "["+stats[1]+"_aro]":
                                 xpos 20
-                        if cheat:
+                        if persistent.cheat:
                             imagebutton auto "gui/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")-1)):
                                 ypos 5
                                 xpos 40
@@ -789,6 +793,37 @@ screen stat_screen():
                         text "BJ: ["+stats[1]+"_bj] / 20"
                         text "Sex: ["+stats[1]+"_pussy] / 30"
                         text "Anal: ["+stats[1]+"_anal] / 40"
+
+screen fullscreen_image(fullscreenimage=False):
+    zorder 970
+    modal True
+    $ keyclose = True
+    default x = 500
+    default y = 400
+    ## Get mouse coords:
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
+    frame:
+        style_prefix "infoscreen"
+        background "gui/inventory_background.png"
+        xalign .5 yalign .5
+        xsize 1920
+        ysize 1080
+        xpadding 20
+        ypadding 20
+        $ i = 0
+        if fullscreenimage:
+            add fullscreenimage:
+                xalign .5
+                yalign .5
+
+        textbutton "Close image" action [SetVariable('keyclose',False),Hide("fullscreen_image")] xalign .95 yalign 1.0
+        imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),Hide("fullscreen_image")]
+        if keyclose:
+            key 'K_ESCAPE' action [SetVariable('keyclose',False),Hide("fullscreen_image")]
+
 
 screen inventory_screen():
     zorder 970
@@ -819,6 +854,7 @@ screen inventory_screen():
                 scrollbars None
                 edgescroll 100,500
                 mousewheel True
+                pagekeys True
                 spacing 5
                 $ inv_list = inv_list_fetch()
                 for name in sorted(inv_list):
@@ -1270,17 +1306,33 @@ screen location(room=False):
     if room == "kitchen":
         if wcount == 5:
             if bottles == 1 or br == 1 and int(current_time[:2]) in (day or night):
-                imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',1),SetVariable('wine_added',True),Jump('kitchen_loc')]:
-                    ypos .485
-                    xpos .31
-            elif bottles == 2 or br == 2:
-                imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
-                    ypos .485
-                    xpos .31
-                imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                if not renpy.get_screen('say') and not renpy.get_screen('choice'):
+                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',1),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
-                        xpos .325
+                        xpos .31
+                else:
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                        ypos .485
+                        xpos .31
+            elif bottles == 2 or br == 2:
+                if not renpy.get_screen('say') and not renpy.get_screen('choice'):                
+                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                        ypos .485
+                        xpos .31
+                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                            ypos .485
+                            xpos .325
+                else:
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                        at ModZoom(.65)
+                        ypos .485
+                        xpos .31
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                        at ModZoom(.65)
+                        ypos .485
+                        xpos .325                        
             elif bottles == 3 or br == 3:
+                if not renpy.get_screen('say') and not renpy.get_screen('choice'):                
                     imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .480
                         xpos .315
@@ -1290,6 +1342,19 @@ screen location(room=False):
                     imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
                         xpos .325
+                else:
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                        at ModZoom(.65)
+                        ypos .480
+                        xpos .315
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"): 
+                        at ModZoom(.65)                     
+                        ypos .485
+                        xpos .31
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                        at ModZoom(.65)                    
+                        ypos .485
+                        xpos .325                                                       
 
         $ exitleft_event_var = "lvr_cfs"
         $ exitleft_event = "livingroom_loc"
@@ -1559,6 +1624,7 @@ screen phone_hint_screen(hintselect='new'):
                 selected hintselect == 'read'
         viewport:
             mousewheel True
+            pagekeys True
             ypos 40
             vbox:
                 if hintselect == 'new':
@@ -1619,6 +1685,7 @@ screen phone_text_screen():
                     size 20
             viewport:
                 mousewheel True
+                pagekeys True
                 ypos 28
                 vbox:
                     $ c = 0
@@ -1673,7 +1740,7 @@ screen phone_text_screen():
                                     if char and msg:
                                         action [SetScreenVariable('char',False),SetScreenVariable('msg',False),Hide('show_text_msg')]
                                     else:
-                                        action [SetScreenVariable('char',k),SetScreenVariable('msg',v),Hide('phone_text_screen'),Show('show_text_msg',None,k,b),Function(set_hint,"You've gotten the info from "+nr.name+" - unfortunately, that's as far as this storyline goes for now")]
+                                        action [SetScreenVariable('char',k),SetScreenVariable('msg',v),Hide('phone_text_screen'),Show('show_text_msg',None,k,b)]
                                         # hovered [SetScreenVariable("char",k),SetScreenVariable('msg',False)]
                                         # unhovered [SetScreenVariable("char",False),SetScreenVariable('msg',False)]
                             $ unique.remove(k)
@@ -1743,6 +1810,7 @@ screen show_text_msg(compchar=False,char=False):
                     size 20
             viewport:
                 mousewheel True
+                pagekeys True
                 ypos 28
                 vbox:
                     spacing 10
@@ -1773,7 +1841,14 @@ screen show_text_msg(compchar=False,char=False):
                                 background "#0cf"
                                 xsize 370
                                 text "[v]"
-                                action [Hide('show_text_msg'),Show('phone_text_screen')]
+                                if compchar == 'nr' and nc_number in v:
+                                    if 'nc' in not_in_contacts:
+                                        action [Function(not_in_contacts.remove,'nc'),Function(set_hint,"You've gotten the info from "+nr.name+" - unfortunately, that's as far as this storyline goes for now"),Hide('show_text_msg'),Show('phone_text_screen')]
+                                        tooltip "Click to add to contacts"
+                                    else:
+                                        action [Function(set_hint,"You've gotten the info from "+nr.name+" - unfortunately, that's as far as this storyline goes for now"),Hide('show_text_msg'),Show('phone_text_screen')]
+                                else:
+                                    action [Hide('show_text_msg'),Show('phone_text_screen')]
 
     use phone_overlay
 
@@ -1827,6 +1902,7 @@ screen phone_call_screen():
                     size 20
             viewport:
                 mousewheel True
+                pagekeys True
                 ypos 28
                 vbox:
                     style_prefix "contacts"
@@ -1924,6 +2000,7 @@ screen phone_gallery_screen():
         $ pgs = 0
         viewport:
             mousewheel True
+            pagekeys True
             vbox:
                 for file in renpy.list_files():
                     if file.startswith('images/phone_gallery/') and file.endswith('.png'):
@@ -1995,7 +2072,7 @@ screen phone_gallery_show():
                 else:
                     imagebutton idle "gui/imggal_transparent_idle.png" focus_mask None action NullAction() at ModZoom(.65):
                         ypos -30
-                action NullAction()
+                action [Show('fullscreen_image',None,filename)]
             if imggal_showbuttons:
                 key "K_h" action SetVariable('imggal_showbuttons',False)
             else:
@@ -2061,6 +2138,7 @@ screen phone_info_screen():
         maximum 370,686
         viewport:
             mousewheel True
+            pagekeys True
             vbox:
                 text "This is the phone-screen. Here you'll find all the game-menus:\n"
                 hbox:
@@ -2212,6 +2290,7 @@ screen display_achievements():
 
         viewport:
             mousewheel True
+            pagekeys True
             vbox:
                 $ i = 0
                 for achievement in achievements:
@@ -2490,6 +2569,7 @@ screen custom_preferences():
 
         viewport:
             mousewheel True
+            pagekeys True
             vbox:
                 if renpy.variant("pc"):
                     fixed:
@@ -2623,7 +2703,7 @@ screen custom_preferences():
                 if config.has_music or config.has_sound or config.has_voice:
                     fixed:
                         xsize 370
-                        ysize 200
+                        ysize 100
                         hbox:
                             yalign 0.0
                             xalign .5
@@ -2632,6 +2712,24 @@ screen custom_preferences():
                                 style "mute_all_button"
                                 text_color "#fff"
                                 foreground "gui/button/check_[prefix_]foreground_white.png"
+
+                fixed:
+                    xsize 370
+                    ysize 200
+                    style_prefix "custom_radio"
+                    hbox:
+                        yalign 0.0
+                        xalign .5
+                        label _("Cheats"):
+                            text_color "#fff"
+                    hbox:
+                        ypos 40
+                        textbutton _("Disable") action SetField(persistent,"cheat",False):
+                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                    hbox:
+                        ypos 80
+                        textbutton _("Enable") action SetField(persistent,"cheat",True):
+                            foreground "gui/button/check_[prefix_]foreground_white.png"
 
                 if disabled_hints:
                     fixed:
@@ -2807,6 +2905,7 @@ screen custom_file_slots(title):
 
         viewport:
             mousewheel True
+            pagekeys True
             ysize 600
             vbox:
                 hbox:
@@ -3010,6 +3109,7 @@ screen maininfo():
         $ keyclose = True
         viewport:
             mousewheel True
+            pagekeys True
             vbox:
                 text "{b}{size=40}How to play{/size}{/b}\n":
                     xalign .5

@@ -1,8 +1,4 @@
-﻿if config.developer:
-    if renpy.windows:
-        define config.screenshot_pattern = "D:\Dropbox\RenPy-games\Screenshots\HSS-screenshot%04d.png"
-
-label splashscreen:
+﻿label splashscreen:
     scene black
     $ renpy.pause(1)
     show text "{size=60}{color=#ffffff}Studio Errilhl Presents ... {/color}{/size}" with dissolve

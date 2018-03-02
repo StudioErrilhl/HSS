@@ -21,7 +21,12 @@ init -10 python:
         persistent.patch_first_time = False
         persistent.patch_enabled = False
 # defined config-variables
-define config.quit_action = [Show('phone'),Show('custom_confirm',None,'quit')]
+define config.quit_action = [Show('phone'),SetVariable('show_icons',False),Show('custom_confirm',None,'quit')]
+if config.developer:
+    if renpy.windows:
+        define config.screenshot_pattern = "D:\Dropbox\RenPy-games\Screenshots\HSS-screenshot%04d.png"
+if not config.developer:
+    define config.console = False
 
 # persistent variables
 default persistent.first_playthrough = True
@@ -31,6 +36,7 @@ default persistent.maininfo = True
 default persistent.phone_firstshow = True
 default persistent.statscreen_infotext = True
 default persistent.backpack_info = True
+default persistent.cheat = False
 
 # character definitions
 define fp = Character("[fpinput]",image="fp_talkside")
@@ -185,7 +191,6 @@ default evening_event = False
 default already_late = False
 default firstday_talk = False
 default firstday_after_talk = False
-default cheat = False
 default light_on = False
 # default hallway_pot_enable = False
 default day_ahead = False
