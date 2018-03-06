@@ -495,6 +495,17 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                 else:
                     alpha 0.5
 
+
+    vbox:
+        xpos 1470
+        xsize 200
+        ysize 100
+        ypos 20
+        text "$ [fp_money]":
+            size 40
+            yalign .5
+            xalign 1.0
+
     frame: ## phone-menu
         xpos 1700
         ypos 15
@@ -503,11 +514,17 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
         background None
         vbox:
             if carry_phone:
-                if not hints:
+                if not hints or calls or messages:
                     imagebutton auto "gui/menu_phone_%s.png" focus_mask True action Show('phone') at ModZoom(.8):
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more"
-                else:
-                    imagebutton auto "gui/menu_phone_redglow_%s.png" focus_mask True action Show('phone') at ModZoom(.8):
+                elif calls:
+                    imagebutton auto "gui/menu_phone_call_%s.png" focus_mask True action Show('phone') at ModZoom(.8):
+                        tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, unanswered calls"
+                elif messages:
+                    imagebutton auto "gui/menu_phone_message_%s.png" focus_mask True action Show('phone') at ModZoom(.8):
+                        tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new messages"
+                elif hints:
+                    imagebutton auto "gui/menu_phone_hint_%s.png" focus_mask True action Show('phone') at ModZoom(.8):
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new hints"
 
                 add "gui/menu_phone_overlay.png" at ModZoom(.8):
@@ -1093,7 +1110,12 @@ style skip_triangle:
     font "DejaVuSans.ttf"
     color "#fff"
 
+style skip_triangle_call:
+    font "DejaVuSans.ttf"
+    color "#50AF00"
+
 screen say(who, what):
+    zorder 999
     style_prefix "say"
     window:
         id "window"
@@ -1208,6 +1230,7 @@ screen location(room=False):
     default x = 500
     default y = 400
     # Get mouse coords:
+    $ print(room)
     python:
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
@@ -1237,9 +1260,11 @@ screen location(room=False):
                 yalign .7
                 xalign .7
         if int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or current_time[:2] == 0 or int(current_time[:2]) == 1:
-            imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_night_bed_glow_%s.png" focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
+            if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+                imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_night_bed_glow_%s.png" focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
         else:
-            imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_bed_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_morning_bed_%s.png") focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
+            if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):            
+                imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_bed_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_morning_bed_%s.png") focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
 
         if not carry_phone:
             if int(current_time[:2]) in night:
@@ -1249,7 +1274,7 @@ screen location(room=False):
             else:
                 $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_morning_phone_%s.png"
             imagebutton auto phoneimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]
-        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event_var = "uhl_cfs"
             $ exitdown_event = "upper_hallway_loc"
             $ exitdown = "Upper hallway"
@@ -1262,7 +1287,7 @@ screen location(room=False):
         if find_pb:
             if not backpack.has_item(princessplug_item):
                 imagebutton auto ("images/backgrounds/interactions_item/pink_buttplug_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/pink_buttplug_morning_%s.png") focus_mask True action [SetVariable('find_pb',False),SetVariable('pb_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
-        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event_var = "uhl_cfs"
             $ exitdown_event = "upper_hallway_loc"
             $ exitdown = "Upper hallway"
@@ -1272,12 +1297,12 @@ screen location(room=False):
             if int(current_time[:2]) in night:
                 add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_night_idle.png"
             elif not end_bike_repair:
-                if not renpy.get_screen('say') and not renpy.get_screen('choice'):
+                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
                     imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('toolbox_added',True),Jump('garage_loc')]
                 else:
                     add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_idle.png"
             else:
-                if not renpy.get_screen('say') and not renpy.get_screen('choice'):
+                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
                     imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]
                 else:
                     add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_idle.png"
@@ -1290,7 +1315,7 @@ screen location(room=False):
         $ exitleft_event = "entrance_loc"
         $ exitleft = "Upstairs / Entrance"
 
-        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event_var = "out_cfs"
             $ exitdown_event = "outside_loc"
             $ exitdown = "Go outside"
@@ -1299,14 +1324,14 @@ screen location(room=False):
         $ exitright_event_var = "kit_cfs"
         $ exitright_event = "kitchen_loc"
         $ exitright = "Kitchen"
-        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event = "entrance_loc"
             $ exitdown = "Entrance"
 
     if room == "kitchen":
         if wcount == 5:
             if bottles == 1 or br == 1 and int(current_time[:2]) in (day or night):
-                if not renpy.get_screen('say') and not renpy.get_screen('choice'):
+                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
                     imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',1),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
                         xpos .31
@@ -1315,7 +1340,7 @@ screen location(room=False):
                         ypos .485
                         xpos .31
             elif bottles == 2 or br == 2:
-                if not renpy.get_screen('say') and not renpy.get_screen('choice'):                
+                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):                
                     imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
                         xpos .31
@@ -1332,7 +1357,7 @@ screen location(room=False):
                         ypos .485
                         xpos .325                        
             elif bottles == 3 or br == 3:
-                if not renpy.get_screen('say') and not renpy.get_screen('choice'):                
+                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):                
                     imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .480
                         xpos .315
@@ -1359,12 +1384,12 @@ screen location(room=False):
         $ exitleft_event_var = "lvr_cfs"
         $ exitleft_event = "livingroom_loc"
         $ exitleft = "Livingroom"
-        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event = "entrance_loc"
             $ exitdown = "Entrance"
 
     if room == "outside":
-        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event = "entrance_loc"
             $ exitdown = "Back into the house"
         $ exitleft_event_var = "gar_cfs"
@@ -1400,7 +1425,7 @@ screen location(room=False):
             else:
                 imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
         else:
-            if bathroom_find_panties and not room == 'upper hallway bathroom peek':
+            if bathroom_find_panties and room != 'upper hallway bathroom peek':
                 imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.png" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('occupied_bath',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
             # if room == "upper hallway bathroom":
             imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable('occupied_bath',False),SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
@@ -1410,7 +1435,7 @@ screen location(room=False):
                 add "images/backgrounds/upper_hallway_bathroom_juliette_shower_bubbles.png"
             imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable('occupied_bath',False),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]
             add "images/backgrounds/interactions_item/bathroom_lightswitch_morning_off_idle.png"
-        if not renpy.get_screen('say') and not renpy.get_screen('choice'):
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event_var = "uhl_cfs"
             $ exitdown_event = "upper_hallway_loc"
             $ exitdown = "Upper hallway"
@@ -1424,7 +1449,11 @@ screen location(room=False):
                         $ randomchoice = True
                     else:
                         $ randomchoice = False
-                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('occupied_bath',randomchoice),SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                    if bathroom_find_panties:
+                        $ returnbfp = True
+                    else:
+                        $ returnbfp = False
+                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('occupied_bath',randomchoice),SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',returnbfp),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
                     xalign .5
                     yalign 1.0
                     tooltip exitdown
@@ -1513,7 +1542,7 @@ screen location(room=False):
             text GetTooltip() style "tooltip_hover"
 
 screen phone():
-    modal True
+    # modal True
     zorder 800
     default x = 500
     default y = 400
@@ -1843,10 +1872,10 @@ screen show_text_msg(compchar=False,char=False):
                                 text "[v]"
                                 if compchar == 'nr' and nc_number in v:
                                     if 'nc' in not_in_contacts:
-                                        action [Function(not_in_contacts.remove,'nc'),Function(set_hint,"You've gotten the info from "+nr.name+" - unfortunately, that's as far as this storyline goes for now"),Hide('show_text_msg'),Show('phone_text_screen')]
+                                        action [Function(not_in_contacts.remove,'nc'),Function(set_hint,"You've gotten the info from "+nr.name+". Maybe you should try calling "+nc.name+""),Hide('show_text_msg'),Show('phone_text_screen')]
                                         tooltip "Click to add to contacts"
                                     else:
-                                        action [Function(set_hint,"You've gotten the info from "+nr.name+" - unfortunately, that's as far as this storyline goes for now"),Hide('show_text_msg'),Show('phone_text_screen')]
+                                        action [Function(set_hint,"You've gotten the info from "+nr.name+". Maybe you should try calling "+nc.name+""),Hide('show_text_msg'),Show('phone_text_screen')]
                                 else:
                                     action [Hide('show_text_msg'),Show('phone_text_screen')]
 
@@ -1861,7 +1890,7 @@ screen show_text_msg(compchar=False,char=False):
 
 screen phone_call_screen():
     tag phonescreen
-    modal True
+    # modal True
     zorder 800
     default x = 500
     default y = 400
@@ -1957,7 +1986,13 @@ screen phone_call_screen():
                                             color "#777"
                                 hovered SetScreenVariable("stats",i)
                                 unhovered SetScreenVariable("stats",False)
-                                action Show('warning_screen',None,300,370,"There are no functionality for the call-screen at the current time")
+                                if i[1] == 'nc':
+                                    action Show('phone_call_show',None,i[1],'nc_talk',True,'first_talk')
+                                elif i[1] == 'nr':
+                                    action Show('phone_call_show',None,i[1],'nr_talk',True,'nr_first_call')
+                                else:
+                                    # action Show('warning_screen',None,300,370,"There are no functionality for this person currently implemented")
+                                    action Show('phone_call_show',None,i[1],False,True,False)
                             $ c += 1
     use phone_overlay
     if GetTooltip() is not None:
@@ -1969,6 +2004,117 @@ screen phone_call_screen():
     if keyclose:
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
 
+screen phone_call_show(char=False,label=False,calling_out=False,event=False):
+    tag phonescreen
+    zorder 900
+    $ keyclose = True
+    frame:
+        background None
+        xpadding 0
+        top_padding 40
+        bottom_padding 10
+        xalign .5
+        yalign .44
+        maximum 370,686
+        $ get_char_name = getattr(store,char)
+        if char in ['fm','fs']:
+            if char == 'fm':
+                $ char_name_lowered = fmName.name
+            else:
+                $ char_name_lowered = fsName.name
+        else:
+            $ char_name_lowered = get_char_name.name.lower().replace(' ','_')
+        vbox:
+            ysize 500
+            yalign 0.0
+            yoffset 50
+            add "images/characters/[char_name_lowered]/[char_name_lowered]_hover.png":
+                zoom 1.5
+                xalign .5
+                yalign .5
+            text "[get_char_name]":
+                xalign .5
+                text_align .5
+                ypos 20
+
+            vbox:
+                style_prefix "skip"                
+                xsize 370
+                ysize 100
+                yoffset 50
+                xalign .5
+                if calling:
+                    hbox:
+                        spacing 9
+                        xalign .5
+                        text _("Calling") style "skip_triangle_call"
+                        text "▸" at delayed_blink(0.0, 1.0) style "skip_triangle_call"
+                        text "▸" at delayed_blink(0.2, 1.0) style "skip_triangle_call"
+                        text "▸" at delayed_blink(0.4, 1.0) style "skip_triangle_call"
+                    $ callrand = renpy.random.random()
+                    timer 3.0:
+                        if callrand > .35 and char in ['nr','nc']:
+                            if label:
+                                action [SetVariable('duringcall',True),SetVariable('calling',False),Call(label,event=event,callrand=callrand)]
+                            else:
+                                action [SetVariable('duringcall',True),SetVariable('calling',False)]
+                        elif char in ['nr','nc']:
+                            if label:
+                                action [SetVariable('duringcall',False),SetVariable('calling',True),Call(label,event=event,callrand=callrand)]
+                            else:
+                                action [SetVariable('duringcall',False),SetVariable('calling',True)]
+                        else:
+                           action [SetVariable('duringcall',False),SetVariable('calling',False),Call('no_answer')]
+
+                elif duringcall:
+                    hbox:
+                        spacing 9
+                        xalign .5
+                        text _("Call connected") style "skip_triangle_call"
+                else:
+                    hbox:
+                        spacing 9
+                        xalign .5
+                        text _("Calling"):
+                            color "#161616"
+            hbox:
+                xsize 370
+                xalign .5
+                if not calling and not duringcall:
+                    imagebutton auto "gui/phone_call_%s.png" focus_mask True:
+                        action [SetVariable('calling',True)]
+                        if not calling_out:
+                            xalign .2
+                        else:
+                            xalign .5
+                else:
+                    imagebutton auto "gui/phone_hang_up_%s.png" focus_mask True:
+                        if renpy.get_screen('say'):
+                            action [Hide('say'),SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
+                        else:
+                            action [SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
+                        xalign .5                    
+                if not calling_out:
+                    imagebutton auto "gui/phone_hang_up_%s.png" focus_mask True:
+                        action [SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
+                        xalign .8
+    hbox:
+        imagebutton auto "gui/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
+            tooltip "Shut off the phone"
+        xalign .5
+        yalign .5
+        if keyclose:
+            key "K_ESCAPE" action [SetVariable('keyclose',False),Function(hide_phone_screens),Show('phone'),Show('phone_gallery_screen')]
+    hbox:
+        if battery_text != 0 and not renpy.get_screen('say') and not renpy.get_screen('choice'):
+            imagebutton auto "gui/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),Function(hide_phone_screens),Show('phone_call_screen')] at ModZoom(.85):
+                alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
+            xalign .5
+            yalign .5
+    hbox:
+        add "gui/phone_white.png" at ModZoom(.85)
+        xalign .5
+        yalign .5                        
 
 screen warning_screen(height=0,width=0,txt=False):
     zorder 980
@@ -2085,7 +2231,7 @@ screen phone_gallery_show():
         if keyclose:
             key "K_ESCAPE" action [SetVariable('keyclose',False),Function(hide_phone_screens),Show('phone'),Show('phone_gallery_screen')]
     hbox:
-        if battery_text != 0:
+        if battery_text != 0 and not renpy.get_screen('say') and not renpy.get_screen('choice'):
             imagebutton auto "gui/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),Function(hide_phone_screens),Show('phone_gallery_show')] at ModZoom(.85):
                 tooltip "Go back to the home-screen"
                 alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
@@ -2117,7 +2263,7 @@ screen phone_info_screen():
             xalign .5
             yalign .5
         hbox:
-            if battery_text != 0:
+            if battery_text != 0 and not renpy.get_screen('say') and not renpy.get_screen('choice'):
                 imagebutton:
                     idle "gui/phone_white_home_hover.png"
                     hover "gui/phone_white_home_hover.png"
@@ -2753,9 +2899,10 @@ screen custom_preferences():
             xalign .5
             yalign .5
         hbox:
-            imagebutton auto "gui/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
-                tooltip "Go back to the home-screen"
-                alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
+            if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+                imagebutton auto "gui/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
+                    tooltip "Go back to the home-screen"
+                    alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
             xalign .5
             yalign .5
 
@@ -2830,35 +2977,6 @@ screen phone_overlay():
         background None
         xalign .5
         yalign .5
-        # hbox:
-        #     imagebutton auto "gui/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
-        #         tooltip "Shut off the phone"
-        #     xalign .5
-        #     yalign .5
-        #     if keyclose:
-        #         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
-        # hbox:
-        #     imagebutton auto "gui/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
-        #         tooltip "Go back to the home-screen"
-        #         alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-        #     xalign .5
-        #     yalign .5
-        # hbox:
-        #     xalign .5
-        #     yalign .5
-        #     add "gui/phone_bottom_overlay.png" at ModZoom(.85)
-        # hbox:
-        #     xalign .5
-        #     yalign .818
-        #     imagebutton auto "gui/phone_lock_%s.png":
-        #         action ToggleVariable('show_unlocked_achievements')
-        #         xpos -100
-        #     imagebutton auto "gui/phone_unlock_%s.png":
-        #         action ToggleVariable('show_locked_achievements')
-        #         xalign .5
-        #     imagebutton auto "gui/phone_hidden_%s.png":
-        #         action ToggleVariable('show_hidden_achievements')
-        #         xpos 100
         vbox:
             add "gui/phone_white.png" at ModZoom(.85)
             xalign .5
@@ -2871,7 +2989,7 @@ screen phone_overlay():
         vbox:
             xalign .5
             yalign .5
-            if battery_text != 0:
+            if battery_text != 0 and not renpy.get_screen('say') and not renpy.get_screen('choice'):
                 imagebutton auto "gui/phone_white_home_%s.png" focus_mask True:
                     at ModZoom(.85)
                     alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]

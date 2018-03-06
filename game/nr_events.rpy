@@ -1,4 +1,4 @@
-label nr_talk(event=False):
+label nr_talk(event=False,callrand=False):
     if event == 'nr_intro':
         $ hacker_3 = False
         "You decide to call [nr] to see if he's free to hang out"
@@ -73,3 +73,31 @@ label nr_talk(event=False):
             $ text_msg_received.append(('nr',nr,"The number for "+nc.name+" is "+nc_number+""))
             call change_loc(current_location,loctrans=True) from _call_change_loc_29
 
+    if event == 'nr_first_call':
+        if nc_after_ft:
+            nr "Hey?"
+            fp "Hey, man!"
+            fp "I called [nc]..."
+            nr "Didn't go well, huh?"
+            fp "How did you know?"
+            nr "Well... I know her. And I know you. Not a brilliant combo, really"
+            fp "Jeez, thanks"
+            nr "Well, I'm right, aren't I?"
+            fp "... Yeah"
+            fp "So, any ideas how I can make her actually talk to me?"
+            nr "..."
+            fp "Nothing?"
+            nr "Well... I do know where she lives... but that is a little bit beyond creepy, just showing up..."
+            nr "Oh, wait. She hangs out at [icafe]! Or, at least she used to"
+            fp "[icafe]?"
+            nr "Yeah, you know, that Internet café, slash dork-haven downtown?"
+            fp "Oh, right, yeah I know where it is"
+            nr "Best bet, man, best bet"
+            fp "'kay, I'll see if she still hangs around. She still got the same look?"
+            nr "Yeah... you probably can't miss her"
+            $ visit_icafe = True
+            $ calling = duringcall = False
+        else:
+            $ calling = duringcall = False            
+            fp "No answer. I'll try him again later"
+        call change_loc(current_location)

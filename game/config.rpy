@@ -39,6 +39,9 @@ default persistent.backpack_info = True
 default persistent.cheat = False
 
 # character definitions
+define narrator = Character(None, what_italic=True)
+define unk_f = Character('???')
+define unk_m = Character('???')
 define fp = Character("[fpinput]",image="fp_talkside")
 define fm = Character("[fmName.Name]",image="fm_talkside")
 define fs = Character("[fsName.Name]",image="fs_talkside")
@@ -65,6 +68,7 @@ default fp_sts = 0
 default fpshower = False
 default fpsink = False
 default fp_creep = 0
+default fp_money = 200
 default punishment_late = 0 #this is the variable for punishment value for lateness at school - reach too high a number, and [fM] is called, and her relationship stat decrease
 default filth_val = 0
 
@@ -109,7 +113,7 @@ default nk_sa_status = False
 
 #nc
 default nc_dom = 0
-default nc_rel = 4
+default nc_rel = 0
 default nc_aro = 0
 default nc_cor = 0
 default nc_anal = 0
@@ -192,7 +196,6 @@ default already_late = False
 default firstday_talk = False
 default firstday_after_talk = False
 default light_on = False
-# default hallway_pot_enable = False
 default day_ahead = False
 default shopping_with_fm = False
 default bathroom_light = False
@@ -211,6 +214,8 @@ default shitty_morning = False
 default call_nr = False
 default home_from_school = False
 # default nr_involved = False #not in use atm
+default icafe = 'Obuko'
+default visit_icafe = False
 default wetshower = False
 
 # fs events
@@ -243,6 +248,7 @@ default bathroom_find_panties = True
 default find_pb = False
 default panties_added = False
 default bathroom_panties_added = False
+default returnbfp = False
 default schoolbooks_added = False
 default smallkeys_added = False
 default toolbox_added = False
@@ -286,6 +292,9 @@ default charge_phone = False
 default imggal_showbuttons = True
 default textmsg = False
 default textchar = False
+default calling = False
+default duringcall = False
+default nc_after_ft = False
 
 #call locations from other screens
 default uhl_fpb_cfs = False
@@ -351,6 +360,14 @@ default hints = []
 default read_hints = []
 default disabled_hints = []
 default deleted_hints = []
+default calls = []
+default read_calls = []
+default disabled_calls = []
+default deleted_calls = []
+default messages = []
+default read_messages = []
+default disabled_messages = []
+default deleted_messages = []
 default hintselect = 'new'
 default firstday_talk_list = ['livingroom','fp bedroom','fs bedroom','kitchen','entrance','outside']
 default fs_p = ['fs_yellow','fs_light_blue','fs_pale_pink','fs_bright_pink']

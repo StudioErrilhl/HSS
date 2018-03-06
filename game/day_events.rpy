@@ -152,14 +152,18 @@ label day_events():
                 else:
                     "No answer. Oh well, you'll call her again some other time"
             else:
-                "It's just not the day for outdoors activities, you decide to stay inside and just watch some TV instead"
+                "It's just not the day for outdoor activities, you decide to stay inside and just watch some TV instead"
                 if fp_sts > 0:
+                    $ print(1)
                     $ statschangenotify("fp_sts",-1)
                 else:
+                    $ print(2)
                     $ evening_event = True
                 if not evening_event:
+                    $ print(3)
                     call end_of_day(True) from _call_end_of_day_7
                 else:
+                    $ print(4)
                     call evening_event_label(True) from _call_evening_event_label
 
     label taking_shower_evening(tse_called=False):
@@ -228,6 +232,11 @@ label day_events():
     #         $ renpy.pause()
     #         return
 
+    label no_answer():
+        $ calling = duringcall = False                
+        fp "No answer - I guess I'll try again later"
+        call change_loc(current_location)
+
     label evening_event_label(ee_called=False):
         if ee_called:
             $ ee_called = False
@@ -263,3 +272,5 @@ label day_events():
                     $ statschangenotify("nk_rel",2)
                     $ addtime(5,False)
                 call end_of_day(True) from _call_end_of_day_8
+            else:
+                call end_of_day(True)

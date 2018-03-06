@@ -761,6 +761,11 @@ image rain:
     0.2
     repeat
 
+image textbox_cutout:
+    "gui/textbox_cutout.png"
+    xalign 0.5
+    yalign 1.0
+
 image stats_hover:
     "gui/stats_hover.png"
 

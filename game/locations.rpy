@@ -1,6 +1,5 @@
 # location changer
 label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=False,sec_call=False,showerstat=False):
-    # $ print(str('test')+str(showerstat))
     if timeadd:
         $ addtime(False, 30)
     if locname:
@@ -10,22 +9,17 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
             $ current_location = locname.replace(' ','_')
             $ locname = locname.replace('_loc','').replace('_',' ')
         $ tmpname = locname.replace(' ','_').replace('_loc','')+"_scene"
-        # $ print(tmpname)
         if loctrans:
             $ loctrans = False
             if showerstat:
-                $ print('showerstat and loctrans')
-                $ print('call expression '+tmpname+' pass trans=False, wetshower='+str(showerstat))
                 call expression tmpname pass (trans=False,wetshower=showerstat)
             else:
                 call expression tmpname pass (trans=False)
         else:
             if showerstat:
-                $ print('showerstat')
                 call expression tmpname pass (wetshower=showerstat)
             else:
                 call expression tmpname
-        $ print(locname)
         show screen location(locname)
         if locname in firstday_talk_list:
             if firstday_talk:
@@ -400,11 +394,20 @@ label outside_loc(out_called=False,trans=False):
             call outside_scene from _call_outside_scene_1
             menu:
                 "Go to school":
-                    # call travel_school(True)
                     call travel_events('travel_school') from _call_travel_events
-                    # call nk_talk(True)
                 "Stay home":
                     $ home_from_school = True
+                    pass
+        if int(current_time[:2]) in day+night:
+            call outside_scene
+            menu:
+                "Do a Trip Black run":
+                    $ addtime(3,False)
+                    $ randmoney = random.randrange(50,250)
+                    $ randmoney = abs(int(randmoney / 100.0) * 70)
+                    $ renpy.notify("You made $"+str(randmoney)+" tonight")
+                    $ fp_money += randmoney
+                "Stay home tonight":
                     pass
         call change_loc('outside') from _call_change_loc_15
 
@@ -422,9 +425,8 @@ label upper_hallway_loc(uhl_called=False,trans=False):
 label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
     $ current_location = 'upper_hallway_bathroom_loc'
     $ loct = False
-    # $ wetshower = False
     if occupied_bath:
-        if not bathroom_occupied_fs or not bathroom_occupied_fm:
+        if not bathroom_occupied_fs and not bathroom_occupied_fm:
             if int(current_time[:2]) < 9:
                 if renpy.random.random() > .5:
                     $ bathroom_occupied_fs = True
@@ -448,6 +450,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
     if (bathroom_occupied_fs or bathroom_occupied_fm) and not_entered:
         $ uhl_bl_called = uhl_bl_cfs = False
         "The bathroom is occupied"
+        $ conditions.addcondition("Sneak a peek","bathroom_occupied_fs")
         menu:
             "Sneak a peek":
                 $ images_unlocked.append('DCIM00002_portrait.png')
@@ -565,18 +568,20 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                                     $ update_all_the_stuff()
                                 $ backpack.add_item(fs_yellow_panties_item)
                             $ bathroom_panties_added = False
+                            $ bathroom_find_panties = False
                             $ fp_creep += 1
                             $ update_panties_achievements()
+                            call change_loc(current_location)
                         "Leave panties":
                             $ bathroom_panties_added = False
-                            $ bathroom_find_panties = True
+                            # $ bathroom_find_panties = True
                             $ loct = True
                 else:
                     $ renpy.notify("You don't have anywhere to carry the panties")
                     if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
                         $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                     $ bathroom_panties_added = False
-                    $ bathroom_find_panties = True
+                    # $ bathroom_find_panties = True
                     $ loct = True
             if fpshower:
                 if filth_val == 0:

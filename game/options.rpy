@@ -192,8 +192,6 @@ init python:
 
     # ## To archive files, classify them as 'archive'.
 
-    build.classify('game/**.png', 'archive')
-    build.classify('game/**.jpg', 'archive')
     build.archive('scripts','all')
     build.archive('images','all')
     build.archive('backgrounds','all')

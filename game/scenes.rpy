@@ -241,7 +241,6 @@ label upper_hallway_bathroom_peek_scene(trans=True):
     return
 
 label upper_hallway_bathroom_scene(trans=True,wetshower=False):
-    $ print(str(wetshower))
     if not uhl_bathroom_ach:
         $ uhl_bathroom_ach = True
         $ update_been_everywhere_achievement()
