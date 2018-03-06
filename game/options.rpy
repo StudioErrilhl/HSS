@@ -23,7 +23,7 @@ define gui.show_name = False
 
 ## The version of the game.
 
-define config.version = "0.024-rc1-(Alpha)"
+define config.version = "0.024-rc2-(Alpha)"
 
 
 ## Text that is placed on the game's about screen. To insert a blank line
@@ -31,7 +31,7 @@ define config.version = "0.024-rc1-(Alpha)"
 
 define gui.about = _("{b}HSS (or HighSchool Shenanigans){/b} is an adult-themed visual novel, with some randomness, and a lot of sexy content. You're playing as <player> (pick your name, or default to Marten), an 18 year old boy who's finishing high school, and is mildly anxious about his exams, the lack of a girlfriend, noone to take to the dance, and how to get his motorcycle rebuilt properly. Add to this an abundance of hot girls in his vicinity, and you got most of the plot right there. At least if you only knew what opportunities you have right at your feet.\n\nThe game is about discovering those opportunities, and realising what you can do, not to mention WHO you can do!\n\nThe game is in very early development, and currently we're working on the game mechanics, how to modify relationships, how to build a believeable story, and how to decide which characters get to do what with whom.\n\n")
 #••••••
-define gui.changelog = _("{b}0.024-rc1:{/b}\n•Added pagekeys to all scrollable displayables\n•Closed #81 - todo - fullscreen image from image-gallery\n•Closed #109 - todo - move stats to contacts on phone (as wontfix, due to not being needed)\n•Closed #122 - todo - create a way to get a contact into the contact list\n•Closed #135 - todo - implement cheat-option in the preferences screen\n•Fixed a few minor config-issues (disabling the console and such for releases)\n•Fixed #137 - bug - bottles in kitchen possible to click during dialogue / choices\n•Fixed a minor bug with the custom quit-screen")
+define gui.changelog = _("{b}0.024-rc2:{/b}\n•Updated the call-screen (it should now be possible to use it for any person in the list, although only precreated events will actually play out)\n•Added a new Narrator-style\n•Added money as a Marten-stat\n•Added characters for \"unknown female\" and \"unknown male\"\n•Added a job-option for Marten during the evenings\n•Cleaned up options.rpy and the archive-methods for the game-files\n•Expanded on the Catherina-events\n•Fixed #146 - bug - panties respawns in bathroom after picking them up\n•Fixed #147 - bug - arriving home from school, showing wrong dialogue")
 
 ## A short name for the game used for executables and directories in the built
 ## distribution. This must be ASCII-only, and must not contain spaces, colons,
