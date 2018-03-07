@@ -154,16 +154,12 @@ label day_events():
             else:
                 "It's just not the day for outdoor activities, you decide to stay inside and just watch some TV instead"
                 if fp_sts > 0:
-                    $ print(1)
                     $ statschangenotify("fp_sts",-1)
                 else:
-                    $ print(2)
                     $ evening_event = True
                 if not evening_event:
-                    $ print(3)
                     call end_of_day(True) from _call_end_of_day_7
                 else:
-                    $ print(4)
                     call evening_event_label(True) from _call_evening_event_label
 
     label taking_shower_evening(tse_called=False):
@@ -233,7 +229,7 @@ label day_events():
     #         return
 
     label no_answer():
-        $ calling = duringcall = False                
+        $ calling = duringcall = False
         fp "No answer - I guess I'll try again later"
         call change_loc(current_location)
 

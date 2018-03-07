@@ -40,8 +40,8 @@ default persistent.cheat = False
 
 # character definitions
 define narrator = Character(None, what_italic=True)
-define unk_f = Character('???')
-define unk_m = Character('???')
+define unk_f = Character('Unknown female')
+define unk_m = Character('Unknown male')
 define fp = Character("[fpinput]",image="fp_talkside")
 define fm = Character("[fmName.Name]",image="fm_talkside")
 define fs = Character("[fsName.Name]",image="fs_talkside")
@@ -217,6 +217,7 @@ default home_from_school = False
 default icafe = 'Obuko'
 default visit_icafe = False
 default wetshower = False
+default drivingcmp = _('TripIt Black')
 
 # fs events
 default fs_si = True
@@ -253,6 +254,8 @@ default schoolbooks_added = False
 default smallkeys_added = False
 default toolbox_added = False
 default wine_added = False
+default carry_wallet = False
+default wallet_added = False
 default pb_added = False
 default pb_return = False
 default bottles = False
@@ -311,6 +314,7 @@ default stn_cfs = False
 default wmc_cfs = False
 default current_file = False
 default keyclose = False
+default ic_cfs = False
 
 default exitdown_event_var = False
 default exitup_event_var = False
@@ -332,6 +336,7 @@ default schoolbooks_pickup = False
 default smallkeys_pickup = False
 default toolbox_pickup = False
 default vodka_pickup = False
+default wallet_pickup = False
 default whiskey_pickup = False
 default wine_pickup = False
 default pref_screen = False
@@ -351,6 +356,7 @@ default garage_ach = False
 default school_outside_ach = False
 default school_principal_office_ach = False
 default beach_ach = False
+default icafe_ach = False
 
 default selected_number = 0
 default panties_sniffer = False
@@ -419,7 +425,7 @@ default text_msg_received = []
 
 default not_in_contacts = ['fp','nc']
 
-default item_weights = {'beer':2,'carkeys':.2,'fs_bright_pink_panties':.1,'fs_pale_pink_panties':.1,'fs_yellow_panties':.1,'fs_light_blue_panties':.1,'gin':1,'phone':.3,'princessplug':.4,'roses':.5,'schoolbooks':5,'small_keys':.2,'toolbox':10,'vodka':1,'whiskey':1,'wine':1}
+default item_weights = {'beer':2,'carkeys':.2,'fs_bright_pink_panties':.1,'fs_pale_pink_panties':.1,'fs_yellow_panties':.1,'fs_light_blue_panties':.1,'gin':1,'phone':.3,'princessplug':.4,'roses':.5,'schoolbooks':5,'small_keys':.2,'toolbox':10,'vodka':1,'wallet':.5,'whiskey':1,'wine':1}
 
 default item_desc = {
             'beer':'What a tasty, delicious beverage! Exactly what you need to kick off a party, slacking on the couch, or just getting slightly wasted. One beer won\'t do much damage, but as soon as you drink a few...',
@@ -436,6 +442,7 @@ default item_desc = {
             'small_keys':'A set of small keys. What they unlock, you have no idea...',
             'toolbox':'Essential tools for fixing your bike',
             'vodka':'{b}This{/b} is the right tool for getting utterly, completely wasted. Not that you have any need for that, of course... not right now, anyway...',
+            'wallet':'Your wallet. As long as you have this, you have money. Or, also known as credit cards. But they\'re paid by someone else, so... free money, right?',
             'whiskey':'Ah! The grown man\'s drink. One sip of this, and you\re pretty sure your throat\'s on fire!',
             'wine':'The preferred drinks of any posh girl out there. You should keep some on hand!'
 }

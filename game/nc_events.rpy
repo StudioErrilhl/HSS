@@ -25,7 +25,7 @@ label nc_talk(event=False,callrand=False):
                 if nc_after_ft:
                     fp "No answer. No surprise there, after what she did when I called the first time..."
                 else:
-                    fp "No answer. I guess I'll have to try again later"            
+                    fp "No answer. I guess I'll have to try again later"
         call change_loc(current_location)
 
     if event == 'icafe_visit':
@@ -37,7 +37,7 @@ label nc_talk(event=False,callrand=False):
             unk_f "{b}Hell to the FUCK no!{/b}"
             unk_m "Listen..."
             unk_f "{b}Shut the FUCK UP!{/b}"
-            unk_m "Calm U+2588U+2588U+2588n!"
+            unk_m "Calm down!"
             unk_f "{b}I will not \"calm down\"! I'm fucking pissed!{/b}"
             "You start heading for the commotion... knowing [nc], this... sorta sounds like her, even though you cannot really remember her voice"
             "When you approach them, they seem to at least have turned down the volume a little bit, but the tension is still palpable"

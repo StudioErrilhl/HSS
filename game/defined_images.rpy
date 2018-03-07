@@ -761,10 +761,15 @@ image rain:
     0.2
     repeat
 
-image textbox_cutout:
-    "gui/textbox_cutout.png"
-    xalign 0.5
+image black_car:
+    ConditionSwitch(
+        "int(current_time[:2]) in night","images/black_car_night.png",
+        True,"images/black_car_morning.png"
+        )
+    zoom .7
     yalign 1.0
+    yoffset 140
+    xoffset 260
 
 image stats_hover:
     "gui/stats_hover.png"

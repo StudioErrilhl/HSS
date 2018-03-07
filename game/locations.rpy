@@ -69,6 +69,14 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
                     $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                 $ schoolbooks_added = False
                 $ loct = True
+        if wallet_added:
+            if not backpack.has_item(wallet_item):
+                $ wallet_pickup = True
+                $ update_all_the_stuff()
+            $ backpack.add_item(wallet_item)
+            $ wallet_added = False
+            $ carry_wallet = True
+            $ loct = True
         if phone_added:
             if charge_phone:
                 menu:
@@ -215,6 +223,15 @@ label garage_loc(gar_called=False,trans=False):
             if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
                 $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
         call change_loc('garage') from _call_change_loc_5
+
+label icafe_loc(ic_called=False,trans=False):
+    $ current_location = 'icafe_loc'
+    if not icafe_ach:
+        $ icafe_ach = True
+        $ update_been_everywhere_achievement()
+    if ic_called or ic_cfs:
+        $ ic_called = ic_cfs = False
+    call change_loc('icafe')
 
 label kitchen_loc(kit_called=False,trans=False):
     $ current_location = 'kitchen_loc'
@@ -383,6 +400,9 @@ label livingroom_loc(lvr_called=False,trans=False):
 
 label outside_loc(out_called=False,trans=False):
     $ current_location = 'outside_loc'
+    call outside_scene
+    if int(current_time[:2]) in day+night:
+        show black_car behind rain
     if out_called or out_cfs:
         $ out_called = out_cfs = False
         if not outside_ach:
@@ -399,17 +419,20 @@ label outside_loc(out_called=False,trans=False):
                     $ home_from_school = True
                     pass
         if int(current_time[:2]) in day+night:
-            call outside_scene
+            $ second_menu_choice = "Stay home {0}".format("today" if int(current_time[:2]) in day else "tonight")
             menu:
-                "Do a Trip Black run":
+                "Do a [drivingcmp] run":
                     $ addtime(3,False)
                     $ randmoney = random.randrange(50,250)
-                    $ randmoney = abs(int(randmoney / 100.0) * 70)
-                    $ renpy.notify("You made $"+str(randmoney)+" tonight")
+                    $ randmoney = int(round((float(randmoney) / 100.0) * float(70)))
+                    $ reply = "You made $"+str(randmoney)+" {0}".format("today" if int(current_time[:2]) in day else "tonight")
+                    $ renpy.notify(""+reply+"")
                     $ fp_money += randmoney
-                "Stay home tonight":
-                    pass
-        call change_loc('outside') from _call_change_loc_15
+                    call change_loc('outside')
+                "[second_menu_choice]":
+                    call change_loc('outside')
+            call change_loc('outside',sec_call='outside_loc') from _call_change_loc_15
+        call change_loc('outside')
 
 label upper_hallway_loc(uhl_called=False,trans=False):
     $ current_location = 'upper_hallway_loc'
@@ -571,17 +594,17 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                             $ bathroom_find_panties = False
                             $ fp_creep += 1
                             $ update_panties_achievements()
-                            call change_loc(current_location)
+                            # call change_loc(current_location)
                         "Leave panties":
                             $ bathroom_panties_added = False
-                            # $ bathroom_find_panties = True
+                            $ bathroom_find_panties = True
                             $ loct = True
                 else:
                     $ renpy.notify("You don't have anywhere to carry the panties")
                     if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
                         $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                     $ bathroom_panties_added = False
-                    # $ bathroom_find_panties = True
+                    $ bathroom_find_panties = True
                     $ loct = True
             if fpshower:
                 if filth_val == 0:

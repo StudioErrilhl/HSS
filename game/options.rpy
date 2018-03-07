@@ -23,7 +23,7 @@ define gui.show_name = False
 
 ## The version of the game.
 
-define config.version = "0.024-rc2-(Alpha)"
+define config.version = "0.024-rc3-(Alpha)"
 
 
 ## Text that is placed on the game's about screen. To insert a blank line
@@ -31,7 +31,7 @@ define config.version = "0.024-rc2-(Alpha)"
 
 define gui.about = _("{b}HSS (or HighSchool Shenanigans){/b} is an adult-themed visual novel, with some randomness, and a lot of sexy content. You're playing as <player> (pick your name, or default to Marten), an 18 year old boy who's finishing high school, and is mildly anxious about his exams, the lack of a girlfriend, noone to take to the dance, and how to get his motorcycle rebuilt properly. Add to this an abundance of hot girls in his vicinity, and you got most of the plot right there. At least if you only knew what opportunities you have right at your feet.\n\nThe game is about discovering those opportunities, and realising what you can do, not to mention WHO you can do!\n\nThe game is in very early development, and currently we're working on the game mechanics, how to modify relationships, how to build a believeable story, and how to decide which characters get to do what with whom.\n\n")
 #••••••
-define gui.changelog = _("{b}0.024-rc2:{/b}\n•Updated the call-screen (it should now be possible to use it for any person in the list, although only precreated events will actually play out)\n•Added a new Narrator-style\n•Added money as a Marten-stat\n•Added characters for \"unknown female\" and \"unknown male\"\n•Added a job-option for Marten during the evenings\n•Cleaned up options.rpy and the archive-methods for the game-files\n•Expanded on the Catherina-events\n•Fixed #146 - bug - panties respawns in bathroom after picking them up\n•Fixed #147 - bug - arriving home from school, showing wrong dialogue")
+define gui.changelog = _("{b}0.024-rc3:{/b}\n•Added wallet to inventory\n•Added icafe location/scene/background\n•Closed #116 - todo - create menu-colors / glow-colors for the phone in the menu\n•Closed #141 - todo - namebox for Catherina\n•Closed #142 - todo - nameboxes for unknown male and unknown female\n•Closed #144 - todo - add wallet to the inventory, with money info\n•Closed #148 - todo - fix the black car image to fit with the cartoon filter\n•Created new versions of the beach (both morning and night)\n•Fixed an issue with earnings for TripIt-driving events\n•Fixed so the car is actually behind the rain-graphics if bad weather\n•Modified the nameboxes a little bit (size/placement/cropping)\n•Renamed outside location\n•Remade the carkeys in inventory to match the TripIt car\n•Updated night-time backgrounds for upper hallway, school (outside), Principal Hudson's office, beach, entrance, garage, livingroom")
 
 ## A short name for the game used for executables and directories in the built
 ## distribution. This must be ASCII-only, and must not contain spaces, colons,

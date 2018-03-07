@@ -25,7 +25,7 @@ init 10:
     default achievement_wine_collector = NewAchievement("Wine collector","You've aquired wine!",1,'inventory/wine_idle.png',hidden=True,next_tier=[achievement_all_the_wine])
 
     # Exploration Achievements
-    default achievement_been_everywhere = NewAchievement("Seasoned traveller","You visited every location in the game",12,'gui/star.png','exploration')
+    default achievement_been_everywhere = NewAchievement("Seasoned traveller","You visited every location in the game",13,'gui/star.png','exploration')
 
     # Lewdness Achievements
     default achievement_diverse_panties = NewAchievement("Diverse Collector","One of every type!",1,'inventory/fs_bright_pink_panties_idle.png','lewdness',True)
@@ -95,7 +95,7 @@ init python:
         achievement_been_everywhere.update()
 
     def update_all_the_stuff():
-        global beer_pickup, carkeys_pickup, bright_pink_panties_pickup, light_blue_panties_pickup, pale_pink_panties_pickup, yellow_panties_pickup, gin_pickup, phone_pickup, princessplug_pickup, roses_pickup, schoolbooks_pickup, smallkeys_pickup, toolbox_pickup, vodka_pickup, whiskey_pickup, wine_pickup
+        global beer_pickup, carkeys_pickup, bright_pink_panties_pickup, light_blue_panties_pickup, pale_pink_panties_pickup, yellow_panties_pickup, gin_pickup, phone_pickup, princessplug_pickup, roses_pickup, schoolbooks_pickup, smallkeys_pickup, toolbox_pickup, vodka_pickup, wallet_pickup, whiskey_pickup, wine_pickup
         if beer_pickup:
             achievement_all_the_stuff.update()
             beer_pickup = False
@@ -138,6 +138,9 @@ init python:
         if vodka_pickup:
             achievement_all_the_stuff.update()
             absolut_pickup = False
+        if wallet_pickup:
+            achievement_all_the_stuff.update()
+            wallet_pickup = False
         if whiskey_pickup:
             achievement_all_the_stuff.update()
             whiskey_pickup = False

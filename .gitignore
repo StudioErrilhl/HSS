@@ -64,3 +64,5 @@ tmp/**
 traceback.txt
 game/saves/**
 game/cache/**
+game/gui/**
+game/images/**

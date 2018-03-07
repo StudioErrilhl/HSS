@@ -1046,6 +1046,9 @@ screen inventory_screen():
                         if selecteditemdesc:
                             text "[selecteditemdesc]":
                                 justify True
+                            if selecteditemname and selecteditemname.lower() == 'wallet':
+                                text "\n\n{b}Total cash amount: $[fp_money]{/b}" at center
+
                         else:
                             text "This is some flavor text for the item currently shown. It will contain mostly completely irrelevant information, and sometimes it might even include something useful about a completely different item...":
                                 justify True
@@ -1137,6 +1140,9 @@ screen say(who, what):
                 elif who.upper() == nb.name.upper():
                     style "namebox_char"
                     background Frame("gui/namebox_nb.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                elif who.upper() == nc.name.upper():
+                    style "namebox_char"
+                    background Frame("gui/namebox_nc.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == nk.name.upper():
                     style "namebox_char"
                     background Frame("gui/namebox_nk.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
@@ -1152,6 +1158,13 @@ screen say(who, what):
                 elif who.upper() == sj.name.upper():
                     style "namebox_char"
                     background Frame("gui/namebox_sj.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                elif who.upper() == unk_f.name.upper():
+                    style "namebox_char"
+                    background Frame("gui/namebox_unkf.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                elif who.upper() == unk_m.name.upper():
+                    style "namebox_char"
+                    background Frame("gui/namebox_unkm.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+
         if who is not None and what:
             background Image("gui/textbox_cutout.png", xalign=0.5, yalign=1.0)
         elif not what:
@@ -1230,7 +1243,6 @@ screen location(room=False):
     default x = 500
     default y = 400
     # Get mouse coords:
-    $ print(room)
     python:
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
@@ -1263,13 +1275,22 @@ screen location(room=False):
             if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
                 imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_night_bed_glow_%s.png" focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
         else:
-            if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):            
+            if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
                 imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_bed_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_morning_bed_%s.png") focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
+
+        if not carry_wallet:
+            if int(current_time[:2]) in night:
+                $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_night_wallet_%s.png"
+            elif int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or int(current_time[:2]) == 0 or int(current_time[:2]) == 1:
+                $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_night_wallet_glow_%s.png"
+            else:
+                $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_morning_wallet_%s.png"
+            imagebutton auto walletimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('wallet_added',True),Jump('fp_bedroom_loc')]
 
         if not carry_phone:
             if int(current_time[:2]) in night:
                 $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_%s.png"
-            elif int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or current_time[:2] == 0 or int(current_time[:2]) == 1:
+            elif int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or int(current_time[:2]) == 0 or int(current_time[:2]) == 1:
                 $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_glow_%s.png"
             else:
                 $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_morning_phone_%s.png"
@@ -1340,7 +1361,7 @@ screen location(room=False):
                         ypos .485
                         xpos .31
             elif bottles == 2 or br == 2:
-                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):                
+                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
                     imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
                         xpos .31
@@ -1355,9 +1376,9 @@ screen location(room=False):
                     add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
                         at ModZoom(.65)
                         ypos .485
-                        xpos .325                        
+                        xpos .325
             elif bottles == 3 or br == 3:
-                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):                
+                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
                     imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .480
                         xpos .315
@@ -1372,14 +1393,14 @@ screen location(room=False):
                         at ModZoom(.65)
                         ypos .480
                         xpos .315
-                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"): 
-                        at ModZoom(.65)                     
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                        at ModZoom(.65)
                         ypos .485
                         xpos .31
                     add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
-                        at ModZoom(.65)                    
+                        at ModZoom(.65)
                         ypos .485
-                        xpos .325                                                       
+                        xpos .325
 
         $ exitleft_event_var = "lvr_cfs"
         $ exitleft_event = "livingroom_loc"
@@ -2038,7 +2059,7 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
                 ypos 20
 
             vbox:
-                style_prefix "skip"                
+                style_prefix "skip"
                 xsize 370
                 ysize 100
                 yoffset 50
@@ -2093,7 +2114,7 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
                             action [Hide('say'),SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
                         else:
                             action [SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
-                        xalign .5                    
+                        xalign .5
                 if not calling_out:
                     imagebutton auto "gui/phone_hang_up_%s.png" focus_mask True:
                         action [SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
@@ -2114,7 +2135,7 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
     hbox:
         add "gui/phone_white.png" at ModZoom(.85)
         xalign .5
-        yalign .5                        
+        yalign .5
 
 screen warning_screen(height=0,width=0,txt=False):
     zorder 980

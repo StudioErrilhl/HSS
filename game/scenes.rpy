@@ -141,6 +141,16 @@ label garage_scene(trans=True):
                 scene honda_cx_500_build_morning
     return
 
+label icafe_scene(trans=True):
+    if not icafe_ach:
+        $ icafe_ach = True
+        $ update_been_everywhere_achievement()
+    if trans:
+        scene icafe with Dissolve(.25)
+    else:
+        scene icafe
+    return
+
 label kitchen_scene(trans=True):
     if not kitchen_ach:
         $ kitchen_ach = True
@@ -173,18 +183,18 @@ label outside_scene:
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         if bad_weather and rainstorm:
-            scene neighborhood_night
+            scene outside_night
             show rain
             with Dissolve(.25)
         else:
-            scene neighborhood_night with Dissolve(.25)
+            scene outside_night with Dissolve(.25)
     else:
         if bad_weather and rainstorm:
-            scene neighborhood_morning
+            scene outside_morning
             show rain
             with Dissolve(.25)
         else:
-            scene neighborhood_morning with Dissolve(.25)
+            scene outside_morning with Dissolve(.25)
     return
 
 label schoolbuilding_scene:
@@ -270,13 +280,11 @@ label upper_hallway_bathroom_scene(trans=True,wetshower=False):
         if trans:
             if wetshower:
                 scene upper_hallway_bathroom_morning_after_shower with Dissolve(.25)
-                return
             else:
                 scene upper_hallway_bathroom_morning with Dissolve(.25)
         else:
             if wetshower:
                 scene upper_hallway_bathroom_morning_after_shower
-                return
             else:
                 scene upper_hallway_bathroom_morning
     return
