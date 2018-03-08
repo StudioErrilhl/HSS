@@ -26,7 +26,7 @@ label nc_talk(event=False,callrand=False):
                     fp "No answer. No surprise there, after what she did when I called the first time..."
                 else:
                     fp "No answer. I guess I'll have to try again later"
-        call change_loc(current_location)
+        call change_loc(current_location) from _call_change_loc_25
 
     if event == 'icafe_visit':
         $ settime(20,00)
@@ -54,7 +54,7 @@ label nc_talk(event=False,callrand=False):
             $ visit_icafe = False
         else:
             fp "I should call [nr] and see if he knows where I might find [nc]..."
-        call change_loc(current_location)
+        call change_loc(current_location) from _call_change_loc_55
 
     if event == 'icafe_talk':
         "You decide to go try to get a hold of [nc]. Hopefully she's calmed down after the accident with her laptop"

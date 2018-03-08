@@ -12,14 +12,14 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
         if loctrans:
             $ loctrans = False
             if showerstat:
-                call expression tmpname pass (trans=False,wetshower=showerstat)
+                call expression tmpname pass (trans=False,wetshower=showerstat) from _call_expression
             else:
-                call expression tmpname pass (trans=False)
+                call expression tmpname pass (trans=False) from _call_expression_1
         else:
             if showerstat:
-                call expression tmpname pass (wetshower=showerstat)
+                call expression tmpname pass (wetshower=showerstat) from _call_expression_3
             else:
-                call expression tmpname
+                call expression tmpname from _call_expression_4
         show screen location(locname)
         if locname in firstday_talk_list:
             if firstday_talk:
@@ -231,7 +231,7 @@ label icafe_loc(ic_called=False,trans=False):
         $ update_been_everywhere_achievement()
     if ic_called or ic_cfs:
         $ ic_called = ic_cfs = False
-    call change_loc('icafe')
+    call change_loc('icafe') from _call_change_loc_58
 
 label kitchen_loc(kit_called=False,trans=False):
     $ current_location = 'kitchen_loc'
@@ -400,39 +400,43 @@ label livingroom_loc(lvr_called=False,trans=False):
 
 label outside_loc(out_called=False,trans=False):
     $ current_location = 'outside_loc'
-    call outside_scene
-    if int(current_time[:2]) in day+night:
-        show black_car behind rain
+    if not bc_clicked:
+        call outside_scene from _call_outside_scene
+    # if int(current_time[:2]) in day+night:
+    #     show black_car behind rain
     if out_called or out_cfs:
         $ out_called = out_cfs = False
         if not outside_ach:
             $ outside_ach = True
             $ update_been_everywhere_achievement()
         if trans:
-            call outside_scene from _call_outside_scene
-        if day_week <= 4 and int(current_time[:2]) in morning:
             call outside_scene from _call_outside_scene_1
+        if day_week <= 4 and int(current_time[:2]) in morning:
+            call outside_scene from _call_outside_scene_3
             menu:
                 "Go to school":
                     call travel_events('travel_school') from _call_travel_events
                 "Stay home":
                     $ home_from_school = True
                     pass
-        if int(current_time[:2]) in day+night:
-            $ second_menu_choice = "Stay home {0}".format("today" if int(current_time[:2]) in day else "tonight")
-            menu:
-                "Do a [drivingcmp] run":
-                    $ addtime(3,False)
-                    $ randmoney = random.randrange(50,250)
-                    $ randmoney = int(round((float(randmoney) / 100.0) * float(70)))
-                    $ reply = "You made $"+str(randmoney)+" {0}".format("today" if int(current_time[:2]) in day else "tonight")
-                    $ renpy.notify(""+reply+"")
-                    $ fp_money += randmoney
-                    call change_loc('outside')
-                "[second_menu_choice]":
-                    call change_loc('outside')
-            call change_loc('outside',sec_call='outside_loc') from _call_change_loc_15
-        call change_loc('outside')
+        if bc_clicked:
+            if int(current_time[:2]) in day+night:
+                $ second_menu_choice = "Stay home {0}".format("today" if int(current_time[:2]) in day else "tonight")
+                menu:
+                    "Do a [drivingcmp] run":
+                        $ addtime(3,False)
+                        $ randmoney = random.randrange(50,250)
+                        $ randmoney = int(round((float(randmoney) / 100.0) * float(70)))
+                        $ reply = "You made $"+str(randmoney)+" {0}".format("today" if int(current_time[:2]) in day else "tonight")
+                        $ renpy.notify(""+reply+"")
+                        $ fp_money += randmoney
+                        $ bc_clicked = False
+                        call change_loc('outside',loctrans=True) from _call_change_loc_59
+                    "[second_menu_choice]":
+                        $ bc_clicked = False
+                        call change_loc('outside',loctrans=True) from _call_change_loc_60
+                call change_loc('outside',loctrans=True,sec_call='outside_loc') from _call_change_loc_15
+        call change_loc('outside') from _call_change_loc_61
 
 label upper_hallway_loc(uhl_called=False,trans=False):
     $ current_location = 'upper_hallway_loc'
@@ -486,7 +490,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                             #call change_loc('upper hallway bathroom peek')
                             pass
                         "Get the hell outta here":
-                            call change_loc('upper hallway')
+                            call change_loc('upper hallway') from _call_change_loc_62
             "Knock on the door":
                 # pass
                 if bathroom_occupied_fs:
@@ -639,7 +643,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                 fp "{i}Good to get the filth off my hands{/i}"
                 $ fpsink = False
                 $ loct = True
-            call change_loc('upper hallway bathroom',loctrans=loct,showerstat=wetshower)
+            call change_loc('upper hallway bathroom',loctrans=loct,showerstat=wetshower) from _call_change_loc_63
 
 label tv_games_evening(tvg_called=False,trans=False):
     if tvg_called:

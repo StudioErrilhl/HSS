@@ -218,6 +218,7 @@ default icafe = 'Obuko'
 default visit_icafe = False
 default wetshower = False
 default drivingcmp = _('TripIt Black')
+default bc_clicked = False
 
 # fs events
 default fs_si = True

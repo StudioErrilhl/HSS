@@ -100,4 +100,4 @@ label nr_talk(event=False,callrand=False):
         else:
             $ calling = duringcall = False            
             fp "No answer. I'll try him again later"
-        call change_loc(current_location)
+        call change_loc(current_location) from _call_change_loc_56

@@ -1,0 +1,24 @@
+﻿I'm sorry, but an uncaught exception occurred.
+
+While parsing D:\Dropbox\RenPy-games\HSS/game/defined_images.rpy.
+ScriptError: Name (u'/Users/PoPSiCLe/Dropbox/RenPy-games/HSS/game/user_screens.rpy', 1517972934, 1) is defined twice, at game/user_screens.rpy:1 and game/user_screens (MacBook-Pros kopi som er i konflikt 2018-03-07).rpyc:1.
+
+-- Full Traceback ------------------------------------------------------------
+
+Full traceback:
+  File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\bootstrap.py", line 306, in bootstrap
+    renpy.main.main()
+  File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\main.py", line 367, in main
+    renpy.game.script.load_script()  # sets renpy.game.script.
+  File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\script.py", line 266, in load_script
+    self.load_appropriate_file(".rpyc", ".rpy", dir, fn, initcode)
+  File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\script.py", line 757, in load_appropriate_file
+    self.finish_load(stmts, initcode, filename=lastfn)
+  File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\script.py", line 423, in finish_load
+    bad_node.filename, bad_node.linenumber))
+ScriptError: Name (u'/Users/PoPSiCLe/Dropbox/RenPy-games/HSS/game/user_screens.rpy', 1517972934, 1) is defined twice, at game/user_screens.rpy:1 and game/user_screens (MacBook-Pros kopi som er i konflikt 2018-03-07).rpyc:1.
+
+Windows-8-6.2.9200
+Ren'Py 6.99.14.2.3244
+ 
+Wed Mar 07 18:52:55 2018

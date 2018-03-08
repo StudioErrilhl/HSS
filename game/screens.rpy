@@ -171,29 +171,29 @@ style frame:
 ##
 ## https://www.renpy.org/doc/html/screen_special.html#input
 
-screen input(prompt):
-    style_prefix "input"
+# screen input(prompt):
+#     style_prefix "input"
 
-    window:
+#     window:
 
-        vbox:
-            xalign gui.dialogue_text_xalign
-            xpos gui.dialogue_xpos
-            xsize gui.dialogue_width
-            ypos gui.dialogue_ypos
+#         vbox:
+#             xalign gui.dialogue_text_xalign
+#             xpos gui.dialogue_xpos
+#             xsize gui.dialogue_width
+#             ypos gui.dialogue_ypos
 
-            text prompt style "input_prompt"
-            input id "input" color "#fff"
+#             text prompt style "input_prompt"
+#             input id "input" color "#fff"
 
-style input_prompt is default
+# style input_prompt is default
 
-style input_prompt:
-    xalign gui.dialogue_text_xalign
-    properties gui.text_properties("input_prompt")
+# style input_prompt:
+#     xalign gui.dialogue_text_xalign
+#     properties gui.text_properties("input_prompt")
 
-style input:
-    xalign gui.dialogue_text_xalign
-    xmaximum gui.dialogue_width
+# style input:
+#     xalign gui.dialogue_text_xalign
+#     xmaximum gui.dialogue_width
 
 
 ## Choice screen ###############################################################

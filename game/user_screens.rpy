@@ -28,6 +28,16 @@ style contacts_button_text:
     hover_color "#0cf"
     selected_color "#0cf"
 
+style input_prompt is default
+
+style input_prompt:
+    xalign gui.dialogue_text_xalign
+    properties gui.text_properties("input_prompt")
+
+style input:
+    xalign gui.dialogue_text_xalign
+    xmaximum gui.dialogue_width
+
 screen empty()
 
 screen choice(items):
@@ -868,7 +878,7 @@ screen inventory_screen():
             vpgrid:
                 style_prefix "inventory"
                 cols 1
-                scrollbars None
+                # scrollbars None
                 edgescroll 100,500
                 mousewheel True
                 pagekeys True
@@ -900,7 +910,7 @@ screen inventory_screen():
                                         ysize 160
                                         $ current_items = check_item_name.lower()
                                         add "images/inventory/outer_ring.png"
-                                        add "images/inventory/"+item.name+"_hover.png":
+                                        add "images/inventory/"+item.name+"_idle.png":
                                             xalign .5
                                             xoffset -140
                                             yalign .5
@@ -1410,6 +1420,48 @@ screen location(room=False):
             $ exitdown = "Entrance"
 
     if room == "outside":
+        if int(current_time[:2]) in day+night:
+            if int(current_time[:2]) in day and (int(current_time[:2]) > 15 and int(current_time[:2]) < 22):
+                imagebutton auto "images/black_car_morning_%s.png" focus_mask True:
+                    if backpack.has_item(carkeys_item):
+                        action [SetVariable('out_cfs',True),SetVariable('bc_clicked',True),Jump('outside_loc')]
+                    else:
+                        action [Function(set_hint,"You need keys to drive the car")]
+                    # at ModZoom(.7)
+                    # yalign 1.0
+                    # xalign .5
+                    # yoffset 140
+                    # xoffset 260
+            elif int(current_time[:2]) in night:
+                if int(current_time[:2]) < 4:
+                    imagebutton auto "images/black_car_night_%s.png" focus_mask True:
+                        if backpack.has_item(carkeys_item):
+                            action [SetVariable('out_cfs',True),SetVariable('bc_clicked',True),Jump('outside_loc')]
+                        else:
+                            action [Function(set_hint,"You need keys to drive the car")]
+                        # at ModZoom(.7)
+                        # yalign 1.0
+                        # xalign .5
+                        # yoffset 140
+                        # xoffset 260
+        # elif int(current_time[:2]) in day+night:
+        #     if int(current_time[:2]) in day and (int(current_time[:2]) > 15 and int(current_time[:2]) < 22):
+        #         add "images/black_car_morning_idle.png" at ModZoom(.7):
+        #             yalign 1.0
+        #             xalign .5
+        #             yoffset 140
+        #             xoffset 260
+        #     elif int(current_time[:2]) in night:
+        #         add "images/black_car_night_idle.png" at ModZoom(.7):
+        #             yalign 1.0
+        #             xalign .5
+        #             yoffset 140
+        #             xoffset 260
+
+
+        if bad_weather:
+            if rainstorm:
+                add "rain"
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event = "entrance_loc"
             $ exitdown = "Back into the house"
@@ -3300,3 +3352,26 @@ init python:
 screen debug_tools():
     zorder 999
     add DynamicDisplayable(dd_cursor_position)
+
+screen input(prompt):
+    style_prefix "input"
+
+    # window:
+    frame:
+        xalign .5
+        yalign .5
+        xsize 800
+        ysize 200
+
+        vbox:
+            xalign gui.dialogue_text_xalign
+            xpos gui.dialogue_xpos
+            xsize gui.dialogue_width
+            # ypos gui.dialogue_ypos
+            # ypos 10
+            yalign .4
+
+            text prompt style "input_prompt"
+            text "\n"    # yalign 0.0
+            input id "input" color "#fff"
+

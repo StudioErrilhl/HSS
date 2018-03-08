@@ -19,6 +19,7 @@ label fs_talk(fst_called=False):
                 $ statschangenotify("fs_rel",1)
                 $ fs_si = False
                 $ fs_si_2 = True
+                hide fs_standing
                 return
             if fs_si_2:
                 show fs_standing ahead

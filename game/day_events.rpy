@@ -231,7 +231,7 @@ label day_events():
     label no_answer():
         $ calling = duringcall = False
         fp "No answer - I guess I'll try again later"
-        call change_loc(current_location)
+        call change_loc(current_location) from _call_change_loc_57
 
     label evening_event_label(ee_called=False):
         if ee_called:
@@ -269,4 +269,4 @@ label day_events():
                     $ addtime(5,False)
                 call end_of_day(True) from _call_end_of_day_8
             else:
-                call end_of_day(True)
+                call end_of_day(True) from _call_end_of_day_9

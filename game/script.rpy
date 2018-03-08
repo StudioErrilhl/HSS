@@ -306,7 +306,7 @@ label start:
                         "[text]"
                         call change_loc('upper hallway bathroom') from _call_change_loc_30
                     else:
-                        call repeat_event(6)
+                        call repeat_event(6) from _call_repeat_event_6
                 elif event == 88:
                     "You're done working on the bike today"
                     $ end_bike_repair = True
