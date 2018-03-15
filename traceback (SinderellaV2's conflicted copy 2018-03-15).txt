@@ -1,7 +1,7 @@
 ﻿I'm sorry, but an uncaught exception occurred.
 
-While parsing D:\Dropbox\RenPy-games\HSS/game/defined_images.rpy.
-ScriptError: Name (u'/Users/PoPSiCLe/Dropbox/RenPy-games/HSS/game/user_screens.rpy', 1517972934, 1) is defined twice, at game/user_screens.rpy:1 and game/user_screens (MacBook-Pros kopi som er i konflikt 2018-03-07).rpyc:1.
+While parsing D:\Dropbox\RenPy-games\HSS/game/nc_events.rpy.
+ScriptError: Name (u'/Users/PoPSiCLe/Dropbox/RenPy-games/HSS/game/nc_events.rpy', 1520100813, 0) is defined twice, at game/nc_events.rpy:2 and game/nc_events (SinderellaV2's conflicted copy 2018-03-15).rpyc:2.
 
 -- Full Traceback ------------------------------------------------------------
 
@@ -16,9 +16,9 @@ Full traceback:
     self.finish_load(stmts, initcode, filename=lastfn)
   File "C:\Program Files (x86)\renpy-6.99.13-sdk\renpy\script.py", line 423, in finish_load
     bad_node.filename, bad_node.linenumber))
-ScriptError: Name (u'/Users/PoPSiCLe/Dropbox/RenPy-games/HSS/game/user_screens.rpy', 1517972934, 1) is defined twice, at game/user_screens.rpy:1 and game/user_screens (MacBook-Pros kopi som er i konflikt 2018-03-07).rpyc:1.
+ScriptError: Name (u'/Users/PoPSiCLe/Dropbox/RenPy-games/HSS/game/nc_events.rpy', 1520100813, 0) is defined twice, at game/nc_events.rpy:2 and game/nc_events (SinderellaV2's conflicted copy 2018-03-15).rpyc:2.
 
 Windows-8-6.2.9200
 Ren'Py 6.99.14.2.3244
  
-Wed Mar 07 18:52:55 2018
+Thu Mar 15 18:30:25 2018
