@@ -148,7 +148,8 @@ renpy/vc_version.py
 /the_question*/.android.json
 /WINDOWS.rst
 /old
-
+/game/AON**
+/log**
 /*-all/
 /*-win/
 /*-mac/

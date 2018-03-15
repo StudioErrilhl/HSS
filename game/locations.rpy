@@ -1,5 +1,5 @@
 # location changer
-label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=False,sec_call=False,showerstat=False):
+label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=False,sec_call=False,event=False,showerstat=False):
     if timeadd:
         $ addtime(False, 30)
     if locname:
@@ -34,7 +34,10 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
                 xanchor .5
                 yanchor .75
         if sec_call:
-            call expression sec_call pass (True) from _call_expression_2
+            if event:
+                call expression sec_call pass (event=event)
+            else:
+                call expression sec_call pass (True) from _call_expression_2
         call screen empty()
         hide screen empty
         hide screen location
@@ -66,7 +69,8 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
             else:
                 $ renpy.notify("You don't have anywhere to carry the books")
                 if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
-                    $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                    $ renpy.notify("You should try to find something to carry items in")
+                    $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                 $ schoolbooks_added = False
                 $ loct = True
         if wallet_added:
@@ -182,7 +186,8 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
             else:
                 $ renpy.notify("You don't have anywhere to carry the panties")
                 if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
-                    $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                    $ renpy.notify("You should try to find something to carry items in")                    
+                    $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                 $ panties_added = False
                 $ find_panties = True
                 $ loct = True
@@ -221,7 +226,8 @@ label garage_loc(gar_called=False,trans=False):
         else:
             $ renpy.notify("You don't have anywhere to carry the toolbox")
             if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
-                $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                $ renpy.notify("You should try to find something to carry items in")                
+                $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
         call change_loc('garage') from _call_change_loc_5
 
 label icafe_loc(ic_called=False,trans=False):
@@ -260,7 +266,8 @@ label kitchen_loc(kit_called=False,trans=False):
                     else:
                         $ renpy.notify("You don't have anywhere to carry a winebottle")
                         if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
-                            $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                            $ renpy.notify("You should try to find something to carry items in")                            
+                            $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
                         $ loct = True
                 "Leave the bottle" if bottles == 1:
@@ -282,7 +289,8 @@ label kitchen_loc(kit_called=False,trans=False):
                     else:
                         $ renpy.notify("You don't have anywhere to carry a winebottle")
                         if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
-                            $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                            $ renpy.notify("You should try to find something to carry items in")                            
+                            $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
                         $ loct = True
                 "Take both bottles" if bottles == 2:
@@ -302,7 +310,8 @@ label kitchen_loc(kit_called=False,trans=False):
                     else:
                         $ renpy.notify("You don't have anywhere to carry winebottles")
                         if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
-                            $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                            $ renpy.notify("You should try to find something to carry items in")                            
+                            $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
                         $ loct = True
                 "Leave the bottles" if bottles == 2:
@@ -324,7 +333,8 @@ label kitchen_loc(kit_called=False,trans=False):
                     else:
                         $ renpy.notify("You don't have anywhere to carry a winebottle")
                         if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
-                            $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                            $ renpy.notify("You should try to find something to carry items in")                            
+                            $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
                         $ loct = True
                 "Take two bottles" if bottles == 3:
@@ -343,7 +353,8 @@ label kitchen_loc(kit_called=False,trans=False):
                     else:
                         $ renpy.notify("You don't have anywhere to carry winebottles")
                         if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
-                            $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                            $ renpy.notify("You should try to find something to carry items in")                            
+                            $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
                         $ loct = True
                 "Take all three bottles" if bottles == 3:
@@ -363,7 +374,8 @@ label kitchen_loc(kit_called=False,trans=False):
                     else:
                         $ renpy.notify("You don't have anywhere to carry winebottles")
                         if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
-                            $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                            $ renpy.notify("You should try to find something to carry items in")                            
+                            $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
                         $ loct = True
                 "Leave the bottles" if bottles == 3:
@@ -391,6 +403,12 @@ label livingroom_loc(lvr_called=False,trans=False):
         if not livingroom_ach:
             $ livingroom_ach = True
             $ update_been_everywhere_achievement()
+        if carkeys_added:
+            $ carkeys_added = False
+            $ carkeys_pickup = True
+            $ update_all_the_stuff()
+            $ backpack.add_item(carkeys_item)
+            call change_loc(current_location)
         if day_week <= 4 and int(current_time[:2]) in fs_present and renpy.random.random() < .5:
             call change_loc('livingroom',sec_call='fs_talk') from _call_change_loc_12
         elif day_week > 4 and int(current_time[:2]) in fs_present_we and renpy.random.random() < .5:
@@ -399,11 +417,14 @@ label livingroom_loc(lvr_called=False,trans=False):
             call change_loc('livingroom') from _call_change_loc_14
 
 label outside_loc(out_called=False,trans=False):
+    if not carry_phone:
+        menu:
+            "Ah, shit, I forgot my phone! I should go get it":
+                jump expression current_location
+
     $ current_location = 'outside_loc'
     if not bc_clicked:
         call outside_scene from _call_outside_scene
-    # if int(current_time[:2]) in day+night:
-    #     show black_car behind rain
     if out_called or out_cfs:
         $ out_called = out_cfs = False
         if not outside_ach:
@@ -420,21 +441,41 @@ label outside_loc(out_called=False,trans=False):
                     $ home_from_school = True
                     pass
         if bc_clicked:
+            $ bc_clicked = False
             if int(current_time[:2]) in day+night:
-                $ second_menu_choice = "Stay home {0}".format("today" if int(current_time[:2]) in day else "tonight")
-                menu:
-                    "Do a [drivingcmp] run":
-                        $ addtime(3,False)
-                        $ randmoney = random.randrange(50,250)
-                        $ randmoney = int(round((float(randmoney) / 100.0) * float(70)))
-                        $ reply = "You made $"+str(randmoney)+" {0}".format("today" if int(current_time[:2]) in day else "tonight")
-                        $ renpy.notify(""+reply+"")
-                        $ fp_money += randmoney
-                        $ bc_clicked = False
-                        call change_loc('outside',loctrans=True) from _call_change_loc_59
-                    "[second_menu_choice]":
-                        $ bc_clicked = False
-                        call change_loc('outside',loctrans=True) from _call_change_loc_60
+                if filth_val <= 15:
+                    $ second_menu_choice = "Stay home {0}".format("today" if int(current_time[:2]) in day else "tonight")
+                    menu:
+                        "Do a [drivingcmp] run":
+                            $ addtime(3,False)
+                            $ randmoney = random.randrange(50,250)
+                            $ randmoney = int(round((float(randmoney) / 100.0) * float(70)))
+                            $ reply = "You made $"+str(randmoney)+" {0}".format("today" if int(current_time[:2]) in day else "tonight")
+                            $ renpy.notify(""+reply+"")
+                            $ fp_money += randmoney
+                            call change_loc('outside',loctrans=True) from _call_change_loc_59
+                        "Go to [icafe]" if int(current_time[:2]) > 21 and int(current_time[:2]) <= 23 and icafe_discovered:
+                            if visit_icafe_1:
+                                $ call = 'nc_talk'
+                                $ event = 'icafe_visit'
+                            elif visit_icafe_2:
+                                $ call = 'nc_talk'
+                                $ event = 'icafe_talk'
+                            elif visit_icafe_3:
+                                $ call = 'nc_talk'
+                                $ event = 'icafe_talk_after_payment'
+                            elif visit_icafe_4:
+                                $ call = 'nc_talk'
+                                $ event = nc_event
+                            else:
+                                $ call = False
+                                $ event = False
+                            call change_loc('icafe',sec_call=call,event=event)
+                        "[second_menu_choice]":
+                            call change_loc('outside',loctrans=True) from _call_change_loc_60
+                else:
+                    $ renpy.notify("You should go take a shower. No way is the people using "+drivingcmp+" gonna want to ride with you")
+                    $ renpy.pause(.4)
                 call change_loc('outside',loctrans=True,sec_call='outside_loc') from _call_change_loc_15
         call change_loc('outside') from _call_change_loc_61
 
@@ -606,34 +647,47 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                 else:
                     $ renpy.notify("You don't have anywhere to carry the panties")
                     if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
-                        $ hints.append("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+                        $ renpy.notify("You should try to find something to carry items in")                        
+                        $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                     $ bathroom_panties_added = False
                     $ bathroom_find_panties = True
                     $ loct = True
             if fpshower:
-                if filth_val == 0:
-                    $ renpy.notify("I don't need to take a shower right now")
+                if not required_shower:
+                    if filth_val == 0:
+                        $ renpy.notify("I don't need to take a shower right now")
+                    else:
+                        menu:
+                            "Take a quick shower - 15 minutes / 10\% cleaner":
+                                $ addtime(False, 15)
+                                if filth_val != 0:
+                                    $ filth_val -= 10
+                                    if filth_val < 0:
+                                        $ filth_val = 0
+                                $ fpshower = False
+                                $ loct = True
+                                $ wetshower = True
+                            "Take a long shower - 30 minutes / 20\% cleaner":
+                                $ addtime(False, 30)
+                                if filth_val != 0:
+                                    $ filth_val -= 20
+                                    if filth_val < 0:
+                                        $ filth_val = 0
+                                $ fpshower = False
+                                $ loct = True
+                                $ wetshower = True
+                            "Use up all the hot water - 1 hour / 30\% cleaner":
+                                $ addtime(1)
+                                if filth_val != 0:
+                                    $ filth_val -= 30
+                                    if filth_val < 0:
+                                        $ filth_val = 0
+                                $ fpshower = False
+                                $ loct = True
+                                $ wetshower = True
+                        fp "{i}Ah, that was refreshing{/i}"
                 else:
-                    menu:
-                        "Take a short shower - 15 minutes / 10\% cleaner":
-                            $ addtime(False, 15)
-                            if filth_val != 0:
-                                $ filth_val -= 10
-                                if filth_val < 0:
-                                    $ filth_val = 0
-                            $ fpshower = False
-                            $ loct = True
-                            $ wetshower = True
-                        "Take a long shower - 30 minutes / 20\% cleaner":
-                            $ addtime(False, 30)
-                            if filth_val != 0:
-                                $ filth_val -= 20
-                                if filth_val < 0:
-                                    $ filth_val = 0
-                            $ fpshower = False
-                            $ loct = True
-                            $ wetshower = True
-                    fp "{i}Ah, that was refreshing{/i}"
+                    jump required_shower
             if fpsink:
                 $ addtime(False,15)
                 if filth_val != 0:
@@ -643,6 +697,35 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                 fp "{i}Good to get the filth off my hands{/i}"
                 $ fpsink = False
                 $ loct = True
+            label required_shower:
+                if required_shower:
+                    menu:
+                        "Take a quick shower - 15 minutes / 10\% cleaner":
+                            $ addtime(False, 15)
+                            if filth_val != 0:
+                                $ filth_val -= 10
+                                if filth_val < 0:
+                                    $ filth_val = 0
+                            $ required_shower = False
+                            $ loct = True
+                            $ wetshower = True
+                        "Take a long shower - 30 minutes / 20\% cleaner":
+                            $ addtime(False, 30)
+                            if filth_val != 0:
+                                $ filth_val -= 20
+                                if filth_val < 0:
+                                    $ filth_val = 0
+                            $ required_shower = False
+                            $ loct = True
+                            $ wetshower = True
+                        "Skip the shower":
+                            $ required_shower = False
+                            $ loct = True
+                            $ wetshower = False
+                            $ bathroom_occupied_fm = bathroom_occupied_fs = False
+                            call change_loc('upper hallway',loctrans=loct)
+                    fp "{i}Ah, that was refreshing{/i}"
+
             call change_loc('upper hallway bathroom',loctrans=loct,showerstat=wetshower) from _call_change_loc_63
 
 label tv_games_evening(tvg_called=False,trans=False):

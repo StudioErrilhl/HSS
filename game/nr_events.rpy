@@ -5,10 +5,10 @@ label nr_talk(event=False,callrand=False):
         fp "Hey, [nr]"
         nr "Hey [fp]! What's up?"
         fp "Well... I have a couple things to run by you, was wondering if you could drop by? If not tonight, then tomorrow?"
-        $ text = "Sure. {0}".format("I can be there in 15" if int(current_time[:2]) > 20 else "It's a bit late, but I can drop by tomorrow? Say around 19:00?")
+        $ text = "Sure. {0}".format("I can be there around 18" if int(current_time[:2]) < 20 else "It's a bit late, but I can drop by tomorrow? Say around 19:00?")
         nr "[text]"
         fp "Cool. I'll be in the garage, so just meet me there"
-        $ text = "Okay. See you {0}".format('soon' if int(current_time[:2]) > 20 else 'tomorrow')
+        $ text = "Okay. See you {0}".format('soon' if int(current_time[:2]) < 20 else 'tomorrow')
         nr "[text]"
         $ hacker_4 = True
         call change_loc(current_location) from _call_change_loc_27
@@ -69,8 +69,9 @@ label nr_talk(event=False,callrand=False):
             $ text = "You turn your conversation to the bike standing in the middle of the garage, in pieces. After spending a few hours working on the bike, you decide to {0}".format('have a few beers to end the night' if backpack.has_item(beer_item) else 'call it a night')
             "[text]"
             if "You need to wait for "+nr.name+" to send you "+nc.name+"'s info" not in hints+read_hints+disabled_hints:
-                $ hints.append("You need to wait for "+nr.name+" to send you "+nc.name+"'s info")
-            $ text_msg_received.append(('nr',nr,"The number for "+nc.name+" is "+nc_number+""))
+                $ set_hint("You need to wait for "+nr.name+" to send you "+nc.name+"'s info")
+            $ hacker_4 = False
+            $ set_message('nr',nr,"The number for "+nc.name+" is "+nc_number+"")
             call change_loc(current_location,loctrans=True) from _call_change_loc_29
 
     if event == 'nr_first_call':
@@ -95,9 +96,10 @@ label nr_talk(event=False,callrand=False):
             nr "Best bet, man, best bet"
             fp "'kay, I'll see if she still hangs around. She still got the same look?"
             nr "Yeah... you probably can't miss her"
-            $ visit_icafe = True
+            $ icafe_discovered = True
+            $ visit_icafe_1 = True
             $ calling = duringcall = False
         else:
-            $ calling = duringcall = False            
+            $ calling = duringcall = False
             fp "No answer. I'll try him again later"
         call change_loc(current_location) from _call_change_loc_56

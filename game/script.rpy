@@ -106,6 +106,9 @@ label start:
     label skippedintro():
         $ fs_mad = True
         show screen ingame_menu_display()
+        if 'DCIM00001_portrait.png' not in images_unlocked:
+            if "You chose to skip the intro - which means that one of the images in the photo-gallery is not gonna be available to you" not in hints+read_hints+disabled_hints:
+                $ set_hint("You chose to skip the intro - which means that one of the images in the photo-gallery is not gonna be available to you")
         if persistent.maininfo:
             call screen maininfo()
         fp "So. Quick recap: I woke up on April 1st, tried to somewhat remotely function and seem awake, and figure out what to with the day. Then, a little later, shellshocked, and trying to figure out how to get the image of my naked [fsName.role] off my mind, I decided spending the day working on my bike would be as good a way as any..."
@@ -132,6 +135,8 @@ label start:
         $ bathroom_occupied_fm = False
         $ home_from_school = False
         $ not_entered = True
+        if nc_action_started and nc_action_started < 8:
+            $ nc_action_started += 1
 
         $ breakfast_jump = False
         $ had_breakfast = False
@@ -182,9 +187,11 @@ label start:
         $ dinner_weights[dinner_select] = (dinner_weights[dinner_select][0],new_weight)
 
         if int(current_time[:2]) in night:
-            if day_week <= 4:
-                $ mh = format(int(morning[renpy.random.randint(0,(len(morning)-3))]),"02d")
+            if day_week <= 4 and not alarmclock:
+                $ mh = format(int(morning[renpy.random.randint(0,(len(morning)-4))]),"02d")
+                $ print(format(int(morning[renpy.random.randint(0,(len(morning)-4))]),"02d"))
                 $ mm = format(renpy.random.randint(00,30),"02d")
+                $ print(mm)
                 $ settime(mh,mm)
             elif day_week >= 5:
                 $ mh = format(int(random.choice(morning)),"02d")
@@ -304,7 +311,11 @@ label start:
                     if not home_from_school:
                         $ text = "I should go in, {0} and {1}".format("take a shower","have breakfast and get ready for school" if day_week <= 4 else "have breakfast")
                         "[text]"
-                        call change_loc('upper hallway bathroom') from _call_change_loc_30
+                        if 'shower' in text:
+                            $ required_shower = True
+                            call change_loc('upper hallway bathroom') from _call_change_loc_30
+                        else:
+                            call change_loc('kitchen')
                     else:
                         call repeat_event(6) from _call_repeat_event_6
                 elif event == 88:

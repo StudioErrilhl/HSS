@@ -135,7 +135,7 @@ init python:
 
 init 10 python:
     def addtime(hours=False,minutes=False,update_scene=False,sec_call=False):
-        global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text,wetshower,not_entered
+        global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text,wetshower,not_entered,nc_action_started,nc_action_completed,nc_event,visit_icafe_4,nc_happens
         local_dw = day_week
         addhour = False
         wetshower = False
@@ -265,8 +265,21 @@ init 10 python:
                     if battery_text > 100:
                         battery_text = 100
 
-            if hacker_4 and int(current_time[:2]) >= 18:
+            if hacker_4 and int(current_time[:2]) == 18:
                 renpy.call("nr_talk",'nr_first_visit')
+
+            if nc_action_started == 7 and int(current_time[:2]) in day:
+                nc_action_started = False
+                nc_action_completed = True
+                visit_icafe_4 = True
+                set_message('nc',nc,"Meet me at "+icafe+" tonight. Around 22-23")
+                nc_event = 'icafe_talk_7_days'
+
+            if nc_action_completed and nc_action_started == 4:
+                nc_action_started = False
+                set_message('nc',nc,""+str(hj)+" is here. You got... maybe an hour")
+                nc_event = 'icafe_talk_hj'
+                nc_happens = current_time
 
             if update_scene:
                 if int(current_time[:2]) >= 22 or int(current_time[:2]) < 6:
@@ -445,6 +458,45 @@ init 10 python:
         if hint:
             if hint not in hints+read_hints+disabled_hints:
                 hints.append(hint)
+
+    def read_message(char=False,charobj=False,message=False):
+        global messages,read_messages
+        if char and charobj and message:
+            if (char,charobj,message) not in read_messages:
+                read_messages.append((char,charobj,message))
+            if (char,charobj,message) in messages:
+                messages.remove((char,charobj,message))
+
+    def disable_message(message=False):
+        global read_messages,disabled_messages
+        if message:
+            disabled_messages.append(message)
+            read_messages.remove(message)
+
+    def delete_message(message=False):
+        global messages,read_messages,disabled_messages
+        if message in messages:
+            messages.remove(message)
+        if message in read_messages:
+            read_messages.remove(message)
+        if message in disabled_messages:
+            deleted_messages.append(message)
+            disabled_messages.remove(message)
+
+    def restore_messages():
+        global messages,disabled_messages
+        for message in disabled_messages:
+            if message not in messages:
+                messages.append(message)
+                disabled_messages.remove(message)
+            else:
+                disabled_messages.remove(message)
+
+    def set_message(char=False,charobj=False,message=False):
+        global messages,read_messages,default_messages
+        if message:
+            # if message not in messages+read_messages+disabled_messages:
+            messages.append((char,charobj,message))
 
 init python hide:
     notice = """

@@ -45,6 +45,7 @@ label day_events():
                             $ statschangenotify("fm_rel",-.5)
                 $ sun_event = False
                 hide fm_standing
+                call change_loc(current_location)
 
     label dinner_events(de_called=False):
         if de_called:
@@ -80,57 +81,57 @@ label day_events():
                     $ dinner_event = False
                     $ renpy.pause(.25)
                     hide fm_standing with dissolve
+                    $ addtime(1)
                 call change_loc('kitchen',loctrans=True) from _call_change_loc_45
 
     label evening_home(evh_called=False):
         if evh_called:
             $ evh_called = False
+            $ n = renpy.random.randint(0,3)
             if day_week <= 4:
                 if detention_served:
                     $ current_time = "17:45"
                 else:
                     $ current_time = "15:30"
-                    $ n = renpy.random.randint(0,3)
-                    $ home_events = [
-                        ["You arrive home. Nobody is there at the moment, it seems, as "+fmName.informal+"'s car is gone, and "+fsName.yourinformal+" is nowhere to be seen.",False],
-                        ["When you arrive home, the door is locked, and you realise you've forgotten your key. Noone is answering the door when you try the doorbell, so both "+fmName.yourinformal+" and "+fmName.yourinformal+" must be out. You weren't really that keen on sitting outside all day, waiting for them, so you're pondering what else you can do instead",False],
-                        ["Arriving home, you see "+fmName.yourinformal+"'s car in the driveway.",False],
-                        ["When you arrive home, you catch a glimpse of "+fsName.yourformal+" by the pool, but "+fmName.yourformal+" is nowhere to be seen. Her car is still here, though.",True]
-                    ] ## create more events here
-                    if n == 1:
-                        call change_loc('outside',sec_call="harsh_homecoming") from _call_change_loc_46
-                        label harsh_homecoming(True):
-                            $ text = home_events[n][0]
-                            "[text]"
-                    else:
-                        call livingroom_scene from _call_livingroom_scene_2
-                    call change_loc('livingroom') from _call_change_loc_47
-                    if home_events[n][1] and fs_mad:
-                        call fs_talk(True) from _call_fs_talk_4
 
-            if renpy.random.random() > .5 and not hacker_3:
-                if  current_month >= 5 and current_month <= 8 and not detention_served:
-                    call change_loc('outside',sec_call='lounge_pool') from _call_change_loc_48
-                    label lounge_pool(True):
-                        "You decide to just lounge by the pool for a while, trying to stand the heat"
-                elif int(current_time[:2]) <= 19:
-                    "You decide that you can spend a few more hours on your bike today"
-                    call change_loc('garage',sec_call='after_evening_bike_repair') from _call_change_loc_49
-                    label after_evening_bike_repair(True):
-                        "After putting in a few more hours on the bike, you decide that the rest of the evening should be spent doing less arduous tasks, and head inside to watch some TV, maybe play some games"
-                        call change_loc('livingroom',sec_call='tv_games_evening') from _call_change_loc_50
-                elif int(current_time[:2]) > 19:
-                    "You're feeling a bit tired, after school, and working on your bike, so you decide taking a shower will be a nice relief right now"
-                    call change_loc('upper hallway bathroom',sec_call='taking_shower_evening') from _call_change_loc_51
+                if n == 1:
+                    call change_loc('outside',sec_call="harsh_homecoming") from _call_change_loc_46
+                    label harsh_homecoming(True):
+                        $ text = home_events[n][0]
+                        "[text]"
+                        $ addtime(2)
+                        "After waiting for ages, [fmName.yourformal] finally comes home and let you into the house"
+                        call change_loc('entrance')
                 else:
-                    call change_loc('livingroom',sec_call='lounge_livingroom') from _call_change_loc_52
-                    label lounge_livingroom(True):
-                        "You decide to just slouch on the couch for a bit, chilling in front of the TV"
-            elif not detention_served and hacker_3 and call_nr:
-                $ hacker_3 = False
-                $ call_nr = False
-                $ hacker_4 = True
-                call nr_talk('nr_intro') from _call_nr_talk
+                    call livingroom_scene from _call_livingroom_scene_2
+                    if renpy.random.random() > .5 and not hacker_3:
+                        if  current_month >= 5 and current_month <= 8 and not detention_served:
+                            call change_loc('outside',sec_call='lounge_pool') from _call_change_loc_48
+                            label lounge_pool(True):
+                                "You decide to just lounge by the pool for a while, trying to stand the heat"
+                        elif int(current_time[:2]) <= 19:
+                            "You decide that you can spend a few more hours on your bike today"
+                            call change_loc('garage',sec_call='after_evening_bike_repair') from _call_change_loc_49
+                            label after_evening_bike_repair(True):
+                                "After putting in a few more hours on the bike, you decide that the rest of the evening should be spent doing less arduous tasks, and head inside to watch some TV, maybe play some games"
+                                call change_loc('livingroom',sec_call='tv_games_evening') from _call_change_loc_50
+                        elif int(current_time[:2]) > 19:
+                            "You're feeling a bit tired, after school, and working on your bike, so you decide taking a shower will be a nice relief right now"
+                            call change_loc('upper hallway bathroom',sec_call='taking_shower_evening') from _call_change_loc_51
+                        else:
+                            call change_loc('livingroom',sec_call='lounge_livingroom') from _call_change_loc_52
+                            label lounge_livingroom(True):
+                                "You decide to just slouch on the couch for a bit, chilling in front of the TV"
+                    elif not detention_served and hacker_3 and call_nr:
+                        $ hacker_3 = False
+                        $ call_nr = False
+                        $ hacker_4 = True
+                        call nr_talk('nr_intro') from _call_nr_talk
+
+                if home_events[n][1] and fs_mad:
+                    call fs_talk(True) from _call_fs_talk_4
+
+                call change_loc('livingroom') from _call_change_loc_47
 
             if mc_f and renpy.random.random() > .65 and current_time[:2] < 17:
                 "You decide to take a ride"

@@ -189,6 +189,9 @@ init python:
     build.classify('**patch.**',None)
     build.classify('saves/**.**',None)
     build.classify('cache/**.**',None)
+    build.classify('game/AON-packages/**.**',None)
+    build.classify('AON.rpa',None)
+    build.classify('AONvve.rpy',None)
 
     # ## To archive files, classify them as 'archive'.
 

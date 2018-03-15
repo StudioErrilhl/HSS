@@ -42,9 +42,10 @@ default persistent.cheat = False
 define narrator = Character(None, what_italic=True)
 define unk_f = Character('Unknown female')
 define unk_m = Character('Unknown male')
-define fp = Character("[fpinput]",image="fp_talkside")
+define fp = Character("[fpinput]",image="fp_talkside",who_background="gui/namebox_fp.png")
 define fm = Character("[fmName.Name]",image="fm_talkside")
 define fs = Character("[fsName.Name]",image="fs_talkside")
+define hj = Character("Jizzer")
 define nb = Character("Bridget")
 define nr = Character("Ron",image="nr_talkside")
 define nk = Character("Karen",image="nk_talkside")
@@ -122,6 +123,8 @@ default nc_bj = 0
 default nc_sex_pref = "BJ"
 default nc_lvl = 0
 default nc_number = '111-555-3369'
+default nc_event = False
+default nc_happens = False
 
 #nb
 default nb_dom = 0
@@ -215,15 +218,22 @@ default call_nr = False
 default home_from_school = False
 # default nr_involved = False #not in use atm
 default icafe = 'Obuko'
-default visit_icafe = False
+default icafe_discovered = False
+default visit_icafe_1 = False
+default visit_icafe_2 = False
+default visit_icafe_3 = False
+default visit_icafe_4 = False
 default wetshower = False
 default drivingcmp = _('TripIt Black')
 default bc_clicked = False
+default show_fridge = False
+default required_shower = False
+default alarmclock = False
 
 # fs events
 default fs_si = True
 default fs_si_2 = False
-default hacker = False
+default hacker_1 = False
 default hacker_2 = False
 default hacker_3 = False
 default hacker_4 = False
@@ -240,6 +250,11 @@ default bathroom_occupied_fs = False
 default bathroom_occupied_fm = False
 default not_entered = True
 
+# nc events
+default nc_owed = 0
+default nc_action_started = False
+default nc_action_completed = False
+
 # items
 default fs_pale_pink_panties = False
 default fs_light_blue_panties = False
@@ -249,6 +264,7 @@ default find_panties = True
 default bathroom_find_panties = True
 default find_pb = False
 default panties_added = False
+default carkeys_added = False
 default bathroom_panties_added = False
 default returnbfp = False
 default schoolbooks_added = False
@@ -422,7 +438,14 @@ default dinner = [ # food, reply, comeback, modifier, stat, weight-mod
         ]
 default images_unlocked = []
 
-default text_msg_received = []
+default home_events = [
+                ["You arrive home. Nobody is there at the moment, it seems, as "+fmName.informal+"'s car is gone, and "+fsName.yourinformal+" is nowhere to be seen.",False],
+                ["When you arrive home, the door is locked, and you realise you've forgotten your key. Noone is answering the door when you try the doorbell, so both "+fmName.yourinformal+" and "+fmName.yourinformal+" must be out. You weren't really that keen on sitting outside all day, waiting for them, so you're pondering what else you can do instead",False],
+                ["Arriving home, you see "+fmName.yourinformal+"'s car in the driveway.",False],
+                ["When you arrive home, you catch a glimpse of "+fsName.yourformal+" by the pool, but "+fmName.yourformal+" is nowhere to be seen. Her car is still here, though.",True]
+            ] ## create more events here
+
+# default text_msg_received = []
 
 default not_in_contacts = ['fp','nc']
 
@@ -489,6 +512,8 @@ default showStats = False
 default setstate = False
 default end_game = False
 default current_location = 'fp_bedroom_loc'
+# style default:
+#     outlines [ (absolute(1), "#f00", absolute(0), absolute(0)) ]
 # default cc_chosen = False
 
 init python:

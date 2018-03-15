@@ -1,6 +1,7 @@
 style infoscreen_text:
     size 22
     justify True
+    text_align .5
 
 style infoscreen_button_text:
     color "#fff"
@@ -16,6 +17,9 @@ style red_color:
 
 style inventory_text:
     color "#fff"
+
+# style clock_outline:
+#     outlines [(absolute(1), "#17d41e", absolute(0), absolute(0))]
 
 style category_button_text:
     color "#fff"
@@ -505,26 +509,26 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
                 else:
                     alpha 0.5
 
-
-    vbox:
-        xpos 1470
-        xsize 200
-        ysize 100
-        ypos 20
-        text "$ [fp_money]":
-            size 40
-            yalign .5
-            xalign 1.0
+    if backpack.has_item(wallet_item):
+        vbox:
+            xpos 1520
+            xsize 200
+            ysize 100
+            ypos 20
+            text "$ [fp_money]":
+                size 40
+                yalign .5
+                xalign 1.0
 
     frame: ## phone-menu
-        xpos 1700
+        xpos 1730
         ypos 15
         xpadding 0
         ypadding 0
         background None
         vbox:
             if carry_phone:
-                if not hints or calls or messages:
+                if not (hints or calls or messages):
                     imagebutton auto "gui/menu_phone_%s.png" focus_mask True action Show('phone') at ModZoom(.8):
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more"
                 elif calls:
@@ -601,37 +605,35 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
 
     frame: #clock-display
         xpos 1810
+        ysize 30
+        xsize 100
         ypos 120
         xpadding 0
         ypadding 0
         background Image('gui/clock_idle.png')
         hbox: #hour-display
-            xsize 50
+            xalign 0.0
+            yalign .5
             $ hour = current_time[:2]
             textbutton "[hour]":
-                text_color "#ffffff"
-                xalign .5
-                ypos -10
+                text_color "#fff"
                 text_font "gui/fonts/digital_dismay.otf"
                 text_size 25
                 action Function(addtime,1,False,True)
         hbox: #: - separates hours and minutes
-            xsize 2
-            xpos 44
-            ypos -2
+            xalign .5
+            yalign .5
             text ":":
                 color "#ffffff"
-                xalign .5
+                yoffset 1
                 font "gui/fonts/digital_dismay.otf"
                 size 34
         hbox: #minute-display
-            xsize 50
-            xpos 50
+            xalign 1.0
+            yalign .5
             $ minute = current_time[3:]
             textbutton "[minute]":
-                text_color "#ffffff"
-                xalign .5
-                ypos -10
+                text_color "#fff"
                 text_font "gui/fonts/digital_dismay.otf"
                 text_size 25
                 action Function(addtime,False,30,True)
@@ -858,6 +860,7 @@ screen inventory_screen():
     $ keyclose = True
     default x = 500
     default y = 400
+    default cb_hs = False
     ## Get mouse coords:
     python:
         x, y = renpy.get_mouse_pos()
@@ -888,7 +891,7 @@ screen inventory_screen():
                     if i % 2:
                         $ bg_c = "#565656"
                     else:
-                        $ bg_c = "#444"
+                        $ bg_c = "#414141"
                     for item in backpack:
                         $ check_item_name = item.name.replace('fs_','').replace('_',' ').capitalize()
                         if 'panties' in check_item_name.lower():
@@ -1049,6 +1052,8 @@ screen inventory_screen():
                         ysize 40
                         if selecteditemname:
                             text "{b}{size=30}[selecteditemname]{/size}{/b}" at center
+                        else:
+                            text "{b}{size=30}Here be dragons!{/size}{/b}" at center
                     vbox:
                         xsize 910
                         xpos -740
@@ -1056,16 +1061,46 @@ screen inventory_screen():
                         if selecteditemdesc:
                             text "[selecteditemdesc]":
                                 justify True
+                                text_align .5
                             if selecteditemname and selecteditemname.lower() == 'wallet':
                                 text "\n\n{b}Total cash amount: $[fp_money]{/b}" at center
 
                         else:
-                            text "This is some flavor text for the item currently shown. It will contain mostly completely irrelevant information, and sometimes it might even include something useful about a completely different item...":
+                            text "Or, rather, you haven't selected anything yet. Yup. That was what I meant to say!" at center:
                                 justify True
+                                text_align .5
 
 
-        textbutton "Close inventory" action [SetVariable('selecteditemdesc',False),SetVariable('selecteditem',False),SetVariable('selecteditemname',False),SetVariable('selecteditemweight',False),SetVariable('selecteditemamount',False),SetVariable('keyclose',False),Hide("inventory_screen")] xalign .95 yalign 1.0
-        imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('selecteditemdesc',False),SetVariable('selecteditem',False),SetVariable('selecteditemname',False),SetVariable('selecteditemweight',False),SetVariable('selecteditemamount',False),SetVariable('keyclose',False),Hide("inventory_screen")]
+        button:
+            xsize 330
+            ysize 75
+            yalign 1.0
+            xalign 1.0
+            padding 0,0
+            hover_background "#ffffff"
+            hbox:
+                xsize 350
+                ysize 75
+                yalign .5
+                xalign .5
+                spacing 0
+                text "Close inventory":
+                    xsize 300
+                    size 26
+                    yalign .5
+                    xalign .5
+                    text_align .5
+                    xoffset 10
+                    # xpos -20
+                    hover_color "#0cf"
+                if cb_hs:
+                    add "gui/closebutton_hover.png" yalign .5 xpos 20
+                else:
+                    add "gui/closebutton_idle.png" yalign .5 xpos 20
+            action [SetVariable('selecteditemdesc',False),SetVariable('selecteditem',False),SetVariable('selecteditemname',False),SetVariable('selecteditemweight',False),SetVariable('selecteditemamount',False),SetVariable('keyclose',False),Hide("inventory_screen")]
+            hovered [SetScreenVariable("cb_hs",True)]
+            unhovered [SetScreenVariable("cb_hs",False)]
+
         if keyclose:
             key 'K_ESCAPE' action [SetVariable('selecteditemdesc',False),SetVariable('selecteditem',False),SetVariable('selecteditemname',False),SetVariable('selecteditemweight',False),SetVariable('selecteditemamount',False),SetVariable('keyclose',False),Hide("inventory_screen")]
 
@@ -1352,6 +1387,10 @@ screen location(room=False):
             $ exitdown = "Go outside"
 
     if room == "livingroom":
+        if not backpack.has_item(carkeys_item) and int(current_time[:2]) > 15:
+            imagebutton auto "images/inventory/carkeys_%s.png" focus_mask True action [SetVariable('carkeys_added',True),SetVariable('lvr_cfs',True),Jump('livingroom_loc')] at ModZoom(.6):
+                yalign .9
+                xalign .65
         $ exitright_event_var = "kit_cfs"
         $ exitright_event = "kitchen_loc"
         $ exitright = "Kitchen"
@@ -1368,6 +1407,7 @@ screen location(room=False):
                         xpos .31
                 else:
                     add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                        at ModZoom(.65)
                         ypos .485
                         xpos .31
             elif bottles == 2 or br == 2:
@@ -1411,6 +1451,9 @@ screen location(room=False):
                         at ModZoom(.65)
                         ypos .485
                         xpos .325
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+            if config.developer:
+                imagebutton auto ("images/backgrounds/interactions_item/kitchen_fridge_door_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/kitchen_fridge_door_morning_%s.png") focus_mask True action [SetVariable('show_fridge',True),Show('fridge_open')]
 
         $ exitleft_event_var = "lvr_cfs"
         $ exitleft_event = "livingroom_loc"
@@ -1421,43 +1464,20 @@ screen location(room=False):
 
     if room == "outside":
         if int(current_time[:2]) in day+night:
-            if int(current_time[:2]) in day and (int(current_time[:2]) > 15 and int(current_time[:2]) < 22):
-                imagebutton auto "images/black_car_morning_%s.png" focus_mask True:
-                    if backpack.has_item(carkeys_item):
-                        action [SetVariable('out_cfs',True),SetVariable('bc_clicked',True),Jump('outside_loc')]
-                    else:
-                        action [Function(set_hint,"You need keys to drive the car")]
-                    # at ModZoom(.7)
-                    # yalign 1.0
-                    # xalign .5
-                    # yoffset 140
-                    # xoffset 260
-            elif int(current_time[:2]) in night:
-                if int(current_time[:2]) < 4:
-                    imagebutton auto "images/black_car_night_%s.png" focus_mask True:
+            if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+                if int(current_time[:2]) in day and (int(current_time[:2]) > 15 and int(current_time[:2]) < 22):
+                    imagebutton auto "images/black_car_morning_%s.png" focus_mask True:
                         if backpack.has_item(carkeys_item):
                             action [SetVariable('out_cfs',True),SetVariable('bc_clicked',True),Jump('outside_loc')]
                         else:
-                            action [Function(set_hint,"You need keys to drive the car")]
-                        # at ModZoom(.7)
-                        # yalign 1.0
-                        # xalign .5
-                        # yoffset 140
-                        # xoffset 260
-        # elif int(current_time[:2]) in day+night:
-        #     if int(current_time[:2]) in day and (int(current_time[:2]) > 15 and int(current_time[:2]) < 22):
-        #         add "images/black_car_morning_idle.png" at ModZoom(.7):
-        #             yalign 1.0
-        #             xalign .5
-        #             yoffset 140
-        #             xoffset 260
-        #     elif int(current_time[:2]) in night:
-        #         add "images/black_car_night_idle.png" at ModZoom(.7):
-        #             yalign 1.0
-        #             xalign .5
-        #             yoffset 140
-        #             xoffset 260
-
+                            action [Function(renpy.notify,"You need to find the car-keys"),Function(set_hint,"You need to find the carkeys to drive the car")]
+                elif int(current_time[:2]) in night:
+                    if int(current_time[:2]) >= 22 or int(current_time[:2]) < 4:
+                        imagebutton auto "images/black_car_night_%s.png" focus_mask True:
+                            if backpack.has_item(carkeys_item):
+                                action [SetVariable('out_cfs',True),SetVariable('bc_clicked',True),Jump('outside_loc')]
+                            else:
+                                action [Function(renpy.notify,"You need to find the car-keys"),Function(set_hint,"You need to find the carkeys to drive the car")]
 
         if bad_weather:
             if rainstorm:
@@ -1472,6 +1492,12 @@ screen location(room=False):
             $ exitright_event = "beach_ride"
             $ exitright = "Go to the beach"
 
+    if room == 'icafe':
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+            $ exitdown_event_var = 'out_cfs'
+            $ exitdown_event = 'outside_loc'
+            $ exitdown = "Outside"
+
     if room == "upper hallway":
             imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_fp_door_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fp_door_morning_%s.png") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]:
                 tooltip "Enter your room"
@@ -1480,7 +1506,7 @@ screen location(room=False):
                     tooltip "Enter [fsName.yourformal]'s room"
             else:
                 imagebutton idle ("images/backgrounds/interactions_move/upper_hallway_fs_door_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fs_door_morning_idle.png") focus_mask True action NullAction():
-                    tooltip "You need a relationship of 40+ with [fsName.yourformal], or an invitation, to enter her room"
+                    tooltip "You need a relationship of 30+ with [fsName.yourformal], or an invitation, to enter her room"
             imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_bathroom_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_bathroom_morning_%s.png") focus_mask True action [SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]:
                 tooltip "Enter bathroom"
             imagebutton auto ("images/backgrounds/interactions_move/stairs_down_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_down_morning_%s.png") focus_mask True action Jump('entrance_loc'):
@@ -1501,6 +1527,7 @@ screen location(room=False):
             if bathroom_find_panties and room != 'upper hallway bathroom peek':
                 imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.png" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('occupied_bath',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
             # if room == "upper hallway bathroom":
+            # if
             imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable('occupied_bath',False),SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
             if wetshower:
                 add "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_wet_glass.png"
@@ -1527,6 +1554,11 @@ screen location(room=False):
                     else:
                         $ returnbfp = False
                 imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('occupied_bath',randomchoice),SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',returnbfp),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                    xalign .5
+                    yalign 1.0
+                    tooltip exitdown
+            elif current_location == 'upper_hallway_bathroom_loc' and required_shower:
+                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('occupied_bath',False),SetVariable('bathroom_occupied_fm',False),SetVariable('bathroom_occupied_fs',False),SetVariable('uhl_bl_cfs',True),SetVariable('required_shower',True),Jump('upper_hallway_bathroom_loc')]:
                     xalign .5
                     yalign 1.0
                     tooltip exitdown
@@ -1792,8 +1824,8 @@ screen phone_text_screen():
                 vbox:
                     $ c = 0
                     style_prefix "contacts"
-                    $ unique = set(x[0] for x in text_msg_received)
-                    for k,b,v in text_msg_received:
+                    $ unique = set(x[0] for x in messages+read_messages)
+                    for k,b,v in messages+read_messages:
                         if k in unique:
                             if c % 2:
                                 $ bg_color_text = '#ddd'
@@ -1824,16 +1856,21 @@ screen phone_text_screen():
                                     ysize 50
                                     xsize 370
                                     xpadding 0
+                                    ypadding 0
                                     hbox:
+                                        yalign .5
                                         if char == k:
                                             add charimg_hover at ModZoom(.40):
                                                 yalign .5
+                                                xpos 5
                                         else:
                                             add charimg at ModZoom(.40):
                                                 yalign .5
+                                                xpos 5
                                         text "[b]":
                                             ysize 50
                                             yalign .5
+                                            xpos 25
                                             if char == k:
                                                 color "#0cf"
                                             else:
@@ -1843,11 +1880,11 @@ screen phone_text_screen():
                                         action [SetScreenVariable('char',False),SetScreenVariable('msg',False),Hide('show_text_msg')]
                                     else:
                                         action [SetScreenVariable('char',k),SetScreenVariable('msg',v),Hide('phone_text_screen'),Show('show_text_msg',None,k,b)]
-                                        # hovered [SetScreenVariable("char",k),SetScreenVariable('msg',False)]
-                                        # unhovered [SetScreenVariable("char",False),SetScreenVariable('msg',False)]
+                                    hovered [SetScreenVariable("char",k),SetScreenVariable('msg',False)]
+                                    unhovered [SetScreenVariable("char",False),SetScreenVariable('msg',False)]
                             $ unique.remove(k)
                             $ c += 1
-                    if not text_msg_received:
+                    if not messages+read_messages:
                         hbox:
                             xsize 370
                             xalign .5
@@ -1918,11 +1955,7 @@ screen show_text_msg(compchar=False,char=False):
                     spacing 10
                     $ c = 0
                     style_prefix "contacts"
-                    for k,b,v in text_msg_received:
-                        # if c % 2:
-                        #     $ bg_color_text = '#ddd'
-                        # else:
-                        #     $ bg_color_text = '#ccc'
+                    for k,b,v in messages+read_messages:
                         if k == compchar:
                             if k == 'fm':
                                 $ charimg = "images/characters/anne/anne_idle.png"
@@ -1945,12 +1978,12 @@ screen show_text_msg(compchar=False,char=False):
                                 text "[v]"
                                 if compchar == 'nr' and nc_number in v:
                                     if 'nc' in not_in_contacts:
-                                        action [Function(not_in_contacts.remove,'nc'),Function(set_hint,"You've gotten the info from "+nr.name+". Maybe you should try calling "+nc.name+""),Hide('show_text_msg'),Show('phone_text_screen')]
+                                        action [Function(read_message,k,b,v),Function(not_in_contacts.remove,'nc'),Function(set_hint,"You've gotten the info from "+nr.name+". Maybe you should try calling "+nc.name+""),Hide('show_text_msg'),Show('phone_text_screen')]
                                         tooltip "Click to add to contacts"
                                     else:
-                                        action [Function(set_hint,"You've gotten the info from "+nr.name+". Maybe you should try calling "+nc.name+""),Hide('show_text_msg'),Show('phone_text_screen')]
+                                        action [Function(read_message,k,b,v),Function(set_hint,"You've gotten the info from "+nr.name+". Maybe you should try calling "+nc.name+""),Hide('show_text_msg'),Show('phone_text_screen')]
                                 else:
-                                    action [Hide('show_text_msg'),Show('phone_text_screen')]
+                                    action [Function(read_message,k,b,v),Hide('show_text_msg'),Show('phone_text_screen')]
 
     use phone_overlay
 
@@ -1959,7 +1992,6 @@ screen show_text_msg(compchar=False,char=False):
             pos(x, y)
             anchor (xval, yval)
             text GetTooltip() style "tooltip_hover"
-
 
 screen phone_call_screen():
     tag phonescreen
@@ -2188,6 +2220,14 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
         add "gui/phone_white.png" at ModZoom(.85)
         xalign .5
         yalign .5
+
+screen fridge_open():
+    if show_fridge:
+        $ show_fridge = False
+        frame:
+            background "images/fridge_open.jpg"
+            xalign .5
+            yalign .5
 
 screen warning_screen(height=0,width=0,txt=False):
     zorder 980
@@ -3072,6 +3112,23 @@ screen phone_overlay():
                     else:
                         action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
                         tooltip "Turn off the phone"
+        if renpy.get_screen('display_achievements'):
+            hbox:
+                xalign .5
+                yalign .5
+                add "gui/phone_bottom_overlay.png" at ModZoom(.85)
+            hbox:
+                xalign .5
+                yalign .818
+                imagebutton auto "gui/phone_unlock_%s.png":
+                    action ToggleVariable('show_unlocked_achievements')
+                    xpos -100
+                imagebutton auto "gui/phone_lock_%s.png":
+                    action ToggleVariable('show_locked_achievements')
+                    xalign .5
+                imagebutton auto "gui/phone_hidden_%s.png":
+                    action ToggleVariable('show_hidden_achievements')
+                    xpos 100
 
     if keyclose and renpy.get_screen('phonescreen'):
         if renpy.get_screen('show_text_msg'):
@@ -3310,6 +3367,7 @@ screen maininfo():
                 text "There will be short info-screens for the different objects you can pick up and use in particular ways as well, as the game progresses.\n"
                 text "Up left you have a button for\n ":
                     justify True
+                    text_align .5
                 textbutton "{u}stats for each NPC{/u}":
                     text_size 20
                     ypos -58
@@ -3321,6 +3379,7 @@ screen maininfo():
                     ypos -94
                     xpos 520
                     justify True
+                    text_align .5
                 text "and a":
                     ypos -94
                 textbutton "{u}t-shirt{/u}":
@@ -3367,11 +3426,8 @@ screen input(prompt):
             xalign gui.dialogue_text_xalign
             xpos gui.dialogue_xpos
             xsize gui.dialogue_width
-            # ypos gui.dialogue_ypos
-            # ypos 10
             yalign .4
 
             text prompt style "input_prompt"
-            text "\n"    # yalign 0.0
+            text "\n"
             input id "input" color "#fff"
-

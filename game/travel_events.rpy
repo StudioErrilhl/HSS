@@ -12,6 +12,7 @@ label travel_events(event=False):
                         fp "Hi [nk]"
                     if bad_weather and rainstorm:
                         $ text1 = "Sure! That way I won't be late, not to mention drowning by the time I get there!\n{i}Damn, she saved my scrawny ass. Don't understand why she gets so much flak at school, she's nice...{/i}"
+                        $ text2 = False
                     else:
                         $ text1 = "Sure! Then I won't be late!\n{i}Who cares if "+nk.name+" is not one of the popular kids - her offer is nice{/i}"
                         $ text2 = "No thanks! I'll just walk. Don't really wanna trust my life to your driving!\n{i}Don't wanna be caught dead in the same car as "+nk.name+"...{/i}"
@@ -102,7 +103,7 @@ label travel_events(event=False):
                 $ addtime(False,25)
                 if int(current_time[:2]) >= 8 and int(current_time[3:]) >= 0:
                     # call school_walk_late_arrival_event(True)
-                    if (int(current_time[3:]) <= 5 and renpy.random.random() < .25) or int(current_time[3:]) > 5:
+                    if (int(current_time[3:]) <= 10 and renpy.random.random() < .25) or int(current_time[3:]) > 10:
                         "{i}Arriving at school, you can see that you're late{/i}\nYou hurry up the stairs, trying to get to your classroom as fast as humanly possible"
                         sn "Greetings, [fp]!"
                         "[sn]s voice sneaks up on you as you hurry through the hallways"

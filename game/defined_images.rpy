@@ -766,10 +766,6 @@ image black_car:
         "int(current_time[:2]) in night","images/black_car_night_idle.png",
         True,"images/black_car_morning_idle.png"
         )
-    # zoom .7
-    # yalign 1.0
-    # yoffset 140
-    # xoffset 260
 
 image stats_hover:
     "gui/stats_hover.png"

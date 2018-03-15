@@ -7,14 +7,19 @@ label fs_talk(fst_called=False):
                 fp "How you doing today?"
                 show fs_standing annoyed
                 $ text = "Bah. It's a crappy day, and I have to go to school {0}and talk to my teacher. Something about maybe not being allowed to take one of my finals".format('tomorrow ' if int(current_time[:2]) > 15 else '')
+                show fs_standing sad
                 fs sad "[text]"
                 fp "Seriously? That sounds bad"
+                show fs_standing annoyed
                 fs annoyed "It's an error on their part, not on mine. I've been good all year, done all my work, behaved. But for some reason their system says I've gotten a written warning, and that I've gotten 3 or 4 calls home. I've gotten [fmName.informal] to come with, so she can tell them in person that it's wrong"
+                show fs_standing crying
                 fs crying "It's bloody annoying! I've been good. Done everything, behaved, been nice. Nothing to deserve this, not one single thing! And nobody wants to listen to me, claiming that their system is fail-proof. I hope bringing [fmName.informal] will at least make them look over it again."
                 fp "I'm sorry that you have so much trouble. It's probably just a computer-glitch, or something like that. Somebody hit the wrong button for an ID, or something."
+                show fs_standing sad
                 fs sad "Yeah... Thanks, [fp] {i}She sounds defeated...{/i}"
                 fp "Don't let it get you down, [fsName.informal]"
                 fp "You'll get it fixed, I'm sure of it!"
+                show fs_standing ahead
                 fs ahead "I hope so. Thanks, [fp]"
                 $ statschangenotify("fs_rel",1)
                 $ fs_si = False
@@ -34,7 +39,7 @@ label fs_talk(fst_called=False):
                     fs smile "Yeah, all is good now, I'm gonna be allowed to take my exams and everything."
                     fp "{i}Hmm... sounds weird that they would make so many mistakes, all pertaining to [fsName.myformal]. Either they're completely incompetent, or there is something else going on...{/i}"
                     $ fs_si_2 = False
-                    $ hacker = True
+                    $ hacker_1 = True
                     hide fs_standing
                     return
                 else:
@@ -51,7 +56,7 @@ label fs_talk(fst_called=False):
                     return
                 return
             label school_hacker_talk(sht_called=False):
-                if hacker and day_week <= 4 and current_location == 'schoolbuilding_loc':
+                if hacker_1 and day_week <= 4 and current_location == 'schoolbuilding_loc':
                     if hacker_first_thought:
                         "{i}You've been thinking about what happened with [fsName.yourformal], and you were almost sure that it wouldn't be possible to manage that many mistakes by accident. Also, they hadn't found out who had updated the records... that's usually registered...{/i}"
                         $ hacker_first_thought = False
@@ -82,7 +87,7 @@ label fs_talk(fst_called=False):
                                 # scn smiles
                                 # scene change to outside school?
                                 fp "{i}So, there {b}is{/b} a chance someone did this on purpose - or, maybe even just by accident, messing with the internal systems. Damn, I wish I was a computer geek... No idea how this could be done. I need to talk to [nr]. If he doesn't know, I'm sure he'll know someone who does.{/i}"
-                                $ hacker = False
+                                $ hacker_1 = False
                                 $ hacker_2 = True
                                 return
                             "Nah, not today, I'll do it tomorrow instead":
@@ -146,7 +151,10 @@ label fs_talk(fst_called=False):
                 fp "{i}Oh, shit...\nDid she actually just say that?{/i}\nI'm really sorry? Look, I owe you one, okay. If you need anything, a ride, drinks, anything, just ask, okay?"
                 show fs_standing smile_open with dissolve
                 fs smile "{b}Smiling now...{/b}\nOh, don't you worry. I will ask. You bet on it!"
-                "With that, she picks herself off the couch, and wanders off"
+                if renpy.get_screen('livingroom'):
+                    "With that, she picks herself off the couch, and wanders off"
+                else:
+                    "With that, she wanders off"
                 hide fs_standing with dissolve
                 $ statschangenotify("fs_rel",3,True)
                 $ firstday_talk = False
@@ -159,15 +167,13 @@ label fs_talk(fst_called=False):
                             $ fs_mad = False
                             $ morning_event_done = True
                             $ fdtfs_after = False
-                            if int(current_time[:2]) in night: #else:
+                            if int(current_time[:2]) in night:
                                 call end_of_day(True) from _call_end_of_day
-                            # return
                         else:
                             $ morning_event_done = True
                             $ fdtfs_after = False
-                            if int(current_time[:2]) in night: #else:
+                            if int(current_time[:2]) in night:
                                 call end_of_day(True) from _call_end_of_day_1
-                            # return
             elif day_week <= 4:
                 if int(current_time[:2]) > 17:
                     $ settime(22,False,True,'fs_where')

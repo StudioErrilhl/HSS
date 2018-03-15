@@ -194,7 +194,6 @@ label outside_scene(trans=True):
             else:
                 scene outside_morning_with_car
     elif int(current_time[:2]) in night:
-        $ print(int(current_time[:2]))
         if int(current_time[:2]) < 4 or int(current_time[:2]) >= 22:
             if trans:
                 if bad_weather:
