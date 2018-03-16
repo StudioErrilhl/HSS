@@ -94,7 +94,7 @@ label nc_talk(event=False,callrand=False):
             $ nc_owed = 0
             $ visit_icafe_2 = False
             $ visit_icafe_3 = True
-            call nc_talk(event='icafe_talk_after_payment')
+            call nc_talk(event='icafe_talk_after_payment') from _call_nc_talk
         else:
             fp "I can't afford that right now"
             nc "Then get back to me when you can"
@@ -107,16 +107,20 @@ label nc_talk(event=False,callrand=False):
 
     if event == 'icafe_talk_after_payment':
         if nc_owed <= 2000 and nc_owed != 0:
-            nc "So, [fp]... you got my cash?"
+            $ nctext = "So, "+str(fp)+"... {0}".format("you got the rest of my cash?" if nc_payment_made else "you got my cash?")
+            nc "[nctext]"
             if fp_money > nc_owed:
                 fp "Yeah, I do..."
+                $ tmp_nc_owed = nc_owed-(max(nc_owed-fp_money,0))
             else:
                 fp "Well, I got some of it..."
+                $ tmp_nc_owed = nc_owed-(max(nc_owed-fp_money,0))
+                $ nc_payment_made = True
             label give_nc_money():
                 menu:
-                    "Give [nc] the $[nc_owed]":
-                        $ fp_money -= nc_owed
-                        $ nc_owed -= nc_owed
+                    "Give [nc] the $[tmp_nc_owed]":
+                        $ fp_money -= tmp_nc_owed
+                        $ nc_owed -= tmp_nc_owed
                         jump after_money_exchange
                     "How much do you want to give?":
                         python:
@@ -158,15 +162,17 @@ label nc_talk(event=False,callrand=False):
                     fp "Haha. You're funny. The school just wanna sweep this under the rug"
                     nc "Okay, I'm gonna need a bit of time to set this up. Gimme a week or so. I'll contact you via text"
                     $ nc_action_started = 1
+                    $ visit_icafe_3 = False
+                    $ addtime(1)
                 else:
                     nc "You still owe me $[nc_owed]"
                     fp "I know. I was hoping you could perhaps start, and I will get the rest of the..."
                     nc "No!"
                     nc "You need my help, not the other way around. You pay me, up front, and I help. Until you pay, no help"
                     fp "Fine..."
+                    $ addtime(False,30)
 
-        $ visit_icafe_3 = False
-        call change_loc(current_location)
+        call change_loc(current_location) from _call_change_loc_68
 
     if event == 'icafe_talk_7_days':
         fp "{i}Now, where is she...{/i}"
@@ -196,19 +202,19 @@ label nc_talk(event=False,callrand=False):
         fp "Do you know anything about this guy? Where I might find him, or anything useful to track him down?"
         "She looks away for a bit..."
         nc "No... no, not really"
-        fp "Oh, come on. You clearly know {b}something(/b}! Tell me!"
+        fp "Oh, come on. You clearly know {b}something{/b}! Tell me!"
         nc "I don't take orders from you. I don't even think I like you. So don't come here and demand information about my... {i}She cuts herself off, before finishing the sentence{/i}"
         fp "Your... wait. [hj] is your... what? Boyfriend?"
         nc "NO! He's just... "
         "She looks flustered... not embarrassed, just... unsure of what she should tell you, maybe?"
         nc "He's a guy I used to hook up with, okay? Then... shit happened, and we had to stop doing that. It's... sorta weird, and not something I wanna share. Okay?"
-        fp "Okay, no problem. I don't really care who you bonk, what I do care about is whether or not I can get a hold of him"
+        fp "Okay, no problem. I don't really care who you boink, what I do care about is whether or not I can get a hold of him"
         nc "I can probably get him here..."
         fp "Okay. Have him show up, then text me. I can be here in 30 minutes max!"
         nc "I'll text you when I got him"
         "You head out, going back home seems like a good plan for now"
         $ nc_action_started = 1
-        call change_loc('outside')
+        call change_loc('outside') from _call_change_loc_69
 
     if event == 'icafe_talk_hj':
         "This is as far as this story goes for now"

@@ -134,6 +134,21 @@ init python:
         assert False, "Shouldn't get here"
 
 init 10 python:
+    def addday(dayamount):
+        global day_week,current_month_day,current_month
+        local_dw = day_week
+        day_week = 0 if day_week == 6 else day_week+1
+        if local_dw != day_week:
+            if current_month_day == months_days[current_month][1]:
+                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
+                current_month_text = months_days[current_month][0]
+                current_month_day = 1
+            else:
+                current_month_day += 1
+                day_ahead = True
+        setattr(store,'current_time','06:00')
+        setattr(store,'day_week',day_week)
+        setattr(store,'current_month',current_month)
     def addtime(hours=False,minutes=False,update_scene=False,sec_call=False):
         global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text,wetshower,not_entered,nc_action_started,nc_action_completed,nc_event,visit_icafe_4,nc_happens
         local_dw = day_week
@@ -268,14 +283,14 @@ init 10 python:
             if hacker_4 and int(current_time[:2]) == 18:
                 renpy.call("nr_talk",'nr_first_visit')
 
-            if nc_action_started == 7 and int(current_time[:2]) in day:
+            if nc_action_started >= 7 and int(current_time[:2]) in day:
                 nc_action_started = False
                 nc_action_completed = True
                 visit_icafe_4 = True
                 set_message('nc',nc,"Meet me at "+icafe+" tonight. Around 22-23")
                 nc_event = 'icafe_talk_7_days'
 
-            if nc_action_completed and nc_action_started == 4:
+            if nc_action_completed and nc_action_started >= 4 and (int(current_time[:2]) in [21,22,23]):
                 nc_action_started = False
                 set_message('nc',nc,""+str(hj)+" is here. You got... maybe an hour")
                 nc_event = 'icafe_talk_hj'

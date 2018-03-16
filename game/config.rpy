@@ -42,7 +42,7 @@ default persistent.cheat = False
 define narrator = Character(None, what_italic=True)
 define unk_f = Character('Unknown female')
 define unk_m = Character('Unknown male')
-define fp = Character("[fpinput]",image="fp_talkside",who_background="gui/namebox_fp.png")
+define fp = Character("[fpinput]",image="fp_talkside")
 define fm = Character("[fmName.Name]",image="fm_talkside")
 define fs = Character("[fsName.Name]",image="fs_talkside")
 define hj = Character("Jizzer")
@@ -252,8 +252,10 @@ default not_entered = True
 
 # nc events
 default nc_owed = 0
+default tmp_nc_owed = 0
 default nc_action_started = False
 default nc_action_completed = False
+default nc_payment_made = False
 
 # items
 default fs_pale_pink_panties = False

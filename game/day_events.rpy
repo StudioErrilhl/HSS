@@ -45,7 +45,7 @@ label day_events():
                             $ statschangenotify("fm_rel",-.5)
                 $ sun_event = False
                 hide fm_standing
-                call change_loc(current_location)
+                call change_loc(current_location) from _call_change_loc_70
 
     label dinner_events(de_called=False):
         if de_called:
@@ -101,7 +101,7 @@ label day_events():
                         "[text]"
                         $ addtime(2)
                         "After waiting for ages, [fmName.yourformal] finally comes home and let you into the house"
-                        call change_loc('entrance')
+                        call change_loc('entrance') from _call_change_loc_71
                 else:
                     call livingroom_scene from _call_livingroom_scene_2
                     if renpy.random.random() > .5 and not hacker_3:

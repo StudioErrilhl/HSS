@@ -406,7 +406,7 @@ style notify_text:
     properties gui.text_properties("notify")
     color "#fff"
 
-screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=current_month_day,current_time=current_time):
+screen ingame_menu_display(day_week=day_week,current_month=current_month,current_month_day=current_month_day,current_time=current_time):
     zorder 300
     default x = 500
     default y = 400
@@ -551,7 +551,7 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             else:
                 add "gui/menu_phone_outline.png" at ModZoom(.8)
 
-    frame: #calendar-display
+    frame: #calendar_display
         xpos 1810
         xpadding 0
         ypadding 0
@@ -560,17 +560,24 @@ screen ingame_menu_display(day_week=day_week,month=current_month_text,month_day=
             xsize 100
             xalign .5
             $ current_day = week_days[day_week]
-            $ current_month = month
-            $ current_month_day = month_day
+            $ current_month = months_days[current_month][0]
+            $ current_month_day = current_month_day
             text "[current_month]":
                 xalign .5
                 color "#fff"
                 size 20
-            text "[current_month_day]":
+            # text "[current_month_day]":
+            #     xalign .5
+            #     color "#000"
+            #     ypos -5
+            #     size 55
+            textbutton "[current_month_day]":
                 xalign .5
-                color "#000"
+                text_color "#000"
                 ypos -5
-                size 55
+                padding 0,0
+                text_size 55
+                action [Function(addday,1),Jump('day_start')] focus_mask None
             if bad_weather and rainstorm and int(current_time[:2]) in night:
                 add "gui/night_rain_icon.png":
                     xalign .5
@@ -1554,6 +1561,11 @@ screen location(room=False):
                     else:
                         $ returnbfp = False
                 imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('occupied_bath',randomchoice),SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',returnbfp),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                    xalign .5
+                    yalign 1.0
+                    tooltip exitdown
+            elif current_location == 'icafe_loc':
+                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable(exitdown_event_var,True),Function(addtime,False,25),Jump('outside_loc')]:
                     xalign .5
                     yalign 1.0
                     tooltip exitdown

@@ -315,7 +315,7 @@ label start:
                             $ required_shower = True
                             call change_loc('upper hallway bathroom') from _call_change_loc_30
                         else:
-                            call change_loc('kitchen')
+                            call change_loc('kitchen') from _call_change_loc_67
                     else:
                         call repeat_event(6) from _call_repeat_event_6
                 elif event == 88:
