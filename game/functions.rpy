@@ -230,7 +230,6 @@ init 10 python:
                             current_time = '0'+current_time
                         setattr(store, 'current_time', current_time)
             if minutes:
-                print(local_time)
                 if int(local_time[-2:])+int(minutes) >= 60:
                     update_minutes = (int(local_time[-2:])+int(minutes))-60
                     if len(str(update_minutes)) == 1:

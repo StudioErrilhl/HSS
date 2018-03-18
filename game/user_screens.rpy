@@ -1369,7 +1369,7 @@ screen location(room=False):
         if not backpack.has_item(toolbox_item):
             if int(current_time[:2]) in night and not mc_f:
                 add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_night_idle.png"
-            elif not end_bike_repair and not mc_f:
+            elif not mc_f:
                 if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
                     imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('toolbox_added',True),Jump('garage_loc')]
                 else:

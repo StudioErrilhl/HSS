@@ -25,6 +25,10 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
             if firstday_talk:
                 if renpy.random.random() > .75:
                     call fs_talk(True) from _call_fs_talk
+        if nk_school_assignment_evening:
+            if 18 <= int(current_time[:2]) < 20:
+                call evening_event_label(True)
+
         if char and imgname:
             show expression "images/characters/[char]/body/standing/[imgname].png" as character: # at fs_standing_ahead_ani with dissolve:
                 zoom .65
@@ -434,6 +438,9 @@ label outside_loc(out_called=False,trans=False):
             call outside_scene from _call_outside_scene_1
         if day_week <= 4 and int(current_time[:2]) in morning:
             call outside_scene from _call_outside_scene_3
+            if bad_weather:
+                if rainstorm:
+                    show rain
             menu:
                 "Go to school":
                     call travel_events('travel_school') from _call_travel_events
@@ -499,7 +506,6 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
     if uhlbc or uhlbcfs:
         $ uhlbc = uhlbcfs = False
         $ current_location = 'upper_hallway_bathroom_loc'
-        $ print(current_location)
         $ loct = False
         if occupied_bath:
             if not bathroom_occupied_fs and not bathroom_occupied_fm:
@@ -601,7 +607,6 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                         $ addtime(False, 30)
                     call change_loc('upper hallway') from _call_change_loc_24
         else:
-            $ print('else happened')
             if not uhl_bathroom_ach:
                 $ uhl_bathroom_ach = True
                 $ update_been_everywhere_achievement()
@@ -616,16 +621,13 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
             if bathroom_panties_added:
                 $ current_p = getattr(store,gp_bath+"_panties_item")
                 if backpack_carry:
-                    $ print('backpack panties')
                     if not backpack.has_item(current_p):
-                        $ print('bp_hasitem')
                         $ r = random.randint(0,3)
                         $ text = p_response[r]
                         if r == 0 or r == 3:
                             $ panties_sniffer = True
                             $ update_panties_achievements()
                     else:
-                        $ print('bp_nothasitem')
                         $ aux = list(p_response)
                         $ del aux[2]
                         $ r = random.randrange(len(aux))
@@ -633,7 +635,6 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                         if r == 0 or r == 3:
                             $ panties_sniffer = True
                             $ update_panties_achievements()
-                    $ print(text)
                     "[text]"
                     menu:
                         "Take panties":
@@ -770,7 +771,7 @@ label beach_loc(br_called=False,br_cfs=False):
     if br_called or br_cfs:
         $ br_called = br_cfs = False
         $ addtime(1,30)
-    call change_loc('beach')
+    call change_loc('beach') from _call_change_loc_26
     # call end_of_day()
 
 label next_town_ride(ntr_called=False,trans=False):

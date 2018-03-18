@@ -1,5 +1,5 @@
 label nr_talk(event=False,callrand=False):
-    if event == 'nr_intro':
+    if event == 'nr_intro' and not nre:
         $ hacker_3 = False
         "You decide to call [nr] to see if he's free to hang out"
         fp "Hey, [nr]"
@@ -11,9 +11,10 @@ label nr_talk(event=False,callrand=False):
         $ text = "Okay. See you {0}".format('soon' if int(current_time[:2]) < 20 else 'tomorrow')
         nr "[text]"
         $ hacker_4 = True
+        $ nre = True
         call change_loc(current_location) from _call_change_loc_27
 
-    if event == 'nr_first_visit':
+    if event == 'nr_first_visit' and not nre:
         if current_location != 'garage':
             call change_loc('garage',sec_call='nr_first_talk') from _call_change_loc_28
         label nr_first_talk(True):
@@ -72,9 +73,10 @@ label nr_talk(event=False,callrand=False):
                 $ set_hint("You need to wait for "+nr.name+" to send you "+nc.name+"'s info")
             $ hacker_4 = False
             $ set_message('nr',nr,"The number for "+nc.name+" is "+nc_number+"")
+            $ nre = True
             call change_loc(current_location,loctrans=True) from _call_change_loc_29
 
-    if event == 'nr_first_call':
+    if event == 'nr_first_call' and not nre:
         if nc_after_ft:
             nr "Hey?"
             fp "Hey, man!"
@@ -102,4 +104,5 @@ label nr_talk(event=False,callrand=False):
         else:
             $ calling = duringcall = False
             fp "No answer. I'll try him again later"
+        $ nre = True
         call change_loc(current_location) from _call_change_loc_56

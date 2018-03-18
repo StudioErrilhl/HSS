@@ -23,7 +23,7 @@ define gui.show_name = False
 
 ## The version of the game.
 
-define config.version = "0.024-Hotfix-(Alpha)"
+define config.version = "0.025-rc1-(Alpha)"
 
 
 ## Text that is placed on the game's about screen. To insert a blank line
@@ -31,13 +31,13 @@ define config.version = "0.024-Hotfix-(Alpha)"
 
 define gui.about = _("{b}HSS (or HighSchool Shenanigans){/b} is an adult-themed visual novel, with some randomness, and a lot of sexy content. You're playing as <player> (pick your name, or default to Marten), an 18 year old boy who's finishing high school, and is mildly anxious about his exams, the lack of a girlfriend, noone to take to the dance, and how to get his motorcycle rebuilt properly. Add to this an abundance of hot girls in his vicinity, and you got most of the plot right there. At least if you only knew what opportunities you have right at your feet.\n\nThe game is about discovering those opportunities, and realising what you can do, not to mention WHO you can do!\n\nThe game is in very early development, and currently we're working on the game mechanics, how to modify relationships, how to build a believeable story, and how to decide which characters get to do what with whom.\n\n")
 #••••••
-define gui.changelog = _("{b}0.024 Hotfix:{/b}\n• Fixed #164 - bug - tooltips under char image on phone-call\n• Fixed #167 - bug - problems going to beach after fixing bike\n• Fixed #168 - bug - gfx-issues entrance during nighttime\n• Fixed #169 - bug - tablet_no_content_warning.png not found\n• Fixed #170 - bug - bike-stat doesn't stop at 150\n• Fixed #171 - bug - panties disappearing (no choice menu) in bathroom\n• Fixed an issue with the wet shower not \"sticking\"\n• Fixed a wrongly named bedroom-background for Martens bedroom\n• Fixed a minor issue with the toolbox still showing when the bike is finished\n• Modified the options.rpy to not use .rpa-archives for the beta-builds\n• Modified the exit code for the upper hallway bathroom\n• Rewrote Marten's bedroom scenes (background code)")
+define gui.changelog = _("{b}0.025-rc1:{/b}\n• Added event-variables so only one event can happen per person per day\n• Fixed an issue where you couldn't pick up the toolbox after completing that day's repair-events\n• Fixed #134 - bug - Karen-events doesn't always trigger after deciding to meet up in the evening\n• Fixed #159 - bug - icafe event chain\n• Fixed #161 - bug - rain stops during dialogue / choices outside\n• Fixed #164 - bug - multiple events on the same day")
 
 ## A short name for the game used for executables and directories in the built
 ## distribution. This must be ASCII-only, and must not contain spaces, colons,
 ## or semicolons.
 
-define build.name = "HSS0.024-Hotfix"
+define build.name = "HSS"
 
 
 ## Sounds and music ############################################################

@@ -143,7 +143,7 @@ label day_events():
                     $ conditions.addcondition("Go to the marina","boat_at_marina")
                     menu:
                         "Go to the beach":
-                            call change_loc('beach')
+                            call change_loc('beach') from _call_change_loc_75
                         "Ride to the next town over":
                             jump next_town_ride
                         "Go to the cabin":

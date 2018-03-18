@@ -2,7 +2,7 @@ label fs_talk(fst_called=False):
     if fst_called:
         $ fst_called = False
         if not fs_mad:
-            if fs_si and day_week <= 4:
+            if fs_si and day_week <= 4 and not fse:
                 show fs_standing ahead
                 fp "How you doing today?"
                 show fs_standing annoyed
@@ -22,11 +22,12 @@ label fs_talk(fst_called=False):
                 show fs_standing ahead
                 fs ahead "I hope so. Thanks, [fp]"
                 $ statschangenotify("fs_rel",1)
+                $ fse = True                
                 $ fs_si = False
                 $ fs_si_2 = True
                 hide fs_standing
                 return
-            if fs_si_2:
+            if fs_si_2 and not fse:
                 show fs_standing ahead
                 fp "How did it go with the issue you had with the school?"
                 if persistent.first_playthrough:
@@ -41,7 +42,6 @@ label fs_talk(fst_called=False):
                     $ fs_si_2 = False
                     $ hacker_1 = True
                     hide fs_standing
-                    return
                 else:
                     fs mad "Oh, the damn idiots didn't even wanna listen to me. Or [fmName.informal], for that matter. Just went on about how their system didn't make mistakes."
                     fp "Okay...? So, they're still threathening with disallowing you for your finals?"
@@ -53,7 +53,7 @@ label fs_talk(fst_called=False):
                     $ fs_si_2 = False
                     $ scs = True
                     hide fs_standing
-                    return
+                $ fse = True
                 return
             label school_hacker_talk(sht_called=False):
                 if hacker_1 and day_week <= 4 and current_location == 'schoolbuilding_loc':
@@ -92,7 +92,7 @@ label fs_talk(fst_called=False):
                                 return
                             "Nah, not today, I'll do it tomorrow instead":
                                 call evening_home(True) from _call_evening_home
-            if hacker_2:
+            if hacker_2 and not fse:
                 show fs_standing ahead with dissolve
                 fp "How you doing today?"
                 fs sad "Okay, I guess. A bit worried about finals"
@@ -109,13 +109,16 @@ label fs_talk(fst_called=False):
                 $ hacker_2 = False
                 $ hacker_3 = True
                 $ call_nr = True
+                $ fse = True
                 hide fs_standing with dissolve
             elif scs_2:
                 fp "How you doing today?"
                 fs ahead "Oh, I'm good. Got a call from school the other day that they've figured out that I was right. No excuses or anything, just... \"You were right, you can take your exams\". Fuck 'em. But I'm happy I don't have to do summer-school or something like that!"
                 fp "Yeah... I went to talk to the clerks. They know me. Got [clerk_talked_to] to look it over. Guess she found something"
+                $ fse = True                
+
         else:
-            if firstday_talk or talk_later:
+            if (firstday_talk or talk_later) and not fse:
                 show fs_standing annoyed with dissolve
                 if talk_later:
                     if int(current_time[:2]) < 15:
@@ -155,6 +158,7 @@ label fs_talk(fst_called=False):
                     "With that, she picks herself off the couch, and wanders off"
                 else:
                     "With that, she wanders off"
+                $ fse = True
                 hide fs_standing with dissolve
                 $ statschangenotify("fs_rel",3,True)
                 $ firstday_talk = False

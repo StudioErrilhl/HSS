@@ -123,6 +123,7 @@ label start:
         call skip_breakfast(True) from _call_skip_breakfast
 
     label day_start():
+        $ fpe = fme = fse = hje = nbe = nre = nke = nce = sne = see = spe = sje = scne = scme = False    
         $ find_panties = True if renpy.random.random() > .75 else False
         $ find_pb_mod = .65 if fs_aro > 10 else .90
         $ find_pb = True if renpy.random.random() > find_pb_mod else False
@@ -274,7 +275,7 @@ label start:
                                     $ mc_p = "{0:.2f}".format(mc_p)
                                     if mc_b == 150:
                                         $ mc_f = True
-                                        call change_loc('garage')                                        
+                                        call change_loc('garage') from _call_change_loc_72                                        
                                     if mc_t == 0:
                                         $ renpy.notify("You did not improve the status of the bike this time")
                                     else:
@@ -294,7 +295,7 @@ label start:
                                     $ mc_p = "{0:.2f}".format(mc_p)
                                     if mc_b == 150:
                                         $ mc_f = True
-                                        call change_loc('garage')
+                                        call change_loc('garage') from _call_change_loc_73
                                     if mc_t == 0:
                                         $ renpy.notify("You did not improve the status of the bike this time")
                                     else:

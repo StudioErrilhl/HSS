@@ -1,5 +1,5 @@
 label nc_talk(event=False,callrand=False):
-    if event == 'first_talk':
+    if event == 'first_talk' and not nce:
         if callrand:
             if callrand > .35 and not nc_after_ft:
                 nc "Hello?"
@@ -27,9 +27,10 @@ label nc_talk(event=False,callrand=False):
                     fp "No answer. No surprise there, after what she did when I called the first time..."
                 else:
                     fp "No answer. I guess I'll have to try again later"
+            $ nce = True
         call change_loc(current_location) from _call_change_loc_25
 
-    if event == 'icafe_visit':
+    if event == 'icafe_visit' and not nce:
         $ settime(20,00)
         if visit_icafe_1:
             $ addtime(False,30)
@@ -59,9 +60,10 @@ label nc_talk(event=False,callrand=False):
             $ addtime(False,20)
         else:
             fp "I should call [nr] and see if he knows where I might find [nc]..."
+        $ nce = True
         call change_loc(current_location) from _call_change_loc_55
 
-    if event == 'icafe_talk':
+    if event == 'icafe_talk' and not nce:
         $ addtime(False, 30)
         "You decide to go try to get a hold of [nc]. Hopefully she's calmed down after the accident with her laptop"
         "Arriving at [icafe], slightly earlier in the day this time around, you head to the back, to see if you can find [nc] anywhere"
@@ -104,8 +106,9 @@ label nc_talk(event=False,callrand=False):
             $ visit_icafe_2 = False
             $ visit_icafe_3 = True
         $ addtime(False,30)
+        $ nce = True
 
-    if event == 'icafe_talk_after_payment':
+    if event == 'icafe_talk_after_payment' and not nce:
         if nc_owed <= 2000 and nc_owed != 0:
             $ nctext = "So, "+str(fp)+"... {0}".format("you got the rest of my cash?" if nc_payment_made else "you got my cash?")
             nc "[nctext]"
@@ -171,10 +174,11 @@ label nc_talk(event=False,callrand=False):
                     nc "You need my help, not the other way around. You pay me, up front, and I help. Until you pay, no help"
                     fp "Fine..."
                     $ addtime(False,30)
+        $ nce = True
 
         call change_loc(current_location) from _call_change_loc_68
 
-    if event == 'icafe_talk_7_days':
+    if event == 'icafe_talk_7_days' and not nce:
         fp "{i}Now, where is she...{/i}"
         nc "Hey, [fp]!"
         "Jumping a bit, you quickly gather your wits about you again..."
@@ -214,7 +218,9 @@ label nc_talk(event=False,callrand=False):
         nc "I'll text you when I got him"
         "You head out, going back home seems like a good plan for now"
         $ nc_action_started = 1
+        $ nce = True
         call change_loc('outside') from _call_change_loc_69
 
-    if event == 'icafe_talk_hj':
+    if event == 'icafe_talk_hj' and not nce:
         "This is as far as this story goes for now"
+        $ nce = True

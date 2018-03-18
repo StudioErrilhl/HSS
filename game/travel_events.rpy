@@ -37,7 +37,7 @@ label travel_events(event=False):
                                         call travel_events('arrive_school') from _call_travel_events_7
                                     else:
                                         call school_events('sn_punishment_late') from _call_school_events_2
-                elif not shitty_morning and int(current_time[:2]) <= 7 and renpy.random.random() < .4:
+                elif not shitty_morning and int(current_time[:2]) <= 7 and renpy.random.random() < .5:
                     show nk_standing ahead with dissolve
                     nk ahead "Hi [fp]! Wanna walk to school with me?"
                     menu:
@@ -62,7 +62,7 @@ label travel_events(event=False):
                             $ statschangenotify("nk_rel",nkrel)
                             $ renpy.pause(.5)
                             call travel_events('arrive_school') from _call_travel_events_9
-                elif not shitty_morning and renpy.random.random() > .6:
+                elif not shitty_morning and renpy.random.random() > .75:
                     $ t_w = [(0,6),(1,6),(2,1),(3,3)] # travel events weights
                     $ t_e = [ # travel events
                         ["see something",False,"You cross the street, trying to get a better look","Forget about it",False,30],

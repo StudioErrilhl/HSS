@@ -330,7 +330,7 @@ label morning_events():
                     fp "Ah, it's a beautiful day. Maybe I should go to the beach...?"
                     menu:
                         "Go to the beach":
-                            call change_loc('beach')
+                            call change_loc('beach') from _call_change_loc_74
                         "Nah, slack of in the garden instead":
                             call entrance_loc() from _call_entrance_loc_5
 

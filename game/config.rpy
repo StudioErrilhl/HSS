@@ -72,6 +72,7 @@ default fp_creep = 0
 default fp_money = 200
 default punishment_late = 0 #this is the variable for punishment value for lateness at school - reach too high a number, and [fM] is called, and her relationship stat decrease
 default filth_val = 0
+default fpe = False
 
 #fm
 default fm_dom = 0
@@ -84,6 +85,7 @@ default fm_bj = 0
 default fm_apologize = False
 default fm_sex_pref = "BJ"
 default fm_lvl = 0
+default fme = False
 
 #fs
 default fs_dom = 0
@@ -96,6 +98,7 @@ default fs_bj = 0
 default fs_sex_pref = "BJ"
 default fs_lvl = 0
 define fs_mad = False
+default fse = False
 
 #nk
 default nk_dom = 0
@@ -111,6 +114,7 @@ default nk_school_assignment_evening = False
 default nk_school_assignment_evening_first = True
 default nk_driving = False
 default nk_sa_status = False
+default nke = False
 
 #nc
 default nc_dom = 0
@@ -125,6 +129,7 @@ default nc_lvl = 0
 default nc_number = '111-555-3369'
 default nc_event = False
 default nc_happens = False
+default nce = False
 
 #nb
 default nb_dom = 0
@@ -136,10 +141,12 @@ default nb_pussy = 0
 default nb_bj = 0
 default nb_sex_pref = "BJ"
 default nb_lvl = 0
+default nbe = False
 
 #nr
 default nr_rel = 0
 default nr_lvl = 0
+default nre = False
 
 #sn
 default sn_dom = 0
@@ -151,26 +158,32 @@ default sn_pussy = 0
 default sn_bj = 0
 default sn_sex_pref = "BJ"
 default sn_lvl = 0
+default sne = False
 
 #se
 default se_rel = 0
 default se_lvl = 0
+default see = False
 
 #sp
 default sp_rel = 0
 default sp_lvl = 0
+default spe = False
 
 #sj
 default sj_rel = 0
 default sj_lvl = 0
+default sje = False
 
 #scn
 default scn_rel = 0
 default scn_lvl = 0
+default scne = False
 
 #scm
 default scm_rel = 0
 default scm_lvl = 0
+default scme = False
 
 #sex-stats
 default total_anal = fm_anal + fs_anal + nk_anal + nb_anal + sn_anal
