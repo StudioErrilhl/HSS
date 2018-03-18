@@ -153,13 +153,13 @@ init 10 python:
         global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text,wetshower,not_entered,nc_action_started,nc_action_completed,nc_event,visit_icafe_4,nc_happens
         local_dw = day_week
         addhour = False
-        wetshower = False
         not_entered = True
         sethour = hours
         starthour = current_time[:2]
         if hours or minutes:
             local_time = current_time
             if hours:
+                wetshower = False
                 if int(local_time[:2])+int(hours) <= 23:
                     if int(local_time[:2])+int(hours) == 24:
                         current_time = str(int(0))+local_time[2:]
@@ -230,11 +230,12 @@ init 10 python:
                             current_time = '0'+current_time
                         setattr(store, 'current_time', current_time)
             if minutes:
+                print(local_time)
                 if int(local_time[-2:])+int(minutes) >= 60:
                     update_minutes = (int(local_time[-2:])+int(minutes))-60
                     if len(str(update_minutes)) == 1:
                         update_minutes = '0'+str(update_minutes)
-                    if local_time == '23:30':
+                    if local_time >= '23:30':
                         setattr(store,'current_time','00:00')
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:
@@ -252,7 +253,7 @@ init 10 python:
                         current_time = '0'+current_time
                     setattr(store,'current_time',current_time)
                 else:
-                    if local_time == '23:30':
+                    if local_time >= '23:30':
                         setattr(store,'current_time','00:00')
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:

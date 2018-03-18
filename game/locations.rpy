@@ -237,7 +237,7 @@ label icafe_loc(ic_called=False,trans=False):
         $ update_been_everywhere_achievement()
     if ic_called or ic_cfs:
         $ ic_called = ic_cfs = False
-    call change_loc('icafe') from _call_change_loc_58
+        call change_loc('icafe') from _call_change_loc_58
 
 label kitchen_loc(kit_called=False,trans=False):
     $ current_location = 'kitchen_loc'
@@ -448,9 +448,7 @@ label outside_loc(out_called=False,trans=False):
                     menu:
                         "Do a [drivingcmp] run":
                             $ randmoney = random.randrange(50,250)
-                            $ print(randmoney)
                             $ randmoney = int(round((float(randmoney) / 100.0) * float(70)))
-                            $ print(randmoney)
                             $ reply = "You made $"+str(randmoney)+" {0}".format("today" if int(current_time[:2]) in day else "tonight")
                             $ renpy.notify(""+reply+"")
                             $ fp_money += randmoney
@@ -497,103 +495,116 @@ label upper_hallway_loc(uhl_called=False,trans=False):
         #     call change_loc('upper hallway',sec_call='talk_fs')
         call change_loc('upper hallway') from _call_change_loc_16
 
-label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
-    $ current_location = 'upper_hallway_bathroom_loc'
-    $ loct = False
-    if occupied_bath:
-        if not bathroom_occupied_fs and not bathroom_occupied_fm:
-            if int(current_time[:2]) < 9:
-                if renpy.random.random() > .5:
-                    $ bathroom_occupied_fs = True
-                    $ bathroom_occupied_fm = False
-                elif renpy.random.random() < .15:
-                    $ bathroom_occupied_fs = False
-                    $ bathroom_occupied_fm = True
-            elif int(current_time[:2]) >= 9 and int(current_time[:2]) <= 15:
-                if renpy.random.random() > .80:
-                    $ bathroom_occupied_fs = False
-                    $ bathroom_occupied_fm = True
-            elif int(current_time[:2]) >= 17:
-                if renpy.random.random() > .65:
-                    $ bathroom_occupied_fs = True
-                    $ bathroom_occupied_fm = False
-                elif renpy.random.random() < .20:
-                    $ bathroom_occupied_fs = False
-                    $ bathroom_occupied_fm = True
-    else:
-        $ bathroom_occupied_fs = bathroom_occupied_fm = False
-    if (bathroom_occupied_fs or bathroom_occupied_fm) and not_entered:
-        $ uhl_bl_called = uhl_bl_cfs = False
-        "The bathroom is occupied"
-        $ conditions.addcondition("Sneak a peek","bathroom_occupied_fs")
-        menu:
-            "Sneak a peek":
-                $ images_unlocked.append('DCIM00002_portrait.png')
-                call change_loc('upper hallway bathroom peek',sec_call='peek_scene_happening') from _call_change_loc_17
-                label peek_scene_happening(True):
-                    fp "{i}Oh {b}SHIT{/b}! That is definitely something worth getting thwapped for! But... maybe I should get the hell outta here before I get caught!{/i}"
-                    $ conditions.addcondition("Stay and watch","fs_rel >= 30 and fs_aro >= 10")
-                    menu:
-                        "Stay and watch":
-                            #call change_loc('upper hallway bathroom peek')
-                            pass
-                        "Get the hell outta here":
-                            call change_loc('upper hallway') from _call_change_loc_62
-            "Knock on the door":
-                # pass
-                if bathroom_occupied_fs:
-                    if fs_mad:
-                        fs "What?!?"
-                        fp "Hey, [fsName.informal] - I really need to pee, you think I could..."
-                        fs "Fuck off, [fp]!"
-                        fp "{i}Okay,then...{/i}"
-                        call change_loc('upper hallway') from _call_change_loc_18
-                    else:
-                        fs "I'm in here, you'll have to come back later"
-                        fp "I really need to pee, [fsName.informal]!"
-                        if fs_rel > 40:
-                            fs "{i}Teasing now...{/i}\nSorry, [fp], I'm not at all decent!"
-                            fp "I don't care! I need to pee!"
-                            fs "Fine! Come in, but no oogling!"
-                            "{b}Click!{/b}"
-                            call change_loc('upper hallway bathroom',loctrans=True,sec_call="first_bathroom_occupied_label") from _call_change_loc_19
-                            label first_bathroom_occupied_label(True):
-                                fs "Lemme get back into the tub, okay?"
-                                fs "Okay, you can come in!"
-                                fp "{i}Running to the toilet{/i}\nOh....\nThanks, sis!"
-                                $ not_entered = False
-                                call change_loc('upper hallway bathroom',loctrans=True) from _call_change_loc_20
+label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
+    if uhlbc or uhlbcfs:
+        $ uhlbc = uhlbcfs = False
+        $ current_location = 'upper_hallway_bathroom_loc'
+        $ print(current_location)
+        $ loct = False
+        if occupied_bath:
+            if not bathroom_occupied_fs and not bathroom_occupied_fm:
+                if int(current_time[:2]) < 9:
+                    if renpy.random.random() > .5:
+                        $ bathroom_occupied_fs = True
+                        $ bathroom_occupied_fm = False
+                    elif renpy.random.random() < .15:
+                        $ bathroom_occupied_fs = False
+                        $ bathroom_occupied_fm = True
+                elif int(current_time[:2]) >= 9 and int(current_time[:2]) <= 15:
+                    if renpy.random.random() > .80:
+                        $ bathroom_occupied_fs = False
+                        $ bathroom_occupied_fm = True
+                elif int(current_time[:2]) >= 17:
+                    if renpy.random.random() > .65:
+                        $ bathroom_occupied_fs = True
+                        $ bathroom_occupied_fm = False
+                    elif renpy.random.random() < .20:
+                        $ bathroom_occupied_fs = False
+                        $ bathroom_occupied_fm = True
+        else:
+            $ bathroom_occupied_fs = bathroom_occupied_fm = False
+        if (bathroom_occupied_fs or bathroom_occupied_fm) and not_entered:
+            "The bathroom is occupied"
+            $ conditions.addcondition("Sneak a peek","bathroom_occupied_fs")
+            menu:
+                "Sneak a peek":
+                    if not uhl_bathroom_ach:
+                        $ uhl_bathroom_ach = True
+                        $ update_been_everywhere_achievement()                
+                    $ images_unlocked.append('DCIM00002_portrait.png')
+                    call change_loc('upper hallway bathroom peek',sec_call='peek_scene_happening') from _call_change_loc_17
+                    label peek_scene_happening(True):
+                        fp "{i}Oh {b}SHIT{/b}! That is definitely something worth getting thwapped for! But... maybe I should get the hell outta here before I get caught!{/i}"
+                        $ conditions.addcondition("Stay and watch","fs_rel >= 30 and fs_aro >= 10")
+                        menu:
+                            "Stay and watch":
+                                #call change_loc('upper hallway bathroom peek')
+                                pass
+                            "Get the hell outta here":
+                                call change_loc('upper hallway') from _call_change_loc_62
+                "Knock on the door":
+                    # pass
+                    if bathroom_occupied_fs:
+                        if fs_mad:
+                            fs "What?!?"
+                            fp "Hey, [fsName.informal] - I really need to pee, you think I could..."
+                            fs "Fuck off, [fp]!"
+                            fp "{i}Okay,then...{/i}"
+                            call change_loc('upper hallway') from _call_change_loc_18
                         else:
-                            fs "I'm not decent! Use the downstairs bathroom!"
-                            fp "I'll never make it! Please let me in?"
-                            fs "Fine! Damn it, [fp]!"
-                            fs "So, get in there and do your thing!"
-                            call change_loc('upper hallway bathroom',loctrans=True,sec_call="second_bathroom_occupied_label") from _call_change_loc_21
-                            label second_bathroom_occupied_label(True):
-                                fp "{i}Running to the toilet{/i}\nOh...\n{i}Damn... she looks {b}hot{/b} with nothing but that towel on...{/i}"
-                                $ not_entered = False
-                                call change_loc('upper hallway bathroom',loctrans=True) from _call_change_loc_22
-                if bathroom_occupied_fm:
-                    fm "I'm in here, [fp]"
-                    fp "I'm sorry, [fmName.informal], but I really, really need to pee!"
-                    fm "But... I'm not decent!"
-                    fp "[fmName.INFORMAL]! I need to go NOW!"
-                    $ not_entered = False
-                    call change_loc('upper hallway bathroom',loctrans=True) from _call_change_loc_23
-            "Leave and come back later":
-                $ occupied_bath = False
-                $ hour = renpy.random.randint(0,1)
-                if hour:
-                    $ addtime(hour,False)
-                else:
-                    $ addtime(False, 30)
-                call change_loc('upper hallway') from _call_change_loc_24
-    else:
-        if not uhl_bathroom_ach:
-            $ uhl_bathroom_ach = True
-            $ update_been_everywhere_achievement()
-        if uhl_bl_called or uhl_bl_cfs:
-            $ uhl_bl_called = uhl_bl_cfs = False
+                            fs "I'm in here, you'll have to come back later"
+                            fp "I really need to pee, [fsName.informal]!"
+                            if fs_rel > 40:
+                                fs "{i}Teasing now...{/i}\nSorry, [fp], I'm not at all decent!"
+                                fp "I don't care! I need to pee!"
+                                fs "Fine! Come in, but no oogling!"
+                                "{b}Click!{/b}"
+                                if not uhl_bathroom_ach:
+                                    $ uhl_bathroom_ach = True
+                                    $ update_been_everywhere_achievement()
+                                call change_loc('upper hallway bathroom',loctrans=True,sec_call="first_bathroom_occupied_label") from _call_change_loc_19
+                                label first_bathroom_occupied_label(True):
+                                    fs "Lemme get back into the tub, okay?"
+                                    fs "Okay, you can come in!"
+                                    fp "{i}Running to the toilet{/i}\nOh....\nThanks, sis!"
+                                    $ not_entered = False
+                                    call change_loc('upper hallway bathroom',loctrans=True) from _call_change_loc_20
+                            else:
+                                fs "I'm not decent! Use the downstairs bathroom!"
+                                fp "I'll never make it! Please let me in?"
+                                fs "Fine! Damn it, [fp]!"
+                                fs "So, get in there and do your thing!"
+                                if not uhl_bathroom_ach:
+                                    $ uhl_bathroom_ach = True
+                                    $ update_been_everywhere_achievement()                                
+                                call change_loc('upper hallway bathroom',loctrans=True,sec_call="second_bathroom_occupied_label") from _call_change_loc_21
+                                label second_bathroom_occupied_label(True):
+                                    fp "{i}Running to the toilet{/i}\nOh...\n{i}Damn... she looks {b}hot{/b} with nothing but that towel on...{/i}"
+                                    $ not_entered = False
+                                    call change_loc('upper hallway bathroom',loctrans=True) from _call_change_loc_22
+                    if bathroom_occupied_fm:
+                        fm "I'm in here, [fp]"
+                        fp "I'm sorry, [fmName.informal], but I really, really need to pee!"
+                        fm "But... I'm not decent!"
+                        fp "[fmName.INFORMAL]! I need to go NOW!"
+                        $ not_entered = False
+                        if not uhl_bathroom_ach:
+                            $ uhl_bathroom_ach = True
+                            $ update_been_everywhere_achievement()                        
+                        call change_loc('upper hallway bathroom',loctrans=True) from _call_change_loc_23
+                "Leave and come back later":
+                    $ occupied_bath = False
+                    $ hour = renpy.random.randint(0,1)
+                    if hour:
+                        $ addtime(hour,False)
+                    else:
+                        $ addtime(False, 30)
+                    call change_loc('upper hallway') from _call_change_loc_24
+        else:
+            $ print('else happened')
+            if not uhl_bathroom_ach:
+                $ uhl_bathroom_ach = True
+                $ update_been_everywhere_achievement()
             if smallkeys_added:
                 "{i}Hmm... a pair of keys. Haven't seen them before. Wonder what they open?\nShould I take them?{/i}"
                 menu:
@@ -605,13 +616,16 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
             if bathroom_panties_added:
                 $ current_p = getattr(store,gp_bath+"_panties_item")
                 if backpack_carry:
+                    $ print('backpack panties')
                     if not backpack.has_item(current_p):
+                        $ print('bp_hasitem')
                         $ r = random.randint(0,3)
                         $ text = p_response[r]
                         if r == 0 or r == 3:
                             $ panties_sniffer = True
                             $ update_panties_achievements()
                     else:
+                        $ print('bp_nothasitem')
                         $ aux = list(p_response)
                         $ del aux[2]
                         $ r = random.randrange(len(aux))
@@ -619,6 +633,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                         if r == 0 or r == 3:
                             $ panties_sniffer = True
                             $ update_panties_achievements()
+                    $ print(text)
                     "[text]"
                     menu:
                         "Take panties":
@@ -704,6 +719,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                 fp "{i}Good to get the filth off my hands{/i}"
                 $ fpsink = False
                 $ loct = True
+                $ wetshower = True
             label required_shower:
                 if required_shower:
                     menu:
@@ -733,7 +749,7 @@ label upper_hallway_bathroom_loc(uhl_bl_called=False,trans=False):
                             call change_loc('upper hallway',loctrans=loct) from _call_change_loc_66
                     fp "{i}Ah, that was refreshing{/i}"
 
-            call change_loc('upper hallway bathroom',loctrans=loct,showerstat=wetshower) from _call_change_loc_63
+        call change_loc('upper hallway bathroom',loctrans=loct,showerstat=wetshower) from _call_change_loc_63
 
 label tv_games_evening(tvg_called=False,trans=False):
     if tvg_called:
@@ -748,27 +764,27 @@ label tv_games_evening(tvg_called=False,trans=False):
         else:
             "You decide to just aimlessly click through channels for now, hoping to find something worth watching"
             $ addtime(2)
-    call end_of_day() from _call_end_of_day_2
+        call end_of_day(True) from _call_end_of_day_2
 
-label beach_ride(br_called=False):
-    if br_called:
-        $ br_called = False
+label beach_loc(br_called=False,br_cfs=False):
+    if br_called or br_cfs:
+        $ br_called = br_cfs = False
         $ addtime(1,30)
-        call change_loc('beach') from _call_change_loc_26
-    call end_of_day() from _call_end_of_day_3
+    call change_loc('beach')
+    # call end_of_day()
 
 label next_town_ride(ntr_called=False,trans=False):
     if ntr_called:
         $ ntr_called = False
         "This is just a placeholder for this event"
-    call end_of_day() from _call_end_of_day_4
+        call end_of_day(True) from _call_end_of_day_4
 label cabin_ride(cr_called=False,trans=False):
     if cr_called:
         $ cr_called = False
         "This is just a placeholder for this event"
-    call end_of_day() from _call_end_of_day_5
+        call end_of_day(True) from _call_end_of_day_5
 label marina_ride(mr_called=False,trans=False):
     if mr_called:
         $ mr_called = False
         "This is just a placeholder for this event"
-    call end_of_day() from _call_end_of_day_6
+        call end_of_day(True) from _call_end_of_day_6

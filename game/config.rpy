@@ -319,12 +319,14 @@ default duringcall = False
 default nc_after_ft = False
 
 #call locations from other screens
+default br_cfs = False
 default uhl_fpb_cfs = False
 default uhl_fsb_cfs = False
 default gar_cfs = False
 default kit_cfs = False
+default uhlbcfs = False
+default uhlbc = False
 default uhl_cfs = False
-default uhl_bl_cfs = False
 default out_cfs = False
 default lvr_cfs = False
 default tfs_cfs = False

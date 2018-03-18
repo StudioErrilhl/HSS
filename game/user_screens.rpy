@@ -1367,18 +1367,19 @@ screen location(room=False):
 
     if room == "garage":
         if not backpack.has_item(toolbox_item):
-            if int(current_time[:2]) in night:
+            if int(current_time[:2]) in night and not mc_f:
                 add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_night_idle.png"
-            elif not end_bike_repair:
+            elif not end_bike_repair and not mc_f:
                 if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
                     imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('toolbox_added',True),Jump('garage_loc')]
                 else:
                     add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_idle.png"
             else:
-                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                    imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]
-                else:
-                    add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_idle.png"
+                if not mc_f:
+                    if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+                        imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]
+                    else:
+                        add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_idle.png"
 
         if int(current_time[:2]) not in night and not end_bike_repair and not mc_f:
             imagebutton auto "gui/tools_1_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('wmc_cfs',True),Jump('w_mc')]:
@@ -1496,8 +1497,15 @@ screen location(room=False):
         $ exitleft_event = "garage_loc"
         $ exitleft = "Garage"
         if mc_f:
-            $ exitright_event = "beach_ride"
+            $ exitright_event_var = 'br_cfs'
+            $ exitright_event = "beach_loc"
             $ exitright = "Go to the beach"
+
+    if room == 'beach':
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+            $ exitdown_event_var = 'out_cfs'
+            $ exitdown_event = 'outside_loc'
+            $ exitdown = "Go back home"
 
     if room == 'icafe':
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
@@ -1514,34 +1522,32 @@ screen location(room=False):
             else:
                 imagebutton idle ("images/backgrounds/interactions_move/upper_hallway_fs_door_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fs_door_morning_idle.png") focus_mask True action NullAction():
                     tooltip "You need a relationship of 30+ with [fsName.yourformal], or an invitation, to enter her room"
-            imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_bathroom_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_bathroom_morning_%s.png") focus_mask True action [SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]:
+            imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_bathroom_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_bathroom_morning_%s.png") focus_mask True action [Call('upper_hallway_bathroom_loc',uhlbcfs=True)]:
                 tooltip "Enter bathroom"
             imagebutton auto ("images/backgrounds/interactions_move/stairs_down_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_down_morning_%s.png") focus_mask True action Jump('entrance_loc'):
                 tooltip "Downstairs"
 
     if room == "upper hallway bathroom" or room == "upper hallway bathroom peek":
         if int(current_time[:2]) >= 6 and int(current_time[:2]) <= 14 and not backpack.has_item(small_keys_item) and keys_mentioned:
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_keys_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable('occupied_bath',False),SetVariable("smallkeys_added",True),Jump('upper_hallway_bathroom_loc')]
+            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_keys_morning_%s.png" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("smallkeys_added",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
 
         if int(current_time[:2]) in night:
             # imagebutton auto "images/backgrounds/upper_hallway_bathroom_shower_night_%s.png" focus_mask True action [SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
-            imagebutton auto ("images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_light_%s.png" if bathroom_light else "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_%s.png") focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable('occupied_bath',False),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]
+            imagebutton auto ("images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_light_%s.png" if bathroom_light else "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_%s.png") focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpsink",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
             if bathroom_light:
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_light_on_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_light_on_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
             else:
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
         else:
             if bathroom_find_panties and room != 'upper hallway bathroom peek':
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.png" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('occupied_bath',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),SetVariable('uhl_bl_cfs',True),Jump('upper_hallway_bathroom_loc')]
-            # if room == "upper hallway bathroom":
-            # if
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable('occupied_bath',False),SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
-            if wetshower:
-                add "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_wet_glass.png"
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.png" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('occupied_bath',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.png" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpshower",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
             if room == 'upper hallway bathroom peek':
                 add "images/backgrounds/upper_hallway_bathroom_juliette_shower_bubbles.png"
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.png" focus_mask True action [SetVariable('uhl_bl_cfs',True),SetVariable('occupied_bath',False),SetVariable("fpsink",True),Jump('upper_hallway_bathroom_loc')]
+            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.png" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpsink",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
             add "images/backgrounds/interactions_item/bathroom_lightswitch_morning_off_idle.png"
+        if wetshower:
+            add "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_wet_glass.png"            
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event_var = "uhl_cfs"
             $ exitdown_event = "upper_hallway_loc"
@@ -1549,28 +1555,24 @@ screen location(room=False):
 
     if exitdown:
         if exitdown_event_var:
-            if current_location == 'upper_hallway_bathroom_loc' and (bathroom_panties_added or fpshower) or not occupied_bath:
+            if current_location == 'upper_hallway_bathroom_loc':
                 $ randomchoice = random.choice([True,False])
-                if int(current_time[:2]) in night:
-                    if renpy.random.random() > .9:
-                        $ randomchoice = True
-                    else:
-                        $ randomchoice = False
-                    if bathroom_find_panties:
-                        $ returnbfp = True
-                    else:
-                        $ returnbfp = False
-                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('occupied_bath',randomchoice),SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',returnbfp),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                $ returnbfp = True if bathroom_find_panties else False
+                imagebutton auto "gui/exit_down_%s.png" focus_mask True:
+                    xalign .5
+                    yalign 1.0
+                    tooltip exitdown
+                    if required_shower:
+                        action [SetVariable('occupied_bath',False),SetVariable('bathroom_occupied_fm',False),SetVariable('bathroom_occupied_fs',False),SetVariable('required_shower',True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+                    else:               
+                        action [SetVariable('occupied_bath',randomchoice),SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',returnbfp),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]
+            elif current_location == 'beach_loc':
+                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable(exitdown_event_var,True),Function(addtime,1,30),Jump('outside_loc')]:
                     xalign .5
                     yalign 1.0
                     tooltip exitdown
             elif current_location == 'icafe_loc':
                 imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable(exitdown_event_var,True),Function(addtime,False,25),Jump('outside_loc')]:
-                    xalign .5
-                    yalign 1.0
-                    tooltip exitdown
-            elif current_location == 'upper_hallway_bathroom_loc' and required_shower:
-                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('occupied_bath',False),SetVariable('bathroom_occupied_fm',False),SetVariable('bathroom_occupied_fs',False),SetVariable('uhl_bl_cfs',True),SetVariable('required_shower',True),Jump('upper_hallway_bathroom_loc')]:
                     xalign .5
                     yalign 1.0
                     tooltip exitdown
@@ -1739,7 +1741,6 @@ screen phone():
                         tooltip "Quit the game"
 
     use phone_overlay
-
     if GetTooltip() is not None:
         frame:
             pos(x, y)
@@ -1908,7 +1909,6 @@ screen phone_text_screen():
                                 size 20
 
     use phone_overlay
-
     if GetTooltip() is not None:
         frame:
             pos(x, y)
@@ -1998,7 +1998,6 @@ screen show_text_msg(compchar=False,char=False):
                                     action [Function(read_message,k,b,v),Hide('show_text_msg'),Show('phone_text_screen')]
 
     use phone_overlay
-
     if GetTooltip() is not None:
         frame:
             pos(x, y)
@@ -2124,6 +2123,12 @@ screen phone_call_screen():
 screen phone_call_show(char=False,label=False,calling_out=False,event=False):
     tag phonescreen
     zorder 900
+    default x = 500
+    default y = 400
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0    
     $ keyclose = True
     frame:
         background None
@@ -2232,6 +2237,13 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
         add "gui/phone_white.png" at ModZoom(.85)
         xalign .5
         yalign .5
+
+    # use phone_overlay
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"
 
 screen fridge_open():
     if show_fridge:
@@ -2367,6 +2379,7 @@ screen phone_gallery_show():
         xalign .5
         yalign .5
 
+    use phone_overlay
     if GetTooltip() is not None:
         frame:
             pos(x, y)
@@ -2708,7 +2721,6 @@ screen display_achievements():
                     $ i += 1
 
     use phone_overlay
-
     if GetTooltip() is not None:
         frame:
             pos(x, y)
@@ -2721,8 +2733,10 @@ screen display_achievements_category_panel():
     tag phonescreen
     frame:
         style_prefix "category"
-        padding 15, 15
-        align 0.03, 0.13
+        # padding 15, 15
+        # align 0.03, 0.13
+        yalign .5
+        xalign .5
         vbox:
             spacing 5
             text "Category" xalign 0.5 underline True size 26 color "#fff"
@@ -3030,7 +3044,8 @@ screen custom_preferences():
                     alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
             xalign .5
             yalign .5
-
+    
+    use phone_overlay
     if GetTooltip() is not None:
         frame:
             pos(x, y)
@@ -3048,6 +3063,7 @@ screen phone_light_background():
         add "gui/phone_background_light.png" at ModZoom(.85)
 
 screen phone_overlay():
+    zorder 990
     $ keyclose = True
     hbox: #notification-bar
         if battery_text != 0:
@@ -3297,7 +3313,7 @@ screen fs_tablet():
                 if int(ic_num_str) == tablet_stored_code:
                     $ tablet_code = True
                     $ ic_num = []
-                    add "tablet_no_content_warning.png" at ModZoom(.85)
+                    add "gui/tablet_no_content_warning.png" at ModZoom(.85)
                 else:
                     $ ic_num = []
             elif tablet_code:

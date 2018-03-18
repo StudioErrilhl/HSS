@@ -4,10 +4,8 @@ label beach_scene(trans=True):
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         scene beach_night with Dissolve(.25)
-        return
     else:
         scene beach_morning with Dissolve(.25)
-        return
     return
 
 label entrance_scene(trans=True):
@@ -25,67 +23,60 @@ label fp_bedroom_scene(trans=True): #this is the starting scene, and the one tha
         $ fp_bedroom_ach = True
         $ update_been_everywhere_achievement()
     $ hours = [0,1,22,23]
-    if int(current_time[:2]) in hours:
-        if not backpack_carry and not carry_phone:
-            if trans:
-                scene fp_bedroom_night_glow_phone_backpack with Dissolve(.25)
-            else:
+    if not backpack_carry:
+        if int(current_time[:2]) in hours:
+            if not carry_phone and not carry_wallet:
+                scene fp_bedroom_night_glow_phone_backpack_wallet
+            elif not carry_phone:
                 scene fp_bedroom_night_glow_phone_backpack
-        elif not backpack_carry and carry_phone:
-            if trans:
-                scene fp_bedroom_night_glow_backpack with Dissolve(.25)
+            elif not carry_wallet:
+                scene fp_bedroom_night_glow_backpack_wallet
             else:
                 scene fp_bedroom_night_glow_backpack
-        elif backpack_carry and not carry_phone:
-            if trans:
-                scene fp_bedroom_night_glow_phone with Dissolve(.25)
-            else:
-                scene fp_bedroom_night_glow_phone
-        else:
-            if trans:
-                scene fp_bedroom_night_glow with Dissolve(.25)
-            else:
-                scene fp_bedroom_night_glow
-    elif int(current_time[:2]) in night:
-        if not backpack_carry and not carry_phone:
-            if trans:
-                scene fp_bedroom_night_phone_backpack with Dissolve(.25)
-            else:
+        elif int(current_time[:2]) in night:
+            if not carry_phone and not carry_wallet:
+                scene fp_bedroom_night_phone_backpack_wallet
+            elif not carry_phone:
                 scene fp_bedroom_night_phone_backpack
-        elif not backpack_carry and carry_phone:
-            if trans:
-                scene fp_bedroom_night_backpack with Dissolve(.25)
+            elif not carry_wallet:
+                scene fp_bedroom_night_backpack_wallet
             else:
                 scene fp_bedroom_night_backpack
-        elif backpack_carry and not carry_phone:
-            if trans:
-                scene fp_bedroom_night_phone with Dissolve(.25)
-            else:
-                scene fp_bedroom_night_phone
         else:
-            if trans:
-                scene fp_bedroom_night with Dissolve(.25)
-            else:
-                scene fp_bedroom_night
-    else:
-        if not backpack_carry and not carry_phone:
-            if trans:
-                scene fp_bedroom_morning_phone_backpack with Dissolve(.25)
-            else:
+            if not carry_phone and not carry_wallet:
+                scene fp_bedroom_morning_phone_backpack_wallet
+            elif not carry_phone:
                 scene fp_bedroom_morning_phone_backpack
-        elif not backpack_carry and carry_phone:
-            if trans:
-                scene fp_bedroom_morning_backpack with Dissolve(.25)
+            elif not carry_wallet:
+                scene fp_bedroom_morning_backpack_wallet
             else:
                 scene fp_bedroom_morning_backpack
-        elif backpack_carry and not carry_phone:
-            if trans:
-                scene fp_bedroom_morning_phone with Dissolve(.25)
+    else:
+        if int(current_time[:2]) in hours:
+            if not carry_phone and not carry_wallet:
+                scene fp_bedroom_night_glow_phone_wallet
+            elif not carry_phone:
+                scene fp_bedroom_night_glow_phone
+            elif not carry_wallet:
+                scene fp_bedroom_night_glow_wallet
             else:
-                scene fp_bedroom_morning_phone
+                scene fp_bedroom_night
+        elif int(current_time[:2]) in night:
+            if not carry_phone and not carry_wallet:
+                scene fp_bedroom_night_phone_wallet
+            elif not carry_phone:
+                scene fp_bedroom_night_phone
+            elif not carry_wallet:
+                scene fp_bedroom_night_wallet
+            else:
+                scene fp_bedroom_night
         else:
-            if trans:
-                scene fp_bedroom_morning with Dissolve(.25)
+            if not carry_phone and not carry_wallet:
+                scene fp_bedroom_morning_phone_wallet
+            elif not carry_phone:
+                scene fp_bedroom_morning_phone
+            elif not carry_wallet:
+                scene fp_bedroom_morning_wallet
             else:
                 scene fp_bedroom_morning
     return

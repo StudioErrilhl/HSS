@@ -189,9 +189,7 @@ label start:
         if int(current_time[:2]) in night:
             if day_week <= 4 and not alarmclock:
                 $ mh = format(int(morning[renpy.random.randint(0,(len(morning)-4))]),"02d")
-                $ print(format(int(morning[renpy.random.randint(0,(len(morning)-4))]),"02d"))
                 $ mm = format(renpy.random.randint(00,30),"02d")
-                $ print(mm)
                 $ settime(mh,mm)
             elif day_week >= 5:
                 $ mh = format(int(random.choice(morning)),"02d")
@@ -270,9 +268,13 @@ label start:
                                         else:
                                             $ mc_t = 1
                                     $ event = 77
-                                    $ mc_b += mc_t
-                                    $ mc_p = (float(mc_b)/float(mc_b_max))*100
+                                    # $ mc_b += mc_t
+                                    $ mc_b = min(mc_b + mc_t,mc_b_max)
+                                    $ mc_p = min((float(mc_b)/float(mc_b_max))*100,100)
                                     $ mc_p = "{0:.2f}".format(mc_p)
+                                    if mc_b == 150:
+                                        $ mc_f = True
+                                        call change_loc('garage')                                        
                                     if mc_t == 0:
                                         $ renpy.notify("You did not improve the status of the bike this time")
                                     else:
@@ -287,9 +289,12 @@ label start:
                                         else:
                                             $ mc_t = 1
                                     $ c += 1
-                                    $ mc_b += mc_t
-                                    $ mc_p = (float(mc_b)/float(mc_b_max))*100
+                                    $ mc_b = min(mc_b + mc_t,mc_b_max)
+                                    $ mc_p = min((float(mc_b)/float(mc_b_max))*100,100)
                                     $ mc_p = "{0:.2f}".format(mc_p)
+                                    if mc_b == 150:
+                                        $ mc_f = True
+                                        call change_loc('garage')
                                     if mc_t == 0:
                                         $ renpy.notify("You did not improve the status of the bike this time")
                                     else:
