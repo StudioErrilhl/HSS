@@ -201,6 +201,7 @@ else:
 # environment
 default early_morning_we = False #check this to see if needed
 default overslept = False
+default overslept_time = False
 default talk_later = False #this should probably be renamed to fs_talk_later
 default skip_breakfast = False
 default late_oh_shit = False
@@ -242,6 +243,9 @@ default bc_clicked = False
 default show_fridge = False
 default required_shower = False
 default alarmclock = False
+default alarmclock_time = "07:00"
+default alarmhour = 0
+default alarmminute = 0
 
 # fs events
 default fs_si = True

@@ -1720,6 +1720,8 @@ screen phone():
                         tooltip "Read your messages"
                         xalign .5
                         xoffset 4
+                    imagebutton auto "gui/phone_button_help_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_alarm')] at ModZoom(.9):
+                        tooltip "Set the alarm"
 
         hbox:
             if battery_text != 0:
@@ -2511,6 +2513,67 @@ screen phone_info_screen():
                 text "\nand more as the game is being developed.\n\nYou close the phone by pressing the power button on the right side of the phone, or by clicking the home-button when on the main screen. If there is an app / screen showing on the phone, the home button takes you back to the main screen. You can also use \"ESC\" to close screens, and the phone itself, if you're on the home-screen. Right-clicking on the home-button / long-pressing (if on touch-screen) (at any time) will close the phone"
     if keyclose:
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetField(persistent,'phone_firstshow',False),Function(hide_phone_screens),SetVariable('show_icons',True),Show('phone')]
+
+screen phone_alarm(pa_chosen=False):
+    tag phonescreen
+    zorder 900
+    $ keyclose = True
+    $ usehour = format(alarmhour,"02d")
+    $ useminute = format(alarmminute,"02d")
+    frame:
+        background None
+        xpadding 0
+        top_padding 40
+        bottom_padding 10
+        xalign .5
+        yalign .44
+        maximum 370,686
+        vbox:
+            xsize 370
+            ysize 300
+            yoffset 30
+            text "Set alarm":
+                xalign .5
+            hbox:
+                xalign .5
+                textbutton "[usehour]":
+                    action Function(alarm_setting,hour=True)
+                    text_size 70
+                    text_color "#eee"
+                    text_hover_color "#0cf"
+                    yalign .5
+                text ":":
+                    size 40
+                    yalign .5
+                    color "#eee"
+                textbutton "[useminute]":
+                    action Function(alarm_setting,minute=True)
+                    text_size 70
+                    text_color "#eee"
+                    text_hover_color "#0cf"
+                    yalign .5
+            hbox:
+                xalign .5
+                textbutton "Set alarm":
+                    background "#0cf"
+                    text_color "#fff"
+                    hover_background "#fff"
+                    text_hover_color "#000"
+                    text_size 24
+                    xalign .5
+                    action [Function(renpy.notify,"Alarm is set to "+usehour+":"+useminute+""),SetVariable('alarmclock_time',""+usehour+":"+useminute+""),SetVariable('alarmclock',True)]
+        vbox:
+            xalign .5
+            yalign .5
+            yoffset 30
+            textbutton "Turn off alarm":
+                background "#f00"
+                text_color "#fff"
+                hover_background "#fff"
+                text_hover_color "#000"
+                text_size 18
+                xalign .5
+                action [Function(renpy.notify,"Alarm is turned off"),SetVariable('alarmclock_time',"00:00"),SetVariable('alarmclock',False)]
 
 screen custom_confirm(cc_chosen=False):
     tag phonescreen

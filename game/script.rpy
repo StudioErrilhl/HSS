@@ -192,6 +192,15 @@ label start:
                 $ mh = format(int(morning[renpy.random.randint(0,(len(morning)-4))]),"02d")
                 $ mm = format(renpy.random.randint(00,30),"02d")
                 $ settime(mh,mm)
+            elif day_week <= 4 and alarmclock:
+                if overslept and renpy.random.random() < .2:
+                    $ mh = format(int(morning[renpy.random.randint(1,(len(morning)-4))]),"02d")
+                    $ mm = format(renpy.random.randint(00,59),"02d")
+                    if mh >= int(alarmclock_time[:2]):
+                        if mm > int(alarmclock_time[3:]):
+                            $ settime(mh,mm)
+                else:
+                    $ settime(format(int(alarmclock_time[:2]),"02d"),format(int(alarmclock_time[3:]),"02d"))
             elif day_week >= 5:
                 $ mh = format(int(random.choice(morning)),"02d")
                 $ mm = format(renpy.random.randint(00,59),"02d")

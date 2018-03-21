@@ -4,7 +4,7 @@ label morning_events():
         call fp_bedroom_scene from _call_fp_bedroom_scene_2
         $ fpmc_r = renpy.random.random()
         if (fpmc_r < .35 and day_week <= 4 and overslept and int(current_time[:2]) > 7) or (int(current_time[:2]) > 7 and day_week <= 4):
-            # $ overslept = False
+            $ overslept = False
             show fm_standing mad with dissolve
             fm mad "[fp]! Wake UP!"
             fp "uuuhh..."
@@ -219,6 +219,7 @@ label morning_events():
                     $ morning_event_done = True
                     call late_morning() from _call_late_morning_3
         elif fpmc_r < .75:
+            $ overslept = False
             if not backpack.has_item(schoolbooks_item):
                 if day_week <= 4:
                     if debug:
@@ -231,6 +232,7 @@ label morning_events():
             $ breakfast_jump = True
             call fp_bedroom_loc(True) from _call_fp_bedroom_loc_3
         else:
+            $ overslept = False
             $ current_time = "06:00"
             if not backpack.has_item(schoolbooks_item):
                 if day_week <= 4:

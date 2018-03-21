@@ -433,6 +433,18 @@ init 10 python:
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+    def alarm_setting(hour=False,minute=False):
+        if hour:
+            if alarmhour < 23:
+                setattr(store, 'alarmhour', getattr(store,'alarmhour') + 1)
+            else:
+                setattr(store, 'alarmhour', 0)
+        if minute:
+            if alarmminute < 50:
+                setattr(store, 'alarmminute', getattr(store, 'alarmminute')+10)
+            else:
+                setattr(store, 'alarmminute', 0)
+
     def hide_phone_screens():
         renpy.hide_screen('phonescreen')
         renpy.hide_screen('warning_screen')

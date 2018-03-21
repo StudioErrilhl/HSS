@@ -2,7 +2,7 @@ label travel_events(event=False):
     if event:
         if event == 'travel_school':
             if 6 <= int(current_time[:2]) <= 8 and day_week <= 4:
-                if shitty_morning and int(current_time[:2]) <= 7:
+                if (shitty_morning and int(current_time[:2]) <= 7) or (int(current_time[:2]) <= 7 and (bad_weather and rainstorm)):
                     nk ahead "Hi [fp]! You wanna ride to school?"
                     if not nk_driving:
                         fp "Hi [nk]... Didn't know you drove?"
@@ -102,8 +102,7 @@ label travel_events(event=False):
             else:
                 $ addtime(False,25)
                 if int(current_time[:2]) >= 8 and int(current_time[3:]) >= 0:
-                    # call school_walk_late_arrival_event(True)
-                    if (int(current_time[3:]) <= 10 and renpy.random.random() < .25) or int(current_time[3:]) > 10:
+                    if (int(current_time[:2]) >= 8 and int(current_time[3:]) > 15) or (int(current_time[:2]) == 8 and int(current_time[3:]) <= 10 and renpy.random.random() < .25) or int(current_time[3:]) > 10 or int(current_time[:2]) >= 9:
                         "{i}Arriving at school, you can see that you're late{/i}\nYou hurry up the stairs, trying to get to your classroom as fast as humanly possible"
                         sn "Greetings, [fp]!"
                         "[sn]s voice sneaks up on you as you hurry through the hallways"
