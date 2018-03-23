@@ -52,6 +52,18 @@ image fm_standing smile:
     xanchor .5
     yanchor .5
 
+transform active_talk:
+    alpha 0.0
+    linear .5 alpha 1.0
+    zoom 1.0
+    yalign 1.0
+    xpos .6
+    ypos .55
+    xanchor .5
+    yanchor .5
+    linear .4 zoom 1.05
+    linear .4 zoom 1.0
+
 transform fm_standing_ahead_ani:
     ConditionSwitch(
         "int(current_time[:2]) in night","images/characters/anne/body/standing/ahead_night.png",
@@ -752,6 +764,9 @@ image juliette_reflection:
 image books_on_dresser:
     "images/backgrounds/interactions_item/fp_bedroom_morning_dresser_idle.png"
 
+image livingroom_morning_bad_weather_windows:
+    "images/backgrounds/livingroom_morning_bad_weather_windows.png"
+
 image rain:
     "images/rain1.png"
     0.2
@@ -778,6 +793,10 @@ transform alpha_transform(a):
 
 transform ModZoom(z):
     zoom z
+
+transform easeIn(t):
+    # easein t
+    linear .35 zoom 1.05
 
 transform stats_hover_transform:
     yalign 0.0

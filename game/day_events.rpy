@@ -159,7 +159,14 @@ label day_events():
                 else:
                     $ evening_event = True
                 if not evening_event:
-                    call end_of_day(True) from _call_end_of_day_7
+                    if int(current_time[:2]) > 22:
+                        call end_of_day(True)
+                    else:
+                        menu:
+                            "You decide to see if there is anything else you can do today":
+                                call change_loc(current_location)
+                            "You're feeling kinda exhausted, and decide to just go to bed":
+                                call end_of_day(True)
                 else:
                     call evening_event_label(True) from _call_evening_event_label
 
@@ -268,6 +275,13 @@ label day_events():
                     "You spend a few hours studying, chatting and generally just catching up"
                     $ statschangenotify("nk_rel",2)
                     $ addtime(5,False)
-                call end_of_day(True) from _call_end_of_day_8
+                call end_of_day(True)
             else:
-                call end_of_day(True) from _call_end_of_day_9
+                if int(current_time[:2]) > 22:
+                    call end_of_day(True)
+                else:
+                    menu:
+                        "You decide to see if there is anything else you can do today":
+                            call change_loc(current_location)
+                        "You're feeling kinda exhausted, and decide to just go to bed":
+                            call end_of_day(True)

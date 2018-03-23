@@ -765,7 +765,11 @@ label tv_games_evening(tvg_called=False,trans=False):
         else:
             "You decide to just aimlessly click through channels for now, hoping to find something worth watching"
             $ addtime(2)
-        call end_of_day(True) from _call_end_of_day_2
+        menu:
+            "You decide to see if there is anything else you can do today":
+                call change_loc(current_location)
+            "You're feeling kinda exhausted, and decide to just go to bed":
+                call end_of_day(True)
 
 label beach_loc(br_called=False,br_cfs=False):
     if br_called or br_cfs:

@@ -1,5 +1,7 @@
 init python:
+    _game_menu_screen = None
     import os, math, re
+
     def define_images(characterImageFolder, excludeFirstXFolders=0, flip=True):
         for path in renpy.list_files():
             if path.startswith(characterImageFolder + "/"):
@@ -37,25 +39,26 @@ default persistent.phone_firstshow = True
 default persistent.statscreen_infotext = True
 default persistent.backpack_info = True
 default persistent.cheat = False
+default persistent.side_image_zoom = True
 
 # character definitions
 define narrator = Character(None, what_italic=True)
-define unk_f = Character('Unknown female')
-define unk_m = Character('Unknown male')
-define fp = Character("[fpinput]",image="fp_talkside")
-define fm = Character("[fmName.Name]",image="fm_talkside")
-define fs = Character("[fsName.Name]",image="fs_talkside")
-define hj = Character("Jizzer")
-define nb = Character("Bridget")
-define nr = Character("Ron",image="nr_talkside")
-define nk = Character("Karen",image="nk_talkside")
-define nc = Character("Catherina") # needs a character namebox - also needs a character image
-define sn = Character("Miss Novak")
-define se = Character("Miss Elliot")
-define sp = Character("Principal Hudson")
-define sj = Character("Jack")
-define scn = Character("Natalie")
-define scm = Character("Mattie")
+define unk_f = Character('Unknown female',who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define unk_m = Character('Unknown male',who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define fp = Character("[fpinput]",image="fp_talkside",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define fm = Character("[fmName.Name]",image="fm_talkside",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define fs = Character("[fsName.Name]",image="fs_talkside",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define hj = Character("Jizzer",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define nb = Character("Bridget",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define nr = Character("Ron",image="nr_talkside",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define nk = Character("Karen",image="nk_talkside",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define nc = Character("Catherina",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))]) # needs a character namebox - also needs a character image
+define sn = Character("Miss Novak",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define se = Character("Miss Elliot",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define sp = Character("Principal Hudson",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define sj = Character("Jack",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define scn = Character("Natalie",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define scm = Character("Mattie",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 #remember to add default color="#000000" if the character do not have a namebox_charname.png in the gui/-directory
 
 default chars = [[fp,"fp"],[fm,"fm"],[fs,"fs"],[nb,"nb"],[nr,"nr"],[nk,"nk"],[nc,"nc"],[sn,"sn"],[se,"se"],[sp,"sp"],[sj,"sj"],[scn,"scn"],[scm,"scm"]]
@@ -533,9 +536,3 @@ default showStats = False
 default setstate = False
 default end_game = False
 default current_location = 'fp_bedroom_loc'
-# style default:
-#     outlines [ (absolute(1), "#f00", absolute(0), absolute(0)) ]
-# default cc_chosen = False
-
-init python:
-    _game_menu_screen = None

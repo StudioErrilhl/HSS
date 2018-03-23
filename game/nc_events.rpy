@@ -30,7 +30,7 @@ label nc_talk(event=False,callrand=False):
             $ nce = True
         call change_loc(current_location) from _call_change_loc_25
 
-    if event == 'icafe_visit' and not nce:
+    if event == 'icafe_visit':
         $ settime(20,00)
         if visit_icafe_1:
             $ addtime(False,30)

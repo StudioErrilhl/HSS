@@ -5,7 +5,7 @@ label morning_events():
         $ fpmc_r = renpy.random.random()
         if (fpmc_r < .35 and day_week <= 4 and overslept and int(current_time[:2]) > 7) or (int(current_time[:2]) > 7 and day_week <= 4):
             $ overslept = False
-            show fm_standing mad with dissolve
+            show fm_standing mad
             fm mad "[fp]! Wake UP!"
             fp "uuuhh..."
             fm mad "[fp]! Get out of bed THIS INSTANT!"
@@ -225,7 +225,7 @@ label morning_events():
                     if debug:
                         "test books on dresser"
                     show books_on_dresser
-            show fm_standing ahead with dissolve
+            show fm_standing ahead
             fm ahead "[fp], time to get out of bed and have some breakfast"
             fp "Sure, [fmName.informal] - I'll be right down"
             hide fm_standing
@@ -340,7 +340,7 @@ label morning_events():
         if bin_called and not had_breakfast:
             $ bin_called = False
             if breakfast_food:
-                show fm_standing ahead with dissolve
+                show fm_standing ahead
                 if breakfast_food == 'cereal':
                     fm ahead "I poured you some [breakfast_food]. We're sort of out of everything. Need to go shopping"
                     fp "Cereal is fine, [fmName.informal]"
@@ -376,9 +376,9 @@ label morning_events():
                         "renpy random more than 5"
                     if not fs_mad:
                         if renpy.random.random() > .5:
-                            show fs_standing ahead flip with dissolve
+                            show fs_standing ahead flip
                         else:
-                            show fs_standing ahead with dissolve
+                            show fs_standing ahead
                         fs ahead "Good morning, [fp]"
                         fp "Hi, [fsName.informal]"
                         if renpy.random.random() > .90:
@@ -399,9 +399,9 @@ label morning_events():
                         $ morning_event_done = True
                     else:
                         if renpy.random.random() > .5:
-                            show fs_standing annoyed flip with dissolve
+                            show fs_standing annoyed flip
                         else:
-                            show fs_standing annoyed with dissolve
+                            show fs_standing annoyed
                         fp "Hi [fsName.informal]"
                         show fs_standing mad with dissolve
                         fs mad "Fuck off, [fp]"

@@ -21,11 +21,26 @@ style inventory_text:
 # style clock_outline:
 #     outlines [(absolute(1), "#17d41e", absolute(0), absolute(0))]
 
+style slider:
+    ysize 20
+    base_bar Frame("gui/slider/horizontal_[prefix_]bar.png", gui.slider_borders, tile=gui.slider_tile)
+    thumb "gui/slider/horizontal_[prefix_]thumb_cr.png"
+
 style category_button_text:
     color "#fff"
     hover_color "#0cf"
     selected_color "#0cf"
     xalign .5
+
+style prefs_button_text:
+    color "#555"
+    hover_color "#0cf"
+    selected_color "#0cf"
+    xalign .5
+
+style prefs_text:
+    color "#007a99"
+    size 20
 
 style contacts_button_text:
     color "#888"
@@ -1235,9 +1250,15 @@ screen say(who, what):
         if not renpy.variant("small"):
             if who is not None:
                 if who.upper() == fpinput.upper():
-                    add SideImage() xalign 1.0 yalign 1.0
+                    if persistent.side_image_zoom:
+                        add SideImage() xalign 1.0 yalign 1.0 at easeIn(.5)
+                    else:
+                        add SideImage() xalign 1.0 yalign 1.0
                 else:
-                    add SideImage() xalign .5 xpos 250 yalign 1.0
+                    if persistent.side_image_zoom:
+                        add SideImage() xalign .5 xpos 250 yalign 1.0 at easeIn(.5)
+                    else:
+                        add SideImage() xalign .5 xpos 250 yalign 1.0
 
 # Make the namebox available for styling through the Character object.
 init python:
@@ -1547,7 +1568,7 @@ screen location(room=False):
             imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.png" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpsink",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
             add "images/backgrounds/interactions_item/bathroom_lightswitch_morning_off_idle.png"
         if wetshower:
-            add "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_wet_glass.png"            
+            add "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_wet_glass.png"
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event_var = "uhl_cfs"
             $ exitdown_event = "upper_hallway_loc"
@@ -1564,7 +1585,7 @@ screen location(room=False):
                     tooltip exitdown
                     if required_shower:
                         action [SetVariable('occupied_bath',False),SetVariable('bathroom_occupied_fm',False),SetVariable('bathroom_occupied_fs',False),SetVariable('required_shower',True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
-                    else:               
+                    else:
                         action [SetVariable('occupied_bath',randomchoice),SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',returnbfp),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]
             elif current_location == 'beach_loc':
                 imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable(exitdown_event_var,True),Function(addtime,1,30),Jump('outside_loc')]:
@@ -1718,10 +1739,10 @@ screen phone():
                 if show_icons:
                     imagebutton auto "gui/phone_button_text_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_text_screen')] at ModZoom(.9):
                         tooltip "Read your messages"
-                        xalign .5
-                        xoffset 4
-                    imagebutton auto "gui/phone_button_help_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_alarm')] at ModZoom(.9):
+                    imagebutton auto "gui/phone_button_alarm_clock_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_alarm')] at ModZoom(.9):
                         tooltip "Set the alarm"
+                        xoffset -110
+
 
         hbox:
             if battery_text != 0:
@@ -2107,7 +2128,7 @@ screen phone_call_screen():
                                 if i[1] == 'nc':
                                     action Show('phone_call_show',None,i[1],'nc_talk',True,'first_talk')
                                 elif i[1] == 'nr':
-                                    action Show('phone_call_show',None,i[1],'nr_talk',True,'nr_first_call')
+                                    action Show('phone_call_show',None,i[1],'nr_talk',True,'nr_after_nc')
                                 else:
                                     # action Show('warning_screen',None,300,370,"There are no functionality for this person currently implemented")
                                     action Show('phone_call_show',None,i[1],False,True,False)
@@ -2130,7 +2151,7 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
     python:
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
-        yval = 1.0 if y > config.screen_height/2 else .0    
+        yval = 1.0 if y > config.screen_height/2 else .0
     $ keyclose = True
     frame:
         background None
@@ -2418,15 +2439,16 @@ screen phone_info_screen():
         background None
         xpadding 0
         top_padding 60
-        bottom_padding 10
+        bottom_padding 20
         xalign .5
         yalign .44
-        maximum 370,686
+        maximum 370,726
         viewport:
             mousewheel True
             pagekeys True
             vbox:
-                text "This is the phone-screen. Here you'll find all the game-menus:\n"
+                xfill True
+                text "This is the phone-screen. Here you'll find all the game-menus (bottom row on home screen):\n"
                 hbox:
                     xpos .2
                     imagebutton auto "gui/phone_button_menu_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.6):
@@ -2477,40 +2499,58 @@ screen phone_info_screen():
                     textbutton "Image gallery" action [Hide('phone_info_screen'),Show('phone_gallery_screen')]:
                         text_size 22
                         yalign .5
-                hbox:
-                    text "While in the gallery, you can click on images to show them in full screen on the phone. While viewing the full-screen image, there will be buttons to navigate and close (depending on amount of images) - to hide/show them, you can press \"h\"":
-                        size 22
-                        yalign .5
-                hbox:
-                    xpos .2
-                    imagebutton auto "gui/phone_button_call_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_call_screen')] at ModZoom(.6):
-                        yalign .5
-                    textbutton "Call screen" action [Hide('phone_info_screen'),Show('phone_call_screen')]:
-                        text_size 22
-                        yalign .5
-                hbox:
-                    xpos .2
-                    imagebutton auto "gui/phone_button_text_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_text_screen')] at ModZoom(.6):
-                        yalign .5
-                    textbutton "Message screen" action [Hide('phone_info_screen'),Show('phone_text_screen')]:
-                        text_size 22
-                        yalign .5
-                hbox:
-                    xpos .2
-                    imagebutton auto "gui/phone_button_help_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.6):
-                        yalign .5
-                    textbutton "In-game help" action [SetVariable('show_icons',False),Show('phone_info_screen')]:
-                        text_size 22
-                        yalign .5
-                hbox:
-                    xpos .2
-                    imagebutton auto "gui/phone_button_hint_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen')] at ModZoom(.6):
-                        yalign .5
-                    textbutton "Game-hints" action [SetVariable('show_icons',False),Show('phone_hint_screen')]:
-                        text_size 22
-                        yalign .5
-
-                text "\nand more as the game is being developed.\n\nYou close the phone by pressing the power button on the right side of the phone, or by clicking the home-button when on the main screen. If there is an app / screen showing on the phone, the home button takes you back to the main screen. You can also use \"ESC\" to close screens, and the phone itself, if you're on the home-screen. Right-clicking on the home-button / long-pressing (if on touch-screen) (at any time) will close the phone"
+                vbox:
+                    ypos 10
+                    hbox:
+                        text "While in the gallery, you can click on images to show them in full screen on the phone. While viewing the full-screen image, there will be buttons to navigate and close (depending on amount of images) - to hide/show them, you can press \"h\"":
+                            size 22
+                            yalign .5
+                    vbox:
+                        ypos 15
+                        hbox:
+                            xpos .2
+                            imagebutton auto "gui/phone_button_call_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_call_screen')] at ModZoom(.6):
+                                yalign .5
+                            textbutton "Call screen" action [Hide('phone_info_screen'),Show('phone_call_screen')]:
+                                text_size 22
+                                yalign .5
+                        hbox:
+                            xpos .2
+                            imagebutton auto "gui/phone_button_help_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.6):
+                                yalign .5
+                            textbutton "In-game help" action [SetVariable('show_icons',False),Show('phone_info_screen')]:
+                                text_size 22
+                                yalign .5
+                        hbox:
+                            xpos .2
+                            imagebutton auto "gui/phone_button_hint_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen')] at ModZoom(.6):
+                                yalign .5
+                            textbutton "Game-hints" action [SetVariable('show_icons',False),Show('phone_hint_screen')]:
+                                text_size 22
+                                yalign .5
+                        vbox:
+                            ypos 10
+                            hbox:
+                                text "The hint-screen (and the phone on the top left, in the menu) will glow red when there are new hints"
+                            vbox:
+                                ypos 10
+                                hbox:
+                                    xpos .2
+                                    imagebutton auto "gui/phone_button_text_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_text_screen')] at ModZoom(.6):
+                                        yalign .5
+                                    textbutton "Message screen" action [Hide('phone_info_screen'),Show('phone_text_screen')]:
+                                        text_size 22
+                                        yalign .5
+                                hbox:
+                                    xpos .2
+                                    imagebutton auto "gui/phone_button_alarm_clock_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_alarm')] at ModZoom(.6):
+                                        yalign .5
+                                    textbutton "Alarm Clock" action [Hide('phone_info_screen'),Show('phone_alarm')]:
+                                        text_size 22
+                                        yalign .5
+                                vbox:
+                                    ypos 10
+                                    text "\nand more as the game is being developed.\n\nYou close the phone by pressing the power button on the right side of the phone, or by clicking the home-button when on the main screen. If there is an app / screen showing on the phone, the home button takes you back to the main screen. You can also use \"ESC\" to close screens, and the phone itself, if you're on the home-screen. Right-clicking on the home-button / long-pressing (if on touch-screen) (at any time) will close the phone\n\n"
     if keyclose:
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetField(persistent,'phone_firstshow',False),Function(hide_phone_screens),SetVariable('show_icons',True),Show('phone')]
 
@@ -2937,28 +2977,28 @@ screen custom_preferences():
                             ypos 80
                             textbutton _("Fullscreen") action Preference("display", "fullscreen"):
                                 foreground "gui/button/check_[prefix_]foreground_white.png"
-
-                fixed:
-                    xsize 370
-                    ysize 200
-                    style_prefix "custom_radio"
-                    hbox:
-                        yalign 0.0
-                        xalign .5
-                        label _("Rollback Side"):
-                            text_color "#fff"
-                    hbox:
-                        ypos 40
-                        textbutton _("Disable") action Preference("rollback side", "disable"):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"
-                    hbox:
-                        ypos 80
-                        textbutton _("Left") action Preference("rollback side", "left"):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"
-                    hbox:
-                        ypos 120
-                        textbutton _("Right") action Preference("rollback side", "right"):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                if not renpy.variant("pc"):
+                    fixed:
+                        xsize 370
+                        ysize 200
+                        style_prefix "custom_radio"
+                        hbox:
+                            yalign 0.0
+                            xalign .5
+                            label _("Rollback Side"):
+                                text_color "#fff"
+                        hbox:
+                            ypos 40
+                            textbutton _("Disable") action Preference("rollback side", "disable"):
+                                foreground "gui/button/check_[prefix_]foreground_white.png"
+                        hbox:
+                            ypos 80
+                            textbutton _("Left") action Preference("rollback side", "left"):
+                                foreground "gui/button/check_[prefix_]foreground_white.png"
+                        hbox:
+                            ypos 120
+                            textbutton _("Right") action Preference("rollback side", "right"):
+                                foreground "gui/button/check_[prefix_]foreground_white.png"
 
                 fixed:
                     xsize 370
@@ -3079,6 +3119,30 @@ screen custom_preferences():
                         textbutton _("Enable") action SetField(persistent,"cheat",True):
                             foreground "gui/button/check_[prefix_]foreground_white.png"
 
+                fixed:
+                    xsize 370
+                    ysize 200
+                    style_prefix "custom_radio"
+                    hbox:
+                        ysize 50
+                        xalign .5
+                        label _("Zoomed side-images"):
+                            text_color "#fff"
+                    hbox:
+                        ysize 50
+                        ypos 50
+                        xsize 370
+                        textbutton _("Disable") action SetField(persistent,'side_image_zoom',False):
+                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                            yalign .5
+                    hbox:
+                        ysize 50
+                        ypos 100
+                        xsize 370
+                        textbutton _("Enable") action SetField(persistent,'side_image_zoom',True):
+                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                            yalign .5
+
                 if disabled_hints:
                     fixed:
                         xsize 370
@@ -3107,7 +3171,7 @@ screen custom_preferences():
                     alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
             xalign .5
             yalign .5
-    
+
     use phone_overlay
     if GetTooltip() is not None:
         frame:
@@ -3522,3 +3586,353 @@ screen input(prompt):
             text prompt style "input_prompt"
             text "\n"
             input id "input" color "#fff"
+
+## Preferences screen ##########################################################
+##
+## The preferences screen allows the player to configure the game to better suit
+## themselves.
+##
+## https://www.renpy.org/doc/html/screen_special.html#preferences
+
+screen preferences():
+    tag menu
+    default selectedmenu = False
+    default displayresolutions = False
+    default soundmuted = False
+    default musicmuted = False
+    default sfxmuted = False
+    default voicemuted = False
+    default skipunseen = False
+    default skipafterchoices = False
+    default skiptransitions = False
+    use game_menu(_("Preferences"), scroll="viewport"):
+        vbox:
+            style_prefix "prefs"
+            xfill True
+            hbox:
+                xalign .5
+                spacing 80
+                if renpy.variant("pc"):
+                    textbutton _("Display") action SetScreenVariable('selectedmenu','displaycontrol'):
+                        xsize 150
+                        if selectedmenu == 'displaycontrol':
+                            text_size 40
+                            yoffset -10
+                    textbutton _("Skip and Speed settings") action SetScreenVariable('selectedmenu','skipcontrol'):
+                        xsize 600
+                        if selectedmenu == 'skipcontrol':
+                            text_size 40
+                            yoffset -10
+                    textbutton _("Sound") action SetScreenVariable('selectedmenu','soundsettings'):
+                        xsize 150
+                        if selectedmenu == "soundsettings":
+                            text_size 40
+                            yoffset -10
+
+            if selectedmenu:
+                if selectedmenu == 'displaycontrol':
+                    vbox:
+                        ypos 100
+                        xfill True
+                        label _("Display Mode"):
+                            xalign .5
+                        hbox:
+                            ypos 25
+                            spacing 130
+                            xalign .5
+                            textbutton _("Window") action [Preference("display","window"),SetScreenVariable('displayresolutions',True)]:
+                                selected not preferences.fullscreen
+                            textbutton _("Fullscreen") action [Preference("display", "fullscreen"),SetScreenVariable('displayresolutions',False)]:
+                                selected preferences.fullscreen
+
+                    if displayresolutions or not preferences.fullscreen:
+                        vbox:
+                            ypos 175
+                            xfill True
+                            label _("Window Size"):
+                                xalign .5
+                            hbox:
+                                ypos 25
+                                xalign .5
+                                spacing 50
+                                textbutton "960x540" action [Preference("display",.5)]
+                                textbutton "1280x720" action [Preference("display",0.6666666666667)]
+                                textbutton "1600x900" action [Preference("display",0.8333333333333334)]
+                                textbutton "1920x1080" action [Preference("display", "fullscreen"),SetScreenVariable('displayresolutions',False)]:
+                                    selected preferences.fullscreen
+
+                if selectedmenu == 'skipcontrol':
+                    vbox:
+                        ypos 100
+                        xfill True
+                        label _("Skip Interactions"):
+                            xalign .5
+                        hbox:
+                            ypos 25
+                            xalign .5
+                            spacing 130
+                            hbox:
+                                xsize 350
+                                textbutton _("Skip Unseen Text") action [ToggleScreenVariable('skipunseen'),Preference("skip", "toggle")]:
+                                    selected skipunseen
+                                if skipunseen:
+                                    add "gui/blue_checkmark.png" at ModZoom(.2)
+                            hbox:
+                                xsize 350
+                                textbutton _("Skip After Choices") action [ToggleScreenVariable('skipafterchoices'),Preference("after choices", "toggle")]:
+                                    selected skipafterchoices
+                                if skipafterchoices:
+                                    add "gui/blue_checkmark.png" at ModZoom(.2)
+                            hbox:
+                                xsize 350
+                                textbutton _("Skip Transitions") action [ToggleScreenVariable('skiptransitions'),InvertSelected(Preference("transitions", "toggle"))]:
+                                    selected skiptransitions
+                                if skiptransitions:
+                                    add "gui/blue_checkmark.png" at ModZoom(.2)
+                    vbox:
+                        ypos 175
+                        xfill True
+                        label _("Adjust Speed"):
+                            xalign .5
+                        hbox:
+                            ypos 25
+                            xalign .5
+                            spacing 130
+                            style_prefix "slider"
+                            vbox:
+                                maximum 300,100
+                                label _("Text Speed"):
+                                    xalign .5
+                                    text_size 20
+                                bar value Preference("text speed")
+                            vbox:
+                                maximum 300,100
+                                label _("Auto-Forward Time"):
+                                    xalign .5
+                                    text_size 20
+                                bar value Preference("auto-forward time")
+
+                if selectedmenu == 'soundsettings':
+                    vbox:
+                        ypos 100
+                        xfill True
+                        label _("Adjust Sound"):
+                            xalign .5
+                        hbox:
+                            ypos 25
+                            xalign .5
+                            spacing 130
+                            if config.has_music:
+                                vbox:
+                                    maximum 325,100
+                                    label _("Music Volume"):
+                                        xalign .5
+                                        text_size 20
+                                    bar value Preference("music volume"):
+                                        ysize 20
+                                    $ musicvolume = int(_preferences.volumes['music']*100) if not soundmuted and not musicmuted else 0
+                                    hbox:
+                                        xalign .5
+                                        spacing 20
+                                        text "[musicvolume]":
+                                            ypos 8
+                                        if musicmuted:
+                                            imagebutton idle "gui/speaker_muted.png" focus_mask True:
+                                                at ModZoom(.6)
+                                                ypos 5
+                                                action [SetScreenVariable('musicmuted',False),ToggleMute('music')]
+                                        else:
+                                            imagebutton idle "gui/speaker_unmuted.png" focus_mask True:
+                                                at ModZoom(.6)
+                                                ypos 5
+                                                action [SetScreenVariable('musicmuted',True),ToggleMute('music')]
+                            if config.has_sound:
+                                vbox:
+                                    maximum 325,100
+                                    label _("Sound Volume"):
+                                        xalign .5
+                                        text_size 20
+                                    bar value Preference("sound volume"):
+                                        ysize 20
+                                    $ soundvolume = int(_preferences.volumes['sfx']*100) if not soundmuted and not sfxmuted else 0
+                                    hbox:
+                                        xalign .5
+                                        spacing 20
+                                        text "[soundvolume]":
+                                            ypos 8
+                                        if sfxmuted:
+                                            imagebutton idle "gui/speaker_muted.png" focus_mask True:
+                                                at ModZoom(.6)
+                                                ypos 5
+                                                action [SetScreenVariable('sfxmuted',False),ToggleMute('sfx')]
+                                        else:
+                                            imagebutton idle "gui/speaker_unmuted.png" focus_mask True:
+                                                at ModZoom(.6)
+                                                ypos 5
+                                                action [SetScreenVariable('sfxmuted',True),ToggleMute('sfx')]
+                                    if config.sample_sound:
+                                        imagebutton idle "gui/media_playback.png" action Play('sound', config.sample_sound):
+                                            at ModZoom(.20)
+                                            ypos 15
+                                            xalign .5
+
+                            if config.has_voice:
+                                vbox:
+                                    maximum 325,100
+                                    label _("Voice Volume"):
+                                        xalign .5
+                                        text_size 20
+                                    bar value Preference("voice volume"):
+                                        ysize 20
+                                    $ voicevolume = int(_preferences.volumes['voice']*100) if not soundmuted and not voicemuted else 0
+                                    hbox:
+                                        xalign .5
+                                        spacing 20
+                                        text "[voicevolume]":
+                                            ypos 8
+                                        if voicemuted:
+                                            imagebutton idle "gui/speaker_muted.png" focus_mask True:
+                                                at ModZoom(.6)
+                                                ypos 5
+                                                action [SetScreenVariable('voicemuted',False),ToggleMute('voice')]
+                                        else:
+                                            imagebutton idle "gui/speaker_unmuted.png" focus_mask True:
+                                                at ModZoom(.6)
+                                                ypos 5
+                                                action [SetScreenVariable('voicemuted',True),ToggleMute('voice')]
+
+                                    if config.sample_voice:
+                                        imagebutton idle "gui/media_playback.png" action Play('voice', config.sample_voice):
+                                            at ModZoom(.20)
+                                            ypos 15
+                                            xalign .5
+
+
+                        if config.has_music or config.has_sound or config.has_voice:
+                            hbox:
+                                ypos 200
+                                xalign .5
+                                # textbutton _("Mute All"):
+                                if soundmuted or (musicmuted and voicemuted and sfxmuted):
+                                    vbox:
+                                        imagebutton idle "gui/speaker_muted.png" focus_mask True:
+                                            xalign .5
+                                            action [SetScreenVariable('soundmuted',False),SetScreenVariable('musicmuted',False),SetScreenVariable('voicemuted',False),SetScreenVariable('sfxmuted',False),Preference("all mute","toggle")]
+                                        # style "mute_all_button"
+                                        text "Sound muted"#:
+                                            # color "#000"
+                                else:
+                                    vbox:
+                                        imagebutton idle "gui/speaker_unmuted.png" focus_mask True:
+                                            xalign .5
+                                            action [SetScreenVariable('soundmuted',True),SetScreenVariable('musicmuted',True),SetScreenVariable('voicemuted',True),SetScreenVariable('sfxmuted',True),Preference("all mute","toggle")]
+                                        text "Mute all sound"#:
+                                            # color "#000"
+
+
+
+                        # vbox:
+
+            #             if config.has_music:
+            #                 label _("Music Volume")
+
+            #                 hbox:
+            #                     bar value Preference("music volume")
+
+            #             if config.has_sound:
+
+            #                 label _("Sound Volume")
+
+            #                 hbox:
+            #                     bar value Preference("sound volume")
+
+            #                     if config.sample_sound:
+            #                         textbutton _("Test") action Play("sound", config.sample_sound)
+
+
+            #             if config.has_voice:
+            #                 label _("Voice Volume")
+
+            #                 hbox:
+            #                     bar value Preference("voice volume")
+
+            #                     if config.sample_voice:
+            #                         textbutton _("Test") action Play("voice", config.sample_voice)
+
+            #             if config.has_music or config.has_sound or config.has_voice:
+            #                 null height gui.pref_spacing
+
+            #                 textbutton _("Mute All"):
+            #                     action Preference("all mute", "toggle")
+            #                     style "mute_all_button"
+
+
+# style pref_label is gui_label
+# style pref_label_text is gui_label_text
+# style pref_vbox is vbox
+
+# style radio_label is pref_label
+# style radio_label_text is pref_label_text
+# style radio_button is gui_button
+# style radio_button_text is gui_button_text
+# style radio_vbox is pref_vbox
+
+# style check_label is pref_label
+# style check_label_text is pref_label_text
+# style check_button is gui_button
+# style check_button_text is gui_button_text
+# style check_vbox is pref_vbox
+
+# style slider_label is pref_label
+# style slider_label_text is pref_label_text
+# style slider_slider is gui_slider
+# style slider_button is gui_button
+# style slider_button_text is gui_button_text
+# style slider_pref_vbox is pref_vbox
+
+# style mute_all_button is check_button
+# style mute_all_button_text is check_button_text
+
+# style pref_label:
+#     top_margin gui.pref_spacing
+#     bottom_margin 3
+
+# style pref_label_text:
+#     yalign 1.0
+
+# style pref_vbox:
+#     xsize 338
+
+# style radio_vbox:
+#     spacing gui.pref_button_spacing
+
+# style radio_button:
+#     properties gui.button_properties("radio_button")
+#     foreground "gui/button/check_[prefix_]foreground.png"
+
+# style radio_button_text:
+#     properties gui.button_text_properties("radio_button")
+
+# style check_vbox:
+#     spacing gui.pref_button_spacing
+
+# style check_button:
+#     properties gui.button_properties("check_button")
+#     foreground "gui/button/check_[prefix_]foreground.png"
+
+# style check_button_text:
+#     properties gui.button_text_properties("check_button")
+
+# style slider_slider:
+#     xsize 525
+
+# style slider_button:
+#     properties gui.button_properties("slider_button")
+#     yalign 0.5
+#     left_margin 15
+
+# style slider_button_text:
+#     properties gui.button_text_properties("slider_button")
+
+# style slider_vbox:
+#     xsize 675

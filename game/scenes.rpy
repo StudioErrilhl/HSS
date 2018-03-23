@@ -165,7 +165,16 @@ label livingroom_scene(trans=True):
     if int(current_time[:2]) in night:
         scene livingroom_night with Dissolve(.25)
     else:
-        scene livingroom_morning with Dissolve(.25)
+        if bad_weather:
+            scene livingroom_morning_bad_weather with Dissolve(.25)
+        else:
+            scene livingroom_morning with Dissolve(.25)
+        if bad_weather:
+            if rainstorm:
+                show rain behind livingroom_morning_bad_weather
+                show livingroom_morning_bad_weather_windows behind rain
+            else:
+                show livingroom_morning_bad_weather_windows
     return
 
 label outside_scene(trans=True):

@@ -14,7 +14,7 @@ label nr_talk(event=False,callrand=False):
         $ nre = True
         call change_loc(current_location) from _call_change_loc_27
 
-    if event == 'nr_first_visit' and not nre:
+    if event == 'nr_first_visit':
         if current_location != 'garage':
             call change_loc('garage',sec_call='nr_first_talk') from _call_change_loc_28
         label nr_first_talk(True):
@@ -76,7 +76,7 @@ label nr_talk(event=False,callrand=False):
             $ nre = True
             call change_loc(current_location,loctrans=True) from _call_change_loc_29
 
-    if event == 'nr_first_call' and not nre:
+    if event == 'nr_after_nc':
         if nc_after_ft:
             nr "Hey?"
             fp "Hey, man!"
