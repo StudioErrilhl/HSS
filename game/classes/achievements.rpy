@@ -14,24 +14,24 @@ default show_hidden_achievements = False
 
 init 10:
     # A special achievement, which takes the place of any achievement when it is hidden
-    default achievement_hidden = NewAchievement("???", "This achievement is hidden.\nPlay the game to figure out what it is", 1, 'gui/hidden.png', register=False)
+    default achievement_hidden = NewAchievement("???", "This achievement is hidden.\nPlay the game to figure out what it is", 1, 'gui/hidden.webp', register=False)
 
     # Other Achievements
-    default achievement_trophy_case = NewAchievement("Trophy Case", "Open the achievement screen", 1, 'gui/star.png')
-    default achievement_all_the_stuff = NewAchievement("All the stuff","Find, and pick up, all the stuff in game",16,'gui/star.png')
-    default achievement_mc_finished = NewAchievement("Ace Mechanic","Finish rebuilding the bike",1,'gui/star.png')
-    default achievement_even_more_wine = NewAchievement("Even more wine!","That's 10 bottles. Please tell me you're not gonna drink them alone?",10,'inventory/wine_idle.png',hidden=True)
-    default achievement_all_the_wine = NewAchievement("All the wine!","That's 5 bottles. Please tell me you're not gonna drink them alone?",5,'inventory/wine_idle.png',hidden=True,next_tier=[achievement_even_more_wine])
-    default achievement_wine_collector = NewAchievement("Wine collector","You've aquired wine!",1,'inventory/wine_idle.png',hidden=True,next_tier=[achievement_all_the_wine])
+    default achievement_trophy_case = NewAchievement("Trophy Case", "Open the achievement screen", 1, 'gui/star.webp')
+    default achievement_all_the_stuff = NewAchievement("All the stuff","Find, and pick up, all the stuff in game",16,'gui/star.webp')
+    default achievement_mc_finished = NewAchievement("Ace Mechanic","Finish rebuilding the bike",1,'gui/star.webp')
+    default achievement_even_more_wine = NewAchievement("Even more wine!","That's 10 bottles. Please tell me you're not gonna drink them alone?",10,'inventory/wine_idle.webp',hidden=True)
+    default achievement_all_the_wine = NewAchievement("All the wine!","That's 5 bottles. Please tell me you're not gonna drink them alone?",5,'inventory/wine_idle.webp',hidden=True,next_tier=[achievement_even_more_wine])
+    default achievement_wine_collector = NewAchievement("Wine collector","You've aquired wine!",1,'inventory/wine_idle.webp',hidden=True,next_tier=[achievement_all_the_wine])
 
     # Exploration Achievements
-    default achievement_been_everywhere = NewAchievement("Seasoned traveller","You visited every location in the game",13,'gui/star.png','exploration')
+    default achievement_been_everywhere = NewAchievement("Seasoned traveller","You visited every location in the game",13,'gui/star.webp','exploration')
 
     # Lewdness Achievements
-    default achievement_diverse_panties = NewAchievement("Diverse Collector","One of every type!",1,'inventory/fs_bright_pink_panties_idle.png','lewdness',True)
-    default achievement_fs_panties_5 = NewAchievement("Collector","You're building a collection",5,'inventory/fs_bright_pink_panties_idle.png','lewdness',True)
-    default achievement_fs_panties_1 = NewAchievement("The start of a budding\ncollection...", "You're a perv! And you have panties!",1,'inventory/fs_bright_pink_panties_idle.png','lewdness',True,next_tier=[achievement_fs_panties_5])
-    default achievement_fs_panties_sniffer = NewAchievement("Panty sniffer", "You're a perv! And you have panties!",1,'inventory/fs_bright_pink_panties_idle.png','lewdness',True)
+    default achievement_diverse_panties = NewAchievement("Diverse Collector","One of every type!",1,'inventory/fs_bright_pink_panties_idle.webp','lewdness',True)
+    default achievement_fs_panties_5 = NewAchievement("Collector","You're building a collection",5,'inventory/fs_bright_pink_panties_idle.webp','lewdness',True)
+    default achievement_fs_panties_1 = NewAchievement("The start of a budding\ncollection...", "You're a perv! And you have panties!",1,'inventory/fs_bright_pink_panties_idle.webp','lewdness',True,next_tier=[achievement_fs_panties_5])
+    default achievement_fs_panties_sniffer = NewAchievement("Panty sniffer", "You're a perv! And you have panties!",1,'inventory/fs_bright_pink_panties_idle.webp','lewdness',True)
 
 init python:
     class NewAchievement(object):

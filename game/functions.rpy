@@ -135,7 +135,7 @@ init python:
 
 init 10 python:
     def addday(dayamount):
-        global day_week,current_month_day,current_month
+        global day_week,current_month_day,current_month,filth_val
         local_dw = day_week
         day_week = 0 if day_week == 6 else day_week+1
         if local_dw != day_week:
@@ -146,11 +146,13 @@ init 10 python:
             else:
                 current_month_day += 1
                 day_ahead = True
+        if filth_val:
+            filth_val += 10
         setattr(store,'current_time','06:00')
         setattr(store,'day_week',day_week)
         setattr(store,'current_month',current_month)
     def addtime(hours=False,minutes=False,update_scene=False,sec_call=False):
-        global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text,wetshower,not_entered,nc_action_started,nc_action_completed,nc_event,visit_icafe_4,nc_happens
+        global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text,wetshower,not_entered,nc_action_started,nc_action_completed,nc_event,visit_icafe_4,nc_happens,filth_val,tmp_filth_val
         local_dw = day_week
         addhour = False
         not_entered = True
@@ -179,6 +181,9 @@ init 10 python:
                         current_time = str(int(0))+(int(local_time[:2])+int(hours)-24)+local_time[2:]
                         if len(current_time) == 4:
                             current_time = '0'+current_time
+                        if filth_val and not tmp_filth_val:
+                            tmp_filth_val = True
+                            filth_val += 10
                         setattr(store, 'current_time', current_time)
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:
@@ -199,6 +204,9 @@ init 10 python:
                         current_time = str(int(0))+local_time[2:]
                         if len(current_time) == 4:
                             current_time = '0'+current_time
+                        if filth_val and not tmp_filth_val:
+                            tmp_filth_val = True
+                            filth_val += 10
                         setattr(store, 'current_time', current_time)
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:
@@ -214,6 +222,9 @@ init 10 python:
                         update_scene = True
                         if len(current_time) == 4:
                             current_time = '0'+current_time
+                        if filth_val and not tmp_filth_val:
+                            tmp_filth_val = True
+                            filth_val += 10
                         setattr(store, 'current_time', current_time)
                         day_week = 0 if day_week == 6 else day_week+1
                         if local_dw != day_week:
@@ -255,6 +266,9 @@ init 10 python:
                     if local_time >= '23:30':
                         setattr(store,'current_time','00:00')
                         day_week = 0 if day_week == 6 else day_week+1
+                        if filth_val and not tmp_filth_val:
+                            tmp_filth_val = True
+                            filth_val += 10
                         if local_dw != day_week:
                             if current_month_day == months_days[current_month][1]:
                                 current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
@@ -386,17 +400,17 @@ init 10 python:
         global inv_list
         inv_list = []
         for file in renpy.list_files():
-            if file.startswith('images/inventory/') and file.endswith('.png'):
+            if file.startswith('images/inventory/') and file.endswith('.webp'):
                 if 'hover' in file:
                     if 'panties' in file:
-                        tempvar = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.png','').replace('fs_','').replace('_insensitive','').split('_')
+                        tempvar = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.webp','').replace('fs_','').replace('_insensitive','').split('_')
                         if len(tempvar) == 3:
                             temp = tempvar[2]+' - '+tempvar[0]+' '+tempvar[1]
                         elif len(tempvar) == 2:
                             temp = tempvar[1]+' - '+tempvar[0]
                         inv_list.append(temp)
                     else:
-                        inv_list.append(file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.png','').replace('fs_','').replace('_',' '))
+                        inv_list.append(file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.webp','').replace('fs_','').replace('_',' '))
         return inv_list
 
     # if day_week <= 4:

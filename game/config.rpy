@@ -1,6 +1,11 @@
 init python:
     _game_menu_screen = None
-    import os, math, re
+    import os, math, re, pygame_sdl2
+    pygame_sdl2.import_as_pygame()
+    pygame_sdl2.init()
+    pydisp = pygame_sdl2.display.list_modes()
+
+    get_max_res = pydisp[0]
 
     def define_images(characterImageFolder, excludeFirstXFolders=0, flip=True):
         for path in renpy.list_files():
@@ -14,32 +19,47 @@ init python:
 
 init -30 python:
     from datetime import time
-    persistent.patch_installed = False
+    p.patch_installed = False
 init -10 python:
-    if persistent.patch_installed and not persistent.patch_first_time:
-        persistent.patch_enabled = True
-        persistent.patch_first_time = True
-    elif not persistent.patch_installed:
-        persistent.patch_first_time = False
-        persistent.patch_enabled = False
+    if p.patch_installed and not p.patch_first_time:
+        p.patch_enabled = True
+        p.patch_first_time = True
+    elif not p.patch_installed:
+        p.patch_first_time = False
+        p.patch_enabled = False
 # defined config-variables
 define config.quit_action = [Show('phone'),SetVariable('show_icons',False),Show('custom_confirm',None,'quit')]
 if config.developer:
     if renpy.windows:
-        define config.screenshot_pattern = "D:\Dropbox\RenPy-games\Screenshots\HSS-screenshot%04d.png"
+        define config.screenshot_pattern = "D:\Dropbox\RenPy-games\Screenshots\HSS-screenshot%04d.webp"
 if not config.developer:
     define config.console = False
 
+define p = persistent
+define config.default_music_volume = .5
+define config.default_sfx_volume = .5
+define config.default_voice_volume = .5
+
 # persistent variables
-default persistent.first_playthrough = True
-default persistent.skipintro = False
-default persistent.splash_screen = False
-default persistent.maininfo = True
-default persistent.phone_firstshow = True
-default persistent.statscreen_infotext = True
-default persistent.backpack_info = True
-default persistent.cheat = False
-default persistent.side_image_zoom = True
+default p.first_playthrough = True
+default p.skipintro = False
+default p.splash_screen = False
+default p.maininfo = True
+default p.phone_firstshow = True
+default p.statscreen_infotext = True
+default p.backpack_info = True
+default p.cheat = False
+default p.side_image_zoom = True
+# persistent preferences variables
+default p.selectedmenu = False
+default p.displayresolutions = False
+default p.soundmuted = False
+default p.musicmuted = False
+default p.sfxmuted = False
+default p.voicemuted = False
+default p.skipunseen = False
+default p.skipafterchoices = False
+default p.skiptransitions = False
 
 # character definitions
 define narrator = Character(None, what_italic=True)
@@ -59,9 +79,9 @@ define sp = Character("Principal Hudson",who_outlines=[(absolute(1),"#999",absol
 define sj = Character("Jack",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define scn = Character("Natalie",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define scm = Character("Mattie",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
-#remember to add default color="#000000" if the character do not have a namebox_charname.png in the gui/-directory
+#remember to add default color="#000000" if the character do not have a namebox_charname.webp in the gui/-directory
 
-default chars = [[fp,"fp"],[fm,"fm"],[fs,"fs"],[nb,"nb"],[nr,"nr"],[nk,"nk"],[nc,"nc"],[sn,"sn"],[se,"se"],[sp,"sp"],[sj,"sj"],[scn,"scn"],[scm,"scm"]]
+default chars = [[fm,"fm"],[nb,"nb"],[nc,"nc"],[sj,"sj"],[fs,"fs"],[nk,"nk"],[fp,"fp"],[scm,"scm"],[scn,"scn"],[se,"se"],[sn,"sn"],[sp,"sp"],[nr,"nr"]]
 default atts = ['rel','dom','aro','cor','att']
 
 #fp
@@ -75,6 +95,7 @@ default fp_creep = 0
 default fp_money = 200
 default punishment_late = 0 #this is the variable for punishment value for lateness at school - reach too high a number, and [fM] is called, and her relationship stat decrease
 default filth_val = 0
+default tmp_filth_val = False
 default fpe = False
 
 #fm
@@ -82,6 +103,10 @@ default fm_dom = 0
 default fm_rel = 10
 default fm_aro = 0
 default fm_cor = 0
+default fm_dom_max = 15
+default fm_rel_max = 50
+default fm_aro_max = 15
+default fm_cor_max = 10
 default fm_anal = 0
 default fm_pussy = 0
 default fm_bj = 0
@@ -95,6 +120,10 @@ default fs_dom = 0
 default fs_rel = 7.5
 default fs_aro = 0
 default fs_cor = 0
+default fs_dom_max = 15
+default fs_rel_max = 50
+default fs_aro_max = 15
+default fs_cor_max = 10
 default fs_anal = 0
 default fs_pussy = 0
 default fs_bj = 0
@@ -104,10 +133,15 @@ define fs_mad = False
 default fse = False
 
 #nk
+default nk_mad = False
 default nk_dom = 0
 default nk_rel = 4
 default nk_aro = 0
 default nk_cor = 0
+default nk_dom_max = 15
+default nk_rel_max = 50
+default nk_aro_max = 15
+default nk_cor_max = 10
 default nk_anal = 0
 default nk_pussy = 0
 default nk_bj = 0
@@ -118,12 +152,20 @@ default nk_school_assignment_evening_first = True
 default nk_driving = False
 default nk_sa_status = False
 default nke = False
+default call_nk = False
+default call_nk_event = False
+default nk_first_date = False
+default nk_day_date = False
 
 #nc
 default nc_dom = 0
 default nc_rel = 0
 default nc_aro = 0
 default nc_cor = 0
+default nc_dom_max = 15
+default nc_rel_max = 50
+default nc_aro_max = 15
+default nc_cor_max = 10
 default nc_anal = 0
 default nc_pussy = 0
 default nc_bj = 0
@@ -139,6 +181,10 @@ default nb_dom = 0
 default nb_rel = 2.5
 default nb_aro = 0
 default nb_cor = 0
+default nb_dom_max = 15
+default nb_rel_max = 50
+default nb_aro_max = 15
+default nb_cor_max = 10
 default nb_anal = 0
 default nb_pussy = 0
 default nb_bj = 0
@@ -156,6 +202,10 @@ default sn_dom = 0
 default sn_rel = 2
 default sn_aro = 0
 default sn_cor = 0
+default sn_dom_max = 15
+default sn_rel_max = 50
+default sn_aro_max = 15
+default sn_cor_max = 10
 default sn_anal = 0
 default sn_pussy = 0
 default sn_bj = 0
@@ -249,6 +299,7 @@ default alarmclock = False
 default alarmclock_time = "07:00"
 default alarmhour = 0
 default alarmminute = 0
+default walk_to_school = False
 
 # fs events
 default fs_si = True

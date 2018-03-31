@@ -30,7 +30,7 @@ label fs_talk(fst_called=False):
             if fs_si_2 and not fse:
                 show fs_standing ahead
                 fp "How did it go with the issue you had with the school?"
-                if persistent.first_playthrough:
+                if p.first_playthrough:
                     fs ahead "Oh, it was nothing, really. We talked, and ended up going through all the entries made about me the last year. [fmName.Informal] confirmed she hadn't received any of the notes or calls that were registered in the system, which sort of made my teacher go a little pale, and become a little upset."
                     fp "Who?"
                     fs annoyed "Oh, [se]. She can be a real bitch!"

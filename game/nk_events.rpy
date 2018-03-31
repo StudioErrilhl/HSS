@@ -1,4 +1,4 @@
-label nk_talk(event=False):
+label nk_talk(event=False,callrand=False):
     if event:
         $ text1 = text2 = False
         $ nktr = renpy.random.random()
@@ -34,6 +34,35 @@ label nk_talk(event=False):
                                     call travel_events('arrive_school') from _call_travel_events_2
                                 else:
                                     call school_events('sn_punishment_late') from _call_school_events_1
+        elif event == 'nk_date' and not nk_mad and not nke:
+            if not nk_first_date:
+                nk "Hey, [fp]"
+                "You can hear the smile in her voice"
+                fp "Hey, [nk]"
+                "..."
+                nk "[fp]... are you there?"
+                fp "Yeah, I'm here..."
+                nk "So...?"
+                fp "Sorry, I suck at this!"
+                nk "What? Talking?"
+                "You can hear her teasing you"
+                nk "So, lemme make this easier on you, [fp]"
+                fp "... okay?"
+                nk "You wanna go get a burger or something? Maybe see if you're better at talking in person than over the phone?"
+                fp "Sure! {i}Damn... too eager!{/i}"
+                "[nk]s cute laugh sounds through the phone"
+                $ text = "Fine! We'll go {0}!".format('this Saturday' if (day_week <= 4 or day_week == 6) else 'tomorrow')
+                nk "[text]"
+                fp "Great! I will see if I can borrow the car, and pick you up around 18?"
+                nk "Sounds great!"
+                $ calling = duringcall = False
+                $ nk_first_date = True
+                $ nk_day_date = current_month_day + (6 - day_week)
+                if nk_day_date == current_month_day:
+                    $ nk_day_date += 6
+                $ renpy.hide_screen('phone')
+                $ call_nk_event = False
+                call change_loc(current_location)
         elif nktr < .5 and day_week <= 4 and not shitty_morning:
             show nk_standing ahead with dissolve
             nk ahead "Hi [fp]! Wanna walk to school with me?"

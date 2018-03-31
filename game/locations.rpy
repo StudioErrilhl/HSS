@@ -30,7 +30,7 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
                 call evening_event_label(True)
 
         if char and imgname:
-            show expression "images/characters/[char]/body/standing/[imgname].png" as character: # at fs_standing_ahead_ani with dissolve:
+            show expression "images/characters/[char]/body/standing/[imgname].webp" as character: # at fs_standing_ahead_ani with dissolve:
                 zoom .65
                 xpos .7
                 ypos 1.0
@@ -536,8 +536,8 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                 "Sneak a peek":
                     if not uhl_bathroom_ach:
                         $ uhl_bathroom_ach = True
-                        $ update_been_everywhere_achievement()                
-                    $ images_unlocked.append('DCIM00002_portrait.png')
+                        $ update_been_everywhere_achievement()
+                    $ images_unlocked.append('DCIM00002_portrait.webp')
                     call change_loc('upper hallway bathroom peek',sec_call='peek_scene_happening') from _call_change_loc_17
                     label peek_scene_happening(True):
                         fp "{i}Oh {b}SHIT{/b}! That is definitely something worth getting thwapped for! But... maybe I should get the hell outta here before I get caught!{/i}"
@@ -582,7 +582,7 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                                 fs "So, get in there and do your thing!"
                                 if not uhl_bathroom_ach:
                                     $ uhl_bathroom_ach = True
-                                    $ update_been_everywhere_achievement()                                
+                                    $ update_been_everywhere_achievement()
                                 call change_loc('upper hallway bathroom',loctrans=True,sec_call="second_bathroom_occupied_label") from _call_change_loc_21
                                 label second_bathroom_occupied_label(True):
                                     fp "{i}Running to the toilet{/i}\nOh...\n{i}Damn... she looks {b}hot{/b} with nothing but that towel on...{/i}"
@@ -596,7 +596,7 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                         $ not_entered = False
                         if not uhl_bathroom_ach:
                             $ uhl_bathroom_ach = True
-                            $ update_been_everywhere_achievement()                        
+                            $ update_been_everywhere_achievement()
                         call change_loc('upper hallway bathroom',loctrans=True) from _call_change_loc_23
                 "Leave and come back later":
                     $ occupied_bath = False

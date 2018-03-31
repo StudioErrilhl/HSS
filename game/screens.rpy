@@ -42,38 +42,38 @@ style prompt_text is gui_text:
 
 style bar:
     ysize gui.bar_size
-    left_bar Frame("gui/bar/left.png", gui.bar_borders, tile=gui.bar_tile)
-    right_bar Frame("gui/bar/right.png", gui.bar_borders, tile=gui.bar_tile)
+    left_bar Frame("gui/bar/left.webp", gui.bar_borders, tile=gui.bar_tile)
+    right_bar Frame("gui/bar/right.webp", gui.bar_borders, tile=gui.bar_tile)
 
 style vbar:
     xsize gui.bar_size
-    top_bar Frame("gui/bar/top.png", gui.vbar_borders, tile=gui.bar_tile)
-    bottom_bar Frame("gui/bar/bottom.png", gui.vbar_borders, tile=gui.bar_tile)
+    top_bar Frame("gui/bar/top.webp", gui.vbar_borders, tile=gui.bar_tile)
+    bottom_bar Frame("gui/bar/bottom.webp", gui.vbar_borders, tile=gui.bar_tile)
 
 style scrollbar:
     ysize gui.scrollbar_size
-    base_bar Frame("gui/scrollbar/horizontal_[prefix_]bar.png", gui.scrollbar_borders, tile=gui.scrollbar_tile)
-    thumb Frame("gui/scrollbar/horizontal_[prefix_]thumb.png", gui.scrollbar_borders, tile=gui.scrollbar_tile)
+    base_bar Frame("gui/scrollbar/horizontal_[prefix_]bar.webp", gui.scrollbar_borders, tile=gui.scrollbar_tile)
+    thumb Frame("gui/scrollbar/horizontal_[prefix_]thumb.webp", gui.scrollbar_borders, tile=gui.scrollbar_tile)
 
 style vscrollbar:
     xsize gui.scrollbar_size
-    base_bar Frame("gui/scrollbar/vertical_[prefix_]bar.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
-    thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
+    base_bar Frame("gui/scrollbar/vertical_[prefix_]bar.webp", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
+    thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.webp", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
 
 # style slider:
 #     ysize gui.slider_size
-#     base_bar Frame("gui/slider/horizontal_[prefix_]bar.png", gui.slider_borders, tile=gui.slider_tile)
-#     thumb "gui/slider/horizontal_[prefix_]thumb.png"
+#     base_bar Frame("gui/slider/horizontal_[prefix_]bar.webp", gui.slider_borders, tile=gui.slider_tile)
+#     thumb "gui/slider/horizontal_[prefix_]thumb.webp"
 
 style vslider:
     xsize gui.slider_size
-    base_bar Frame("gui/slider/vertical_[prefix_]bar.png", gui.vslider_borders, tile=gui.slider_tile)
-    thumb "gui/slider/vertical_[prefix_]thumb.png"
+    base_bar Frame("gui/slider/vertical_[prefix_]bar.webp", gui.vslider_borders, tile=gui.slider_tile)
+    thumb "gui/slider/vertical_[prefix_]thumb.webp"
 
 
 style frame:
     padding gui.frame_borders.padding
-    background Frame("gui/frame.png", gui.frame_borders, tile=gui.frame_tile)
+    background Frame("gui/frame.webp", gui.frame_borders, tile=gui.frame_tile)
 
 
 
@@ -136,7 +136,7 @@ style frame:
 #     yalign gui.textbox_yalign
 #     ysize gui.textbox_height
 
-#     background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
+#     background Image("gui/textbox.webp", xalign=0.5, yalign=1.0)
 
 # style namebox:
 #     xpos gui.name_xpos
@@ -145,7 +145,7 @@ style frame:
 #     ypos gui.name_ypos
 #     ysize gui.namebox_height
 
-#     background Frame("gui/namebox.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+#     background Frame("gui/namebox.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
 #     padding gui.namebox_borders.padding
 
 # style say_label:
@@ -386,7 +386,7 @@ style quick_button_text:
 #     xsize 420
 #     yfill True
 
-#     background "gui/overlay/main_menu.png"
+#     background "gui/overlay/main_menu.webp"
 
 # style main_menu_vbox:
 #     xalign 1.0
@@ -496,7 +496,7 @@ style quick_button_text:
 #     bottom_padding 45
 #     top_padding 180
 
-#     background "gui/overlay/game_menu.png"
+#     background "gui/overlay/game_menu.webp"
 
 # style game_menu_navigation_frame:
 #     xsize 420
@@ -538,39 +538,39 @@ style quick_button_text:
 ## There's nothing special about this screen, and hence it also serves as an
 ## example of how to make a custom screen.
 
-screen about():
+# screen about():
 
-    tag menu
+#     tag menu
 
-    ## This use statement includes the game_menu screen inside this one. The
-    ## vbox child is then included inside the viewport inside the game_menu
-    ## screen.
-    use game_menu(_("About"), scroll="viewport"):
+#     ## This use statement includes the game_menu screen inside this one. The
+#     ## vbox child is then included inside the viewport inside the game_menu
+#     ## screen.
+#     use game_menu(_("About"), scroll="viewport"):
 
-        style_prefix "about"
+#         style_prefix "about"
 
-        vbox:
+#         vbox:
 
-            label "[config.name!t]"
-            text _("Version [config.version!t]\n")
+#             label "[config.name!t]"
+#             text _("Version [config.version!t]\n")
 
-            ## gui.about is usually set in options.rpy.
-            if gui.about:
-                text "[gui.about!t]\n"
+#             ## gui.about is usually set in options.rpy.
+#             if gui.about:
+#                 text "[gui.about!t]\n"
 
-            text _("Made with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]")
-
-
-## This is redefined in options.rpy to add text to the about screen.
-define gui.about = ""
+#             text _("Made with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]")
 
 
-style about_label is gui_label
-style about_label_text is gui_label_text
-style about_text is gui_text
+# ## This is redefined in options.rpy to add text to the about screen.
+# define gui.about = ""
 
-style about_label_text:
-    size gui.label_text_size
+
+# style about_label is gui_label
+# style about_label_text is gui_label_text
+# style about_text is gui_text
+
+# style about_label_text:
+#     size gui.label_text_size
 
 
 ## Load and Save screens #######################################################
@@ -589,11 +589,11 @@ screen save():
     use file_slots(_("Save"))
 
 
-screen load():
+# screen load():
 
-    tag menu
+#     tag menu
 
-    use file_slots(_("Load"))
+#     use file_slots(_("Load"))
 
 
 screen file_slots(title):
@@ -840,7 +840,7 @@ style slot_button_text:
 
 # style radio_button:
 #     properties gui.button_properties("radio_button")
-#     foreground "gui/button/check_[prefix_]foreground.png"
+#     foreground "gui/button/check_[prefix_]foreground.webp"
 
 # style radio_button_text:
 #     properties gui.button_text_properties("radio_button")
@@ -850,7 +850,7 @@ style slot_button_text:
 
 # style check_button:
 #     properties gui.button_properties("check_button")
-#     foreground "gui/button/check_[prefix_]foreground.png"
+#     foreground "gui/button/check_[prefix_]foreground.webp"
 
 # style check_button_text:
 #     properties gui.button_text_properties("check_button")
@@ -966,156 +966,156 @@ style history_label_text:
 ## screens (keyboard_help, mouse_help, and gamepad_help) to display the actual
 ## help.
 
-screen help():
+# screen help():
 
-    tag menu
+#     tag menu
 
-    default device = "keyboard"
+#     default device = "keyboard"
 
-    use game_menu(_("Help"), scroll="viewport"):
+#     use game_menu(_("Help"), scroll="viewport"):
 
-        style_prefix "help"
+#         style_prefix "help"
 
-        vbox:
-            spacing 23
+#         vbox:
+#             spacing 23
 
-            hbox:
+#             hbox:
 
-                textbutton _("Keyboard") action SetScreenVariable("device", "keyboard")
-                textbutton _("Mouse") action SetScreenVariable("device", "mouse")
+#                 textbutton _("Keyboard") action SetScreenVariable("device", "keyboard")
+#                 textbutton _("Mouse") action SetScreenVariable("device", "mouse")
 
-                if GamepadExists():
-                    textbutton _("Gamepad") action SetScreenVariable("device", "gamepad")
+#                 if GamepadExists():
+#                     textbutton _("Gamepad") action SetScreenVariable("device", "gamepad")
 
-            if device == "keyboard":
-                use keyboard_help
-            elif device == "mouse":
-                use mouse_help
-            elif device == "gamepad":
-                use gamepad_help
-
-
-screen keyboard_help():
-
-    hbox:
-        label _("Enter")
-        text _("Advances dialogue and activates the interface.")
-
-    hbox:
-        label _("Space")
-        text _("Advances dialogue without selecting choices.")
-
-    hbox:
-        label _("Arrow Keys")
-        text _("Navigate the interface.")
-
-    hbox:
-        label _("Escape")
-        text _("Accesses the game menu.")
-
-    hbox:
-        label _("Ctrl")
-        text _("Skips dialogue while held down.")
-
-    hbox:
-        label _("Tab")
-        text _("Toggles dialogue skipping.")
-
-    hbox:
-        label _("Page Up")
-        text _("Rolls back to earlier dialogue.")
-
-    hbox:
-        label _("Page Down")
-        text _("Rolls forward to later dialogue.")
-
-    hbox:
-        label "H"
-        text _("Hides the user interface.")
-
-    hbox:
-        label "S"
-        text _("Takes a screenshot.")
-
-    hbox:
-        label "V"
-        text _("Toggles assistive {a=https://www.renpy.org/l/voicing}self-voicing{/a}.")
+#             if device == "keyboard":
+#                 use keyboard_help
+#             elif device == "mouse":
+#                 use mouse_help
+#             elif device == "gamepad":
+#                 use gamepad_help
 
 
-screen mouse_help():
+# screen keyboard_help():
 
-    hbox:
-        label _("Left Click")
-        text _("Advances dialogue and activates the interface.")
+#     hbox:
+#         label _("Enter")
+#         text _("Advances dialogue and activates the interface.")
 
-    hbox:
-        label _("Middle Click")
-        text _("Hides the user interface.")
+#     hbox:
+#         label _("Space")
+#         text _("Advances dialogue without selecting choices.")
 
-    hbox:
-        label _("Right Click")
-        text _("Accesses the game menu.")
+#     hbox:
+#         label _("Arrow Keys")
+#         text _("Navigate the interface.")
 
-    hbox:
-        label _("Mouse Wheel Up\nClick Rollback Side")
-        text _("Rolls back to earlier dialogue.")
+#     hbox:
+#         label _("Escape")
+#         text _("Accesses the game menu.")
 
-    hbox:
-        label _("Mouse Wheel Down")
-        text _("Rolls forward to later dialogue.")
+#     hbox:
+#         label _("Ctrl")
+#         text _("Skips dialogue while held down.")
 
+#     hbox:
+#         label _("Tab")
+#         text _("Toggles dialogue skipping.")
 
-screen gamepad_help():
+#     hbox:
+#         label _("Page Up")
+#         text _("Rolls back to earlier dialogue.")
 
-    hbox:
-        label _("Right Trigger\nA/Bottom Button")
-        text _("Advances dialogue and activates the interface.")
+#     hbox:
+#         label _("Page Down")
+#         text _("Rolls forward to later dialogue.")
 
-    hbox:
-        label _("Left Trigger\nLeft Shoulder")
-        text _("Rolls back to earlier dialogue.")
+#     hbox:
+#         label "H"
+#         text _("Hides the user interface.")
 
-    hbox:
-        label _("Right Shoulder")
-        text _("Rolls forward to later dialogue.")
+#     hbox:
+#         label "S"
+#         text _("Takes a screenshot.")
 
-
-    hbox:
-        label _("D-Pad, Sticks")
-        text _("Navigate the interface.")
-
-    hbox:
-        label _("Start, Guide")
-        text _("Accesses the game menu.")
-
-    hbox:
-        label _("Y/Top Button")
-        text _("Hides the user interface.")
-
-    textbutton _("Calibrate") action GamepadCalibrate()
+#     hbox:
+#         label "V"
+#         text _("Toggles assistive {a=https://www.renpy.org/l/voicing}self-voicing{/a}.")
 
 
-style help_button is gui_button
-style help_button_text is gui_button_text
-style help_label is gui_label
-style help_label_text is gui_label_text
-style help_text is gui_text
+# screen mouse_help():
 
-style help_button:
-    properties gui.button_properties("help_button")
-    xmargin 12
+#     hbox:
+#         label _("Left Click")
+#         text _("Advances dialogue and activates the interface.")
 
-style help_button_text:
-    properties gui.button_text_properties("help_button")
+#     hbox:
+#         label _("Middle Click")
+#         text _("Hides the user interface.")
 
-style help_label:
-    xsize 375
-    right_padding 30
+#     hbox:
+#         label _("Right Click")
+#         text _("Accesses the game menu.")
 
-style help_label_text:
-    size gui.text_size
-    xalign 1.0
-    text_align 1.0
+#     hbox:
+#         label _("Mouse Wheel Up\nClick Rollback Side")
+#         text _("Rolls back to earlier dialogue.")
+
+#     hbox:
+#         label _("Mouse Wheel Down")
+#         text _("Rolls forward to later dialogue.")
+
+
+# screen gamepad_help():
+
+#     hbox:
+#         label _("Right Trigger\nA/Bottom Button")
+#         text _("Advances dialogue and activates the interface.")
+
+#     hbox:
+#         label _("Left Trigger\nLeft Shoulder")
+#         text _("Rolls back to earlier dialogue.")
+
+#     hbox:
+#         label _("Right Shoulder")
+#         text _("Rolls forward to later dialogue.")
+
+
+#     hbox:
+#         label _("D-Pad, Sticks")
+#         text _("Navigate the interface.")
+
+#     hbox:
+#         label _("Start, Guide")
+#         text _("Accesses the game menu.")
+
+#     hbox:
+#         label _("Y/Top Button")
+#         text _("Hides the user interface.")
+
+#     textbutton _("Calibrate") action GamepadCalibrate()
+
+
+# style help_button is gui_button
+# style help_button_text is gui_button_text
+# style help_label is gui_label
+# style help_label_text is gui_label_text
+# style help_text is gui_text
+
+# style help_button:
+#     properties gui.button_properties("help_button")
+#     xmargin 12
+
+# style help_button_text:
+#     properties gui.button_text_properties("help_button")
+
+# style help_label:
+#     xsize 375
+#     right_padding 30
+
+# style help_label_text:
+#     size gui.text_size
+#     xalign 1.0
+#     text_align 1.0
 
 
 
@@ -1140,7 +1140,7 @@ screen confirm(message, yes_action, no_action):
 
     style_prefix "confirm"
 
-    # add "gui/overlay/confirm.png"
+    # add "gui/overlay/confirm.webp"
 
     frame:
 
@@ -1173,7 +1173,7 @@ style confirm_button is gui_medium_button
 style confirm_button_text is gui_medium_button_text
 
 style confirm_frame:
-    background Frame([ "gui/confirm_frame.png", "gui/frame.png"], gui.confirm_frame_borders, tile=gui.frame_tile)
+    background Frame([ "gui/confirm_frame.webp", "gui/frame.webp"], gui.confirm_frame_borders, tile=gui.frame_tile)
     padding gui.confirm_frame_borders.padding
     xalign .5
     yalign .5
@@ -1234,7 +1234,7 @@ style confirm_button_text:
 
 # style skip_frame:
 #     ypos gui.skip_ypos
-#     background Frame("gui/skip.png", gui.skip_frame_borders, tile=gui.frame_tile)
+#     background Frame("gui/skip.webp", gui.skip_frame_borders, tile=gui.frame_tile)
 #     padding gui.skip_frame_borders.padding
 
 # style skip_text:
@@ -1278,7 +1278,7 @@ style confirm_button_text:
 # style notify_frame:
 #     ypos gui.notify_ypos
 
-#     background Frame("gui/notify.png", gui.notify_frame_borders, tile=gui.frame_tile)
+#     background Frame("gui/notify.webp", gui.notify_frame_borders, tile=gui.frame_tile)
 #     padding gui.notify_frame_borders.padding
 
 # style notify_text:
@@ -1360,7 +1360,7 @@ style nvl_window:
     xfill True
     yfill True
 
-    background "gui/nvl.png"
+    background "gui/nvl.webp"
     padding gui.nvl_borders.padding
 
 style nvl_entry:
@@ -1433,27 +1433,27 @@ screen quick_menu():
 
 style window:
     variant "small"
-    background "gui/phone/textbox.png"
+    background "gui/phone/textbox.webp"
 
 style radio_button:
     variant "small"
-    foreground "gui/phone/button/check_[prefix_]foreground.png"
+    foreground "gui/phone/button/check_[prefix_]foreground.webp"
 
 style check_button:
     variant "small"
-    foreground "gui/phone/button/check_[prefix_]foreground.png"
+    foreground "gui/phone/button/check_[prefix_]foreground.webp"
 
 style nvl_window:
     variant "small"
-    background "gui/phone/nvl.png"
+    background "gui/phone/nvl.webp"
 
 style main_menu_frame:
     variant "small"
-    background "gui/phone/overlay/main_menu.png"
+    background "gui/phone/overlay/main_menu.webp"
 
 style game_menu_outer_frame:
     variant "small"
-    background "gui/phone/overlay/game_menu.png"
+    background "gui/phone/overlay/game_menu.webp"
 
 style game_menu_navigation_frame:
     variant "small"
@@ -1470,38 +1470,38 @@ style pref_vbox:
 style bar:
     variant "small"
     ysize gui.bar_size
-    left_bar Frame("gui/phone/bar/left.png", gui.bar_borders, tile=gui.bar_tile)
-    right_bar Frame("gui/phone/bar/right.png", gui.bar_borders, tile=gui.bar_tile)
+    left_bar Frame("gui/phone/bar/left.webp", gui.bar_borders, tile=gui.bar_tile)
+    right_bar Frame("gui/phone/bar/right.webp", gui.bar_borders, tile=gui.bar_tile)
 
 style vbar:
     variant "small"
     xsize gui.bar_size
-    top_bar Frame("gui/phone/bar/top.png", gui.vbar_borders, tile=gui.bar_tile)
-    bottom_bar Frame("gui/phone/bar/bottom.png", gui.vbar_borders, tile=gui.bar_tile)
+    top_bar Frame("gui/phone/bar/top.webp", gui.vbar_borders, tile=gui.bar_tile)
+    bottom_bar Frame("gui/phone/bar/bottom.webp", gui.vbar_borders, tile=gui.bar_tile)
 
 style scrollbar:
     variant "small"
     ysize gui.scrollbar_size
-    base_bar Frame("gui/phone/scrollbar/horizontal_[prefix_]bar.png", gui.scrollbar_borders, tile=gui.scrollbar_tile)
-    thumb Frame("gui/phone/scrollbar/horizontal_[prefix_]thumb.png", gui.scrollbar_borders, tile=gui.scrollbar_tile)
+    base_bar Frame("gui/phone/scrollbar/horizontal_[prefix_]bar.webp", gui.scrollbar_borders, tile=gui.scrollbar_tile)
+    thumb Frame("gui/phone/scrollbar/horizontal_[prefix_]thumb.webp", gui.scrollbar_borders, tile=gui.scrollbar_tile)
 
 style vscrollbar:
     variant "small"
     xsize gui.scrollbar_size
-    base_bar Frame("gui/phone/scrollbar/vertical_[prefix_]bar.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
-    thumb Frame("gui/phone/scrollbar/vertical_[prefix_]thumb.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
+    base_bar Frame("gui/phone/scrollbar/vertical_[prefix_]bar.webp", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
+    thumb Frame("gui/phone/scrollbar/vertical_[prefix_]thumb.webp", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
 
 style slider:
     variant "small"
     ysize gui.slider_size
-    base_bar Frame("gui/phone/slider/horizontal_[prefix_]bar.png", gui.slider_borders, tile=gui.slider_tile)
-    thumb "gui/phone/slider/horizontal_[prefix_]thumb.png"
+    base_bar Frame("gui/phone/slider/horizontal_[prefix_]bar.webp", gui.slider_borders, tile=gui.slider_tile)
+    thumb "gui/phone/slider/horizontal_[prefix_]thumb.webp"
 
 style vslider:
     variant "small"
     xsize gui.slider_size
-    base_bar Frame("gui/phone/slider/vertical_[prefix_]bar.png", gui.vslider_borders, tile=gui.slider_tile)
-    thumb "gui/phone/slider/vertical_[prefix_]thumb.png"
+    base_bar Frame("gui/phone/slider/vertical_[prefix_]bar.webp", gui.vslider_borders, tile=gui.slider_tile)
+    thumb "gui/phone/slider/vertical_[prefix_]thumb.webp"
 
 style slider_pref_vbox:
     variant "small"

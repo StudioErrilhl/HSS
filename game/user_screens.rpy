@@ -23,8 +23,8 @@ style inventory_text:
 
 style slider:
     ysize 20
-    base_bar Frame("gui/slider/horizontal_[prefix_]bar.png", gui.slider_borders, tile=gui.slider_tile)
-    thumb "gui/slider/horizontal_[prefix_]thumb_cr.png"
+    base_bar Frame("gui/slider/horizontal_[prefix_]bar.webp", gui.slider_borders, tile=gui.slider_tile)
+    thumb "gui/slider/horizontal_[prefix_]thumb_cr.webp"
 
 style category_button_text:
     color "#fff"
@@ -37,6 +37,11 @@ style prefs_button_text:
     hover_color "#0cf"
     selected_color "#0cf"
     xalign .5
+
+style prefs_button:
+    xsize 200
+    ysize 60
+    hover_background Frame("gui/button_background.webp",xalign=.5)
 
 style prefs_text:
     color "#007a99"
@@ -78,7 +83,7 @@ screen choice(items):
                         text caption style "choice_button"
             else:
                 frame:
-                    background "gui/textbox_top.png"
+                    background "gui/textbox_top.webp"
                     xalign .5
                     xpos -50
                     ypos -650
@@ -167,22 +172,46 @@ screen nvl:
 
     use quick_menu
 
+screen about():
+    tag menu
+    use game_menu(_("About"), scroll="viewport"):
+        style_prefix "about"
+        vbox:
+            if gui.about:
+                text "[gui.about!t]\n"
+            if gui.about_2_head:
+                text "[gui.about_2_head!t]" at center
+            if gui.about_2_text:
+                text "[gui.about_2_text!t]"
+
+            text _("{size=24}Made with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]{/size}")
+
+style about_label is gui_label
+style about_label_text is gui_label_text
+style about_text is gui_text
+
+style about_label_text:
+    size gui.label_text_size
+
+screen load():
+    tag menu
+    use file_slots(_("Continue"))
+
 screen navigation():
     vbox:
-        style_prefix "navigation"
+        # style_prefix "navigation"
+        style_prefix "prefs"
 
         xpos gui.navigation_xpos
         yalign 0.5
 
         spacing gui.navigation_spacing
 
-        textbutton _("Main Menu") action MainMenu()
-        textbutton _("Save") action ShowMenu("save")
-        textbutton _("Load") action ShowMenu("load")
+        textbutton _("Continue") action ShowMenu("load")
         textbutton _("Preferences") action ShowMenu("preferences")
-        textbutton _("History") action ShowMenu("history")
         textbutton _("About") action ShowMenu("about")
-        textbutton _("Changelog") action [Show ("changelog")]
+        textbutton _("Changelog") action ShowMenu("changelog")
+        textbutton _("Help") action ShowMenu("help")
 
         if _in_replay:
             textbutton _("End Replay") action EndReplay(confirm=True)
@@ -206,8 +235,8 @@ screen main_menu():
 
     if main_menu:
         imagemap:
-            ground "gui/menu.png"
-            hover "gui/menu_hover.png"
+            ground "gui/menu.webp"
+            hover "gui/menu_hover.webp"
 
             hotspot (44, 100, 355, 110) action Start()
             hotspot (44, 210, 378, 110) action ShowMenu("load")
@@ -237,8 +266,8 @@ screen main_menu():
             ypos 65
 
         imagebutton:
-            idle "gui/patreon_idle.png"
-            hover "gui/patreon_hover.png"
+            idle "gui/patreon_idle.webp"
+            hover "gui/patreon_hover.webp"
             action OpenURL("./game/test.html")
 
 style main_menu_frame is empty
@@ -268,46 +297,32 @@ screen game_menu(title, scroll=None, yinitial=0.0):
 
     frame:
         style "game_menu_outer_frame"
-
         hbox:
-
             frame:
                 style "game_menu_navigation_frame"
-
             frame:
                 style "game_menu_content_frame"
-
                 if scroll == "viewport":
-
                     viewport:
                         yinitial yinitial
                         scrollbars "vertical"
                         mousewheel True
                         pagekeys True
                         draggable True
-
                         side_yfill True
-
                         vbox:
                             transclude
-
                 elif scroll == "vpgrid":
-
                     vpgrid:
                         cols 1
                         yinitial yinitial
-
                         scrollbars "vertical"
                         mousewheel True
                         pagekeys True
                         draggable True
-
                         side_yfill True
-
                         transclude
-
                 else:
-
                     transclude
 
     use navigation
@@ -316,7 +331,6 @@ screen game_menu(title, scroll=None, yinitial=0.0):
         style "return_button"
         text_style "white_color"
         action Return()
-
     label title
 
 style game_menu_outer_frame is empty
@@ -335,7 +349,7 @@ style return_button_text is navigation_button_text
 style game_menu_outer_frame:
     bottom_padding 45
     top_padding 180
-    background "gui/overlay/game_menu.png"
+    background "gui/overlay/game_menu.webp"
 
 style game_menu_navigation_frame:
     xsize 420
@@ -414,7 +428,7 @@ style notify_text is gui_text
 style notify_frame:
     ypos gui.notify_ypos
 
-    background Frame("gui/notify.png", gui.notify_frame_borders, tile=gui.frame_tile)
+    background Frame("gui/notify.webp", gui.notify_frame_borders, tile=gui.frame_tile)
     padding gui.notify_frame_borders.padding
 
 style notify_text:
@@ -432,21 +446,21 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
         yval = 1.0 if y > config.screen_height/2 else .0
 
     hbox xalign 0 yalign 0:
-        imagebutton auto "gui/stats_%s.png" focus_mask True action Show('stat_screen'):
+        imagebutton auto "gui/stats_%s.webp" focus_mask True action Show('stat_screen'):
             tooltip "Here you'll find all the stats for all the characters in the game. Some characters doesn't have a lot of stats currently, this may change with the coming updates"
-        add "gui/stats_overlay.png":
+        add "gui/stats_overlay.webp":
             xpos -128
             if int(current_time[:2]) not in night:
                 alpha 0.0
             else:
                 alpha 0.5
         if filth_val == 0: ## filth-meter
-            imagebutton idle "gui/tshirt.png":
+            imagebutton idle "gui/tshirt.webp":
                 xpos -150
                 ypos 10
                 tooltip "You're clean as a whistle"
                 action NullAction()
-            add "gui/tshirt_overlay.png":
+            add "gui/tshirt_overlay.webp":
                 ypos 10
                 xpos -250
                 if int(current_time[:2]) not in night:
@@ -454,10 +468,10 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 else:
                     alpha .5
         else:
-            add "gui/tshirt.png":
+            add "gui/tshirt.webp":
                 xpos -150
                 ypos 10
-            imagebutton idle "gui/tshirt_overlay.png":
+            imagebutton idle "gui/tshirt_overlay.webp":
                 xpos -250
                 ypos 10
                 if filth_val < 10:
@@ -499,7 +513,7 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 else:
                     tooltip "You're filthy! Go wash up! ("+str(filth_val)+"% dirty)"
                     action NullAction()
-            add "gui/tshirt_overlay.png":
+            add "gui/tshirt_overlay.webp":
                 ypos 10
                 xpos -350
                 if int(current_time[:2]) not in night:
@@ -508,16 +522,16 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                     alpha .5
 
     if not backpack_carry:
-        add "gui/backpack_outline.png"
+        add "gui/backpack_outline.webp"
     if backpack_carry:
         vbox xalign .99 yalign .99: #backpack / inventory
-            imagebutton auto "gui/backpack_%s.png":
+            imagebutton auto "gui/backpack_%s.webp":
                 xalign 0.8
                 ypos 100
                 focus_mask True
                 action [Show("inventory_screen")]
                 tooltip "Here you'll be able to see what you have in your backpack"
-            add "gui/backpack_overlay.png":
+            add "gui/backpack_overlay.webp":
                 ypos -16
                 if int(current_time[:2]) not in night:
                     alpha 0.0
@@ -544,19 +558,19 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
         vbox:
             if carry_phone:
                 if not (hints or calls or messages):
-                    imagebutton auto "gui/menu_phone_%s.png" focus_mask True action Show('phone') at ModZoom(.8):
+                    imagebutton auto "gui/menu_phone_%s.webp" focus_mask True action Show('phone') at ModZoom(.8):
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more"
                 elif calls:
-                    imagebutton auto "gui/menu_phone_call_%s.png" focus_mask True action Show('phone') at ModZoom(.8):
+                    imagebutton auto "gui/menu_phone_call_%s.webp" focus_mask True action Show('phone') at ModZoom(.8):
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, unanswered calls"
                 elif messages:
-                    imagebutton auto "gui/menu_phone_message_%s.png" focus_mask True action Show('phone') at ModZoom(.8):
+                    imagebutton auto "gui/menu_phone_message_%s.webp" focus_mask True action Show('phone') at ModZoom(.8):
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new messages"
                 elif hints:
-                    imagebutton auto "gui/menu_phone_hint_%s.png" focus_mask True action Show('phone') at ModZoom(.8):
+                    imagebutton auto "gui/menu_phone_hint_%s.webp" focus_mask True action Show('phone') at ModZoom(.8):
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new hints"
 
-                add "gui/menu_phone_overlay.png" at ModZoom(.8):
+                add "gui/menu_phone_overlay.webp" at ModZoom(.8):
                     # xpos -340
                     ypos -119
                     if int(current_time[:2]) not in night:
@@ -564,13 +578,13 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                     else:
                         alpha 0.5
             else:
-                add "gui/menu_phone_outline.png" at ModZoom(.8)
+                add "gui/menu_phone_outline.webp" at ModZoom(.8)
 
     frame: #calendar_display
         xpos 1810
         xpadding 0
         ypadding 0
-        background Image("gui/calendar.png")
+        background Image("gui/calendar.webp")
         vbox: #month and date and dayname
             xsize 100
             xalign .5
@@ -581,11 +595,6 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 xalign .5
                 color "#fff"
                 size 20
-            # text "[current_month_day]":
-            #     xalign .5
-            #     color "#000"
-            #     ypos -5
-            #     size 55
             textbutton "[current_month_day]":
                 xalign .5
                 text_color "#000"
@@ -594,19 +603,19 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 text_size 55
                 action [Function(addday,1),Jump('day_start')] focus_mask None
             if bad_weather and rainstorm and int(current_time[:2]) in night:
-                add "gui/night_rain_icon.png":
+                add "gui/night_rain_icon.webp":
                     xalign .5
                     ypos -15
             elif bad_weather and rainstorm:
-                add "gui/morning_rain_icon.png":
+                add "gui/morning_rain_icon.webp":
                     xalign .5
                     ypos -15
             elif int(current_time[:2]) in night:
-                add "gui/night_icon.png":
+                add "gui/night_icon.webp":
                     xalign .5
                     ypos -15
             else:
-                add "gui/sun_icon.png":
+                add "gui/sun_icon.webp":
                     xalign .5
                     ypos -15
             text "[current_day]":
@@ -618,7 +627,7 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 else:
                     color "#000"
 
-            add "gui/calendar_overlay.png":
+            add "gui/calendar_overlay.webp":
                 ypos -140
                 if int(current_time[:2]) not in night:
                     alpha 0.0
@@ -632,7 +641,7 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
         ypos 120
         xpadding 0
         ypadding 0
-        background Image('gui/clock_idle.png')
+        background Image('gui/clock_idle.webp')
         hbox: #hour-display
             xalign 0.0
             yalign .5
@@ -660,7 +669,7 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 text_size 25
                 action Function(addtime,False,30,True)
 
-        add "gui/clock_overlay.png":
+        add "gui/clock_overlay.webp":
             if int(current_time[:2]) not in night:
                 alpha 0.0
             else:
@@ -713,15 +722,15 @@ screen statscreen_infotext():
         yalign .5
         xalign .5
         text "The statscreen consists of thumbnails for each character. When hovering over an image, it will display the stats for that character. The stats change over time, so you might wanna keep an eye on them. If you click on a character image, the stats for that character will show permanently and revert back to that character if you hover over another character."
-        if persistent.cheat:
+        if p.cheat:
             text "If you have enabled the cheat-mode, this will allow you to manipulate stats."
-        imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),SetField(persistent,'statscreen_infotext',False),Hide("statscreen_infotext")]
+        imagebutton auto "gui/closebutton_%s.webp" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),SetField(persistent,'statscreen_infotext',False),Hide("statscreen_infotext")]
         if keyclose:
             key 'K_ESCAPE' action [SetVariable('keyclose',False),SetField(persistent,'statscreen_infotext',False),Hide("statscreen_infotext")]
 
 screen stat_screen():
     modal True
-    if persistent.statscreen_infotext:
+    if p.statscreen_infotext:
         on "show" action Show('statscreen_infotext')
     zorder 800
     default stats = None
@@ -738,48 +747,49 @@ screen stat_screen():
             ysize 500
             vpgrid:
                 cols 6
+                mousewheel True
                 spacing 20
                 for i in chars:
                     if i[1] == "fp":
-                        imagebutton auto "images/characters/marten/marten_%s.png" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable('setstate',i[1]),SetScreenVariable('stats',i)]:
+                        imagebutton auto "images/characters/marten/marten_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable('setstate',i[1]),SetScreenVariable('stats',i)]:
                             hovered SetScreenVariable('stats',i)
                             if not setstate == i[1]:
                                 unhovered SetScreenVariable('stats',clicked)
-                        text "[i[0]]" ypos 25
+                        text "[i[0]]" ypos 35
                     elif i[1] == "fs":
-                        imagebutton auto "images/characters/juliette/juliette_%s.png" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
+                        imagebutton auto "images/characters/juliette/juliette_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
                             hovered SetScreenVariable("stats",i)
                             if not setstate == i[1]:
                                 unhovered SetScreenVariable("stats",clicked)
-                        text "[i[0]]" ypos 25
+                        text "[i[0]]" ypos 35
                     elif i[1] == "fm":
-                        imagebutton auto "images/characters/anne/anne_%s.png" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
+                        imagebutton auto "images/characters/anne/anne_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
                             hovered SetScreenVariable("stats",i)
                             if not setstate == i[1]:
                                 unhovered SetScreenVariable("stats",clicked)
-                        text "[i[0]]" ypos 25
+                        text "[i[0]]" ypos 35
                     elif i[1] == "nk":
-                        imagebutton auto "images/characters/karen/karen_%s.png" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
+                        imagebutton auto "images/characters/karen/karen_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
                             hovered SetScreenVariable("stats",i)
                             if not setstate == i[1]:
                                 unhovered SetScreenVariable("stats",clicked)
-                        text "[i[0]]" ypos 25
+                        text "[i[0]]" ypos 35
                     elif i[1] == "nr":
-                        imagebutton auto "images/characters/ron/ron_%s.png" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable('setstate',i[1]),SetScreenVariable('stats',i)]:
+                        imagebutton auto "images/characters/ron/ron_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable('setstate',i[1]),SetScreenVariable('stats',i)]:
                             hovered SetScreenVariable('stats',i)
                             if not setstate == i[1]:
                                 unhovered SetScreenVariable('stats',clicked)
-                        text "[i[0]]" ypos 25
+                        text "[i[0]]" ypos 35
                     else:
-                        imagebutton auto "gui/question_mark_%s.png" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
+                        imagebutton auto "gui/question_mark_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
                             hovered SetScreenVariable("stats",i)
                             if not setstate == i[1]:
                                 unhovered SetScreenVariable("stats",clicked)
                         if i[1] == "sn" or i[1] == "sp":
-                            text "[i[0]]" ypos 25
+                            text "[i[0]]" ypos 35
                         else:
                             text "[i[0]]" ypos 35
-        imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),SetScreenVariable('stats',False),Hide("stat_screen")]
+        imagebutton auto "gui/closebutton_%s.webp" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),SetScreenVariable('stats',False),Hide("stat_screen")]
         if keyclose:
             key 'K_ESCAPE' action [SetVariable('keyclose',False),SetScreenVariable('stats',False),Hide("stat_screen")]
 
@@ -807,11 +817,11 @@ screen stat_screen():
                             text "Dom:"
                             text "["+stats[1]+"_dom]":
                                 xpos 10
-                        if persistent.cheat:
-                            imagebutton auto "gui/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_dom",math.floor(getattr(store,stats[1]+"_dom")-1)):
+                        if p.cheat:
+                            imagebutton auto "gui/minusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_dom",math.floor(getattr(store,stats[1]+"_dom")-1)):
                                 ypos 5
                                 xpos 40
-                            imagebutton auto "gui/plusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_dom",math.floor(getattr(store,stats[1]+"_dom")+1)):
+                            imagebutton auto "gui/plusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_dom",math.floor(getattr(store,stats[1]+"_dom")+1)):
                                 ypos 5
                                 xpos 50
                     hbox:
@@ -820,11 +830,11 @@ screen stat_screen():
                             text "Rel:"
                             text "["+stats[1]+"_rel]":
                                 xpos 20
-                        if persistent.cheat:
-                            imagebutton auto "gui/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")-1)):
+                        if p.cheat:
+                            imagebutton auto "gui/minusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")-1)):
                                 ypos 5
                                 xpos 40
-                            imagebutton auto "gui/plusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")+1)):
+                            imagebutton auto "gui/plusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")+1)):
                                 ypos 5
                                 xpos 50
                     hbox:
@@ -833,11 +843,11 @@ screen stat_screen():
                             text "Aro:"
                             text "["+stats[1]+"_aro]":
                                 xpos 20
-                        if persistent.cheat:
-                            imagebutton auto "gui/minusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")-1)):
+                        if p.cheat:
+                            imagebutton auto "gui/minusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")-1)):
                                 ypos 5
                                 xpos 40
-                            imagebutton auto "gui/plusbutton_small_%s.png" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")+1)):
+                            imagebutton auto "gui/plusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")+1)):
                                 ypos 5
                                 xpos 50
                     if getattr(store, ""+stats[1]+"_cor") > 10:
@@ -858,7 +868,7 @@ screen fullscreen_image(fullscreenimage=False):
         yval = 1.0 if y > config.screen_height/2 else .0
     frame:
         style_prefix "infoscreen"
-        background "gui/inventory_background.png"
+        background "gui/inventory_background.webp"
         xalign .5 yalign .5
         xsize 1920
         ysize 1080
@@ -871,7 +881,7 @@ screen fullscreen_image(fullscreenimage=False):
                 yalign .5
 
         textbutton "Close image" action [SetVariable('keyclose',False),Hide("fullscreen_image")] xalign .95 yalign 1.0
-        imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),Hide("fullscreen_image")]
+        imagebutton auto "gui/closebutton_%s.webp" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),Hide("fullscreen_image")]
         if keyclose:
             key 'K_ESCAPE' action [SetVariable('keyclose',False),Hide("fullscreen_image")]
 
@@ -890,7 +900,7 @@ screen inventory_screen():
         yval = 1.0 if y > config.screen_height/2 else .0
     frame:
         style_prefix "infoscreen"
-        background "gui/inventory_background.png"
+        background "gui/inventory_background.webp"
         xalign .5 yalign .5
         xsize 1920
         ysize 1080
@@ -934,8 +944,8 @@ screen inventory_screen():
                                         xsize 160
                                         ysize 160
                                         $ current_items = check_item_name.lower()
-                                        add "images/inventory/outer_ring.png"
-                                        add "images/inventory/"+item.name+"_idle.png":
+                                        add "images/inventory/outer_ring.webp"
+                                        add "images/inventory/"+item.name+"_idle.webp":
                                             xalign .5
                                             xoffset -140
                                             yalign .5
@@ -976,10 +986,10 @@ screen inventory_screen():
                                             $ imgname = str('fs_'+tempname[1]+'_'+tempname[2]+'_'+tempname[0])
                                     else:
                                         $ imgname = str(name.replace(' ','_').replace('_-_','_').lower())
-                                    add "images/inventory/outer_ring_insensitive.png":
+                                    add "images/inventory/outer_ring_insensitive.webp":
                                         xalign .5
                                         yalign .5
-                                    add "images/inventory/"+imgname+"_insensitive.png":
+                                    add "images/inventory/"+imgname+"_insensitive.webp":
                                         xalign .5
                                         xoffset -140
                                         yalign .5
@@ -1006,19 +1016,19 @@ screen inventory_screen():
             ysize 600
             frame:
                 xsize 1130
-                background Frame("images/inventory/outer_ring_large.png")
+                background Frame("images/inventory/outer_ring_large.webp")
                 hbox:
                     xsize 158
                     vbox:
                         ysize 158
                         xsize 158
-                        add "images/inventory/outer_ring.png"
+                        add "images/inventory/outer_ring.webp"
                     if selecteditem:
                         vbox:
                             ysize 158
                             xsize 158
                             xpos -158
-                            add "images/inventory/"+selecteditem+"_idle.png":
+                            add "images/inventory/"+selecteditem+"_idle.webp":
                                 xalign .5
                                 yalign .5
                     vbox:
@@ -1055,11 +1065,11 @@ screen inventory_screen():
                         ypos 400
                         if selecteditemname and selecteditemname.lower() == 'phone':
                             if battery_text <= 20:
-                                $ charge_batt_img = "gui/inventory_charge_phone_red_%s.png"
+                                $ charge_batt_img = "gui/inventory_charge_phone_red_%s.webp"
                             elif battery_text <= 50:
-                                $ charge_batt_img = "gui/inventory_charge_phone_orange_%s.png"
+                                $ charge_batt_img = "gui/inventory_charge_phone_orange_%s.webp"
                             else:
-                                $ charge_batt_img = "gui/inventory_charge_phone_%s.png"
+                                $ charge_batt_img = "gui/inventory_charge_phone_%s.webp"
                             imagebutton auto charge_batt_img focus_mask True:
                                 at ModZoom(.8)
                                 xalign .5
@@ -1116,9 +1126,9 @@ screen inventory_screen():
                     # xpos -20
                     hover_color "#0cf"
                 if cb_hs:
-                    add "gui/closebutton_hover.png" yalign .5 xpos 20
+                    add "gui/closebutton_hover.webp" yalign .5 xpos 20
                 else:
-                    add "gui/closebutton_idle.png" yalign .5 xpos 20
+                    add "gui/closebutton_idle.webp" yalign .5 xpos 20
             action [SetVariable('selecteditemdesc',False),SetVariable('selecteditem',False),SetVariable('selecteditemname',False),SetVariable('selecteditemweight',False),SetVariable('selecteditemamount',False),SetVariable('keyclose',False),Hide("inventory_screen")]
             hovered [SetScreenVariable("cb_hs",True)]
             unhovered [SetScreenVariable("cb_hs",False)]
@@ -1133,7 +1143,6 @@ screen inventory_screen():
             text GetTooltip() style "tooltip_hover"
 
 screen skip_indicator():
-
     zorder 100
     style_prefix "skip"
 
@@ -1145,7 +1154,6 @@ screen skip_indicator():
             text "▸" at delayed_blink(0.0, 1.0) style "skip_triangle"
             text "▸" at delayed_blink(0.2, 1.0) style "skip_triangle"
             text "▸" at delayed_blink(0.4, 1.0) style "skip_triangle"
-
 
 ## This transform is used to blink the arrows one after another.
 transform delayed_blink(delay, cycle):
@@ -1160,14 +1168,13 @@ transform delayed_blink(delay, cycle):
         pause (cycle - .4)
         repeat
 
-
 style skip_frame is empty
 style skip_text is gui_text
 style skip_triangle is skip_text
 
 style skip_frame:
     yalign .2
-    background Frame("gui/skip.png", gui.skip_frame_borders, tile=gui.frame_tile)
+    background Frame("gui/skip.webp", gui.skip_frame_borders, tile=gui.frame_tile)
     padding gui.skip_frame_borders.padding
 
 style skip_text:
@@ -1197,47 +1204,47 @@ screen say(who, what):
                 text who id "who"
                 if who.upper() == fpinput.upper():
                     style "namebox_char"
-                    background Frame("gui/namebox_fp.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                    background Frame("gui/namebox_fp.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == fmName.name.upper():
                     style "namebox_char"
-                    background Frame("gui/namebox_fm.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                    background Frame("gui/namebox_fm.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == fsName.name.upper():
                     style "namebox_char"
-                    background Frame("gui/namebox_fs.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                    background Frame("gui/namebox_fs.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == nb.name.upper():
                     style "namebox_char"
-                    background Frame("gui/namebox_nb.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                    background Frame("gui/namebox_nb.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == nc.name.upper():
                     style "namebox_char"
-                    background Frame("gui/namebox_nc.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                    background Frame("gui/namebox_nc.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == nk.name.upper():
                     style "namebox_char"
-                    background Frame("gui/namebox_nk.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                    background Frame("gui/namebox_nk.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == nr.name.upper():
                     style "namebox_char"
-                    background Frame("gui/namebox_nr.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                    background Frame("gui/namebox_nr.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == sn.name.upper():
                     style "namebox_char"
-                    background Frame("gui/namebox_sn.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                    background Frame("gui/namebox_sn.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == sp.name.upper():
                     style "namebox_char"
-                    background Frame("gui/namebox_sp.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                    background Frame("gui/namebox_sp.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == sj.name.upper():
                     style "namebox_char"
-                    background Frame("gui/namebox_sj.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                    background Frame("gui/namebox_sj.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == unk_f.name.upper():
                     style "namebox_char"
-                    background Frame("gui/namebox_unkf.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                    background Frame("gui/namebox_unkf.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
                 elif who.upper() == unk_m.name.upper():
                     style "namebox_char"
-                    background Frame("gui/namebox_unkm.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+                    background Frame("gui/namebox_unkm.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
 
         if who is not None and what:
-            background Image("gui/textbox_cutout.png", xalign=0.5, yalign=1.0)
+            background Image("gui/textbox_cutout.webp", xalign=0.5, yalign=1.0)
         elif not what:
-            background Image("gui/textbox_transparent.png", xalign=0.5,yalign=1.0)
+            background Image("gui/textbox_transparent.webp", xalign=0.5,yalign=1.0)
         else:
-            background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
+            background Image("gui/textbox.webp", xalign=0.5, yalign=1.0)
 
         text what id "what":
             properties gui.text_properties("dialogue")
@@ -1250,12 +1257,12 @@ screen say(who, what):
         if not renpy.variant("small"):
             if who is not None:
                 if who.upper() == fpinput.upper():
-                    if persistent.side_image_zoom:
+                    if p.side_image_zoom:
                         add SideImage() xalign 1.0 yalign 1.0 at easeIn(.5)
                     else:
                         add SideImage() xalign 1.0 yalign 1.0
                 else:
-                    if persistent.side_image_zoom:
+                    if p.side_image_zoom:
                         add SideImage() xalign .5 xpos 250 yalign 1.0 at easeIn(.5)
                     else:
                         add SideImage() xalign .5 xpos 250 yalign 1.0
@@ -1277,7 +1284,7 @@ style window:
     xfill True
     yalign gui.textbox_yalign
     ysize gui.textbox_height
-    background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
+    background Image("gui/textbox.webp", xalign=0.5, yalign=1.0)
 
 style namebox:
     xpos gui.name_xpos
@@ -1286,7 +1293,7 @@ style namebox:
     ypos gui.name_ypos
     ysize gui.namebox_height
 
-    background Frame("gui/namebox.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+    background Frame("gui/namebox.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
     padding gui.namebox_borders.padding
 
 style namebox_char:
@@ -1322,51 +1329,51 @@ screen location(room=False):
         yval = 1.0 if y > config.screen_height/2 else .0
 
     if room == 'entrance':
-            imagebutton auto ("images/backgrounds/interactions_move/front_door_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/front_door_morning_%s.png") focus_mask True action [SetVariable('trans',True),SetVariable('out_cfs',True),Jump('outside_loc')]:
+            imagebutton auto ("images/backgrounds/interactions_move/front_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/front_door_morning_%s.webp") focus_mask True action [SetVariable('trans',True),SetVariable('out_cfs',True),Jump('outside_loc')]:
                 tooltip "Go outside"
-            imagebutton auto ("images/backgrounds/interactions_move/kitchen_door_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/kitchen_door_morning_%s.png") focus_mask True action [SetVariable('kit_cfs',True),Jump('kitchen_loc')]:
+            imagebutton auto ("images/backgrounds/interactions_move/kitchen_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/kitchen_door_morning_%s.webp") focus_mask True action [SetVariable('kit_cfs',True),Jump('kitchen_loc')]:
                 tooltip 'Kitchen'
-            imagebutton auto ("images/backgrounds/interactions_move/livingroom_door_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/livingroom_door_morning_%s.png") focus_mask True action [SetVariable('lvr_cfs',True),Jump('livingroom_loc')]:
+            imagebutton auto ("images/backgrounds/interactions_move/livingroom_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/livingroom_door_morning_%s.webp") focus_mask True action [SetVariable('lvr_cfs',True),Jump('livingroom_loc')]:
                 tooltip "Livingroom"
-            imagebutton auto ("images/backgrounds/interactions_move/stairs_up_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_up_morning_%s.png") focus_mask True action [SetVariable('uhl_cfs',True),Jump('upper_hallway_loc')]:
+            imagebutton auto ("images/backgrounds/interactions_move/stairs_up_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_up_morning_%s.webp") focus_mask True action [SetVariable('uhl_cfs',True),Jump('upper_hallway_loc')]:
                 tooltip "Bedrooms / Bathroom"
-            imagebutton auto ("images/backgrounds/interactions_move/stairs_basement_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_basement_morning_%s.png") focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]:
+            imagebutton auto ("images/backgrounds/interactions_move/stairs_basement_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_basement_morning_%s.webp") focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]:
                 tooltip "Downstairs / Garage"
 
     if room == "fp bedroom":
         if day_week <= 4:
             if not backpack.has_item(schoolbooks_item):
                 if int(current_time[:2]) in night:
-                    add "images/backgrounds/interactions_item/fp_bedroom_night_dresser_idle.png"
+                    add "images/backgrounds/interactions_item/fp_bedroom_night_dresser_idle.webp"
                 else:
-                    imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_morning_dresser_%s.png" focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('schoolbooks_added',True),Jump('fp_bedroom_loc')]
+                    imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_morning_dresser_%s.webp" focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('schoolbooks_added',True),Jump('fp_bedroom_loc')]
         if not backpack_carry:
-            imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_backpack_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_day_backpack_%s.png") focus_mask True action [SetVariable('backpack_carry',True),SetVariable('uhl_fpb_cfs',True),Function(delete_hint,"You should perhaps try to get something to carry all these things you seem to be able to pick up..."),Jump('fp_bedroom_loc')]:
+            imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_backpack_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_day_backpack_%s.webp") focus_mask True action [SetVariable('backpack_carry',True),SetVariable('uhl_fpb_cfs',True),Function(delete_hint,"You should perhaps try to get something to carry all these things you seem to be able to pick up..."),Jump('fp_bedroom_loc')]:
                 yalign .7
                 xalign .7
         if int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or current_time[:2] == 0 or int(current_time[:2]) == 1:
             if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_night_bed_glow_%s.png" focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
+                imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_night_bed_glow_%s.webp" focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
         else:
             if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_bed_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_morning_bed_%s.png") focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
+                imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_bed_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_morning_bed_%s.webp") focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
 
         if not carry_wallet:
             if int(current_time[:2]) in night:
-                $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_night_wallet_%s.png"
+                $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_night_wallet_%s.webp"
             elif int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or int(current_time[:2]) == 0 or int(current_time[:2]) == 1:
-                $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_night_wallet_glow_%s.png"
+                $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_night_wallet_glow_%s.webp"
             else:
-                $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_morning_wallet_%s.png"
+                $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_morning_wallet_%s.webp"
             imagebutton auto walletimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('wallet_added',True),Jump('fp_bedroom_loc')]
 
         if not carry_phone:
             if int(current_time[:2]) in night:
-                $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_%s.png"
+                $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_%s.webp"
             elif int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or int(current_time[:2]) == 0 or int(current_time[:2]) == 1:
-                $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_glow_%s.png"
+                $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_glow_%s.webp"
             else:
-                $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_morning_phone_%s.png"
+                $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_morning_phone_%s.webp"
             imagebutton auto phoneimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event_var = "uhl_cfs"
@@ -1375,12 +1382,12 @@ screen location(room=False):
 
     if room == "fs bedroom":
         if find_panties:
-                imagebutton auto ("images/backgrounds/interactions_item/bedroom_panties_"+gp_bed+"_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/bedroom_panties_"+gp_bed+"_morning_%s.png") focus_mask True action [SetVariable('find_panties',False),SetVariable('panties_added',True),SetVariable('gp_bed',gp_bed),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
+                imagebutton auto ("images/backgrounds/interactions_item/bedroom_panties_"+gp_bed+"_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/bedroom_panties_"+gp_bed+"_morning_%s.webp") focus_mask True action [SetVariable('find_panties',False),SetVariable('panties_added',True),SetVariable('gp_bed',gp_bed),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
         if find_tablet:
-            imagebutton auto ("images/backgrounds/interactions_item/fs_tablet_bedroom_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fs_tablet_bedroom_morning_%s.png") focus_mask True action [SetVariable('find_tablet',False),SetVariable('tablet_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
+            imagebutton auto ("images/backgrounds/interactions_item/fs_tablet_bedroom_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fs_tablet_bedroom_morning_%s.webp") focus_mask True action [SetVariable('find_tablet',False),SetVariable('tablet_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
         if find_pb:
             if not backpack.has_item(princessplug_item):
-                imagebutton auto ("images/backgrounds/interactions_item/pink_buttplug_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/pink_buttplug_morning_%s.png") focus_mask True action [SetVariable('find_pb',False),SetVariable('pb_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
+                imagebutton auto ("images/backgrounds/interactions_item/pink_buttplug_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/pink_buttplug_morning_%s.webp") focus_mask True action [SetVariable('find_pb',False),SetVariable('pb_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event_var = "uhl_cfs"
             $ exitdown_event = "upper_hallway_loc"
@@ -1389,21 +1396,21 @@ screen location(room=False):
     if room == "garage":
         if not backpack.has_item(toolbox_item):
             if int(current_time[:2]) in night and not mc_f:
-                add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_night_idle.png"
+                add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_night_idle.webp"
             elif not mc_f:
                 if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                    imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('toolbox_added',True),Jump('garage_loc')]
+                    imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.webp" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('toolbox_added',True),Jump('garage_loc')]
                 else:
-                    add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_idle.png"
+                    add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_idle.webp"
             else:
                 if not mc_f:
                     if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                        imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]
+                        imagebutton auto "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_%s.webp" focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]
                     else:
-                        add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_idle.png"
+                        add "images/backgrounds/interactions_item/honda_cx_500_build_toolbox_morning_idle.webp"
 
         if int(current_time[:2]) not in night and not end_bike_repair and not mc_f:
-            imagebutton auto "gui/tools_1_morning_%s.png" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('wmc_cfs',True),Jump('w_mc')]:
+            imagebutton auto "gui/tools_1_morning_%s.webp" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('wmc_cfs',True),Jump('w_mc')]:
                 xalign .5
                 yalign .5
 
@@ -1417,7 +1424,7 @@ screen location(room=False):
 
     if room == "livingroom":
         if not backpack.has_item(carkeys_item) and int(current_time[:2]) > 15:
-            imagebutton auto "images/inventory/carkeys_%s.png" focus_mask True action [SetVariable('carkeys_added',True),SetVariable('lvr_cfs',True),Jump('livingroom_loc')] at ModZoom(.6):
+            imagebutton auto "images/inventory/carkeys_%s.webp" focus_mask True action [SetVariable('carkeys_added',True),SetVariable('lvr_cfs',True),Jump('livingroom_loc')] at ModZoom(.6):
                 yalign .9
                 xalign .65
         $ exitright_event_var = "kit_cfs"
@@ -1431,58 +1438,58 @@ screen location(room=False):
         if wcount == 5:
             if bottles == 1 or br == 1 and int(current_time[:2]) in (day or night):
                 if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',1),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',1),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
                         xpos .31
                 else:
-                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.webp"):
                         at ModZoom(.65)
                         ypos .485
                         xpos .31
             elif bottles == 2 or br == 2:
                 if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
                         xpos .31
-                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                             ypos .485
                             xpos .325
                 else:
-                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.webp"):
                         at ModZoom(.65)
                         ypos .485
                         xpos .31
-                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.webp"):
                         at ModZoom(.65)
                         ypos .485
                         xpos .325
             elif bottles == 3 or br == 3:
                 if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .480
                         xpos .315
-                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
                         xpos .31
-                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.png") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                    imagebutton auto ("images/backgrounds/interactions_item/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
                         ypos .485
                         xpos .325
                 else:
-                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.webp"):
                         at ModZoom(.65)
                         ypos .480
                         xpos .315
-                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.webp"):
                         at ModZoom(.65)
                         ypos .485
                         xpos .31
-                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.png"):
+                    add ("images/backgrounds/interactions_item/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wine_bottle_morning_idle.webp"):
                         at ModZoom(.65)
                         ypos .485
                         xpos .325
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             if config.developer:
-                imagebutton auto ("images/backgrounds/interactions_item/kitchen_fridge_door_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/kitchen_fridge_door_morning_%s.png") focus_mask True action [SetVariable('show_fridge',True),Show('fridge_open')]
+                imagebutton auto ("images/backgrounds/interactions_item/kitchen_fridge_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/kitchen_fridge_door_morning_%s.webp") focus_mask True action [SetVariable('show_fridge',True),Show('fridge_open')]
 
         $ exitleft_event_var = "lvr_cfs"
         $ exitleft_event = "livingroom_loc"
@@ -1495,14 +1502,14 @@ screen location(room=False):
         if int(current_time[:2]) in day+night:
             if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
                 if int(current_time[:2]) in day and (int(current_time[:2]) > 15 and int(current_time[:2]) < 22):
-                    imagebutton auto "images/black_car_morning_%s.png" focus_mask True:
+                    imagebutton auto "images/black_car_morning_%s.webp" focus_mask True:
                         if backpack.has_item(carkeys_item):
                             action [SetVariable('out_cfs',True),SetVariable('bc_clicked',True),Jump('outside_loc')]
                         else:
                             action [Function(renpy.notify,"You need to find the car-keys"),Function(set_hint,"You need to find the carkeys to drive the car")]
                 elif int(current_time[:2]) in night:
                     if int(current_time[:2]) >= 22 or int(current_time[:2]) < 4:
-                        imagebutton auto "images/black_car_night_%s.png" focus_mask True:
+                        imagebutton auto "images/black_car_night_%s.webp" focus_mask True:
                             if backpack.has_item(carkeys_item):
                                 action [SetVariable('out_cfs',True),SetVariable('bc_clicked',True),Jump('outside_loc')]
                             else:
@@ -1535,40 +1542,40 @@ screen location(room=False):
             $ exitdown = "Outside"
 
     if room == "upper hallway":
-            imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_fp_door_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fp_door_morning_%s.png") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]:
+            imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_fp_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fp_door_morning_%s.webp") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]:
                 tooltip "Enter your room"
             if fs_rel >= 30 or fs_invitation:
-                imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_fs_door_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fs_door_morning_%s.png") focus_mask True action [SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]:
+                imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_fs_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fs_door_morning_%s.webp") focus_mask True action [SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]:
                     tooltip "Enter [fsName.yourformal]'s room"
             else:
-                imagebutton idle ("images/backgrounds/interactions_move/upper_hallway_fs_door_night_idle.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fs_door_morning_idle.png") focus_mask True action NullAction():
+                imagebutton idle ("images/backgrounds/interactions_move/upper_hallway_fs_door_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fs_door_morning_idle.webp") focus_mask True action NullAction():
                     tooltip "You need a relationship of 30+ with [fsName.yourformal], or an invitation, to enter her room"
-            imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_bathroom_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_bathroom_morning_%s.png") focus_mask True action [Call('upper_hallway_bathroom_loc',uhlbcfs=True)]:
+            imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_bathroom_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_bathroom_morning_%s.webp") focus_mask True action [Call('upper_hallway_bathroom_loc',uhlbcfs=True)]:
                 tooltip "Enter bathroom"
-            imagebutton auto ("images/backgrounds/interactions_move/stairs_down_night_%s.png" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_down_morning_%s.png") focus_mask True action Jump('entrance_loc'):
+            imagebutton auto ("images/backgrounds/interactions_move/stairs_down_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_down_morning_%s.webp") focus_mask True action Jump('entrance_loc'):
                 tooltip "Downstairs"
 
     if room == "upper hallway bathroom" or room == "upper hallway bathroom peek":
         if int(current_time[:2]) >= 6 and int(current_time[:2]) <= 14 and not backpack.has_item(small_keys_item) and keys_mentioned:
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_keys_morning_%s.png" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("smallkeys_added",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_keys_morning_%s.webp" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("smallkeys_added",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
 
         if int(current_time[:2]) in night:
-            # imagebutton auto "images/backgrounds/upper_hallway_bathroom_shower_night_%s.png" focus_mask True action [SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
-            imagebutton auto ("images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_light_%s.png" if bathroom_light else "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_%s.png") focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpsink",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+            # imagebutton auto "images/backgrounds/upper_hallway_bathroom_shower_night_%s.webp" focus_mask True action [SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
+            imagebutton auto ("images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_light_%s.webp" if bathroom_light else "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_%s.webp") focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpsink",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
             if bathroom_light:
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_light_on_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_light_on_%s.webp" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
             else:
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_%s.png" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_%s.webp" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
         else:
             if bathroom_find_panties and room != 'upper hallway bathroom peek':
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.png" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('occupied_bath',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.png" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpshower",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+                imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.webp" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('occupied_bath',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.webp" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpshower",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
             if room == 'upper hallway bathroom peek':
-                add "images/backgrounds/upper_hallway_bathroom_juliette_shower_bubbles.png"
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.png" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpsink",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
-            add "images/backgrounds/interactions_item/bathroom_lightswitch_morning_off_idle.png"
+                add "images/backgrounds/upper_hallway_bathroom_juliette_shower_bubbles.webp"
+            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.webp" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpsink",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+            add "images/backgrounds/interactions_item/bathroom_lightswitch_morning_off_idle.webp"
         if wetshower:
-            add "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_wet_glass.png"
+            add "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_wet_glass.webp"
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event_var = "uhl_cfs"
             $ exitdown_event = "upper_hallway_loc"
@@ -1579,7 +1586,7 @@ screen location(room=False):
             if current_location == 'upper_hallway_bathroom_loc':
                 $ randomchoice = random.choice([True,False])
                 $ returnbfp = True if bathroom_find_panties else False
-                imagebutton auto "gui/exit_down_%s.png" focus_mask True:
+                imagebutton auto "gui/exit_down_%s.webp" focus_mask True:
                     xalign .5
                     yalign 1.0
                     tooltip exitdown
@@ -1588,89 +1595,89 @@ screen location(room=False):
                     else:
                         action [SetVariable('occupied_bath',randomchoice),SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',returnbfp),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]
             elif current_location == 'beach_loc':
-                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable(exitdown_event_var,True),Function(addtime,1,30),Jump('outside_loc')]:
+                imagebutton auto "gui/exit_down_%s.webp" focus_mask True action [SetVariable(exitdown_event_var,True),Function(addtime,1,30),Jump('outside_loc')]:
                     xalign .5
                     yalign 1.0
                     tooltip exitdown
             elif current_location == 'icafe_loc':
-                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable(exitdown_event_var,True),Function(addtime,False,25),Jump('outside_loc')]:
+                imagebutton auto "gui/exit_down_%s.webp" focus_mask True action [SetVariable(exitdown_event_var,True),Function(addtime,False,25),Jump('outside_loc')]:
                     xalign .5
                     yalign 1.0
                     tooltip exitdown
             elif current_location == 'fs_bedroom_loc' and (panties_added or pb_added):
                 if panties_added and not pb_added:
-                    imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('panties_added',False),SetVariable('find_panties',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                    imagebutton auto "gui/exit_down_%s.webp" focus_mask True action [SetVariable('panties_added',False),SetVariable('find_panties',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
                         xalign .5
                         yalign 1.0
                         tooltip exitdown
                 elif not panties_added and pb_added:
-                    imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('pb_added',False),SetVariable('find_pb',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                    imagebutton auto "gui/exit_down_%s.webp" focus_mask True action [SetVariable('pb_added',False),SetVariable('find_pb',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
                         xalign .5
                         yalign 1.0
                         tooltip exitdown
                 else:
-                    imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('pb_added',False),SetVariable('find_pb',True),SetVariable('panties_added',False),SetVariable('find_panties',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                    imagebutton auto "gui/exit_down_%s.webp" focus_mask True action [SetVariable('pb_added',False),SetVariable('find_pb',True),SetVariable('panties_added',False),SetVariable('find_panties',True),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
                         xalign .5
                         yalign 1.0
                         tooltip exitdown
             else:
-                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
+                imagebutton auto "gui/exit_down_%s.webp" focus_mask True action [SetVariable(exitdown_event_var,True),Jump(exitdown_event)]:
                     xalign .5
                     yalign 1.0
                     tooltip exitdown
         else:
             if current_location == 'kitchen_loc' and wine_added:
-                imagebutton auto "gui/exit_down_%s.png" focus_mask True action [SetVariable('wine_added',False),Jump(exitdown_event)]:
+                imagebutton auto "gui/exit_down_%s.webp" focus_mask True action [SetVariable('wine_added',False),Jump(exitdown_event)]:
                     xalign .5
                     yalign 1.0
                     tooltip exitdown
             else:
-                imagebutton auto "gui/exit_down_%s.png" focus_mask True action Jump(exitdown_event):
+                imagebutton auto "gui/exit_down_%s.webp" focus_mask True action Jump(exitdown_event):
                     xalign .5
                     yalign 1.0
                     tooltip exitdown
     if exitleft:
         if exitleft_event_var:
             if current_location == 'kitchen_loc' and wine_added:
-                imagebutton auto "gui/exit_left_%s.png" focus_mask True action [SetVariable('wine_added',False),SetVariable(exitleft_event_var,True),Jump(exitleft_event)]:
+                imagebutton auto "gui/exit_left_%s.webp" focus_mask True action [SetVariable('wine_added',False),SetVariable(exitleft_event_var,True),Jump(exitleft_event)]:
                     xalign 0.0
                     yalign .5
                     tooltip exitleft
             else:
-                imagebutton auto "gui/exit_left_%s.png" focus_mask True action [SetVariable(exitleft_event_var,True),Jump(exitleft_event)]:
+                imagebutton auto "gui/exit_left_%s.webp" focus_mask True action [SetVariable(exitleft_event_var,True),Jump(exitleft_event)]:
                     xalign 0.0
                     yalign .5
                     tooltip exitleft
         else:
             if current_location == 'kitchen_loc' and wine_added:
-                imagebutton auto "gui/exit_left_%s.png" focus_mask True action [SetVariable('wine_added',False),Jump(exitleft_event)]:
+                imagebutton auto "gui/exit_left_%s.webp" focus_mask True action [SetVariable('wine_added',False),Jump(exitleft_event)]:
                     xalign 0.0
                     yalign .5
                     tooltip exitleft
             else:
-                imagebutton auto "gui/exit_left_%s.png" focus_mask True action Jump(exitleft_event):
+                imagebutton auto "gui/exit_left_%s.webp" focus_mask True action Jump(exitleft_event):
                     xalign 0.0
                     yalign .5
                     tooltip exitleft
     if exitup:
         if exitup_event_var:
-            imagebutton auto "gui/exit_up_%s.png" focus_mask True action [SetVariable(exitup_event_var,True),Jump(exitup_event)]:
+            imagebutton auto "gui/exit_up_%s.webp" focus_mask True action [SetVariable(exitup_event_var,True),Jump(exitup_event)]:
                 xalign .5
                 yalign 0.0
                 tooltip exitup
         else:
-            imagebutton auto "gui/exit_up_%s.png" focus_mask True action Jump(exitup_event):
+            imagebutton auto "gui/exit_up_%s.webp" focus_mask True action Jump(exitup_event):
                 xalign .5
                 yalign 0.0
                 tooltip exitup
     if exitright:
         if exitright_event_var:
-            imagebutton auto "gui/exit_right_%s.png" focus_mask True action [SetVariable(exitright_event_var,True),Jump(exitright_event)]:
+            imagebutton auto "gui/exit_right_%s.webp" focus_mask True action [SetVariable(exitright_event_var,True),Jump(exitright_event)]:
                 xalign 1.0
                 yalign .5
                 tooltip exitright
         else:
-            imagebutton auto "gui/exit_right_%s.png" focus_mask True action Jump(exitright_event):
+            imagebutton auto "gui/exit_right_%s.webp" focus_mask True action Jump(exitright_event):
                 xalign 1.0
                 yalign .5
                 tooltip exitright
@@ -1691,14 +1698,14 @@ screen phone():
         xval = 1.0 if x > config.screen_width/2 else .0
         yval = 1.0 if y > config.screen_height/2 else .0
 
-    if persistent.phone_firstshow:
+    if p.phone_firstshow:
         on 'show' action [SetVariable('show_icons',False),Show('phone_info_screen')]
     $ keyclose = True
     fixed:
         maximum 370,686
         xalign .5
         yalign .5
-        add "gui/phone_background_black.png" at ModZoom(.85):
+        add "gui/phone_background_black.webp" at ModZoom(.85):
             yalign .5
             xalign .5
 
@@ -1711,22 +1718,22 @@ screen phone():
                 spacing 12
                 xsize 370
                 if show_icons:
-                    imagebutton auto "gui/phone_button_achievement_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.9):
+                    imagebutton auto "gui/phone_button_achievement_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.9):
                         tooltip "Open the achievement-screen"
-                    imagebutton auto "gui/phone_button_gallery_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_gallery_screen')] at ModZoom(.9):
+                    imagebutton auto "gui/phone_button_gallery_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_gallery_screen')] at ModZoom(.9):
                         tooltip "Open the image gallery"
-                    imagebutton auto "gui/phone_button_call_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_call_screen')] at ModZoom(.9):
+                    imagebutton auto "gui/phone_button_call_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_call_screen')] at ModZoom(.9):
                         tooltip "Phonecalls happen here"
-                    imagebutton auto "gui/phone_button_help_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.9):
+                    imagebutton auto "gui/phone_button_help_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.9):
                         tooltip "Open the in-game help-screen"
                     if len(hints) > 0:
-                        imagebutton auto "gui/phone_button_hint_redglow_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen')] at ModZoom(.9):
+                        imagebutton auto "gui/phone_button_hint_redglow_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen')] at ModZoom(.9):
                             tooltip "New hints available"
                     elif len(read_hints) > 0:
-                        imagebutton auto "gui/phone_button_hint_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen',None,'read')] at ModZoom(.9):
+                        imagebutton auto "gui/phone_button_hint_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen',None,'read')] at ModZoom(.9):
                             tooltip "No new hints available"
                     else:
-                        imagebutton idle "gui/phone_button_hint_insensitive.png" focus_mask True action NullAction() at ModZoom(.9):
+                        imagebutton idle "gui/phone_button_hint_insensitive.webp" focus_mask True action NullAction() at ModZoom(.9):
                             tooltip "No hints available at the current time"
         hbox:
             if battery_text != 0:
@@ -1737,9 +1744,9 @@ screen phone():
                 spacing 12
                 xsize 370
                 if show_icons:
-                    imagebutton auto "gui/phone_button_text_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_text_screen')] at ModZoom(.9):
+                    imagebutton auto "gui/phone_button_text_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_text_screen')] at ModZoom(.9):
                         tooltip "Read your messages"
-                    imagebutton auto "gui/phone_button_alarm_clock_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_alarm')] at ModZoom(.9):
+                    imagebutton auto "gui/phone_button_alarm_clock_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_alarm')] at ModZoom(.9):
                         tooltip "Set the alarm"
                         xoffset -110
 
@@ -1752,15 +1759,15 @@ screen phone():
                 yoffset -24
                 spacing 12
                 if show_icons:
-                    imagebutton auto "gui/phone_button_menu_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.9):
+                    imagebutton auto "gui/phone_button_menu_%s.webp" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.9):
                         tooltip "Go to the main menu"
-                    imagebutton auto "gui/phone_button_save_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.9):
+                    imagebutton auto "gui/phone_button_save_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.9):
                         tooltip "Save your game"
-                    imagebutton auto "gui/phone_button_load_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.9):
-                        tooltip "Load your game"
-                    imagebutton auto "gui/phone_button_preferences_%s.png" focus_mask True action [SetVariable('pref_screen',True),SetVariable('show_icons',False),Show('custom_preferences')] at ModZoom(.9):
+                    imagebutton auto "gui/phone_button_load_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.9):
+                        tooltip "Continue your game"
+                    imagebutton auto "gui/phone_button_preferences_%s.webp" focus_mask True action [SetVariable('pref_screen',True),SetVariable('show_icons',False),Show('custom_preferences')] at ModZoom(.9):
                         tooltip "Show preferences screen"
-                    imagebutton auto "gui/phone_button_quit_%s.png" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.9):
+                    imagebutton auto "gui/phone_button_quit_%s.webp" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.9):
                         tooltip "Quit the game"
 
     use phone_overlay
@@ -1832,7 +1839,7 @@ screen phone_text_screen():
             xalign .5
             yalign .5
             yoffset 20
-            add "gui/phone_background_contacts.png" at ModZoom(.85)
+            add "gui/phone_background_contacts.webp" at ModZoom(.85)
 
         frame:
             background None
@@ -1869,20 +1876,20 @@ screen phone_text_screen():
                                 $ bg_color_text = '#ccc'
                             if not k == 'fp':
                                 if k == 'fm':
-                                    $ charimg = "images/characters/anne/anne_idle.png"
-                                    $ charimg_hover = "images/characters/anne/anne_hover.png"
+                                    $ charimg = "images/characters/anne/anne_idle.webp"
+                                    $ charimg_hover = "images/characters/anne/anne_hover.webp"
                                 elif k == 'fs':
-                                    $ charimg = "images/characters/juliette/juliette_idle.png"
-                                    $ charimg_hover = "images/characters/juliette/juliette_hover.png"
+                                    $ charimg = "images/characters/juliette/juliette_idle.webp"
+                                    $ charimg_hover = "images/characters/juliette/juliette_hover.webp"
                                 elif k == 'nk':
-                                    $ charimg = "images/characters/karen/karen_idle.png"
-                                    $ charimg_hover = "images/characters/karen/karen_hover.png"
+                                    $ charimg = "images/characters/karen/karen_idle.webp"
+                                    $ charimg_hover = "images/characters/karen/karen_hover.webp"
                                 elif k == 'nr':
-                                    $ charimg = "images/characters/ron/ron_idle.png"
-                                    $ charimg_hover = "images/characters/ron/ron_hover.png"
+                                    $ charimg = "images/characters/ron/ron_idle.webp"
+                                    $ charimg_hover = "images/characters/ron/ron_hover.webp"
                                 else:
-                                    $ charimg = "gui/question_mark_idle.png"
-                                    $ charimg_hover = "gui/question_mark_hover.png"
+                                    $ charimg = "gui/question_mark_idle.webp"
+                                    $ charimg_hover = "gui/question_mark_hover.webp"
                                 button:
                                     if char == k:
                                         background "#fff"
@@ -1962,7 +1969,7 @@ screen show_text_msg(compchar=False,char=False):
             xalign .5
             yalign .5
             yoffset 20
-            add "gui/phone_background_contacts.png" at ModZoom(.85)
+            add "gui/phone_background_contacts.webp" at ModZoom(.85)
         frame:
             background None
             xpadding 0
@@ -1993,20 +2000,20 @@ screen show_text_msg(compchar=False,char=False):
                     for k,b,v in messages+read_messages:
                         if k == compchar:
                             if k == 'fm':
-                                $ charimg = "images/characters/anne/anne_idle.png"
-                                $ charimg_hover = "images/characters/anne/anne_hover.png"
+                                $ charimg = "images/characters/anne/anne_idle.webp"
+                                $ charimg_hover = "images/characters/anne/anne_hover.webp"
                             elif k == 'fs':
-                                $ charimg = "images/characters/juliette/juliette_idle.png"
-                                $ charimg_hover = "images/characters/juliette/juliette_hover.png"
+                                $ charimg = "images/characters/juliette/juliette_idle.webp"
+                                $ charimg_hover = "images/characters/juliette/juliette_hover.webp"
                             elif k == 'nk':
-                                $ charimg = "images/characters/karen/karen_idle.png"
-                                $ charimg_hover = "images/characters/karen/karen_hover.png"
+                                $ charimg = "images/characters/karen/karen_idle.webp"
+                                $ charimg_hover = "images/characters/karen/karen_hover.webp"
                             elif k == 'nr':
-                                $ charimg = "images/characters/ron/ron_idle.png"
-                                $ charimg_hover = "images/characters/ron/ron_hover.png"
+                                $ charimg = "images/characters/ron/ron_idle.webp"
+                                $ charimg_hover = "images/characters/ron/ron_hover.webp"
                             else:
-                                $ charimg = "gui/question_mark_idle.png"
-                                $ charimg_hover = "gui/question_mark_hover.png"
+                                $ charimg = "gui/question_mark_idle.webp"
+                                $ charimg_hover = "gui/question_mark_hover.webp"
                             button:
                                 background "#0cf"
                                 xsize 370
@@ -2048,7 +2055,7 @@ screen phone_call_screen():
             xalign .5
             yalign .5
             yoffset 20
-            add "gui/phone_background_contacts.png" at ModZoom(.85)
+            add "gui/phone_background_contacts.webp" at ModZoom(.85)
         frame:
             background None
             xpadding 0
@@ -2082,20 +2089,20 @@ screen phone_call_screen():
                             $ bg_color_contacts = '#ccc'
                         if not i[1] in not_in_contacts:
                             if i[1] == 'fm':
-                                $ charimg = "images/characters/anne/anne_idle.png"
-                                $ charimg_hover = "images/characters/anne/anne_hover.png"
+                                $ charimg = "images/characters/anne/anne_idle.webp"
+                                $ charimg_hover = "images/characters/anne/anne_hover.webp"
                             elif i[1] == 'fs':
-                                $ charimg = "images/characters/juliette/juliette_idle.png"
-                                $ charimg_hover = "images/characters/juliette/juliette_hover.png"
+                                $ charimg = "images/characters/juliette/juliette_idle.webp"
+                                $ charimg_hover = "images/characters/juliette/juliette_hover.webp"
                             elif i[1] == 'nk':
-                                $ charimg = "images/characters/karen/karen_idle.png"
-                                $ charimg_hover = "images/characters/karen/karen_hover.png"
+                                $ charimg = "images/characters/karen/karen_idle.webp"
+                                $ charimg_hover = "images/characters/karen/karen_hover.webp"
                             elif i[1] == 'nr':
-                                $ charimg = "images/characters/ron/ron_idle.png"
-                                $ charimg_hover = "images/characters/ron/ron_hover.png"
+                                $ charimg = "images/characters/ron/ron_idle.webp"
+                                $ charimg_hover = "images/characters/ron/ron_hover.webp"
                             else:
-                                $ charimg = "gui/question_mark_idle.png"
-                                $ charimg_hover = "gui/question_mark_hover.png"
+                                $ charimg = "gui/question_mark_idle.webp"
+                                $ charimg_hover = "gui/question_mark_hover.webp"
 
                             button:
                                 background bg_color_contacts
@@ -2106,18 +2113,28 @@ screen phone_call_screen():
                                     ysize 80
                                     spacing 10
                                     if stats == i:
-                                        add charimg_hover at ModZoom(.65):
-                                            yalign .5
-                                            yoffset -10
+                                        if charimg_hover == 'gui/question_mark_hover.webp':
+                                            add charimg_hover at ModZoom(.6):
+                                                yalign .5
+                                                yoffset -10
+                                        else:
+                                            add charimg_hover at ModZoom(.65):
+                                                yalign .5
+                                                yoffset -10
                                         text "[i[0]]":
                                             ysize 80
                                             yalign .5
                                             yoffset -10
                                             color "#0cf"
                                     else:
-                                        add charimg at ModZoom(.65):
-                                            yalign .5
-                                            yoffset -10
+                                        if charimg == "gui/question_mark_idle.webp":
+                                            add charimg at ModZoom(.6):
+                                                yalign .5
+                                                yoffset -10
+                                        else:
+                                            add charimg at ModZoom(.65):
+                                                yalign .5
+                                                yoffset -10
                                         text "[i[0]]":
                                             ysize 80
                                             yalign .5
@@ -2129,6 +2146,11 @@ screen phone_call_screen():
                                     action Show('phone_call_show',None,i[1],'nc_talk',True,'first_talk')
                                 elif i[1] == 'nr':
                                     action Show('phone_call_show',None,i[1],'nr_talk',True,'nr_after_nc')
+                                elif i[1] == 'nk':
+                                    if call_nk_event:
+                                        action Show('phone_call_show',None,i[1],'nk_talk',True,call_nk_event)
+                                    else:
+                                        action Show('phone_call_show',None,i[1],False,True,False)
                                 else:
                                     # action Show('warning_screen',None,300,370,"There are no functionality for this person currently implemented")
                                     action Show('phone_call_show',None,i[1],False,True,False)
@@ -2173,8 +2195,8 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
             ysize 500
             yalign 0.0
             yoffset 50
-            add "images/characters/[char_name_lowered]/[char_name_lowered]_hover.png":
-                zoom 1.5
+            add "images/characters/[char_name_lowered]/[char_name_lowered]_phone_image.webp":
+                zoom .8
                 xalign .5
                 yalign .5
             text "[get_char_name]":
@@ -2198,16 +2220,18 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
                         text "▸" at delayed_blink(0.4, 1.0) style "skip_triangle_call"
                     $ callrand = renpy.random.random()
                     timer 3.0:
-                        if callrand > .35 and char in ['nr','nc']:
+                        if callrand > .35 and char in ['nr','nc','nk']:
                             if label:
                                 action [SetVariable('duringcall',True),SetVariable('calling',False),Call(label,event=event,callrand=callrand)]
                             else:
-                                action [SetVariable('duringcall',True),SetVariable('calling',False)]
-                        elif char in ['nr','nc']:
-                            if label:
-                                action [SetVariable('duringcall',False),SetVariable('calling',True),Call(label,event=event,callrand=callrand)]
-                            else:
-                                action [SetVariable('duringcall',False),SetVariable('calling',True)]
+                                # action [SetVariable('duringcall',True),SetVariable('calling',False)]
+                                action [SetVariable('duringcall',False),SetVariable('calling',False),Call('no_answer')]
+                        # elif char in ['nr','nc','nk']:
+                        #     if label:
+                        #         action [SetVariable('duringcall',False),SetVariable('calling',True),Call(label,event=event,callrand=callrand)]
+                        #     else:
+                        #         # action [SetVariable('duringcall',False),SetVariable('calling',True)]
+                        #         action [SetVariable('duringcall',False),SetVariable('calling',False),Call('no_answer')]
                         else:
                            action [SetVariable('duringcall',False),SetVariable('calling',False),Call('no_answer')]
 
@@ -2226,25 +2250,25 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
                 xsize 370
                 xalign .5
                 if not calling and not duringcall:
-                    imagebutton auto "gui/phone_call_%s.png" focus_mask True:
+                    imagebutton auto "gui/phone_call_%s.webp" focus_mask True:
                         action [SetVariable('calling',True)]
                         if not calling_out:
                             xalign .2
                         else:
                             xalign .5
                 else:
-                    imagebutton auto "gui/phone_hang_up_%s.png" focus_mask True:
+                    imagebutton auto "gui/phone_hang_up_%s.webp" focus_mask True:
                         if renpy.get_screen('say'):
                             action [Hide('say'),SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
                         else:
                             action [SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
                         xalign .5
                 if not calling_out:
-                    imagebutton auto "gui/phone_hang_up_%s.png" focus_mask True:
+                    imagebutton auto "gui/phone_hang_up_%s.webp" focus_mask True:
                         action [SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
                         xalign .8
     hbox:
-        imagebutton auto "gui/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
+        imagebutton auto "gui/phone_white_power_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
             tooltip "Shut off the phone"
         xalign .5
         yalign .5
@@ -2252,12 +2276,12 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
             key "K_ESCAPE" action [SetVariable('keyclose',False),Function(hide_phone_screens),Show('phone'),Show('phone_gallery_screen')]
     hbox:
         if battery_text != 0 and not renpy.get_screen('say') and not renpy.get_screen('choice'):
-            imagebutton auto "gui/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),Function(hide_phone_screens),Show('phone_call_screen')] at ModZoom(.85):
+            imagebutton auto "gui/phone_white_home_%s.webp" focus_mask True action [SetVariable('keyclose',False),Function(hide_phone_screens),Show('phone_call_screen')] at ModZoom(.85):
                 alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
             xalign .5
             yalign .5
     hbox:
-        add "gui/phone_white.png" at ModZoom(.85)
+        add "gui/phone_white.webp" at ModZoom(.85)
         xalign .5
         yalign .5
 
@@ -2309,7 +2333,7 @@ screen phone_gallery_screen():
             pagekeys True
             vbox:
                 for file in renpy.list_files():
-                    if file.startswith('images/phone_gallery/') and file.endswith('.png'):
+                    if file.startswith('images/phone_gallery/') and file.endswith('.webp'):
                         $ name = file.replace('images/phone_gallery/','')
                         if name in images_unlocked:
                             imagebutton idle Transform(file,maxsize=(215,215)):
@@ -2373,10 +2397,10 @@ screen phone_gallery_show():
                     xalign .5
                     yalign .5
                 if imggal_showbuttons:
-                    imagebutton auto "gui/imggal_close_%s.png" focus_mask None action[Hide('phone_gallery_show'),Show('phone_gallery_screen')] at ModZoom(.65):
+                    imagebutton auto "gui/imggal_close_%s.webp" focus_mask None action[Hide('phone_gallery_show'),Show('phone_gallery_screen')] at ModZoom(.65):
                         ypos -30
                 else:
-                    imagebutton idle "gui/imggal_transparent_idle.png" focus_mask None action NullAction() at ModZoom(.65):
+                    imagebutton idle "gui/imggal_transparent_idle.webp" focus_mask None action NullAction() at ModZoom(.65):
                         ypos -30
                 action [Show('fullscreen_image',None,filename)]
             if imggal_showbuttons:
@@ -2384,7 +2408,7 @@ screen phone_gallery_show():
             else:
                 key "K_h" action SetVariable('imggal_showbuttons',True)
     hbox:
-        imagebutton auto "gui/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
+        imagebutton auto "gui/phone_white_power_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
             tooltip "Shut off the phone"
         xalign .5
         yalign .5
@@ -2392,13 +2416,13 @@ screen phone_gallery_show():
             key "K_ESCAPE" action [SetVariable('keyclose',False),Function(hide_phone_screens),Show('phone'),Show('phone_gallery_screen')]
     hbox:
         if battery_text != 0 and not renpy.get_screen('say') and not renpy.get_screen('choice'):
-            imagebutton auto "gui/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),Function(hide_phone_screens),Show('phone_gallery_show')] at ModZoom(.85):
+            imagebutton auto "gui/phone_white_home_%s.webp" focus_mask True action [SetVariable('keyclose',False),Function(hide_phone_screens),Show('phone_gallery_show')] at ModZoom(.85):
                 tooltip "Go back to the home-screen"
                 alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
             xalign .5
             yalign .5
     hbox:
-        add "gui/phone_white.png" at ModZoom(.85)
+        add "gui/phone_white.webp" at ModZoom(.85)
         xalign .5
         yalign .5
 
@@ -2413,11 +2437,11 @@ screen phone_info_screen():
     tag phonescreen
     zorder 950
     $ keyclose = True
-    if persistent.phone_firstshow:
+    if p.phone_firstshow:
         hbox:
             imagebutton:
-                idle "gui/phone_white_power_hover.png"
-                hover "gui/phone_white_power_hover.png"
+                idle "gui/phone_white_power_hover.webp"
+                hover "gui/phone_white_power_hover.webp"
                 focus_mask True
                 action [SetField(persistent,'phone_firstshow',False),SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85)
                 tooltip "Shut off the phone"
@@ -2426,8 +2450,8 @@ screen phone_info_screen():
         hbox:
             if battery_text != 0 and not renpy.get_screen('say') and not renpy.get_screen('choice'):
                 imagebutton:
-                    idle "gui/phone_white_home_hover.png"
-                    hover "gui/phone_white_home_hover.png"
+                    idle "gui/phone_white_home_hover.webp"
+                    hover "gui/phone_white_home_hover.webp"
                     focus_mask True
                     alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
                     action [SetField(persistent,'phone_firstshow',False),SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85)
@@ -2451,35 +2475,35 @@ screen phone_info_screen():
                 text "This is the phone-screen. Here you'll find all the game-menus (bottom row on home screen):\n"
                 hbox:
                     xpos .2
-                    imagebutton auto "gui/phone_button_menu_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.6):
+                    imagebutton auto "gui/phone_button_menu_%s.webp" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.6):
                         yalign .5
                     textbutton "Main menu" action [Hide('phone_info_screen'),Show('custom_confirm',None,'mainmenu')]:
                         text_size 22
                         yalign .5
                 hbox:
                     xpos .2
-                    imagebutton auto "gui/phone_button_save_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.6):
+                    imagebutton auto "gui/phone_button_save_%s.webp" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),Show('custom_save')] at ModZoom(.6):
                         yalign .5
                     textbutton "Save" action [Hide('phone_info_screen'),Show('custom_save')]:
                         text_size 22
                         yalign .5
                 hbox:
                     xpos .2
-                    imagebutton auto "gui/phone_button_load_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.6):
+                    imagebutton auto "gui/phone_button_load_%s.webp" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),Show('custom_load')] at ModZoom(.6):
                         yalign .5
-                    textbutton "Load" action [Hide('phone_info_screen'),Show('custom_load')]:
+                    textbutton "Continue" action [Hide('phone_info_screen'),Show('custom_load')]:
                         text_size 22
                         yalign .5
                 hbox:
                     xpos .2
-                    imagebutton auto "gui/phone_button_preferences_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('pref_screen',True),SetVariable('show_icons',False),Show('custom_preferences')] at ModZoom(.6):
+                    imagebutton auto "gui/phone_button_preferences_%s.webp" focus_mask True action [Hide('phone_info_screen'),SetVariable('pref_screen',True),SetVariable('show_icons',False),Show('custom_preferences')] at ModZoom(.6):
                         yalign .5
                     textbutton "Preferences" action [Hide('phone_info_screen'),Show('custom_preferences')]:
                         text_size 22
                         yalign .5
                 hbox:
                     xpos .2
-                    imagebutton auto "gui/phone_button_quit_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.6):
+                    imagebutton auto "gui/phone_button_quit_%s.webp" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'quit')] at ModZoom(.6):
                         yalign .5
                     textbutton "Quit game" action [Hide('phone_info_screen'),Show('custom_confirm',None,'quit')]:
                         text_size 22
@@ -2487,14 +2511,14 @@ screen phone_info_screen():
                 text "\nand also different other screens, like the:\n"
                 hbox:
                     xpos .2
-                    imagebutton auto "gui/phone_button_achievement_%s.png" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.6):
+                    imagebutton auto "gui/phone_button_achievement_%s.webp" focus_mask True action [Hide('phone_info_screen'),SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.6):
                         yalign .5
                     textbutton "Achievement screen" action [Hide('phone_info_screen'),Show('display_achievements')]:
                         text_size 22
                         yalign .5
                 hbox:
                     xpos .2
-                    imagebutton auto "gui/phone_button_gallery_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_gallery_screen')] at ModZoom(.6):
+                    imagebutton auto "gui/phone_button_gallery_%s.webp" focus_mask True action [Hide('phone_info_screen'),Show('phone_gallery_screen')] at ModZoom(.6):
                         yalign .5
                     textbutton "Image gallery" action [Hide('phone_info_screen'),Show('phone_gallery_screen')]:
                         text_size 22
@@ -2509,21 +2533,21 @@ screen phone_info_screen():
                         ypos 15
                         hbox:
                             xpos .2
-                            imagebutton auto "gui/phone_button_call_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_call_screen')] at ModZoom(.6):
+                            imagebutton auto "gui/phone_button_call_%s.webp" focus_mask True action [Hide('phone_info_screen'),Show('phone_call_screen')] at ModZoom(.6):
                                 yalign .5
                             textbutton "Call screen" action [Hide('phone_info_screen'),Show('phone_call_screen')]:
                                 text_size 22
                                 yalign .5
                         hbox:
                             xpos .2
-                            imagebutton auto "gui/phone_button_help_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.6):
+                            imagebutton auto "gui/phone_button_help_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.6):
                                 yalign .5
                             textbutton "In-game help" action [SetVariable('show_icons',False),Show('phone_info_screen')]:
                                 text_size 22
                                 yalign .5
                         hbox:
                             xpos .2
-                            imagebutton auto "gui/phone_button_hint_%s.png" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen')] at ModZoom(.6):
+                            imagebutton auto "gui/phone_button_hint_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen')] at ModZoom(.6):
                                 yalign .5
                             textbutton "Game-hints" action [SetVariable('show_icons',False),Show('phone_hint_screen')]:
                                 text_size 22
@@ -2536,14 +2560,14 @@ screen phone_info_screen():
                                 ypos 10
                                 hbox:
                                     xpos .2
-                                    imagebutton auto "gui/phone_button_text_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_text_screen')] at ModZoom(.6):
+                                    imagebutton auto "gui/phone_button_text_%s.webp" focus_mask True action [Hide('phone_info_screen'),Show('phone_text_screen')] at ModZoom(.6):
                                         yalign .5
                                     textbutton "Message screen" action [Hide('phone_info_screen'),Show('phone_text_screen')]:
                                         text_size 22
                                         yalign .5
                                 hbox:
                                     xpos .2
-                                    imagebutton auto "gui/phone_button_alarm_clock_%s.png" focus_mask True action [Hide('phone_info_screen'),Show('phone_alarm')] at ModZoom(.6):
+                                    imagebutton auto "gui/phone_button_alarm_clock_%s.webp" focus_mask True action [Hide('phone_info_screen'),Show('phone_alarm')] at ModZoom(.6):
                                         yalign .5
                                     textbutton "Alarm Clock" action [Hide('phone_info_screen'),Show('phone_alarm')]:
                                         text_size 22
@@ -2687,7 +2711,7 @@ screen display_achievements():
                                 fixed:
                                     xsize 370
                                     ysize 100
-                                    imagebutton auto "gui/achievement_%s.png" focus_mask True:
+                                    imagebutton auto "gui/achievement_%s.webp" focus_mask True:
                                         if selected_achievement != achievement_hidden:
                                             action [SetVariable('selected_number',i),SetVariable('selected_achievement', achievement_hidden)]
                                         elif selected_achievement == achievement_hidden and selected_number != i:
@@ -2701,7 +2725,7 @@ screen display_achievements():
                                     text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
                                         xpos 100
                                         ypos 38
-                                    add "gui/phone_hidden_idle.png":
+                                    add "gui/phone_hidden_idle.webp":
                                         xpos 300
                                         ypos 35
                                     if selected_achievement == achievement_hidden and i == selected_number:
@@ -2721,7 +2745,7 @@ screen display_achievements():
                                 fixed:
                                     xsize 370
                                     ysize 100
-                                    imagebutton auto "gui/achievement_%s.png" focus_mask True:
+                                    imagebutton auto "gui/achievement_%s.webp" focus_mask True:
                                         if selected_achievement != achievement:
                                             action SetVariable('selected_achievement', achievement)
                                         else:
@@ -2733,7 +2757,7 @@ screen display_achievements():
                                     text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
                                         xpos 100
                                         ypos 38
-                                    add "gui/phone_lock_idle.png":
+                                    add "gui/phone_lock_idle.webp":
                                         xpos 300
                                         ypos 35
                                     if selected_achievement == achievement:
@@ -2754,7 +2778,7 @@ screen display_achievements():
                                 fixed:
                                     xsize 370
                                     ysize 100
-                                    imagebutton auto "gui/achievement_%s.png" focus_mask True:
+                                    imagebutton auto "gui/achievement_%s.webp" focus_mask True:
                                         if selected_achievement != achievement:
                                             action SetVariable('selected_achievement', achievement)
                                         else:
@@ -2766,7 +2790,7 @@ screen display_achievements():
                                     text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
                                         xpos 100
                                         ypos 38
-                                    add "gui/phone_unlock_idle.png":
+                                    add "gui/phone_unlock_idle.webp":
                                         xpos 300
                                         ypos 35
                                     if selected_achievement == achievement:
@@ -2785,7 +2809,7 @@ screen display_achievements():
                             fixed:
                                 xsize 370
                                 ysize 100
-                                imagebutton auto "gui/achievement_%s.png" focus_mask True:
+                                imagebutton auto "gui/achievement_%s.webp" focus_mask True:
                                     if selected_achievement != achievement:
                                         action SetVariable('selected_achievement', achievement)
                                     else:
@@ -2798,15 +2822,15 @@ screen display_achievements():
                                     xpos 100
                                     ypos 38
                                 if achievement.unlocked:
-                                    add "gui/phone_unlock_idle.png":
+                                    add "gui/phone_unlock_idle.webp":
                                         xpos 300
                                         ypos 35
                                 elif not achievement.unlocked:
-                                    add "gui/phone_lock_idle.png":
+                                    add "gui/phone_lock_idle.webp":
                                         xpos 300
                                         ypos 35
                                 elif achievement.hidden:
-                                    add "gui/phone_hidden_idle.png":
+                                    add "gui/phone_hidden_idle.webp":
                                         xpos 300
                                         ypos 35
                                 if selected_achievement == achievement:
@@ -2933,7 +2957,7 @@ screen custom_save():
 screen custom_load():
     tag phonescreen
     zorder 900
-    use custom_file_slots(_("Load"))
+    use custom_file_slots(_("Continue"))
 
 screen custom_preferences():
     tag phonescreen
@@ -2972,11 +2996,11 @@ screen custom_preferences():
                         hbox:
                             ypos 40
                             textbutton _("Window") action Preference("display", "window"):
-                                foreground "gui/button/check_[prefix_]foreground_white.png"
+                                foreground "gui/button/check_[prefix_]foreground_white.webp"
                         hbox:
                             ypos 80
                             textbutton _("Fullscreen") action Preference("display", "fullscreen"):
-                                foreground "gui/button/check_[prefix_]foreground_white.png"
+                                foreground "gui/button/check_[prefix_]foreground_white.webp"
                 if not renpy.variant("pc"):
                     fixed:
                         xsize 370
@@ -2990,15 +3014,15 @@ screen custom_preferences():
                         hbox:
                             ypos 40
                             textbutton _("Disable") action Preference("rollback side", "disable"):
-                                foreground "gui/button/check_[prefix_]foreground_white.png"
+                                foreground "gui/button/check_[prefix_]foreground_white.webp"
                         hbox:
                             ypos 80
                             textbutton _("Left") action Preference("rollback side", "left"):
-                                foreground "gui/button/check_[prefix_]foreground_white.png"
+                                foreground "gui/button/check_[prefix_]foreground_white.webp"
                         hbox:
                             ypos 120
                             textbutton _("Right") action Preference("rollback side", "right"):
-                                foreground "gui/button/check_[prefix_]foreground_white.png"
+                                foreground "gui/button/check_[prefix_]foreground_white.webp"
 
                 fixed:
                     xsize 370
@@ -3012,15 +3036,15 @@ screen custom_preferences():
                     hbox:
                         ypos 40
                         textbutton _("Unseen Text") action Preference("skip", "toggle"):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                            foreground "gui/button/check_[prefix_]foreground_white.webp"
                     hbox:
                         ypos 80
                         textbutton _("After Choices") action Preference("after choices", "toggle"):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                            foreground "gui/button/check_[prefix_]foreground_white.webp"
                     hbox:
                         ypos 120
                         textbutton _("Transitions") action InvertSelected(Preference("transitions", "toggle")):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                            foreground "gui/button/check_[prefix_]foreground_white.webp"
 
                 fixed:
                     xsize 370
@@ -3099,7 +3123,7 @@ screen custom_preferences():
                                 action Preference("all mute", "toggle")
                                 style "mute_all_button"
                                 text_color "#fff"
-                                foreground "gui/button/check_[prefix_]foreground_white.png"
+                                foreground "gui/button/check_[prefix_]foreground_white.webp"
 
                 fixed:
                     xsize 370
@@ -3113,11 +3137,11 @@ screen custom_preferences():
                     hbox:
                         ypos 40
                         textbutton _("Disable") action SetField(persistent,"cheat",False):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                            foreground "gui/button/check_[prefix_]foreground_white.webp"
                     hbox:
                         ypos 80
                         textbutton _("Enable") action SetField(persistent,"cheat",True):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                            foreground "gui/button/check_[prefix_]foreground_white.webp"
 
                 fixed:
                     xsize 370
@@ -3133,14 +3157,14 @@ screen custom_preferences():
                         ypos 50
                         xsize 370
                         textbutton _("Disable") action SetField(persistent,'side_image_zoom',False):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                            foreground "gui/button/check_[prefix_]foreground_white.webp"
                             yalign .5
                     hbox:
                         ysize 50
                         ypos 100
                         xsize 370
                         textbutton _("Enable") action SetField(persistent,'side_image_zoom',True):
-                            foreground "gui/button/check_[prefix_]foreground_white.png"
+                            foreground "gui/button/check_[prefix_]foreground_white.webp"
                             yalign .5
 
                 if disabled_hints:
@@ -3154,19 +3178,19 @@ screen custom_preferences():
                                 action Function(restore_hints)
                                 style "mute_all_button"
                                 text_color "#fff"
-                                foreground "gui/button/check_[prefix_]foreground_white.png"
+                                foreground "gui/button/check_[prefix_]foreground_white.webp"
     frame:
         background None
         xalign .5
         yalign .5
         hbox:
-            imagebutton auto "gui/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
+            imagebutton auto "gui/phone_white_power_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
             xalign .5
             yalign .5
         hbox:
             if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                imagebutton auto "gui/phone_white_home_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
+                imagebutton auto "gui/phone_white_home_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)] at ModZoom(.85):
                     tooltip "Go back to the home-screen"
                     alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
             xalign .5
@@ -3187,40 +3211,40 @@ screen phone_light_background():
     hbox:
         xalign .5
         yalign .5
-        add "gui/phone_background_light.png" at ModZoom(.85)
+        add "gui/phone_background_light.webp" at ModZoom(.85)
 
 screen phone_overlay():
     zorder 990
     $ keyclose = True
     hbox: #notification-bar
         if battery_text != 0:
-            add "gui/phone_notification_bar.png" at ModZoom(.85)
+            add "gui/phone_notification_bar.webp" at ModZoom(.85)
             xalign .5
             yalign .5
     hbox: #battery-indicator
         if battery_text != 0:
             if battery_text == 100:
-                add "gui/phone_battery_100.png"
+                add "gui/phone_battery_100.webp"
             elif battery_text < 100 and battery_text >= 90:
-                add "gui/phone_battery_90.png"
+                add "gui/phone_battery_90.webp"
             elif battery_text < 90 and battery_text >= 80:
-                add "gui/phone_battery_80.png"
+                add "gui/phone_battery_80.webp"
             elif battery_text < 80 and battery_text >= 70:
-                add "gui/phone_battery_70.png"
+                add "gui/phone_battery_70.webp"
             elif battery_text < 70 and battery_text >= 60:
-                add "gui/phone_battery_60.png"
+                add "gui/phone_battery_60.webp"
             elif battery_text < 60 and battery_text >= 50:
-                add "gui/phone_battery_50.png"
+                add "gui/phone_battery_50.webp"
             elif battery_text < 50 and battery_text >= 40:
-                add "gui/phone_battery_40.png"
+                add "gui/phone_battery_40.webp"
             elif battery_text < 40 and battery_text >= 30:
-                add "gui/phone_battery_30.png"
+                add "gui/phone_battery_30.webp"
             elif battery_text < 30 and battery_text >= 20:
-                add "gui/phone_battery_20.png"
+                add "gui/phone_battery_20.webp"
             elif battery_text < 20 and battery_text >= 10:
-                add "gui/phone_battery_10.png"
+                add "gui/phone_battery_10.webp"
             else:
-                add "gui/phone_battery_0.png"
+                add "gui/phone_battery_0.webp"
             at ModZoom(.85)
             xalign .5
             yalign .5
@@ -3246,19 +3270,19 @@ screen phone_overlay():
         xalign .5
         yalign .5
         vbox:
-            add "gui/phone_white.png" at ModZoom(.85)
+            add "gui/phone_white.webp" at ModZoom(.85)
             xalign .5
             yalign .5
         vbox:
             xalign .5
             yalign .5
-            imagebutton auto "gui/phone_white_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
+            imagebutton auto "gui/phone_white_power_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
                 tooltip "Shut off the phone"
         vbox:
             xalign .5
             yalign .5
             if battery_text != 0 and not renpy.get_screen('say') and not renpy.get_screen('choice'):
-                imagebutton auto "gui/phone_white_home_%s.png" focus_mask True:
+                imagebutton auto "gui/phone_white_home_%s.webp" focus_mask True:
                     at ModZoom(.85)
                     alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
                     if renpy.get_screen('phonescreen'):
@@ -3271,17 +3295,17 @@ screen phone_overlay():
             hbox:
                 xalign .5
                 yalign .5
-                add "gui/phone_bottom_overlay.png" at ModZoom(.85)
+                add "gui/phone_bottom_overlay.webp" at ModZoom(.85)
             hbox:
                 xalign .5
                 yalign .818
-                imagebutton auto "gui/phone_unlock_%s.png":
+                imagebutton auto "gui/phone_unlock_%s.webp":
                     action ToggleVariable('show_unlocked_achievements')
                     xpos -100
-                imagebutton auto "gui/phone_lock_%s.png":
+                imagebutton auto "gui/phone_lock_%s.webp":
                     action ToggleVariable('show_locked_achievements')
                     xalign .5
-                imagebutton auto "gui/phone_hidden_%s.png":
+                imagebutton auto "gui/phone_hidden_%s.webp":
                     action ToggleVariable('show_hidden_achievements')
                     xpos 100
 
@@ -3329,7 +3353,7 @@ screen custom_file_slots(title):
 
                         button:
                             style "custom_slot_button"
-                            if title == "Load":
+                            if title == "Continue":
                                 action FileLoad(slot)
                             else:
                                 action FileAction(slot)
@@ -3431,7 +3455,7 @@ screen fs_tablet():
         hbox:
             yalign .5
             xalign .5
-            add "gui/tablet.png" at ModZoom(.85)
+            add "gui/tablet.webp" at ModZoom(.85)
         hbox: #backgrounds
             yalign .5
             xalign .5
@@ -3440,15 +3464,15 @@ screen fs_tablet():
                 if int(ic_num_str) == tablet_stored_code:
                     $ tablet_code = True
                     $ ic_num = []
-                    add "gui/tablet_no_content_warning.png" at ModZoom(.85)
+                    add "gui/tablet_no_content_warning.webp" at ModZoom(.85)
                 else:
                     $ ic_num = []
             elif tablet_code:
-                add "gui/tablet_background.png" at ModZoom(.85)
+                add "gui/tablet_background.webp" at ModZoom(.85)
         hbox:
             xalign .5
             yalign .5
-            imagebutton auto "gui/tablet_power_%s.png" focus_mask True action [SetVariable('keyclose',False),SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()] at ModZoom(.85)
+            imagebutton auto "gui/tablet_power_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()] at ModZoom(.85)
             if keyclose:
                 key 'K_ESCAPE' action [SetVariable('keyclose',False),Hide('phone_info_screen'),SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()]
 
@@ -3457,15 +3481,15 @@ screen fs_tablet():
                 imagemap:
                     alpha False
                     if len(ic_num) == 1:
-                        add "gui/tablet_unlock_1.png"
+                        add "gui/tablet_unlock_1.webp"
                     elif len(ic_num) == 2:
-                        add "gui/tablet_unlock_2.png"
+                        add "gui/tablet_unlock_2.webp"
                     elif len(ic_num) == 3:
-                        add "gui/tablet_unlock_3.png"
+                        add "gui/tablet_unlock_3.webp"
                     elif len(ic_num) == 4:
-                        add "gui/tablet_unlock_4.png"
-                    ground "gui/tablet_unlock.png"
-                    hover "gui/tablet_unlock_hover.png"
+                        add "gui/tablet_unlock_4.webp"
+                    ground "gui/tablet_unlock.webp"
+                    hover "gui/tablet_unlock_hover.webp"
                     at ModZoom(.85)
                     yalign .5
                     xalign .5
@@ -3495,7 +3519,7 @@ screen fs_tablet():
 
 screen maininfo():
     frame:
-        if persistent.maininfo:
+        if p.maininfo:
             style_prefix "infoscreen"
             xalign .5
             yalign .5
@@ -3549,12 +3573,12 @@ screen maininfo():
                     first_indent 130
                 text "Up to the right there is a calendar, showing month, date, weather, day and time. {b}The time / clock is clickable, to advance time - clicking on the hour advances time by 1 hour, clicking on the minutes advances time by 30 minutes{/b}\n":
                     ypos -170
-                if persistent.maininfo:
+                if p.maininfo:
                     text "{color=#f00}{size=28}Once closed, this infoscreen will not show again like this, but the info will be available via the help-screen in-game.{/size}{/color}":
                         xalign .5
                         ypos -180
-        if persistent.maininfo:
-            imagebutton auto "gui/closebutton_%s.png" xalign 1.0 yalign 1.0 focus_mask True action [SetField(persistent,'maininfo',False),Hide("maininfo"),Return()]
+        if p.maininfo:
+            imagebutton auto "gui/closebutton_%s.webp" xalign 1.0 yalign 1.0 focus_mask True action [SetField(persistent,'maininfo',False),Hide("maininfo"),Return()]
             if keyclose:
                 key 'K_ESCAPE' action [SetVariable('keyclose',False),Hide('phone_info_screen'),SetField(persistent,'maininfo',False),Hide("maininfo"),Return()]
 
@@ -3570,7 +3594,6 @@ screen debug_tools():
 screen input(prompt):
     style_prefix "input"
 
-    # window:
     frame:
         xalign .5
         yalign .5
@@ -3587,24 +3610,14 @@ screen input(prompt):
             text "\n"
             input id "input" color "#fff"
 
-## Preferences screen ##########################################################
-##
-## The preferences screen allows the player to configure the game to better suit
-## themselves.
-##
-## https://www.renpy.org/doc/html/screen_special.html#preferences
-
 screen preferences():
     tag menu
-    default selectedmenu = False
-    default displayresolutions = False
-    default soundmuted = False
-    default musicmuted = False
-    default sfxmuted = False
-    default voicemuted = False
-    default skipunseen = False
-    default skipafterchoices = False
-    default skiptransitions = False
+    default x = 500
+    default y = 400
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
     use game_menu(_("Preferences"), scroll="viewport"):
         vbox:
             style_prefix "prefs"
@@ -3613,24 +3626,24 @@ screen preferences():
                 xalign .5
                 spacing 80
                 if renpy.variant("pc"):
-                    textbutton _("Display") action SetScreenVariable('selectedmenu','displaycontrol'):
-                        xsize 150
-                        if selectedmenu == 'displaycontrol':
+                    textbutton _("Display") action SetField(persistent,'selectedmenu','displaycontrol'):
+                        xsize 200
+                        ysize 60
+                        if p.selectedmenu == 'displaycontrol':
                             text_size 40
-                            yoffset -10
-                    textbutton _("Skip and Speed settings") action SetScreenVariable('selectedmenu','skipcontrol'):
+                    textbutton _("Skip and Speed settings") action SetField(persistent,'selectedmenu','skipcontrol'):
                         xsize 600
-                        if selectedmenu == 'skipcontrol':
+                        ysize 60
+                        if p.selectedmenu == 'skipcontrol':
                             text_size 40
-                            yoffset -10
-                    textbutton _("Sound") action SetScreenVariable('selectedmenu','soundsettings'):
-                        xsize 150
-                        if selectedmenu == "soundsettings":
+                    textbutton _("Sound") action SetField(persistent,'selectedmenu','soundsettings'):
+                        xsize 200
+                        ysize 60
+                        if p.selectedmenu == "soundsettings":
                             text_size 40
-                            yoffset -10
 
-            if selectedmenu:
-                if selectedmenu == 'displaycontrol':
+            if p.selectedmenu:
+                if p.selectedmenu == 'displaycontrol':
                     vbox:
                         ypos 100
                         xfill True
@@ -3640,12 +3653,12 @@ screen preferences():
                             ypos 25
                             spacing 130
                             xalign .5
-                            textbutton _("Window") action [Preference("display","window"),SetScreenVariable('displayresolutions',True)]:
+                            textbutton _("Window") action [Preference("display","window"),SetField(persistent,'displayresolutions',True)]:
                                 selected not preferences.fullscreen
-                            textbutton _("Fullscreen") action [Preference("display", "fullscreen"),SetScreenVariable('displayresolutions',False)]:
+                            textbutton _("Fullscreen") action [Preference("display", "fullscreen"),SetField(persistent,'displayresolutions',False)]:
                                 selected preferences.fullscreen
 
-                    if displayresolutions or not preferences.fullscreen:
+                    if p.displayresolutions or not preferences.fullscreen:
                         vbox:
                             ypos 175
                             xfill True
@@ -3655,13 +3668,18 @@ screen preferences():
                                 ypos 25
                                 xalign .5
                                 spacing 50
-                                textbutton "960x540" action [Preference("display",.5)]
-                                textbutton "1280x720" action [Preference("display",0.6666666666667)]
-                                textbutton "1600x900" action [Preference("display",0.8333333333333334)]
-                                textbutton "1920x1080" action [Preference("display", "fullscreen"),SetScreenVariable('displayresolutions',False)]:
-                                    selected preferences.fullscreen
+                                $ availres = [(960,540,.5),(1280,720,.6666666666667),(1366,768,.71175117511751175),(1600,900,.8333333333333334),(1920,1080,1)]
+                                for x,y,r in availres:
+                                    if get_max_res[1] > y and get_max_res[0] != x:
+                                        textbutton "[x]x[y]" action [Preference("display",r)]:
+                                            if pygame_sdl2.display.Info().current_w != 1365:
+                                                selected x == pygame_sdl2.display.Info().current_w
+                                            elif pygame_sdl2.display.Info().current_w == 1365 and pygame_sdl2.display.Info().current_h == 768:
+                                                selected x == 1366
+                                    elif get_max_res[0] == x:
+                                        textbutton "[x]x[y]" action [Preference("display","fullscreen"),SetField(persistent,'displayresolutions',False)]
 
-                if selectedmenu == 'skipcontrol':
+                if p.selectedmenu == 'skipcontrol':
                     vbox:
                         ypos 100
                         xfill True
@@ -3670,25 +3688,28 @@ screen preferences():
                         hbox:
                             ypos 25
                             xalign .5
-                            spacing 130
+                            spacing 110
                             hbox:
-                                xsize 350
-                                textbutton _("Skip Unseen Text") action [ToggleScreenVariable('skipunseen'),Preference("skip", "toggle")]:
-                                    selected skipunseen
-                                if skipunseen:
-                                    add "gui/blue_checkmark.png" at ModZoom(.2)
+                                xsize 365
+                                # ysize 60
+                                textbutton _("Skip Unseen Text") action [ToggleField(persistent,'skipunseen',True,False),Preference("skip", "toggle")]:
+                                    xsize 310
+                                if p.skipunseen:
+                                    add "gui/blue_checkmark.webp" at ModZoom(.2)
                             hbox:
-                                xsize 350
-                                textbutton _("Skip After Choices") action [ToggleScreenVariable('skipafterchoices'),Preference("after choices", "toggle")]:
-                                    selected skipafterchoices
-                                if skipafterchoices:
-                                    add "gui/blue_checkmark.png" at ModZoom(.2)
+                                xsize 365
+                                # ysize 60
+                                textbutton _("Skip After Choices") action [ToggleField(persistent,'skipafterchoices',True,False),Preference("after choices", "toggle")]:
+                                    xsize 310
+                                if p.skipafterchoices:
+                                    add "gui/blue_checkmark.webp" at ModZoom(.2)
                             hbox:
-                                xsize 350
-                                textbutton _("Skip Transitions") action [ToggleScreenVariable('skiptransitions'),InvertSelected(Preference("transitions", "toggle"))]:
-                                    selected skiptransitions
-                                if skiptransitions:
-                                    add "gui/blue_checkmark.png" at ModZoom(.2)
+                                xsize 365
+                                # ysize 60
+                                textbutton _("Skip Transitions") action [ToggleField(persistent,'skiptransitions',True,False),InvertSelected(Preference("transitions", "toggle"))]:
+                                    xsize 310
+                                if p.skiptransitions:
+                                    add "gui/blue_checkmark.webp" at ModZoom(.2)
                     vbox:
                         ypos 175
                         xfill True
@@ -3712,7 +3733,7 @@ screen preferences():
                                     text_size 20
                                 bar value Preference("auto-forward time")
 
-                if selectedmenu == 'soundsettings':
+                if p.selectedmenu == 'soundsettings':
                     vbox:
                         ypos 100
                         xfill True
@@ -3730,22 +3751,22 @@ screen preferences():
                                         text_size 20
                                     bar value Preference("music volume"):
                                         ysize 20
-                                    $ musicvolume = int(_preferences.volumes['music']*100) if not soundmuted and not musicmuted else 0
+                                    $ musicvolume = int(_preferences.volumes['music']*100) if not p.soundmuted and not p.musicmuted else 0
                                     hbox:
                                         xalign .5
                                         spacing 20
                                         text "[musicvolume]":
                                             ypos 8
-                                        if musicmuted:
-                                            imagebutton idle "gui/speaker_muted.png" focus_mask True:
+                                        if p.musicmuted:
+                                            imagebutton idle "gui/speaker_muted.webp" focus_mask True:
                                                 at ModZoom(.6)
                                                 ypos 5
-                                                action [SetScreenVariable('musicmuted',False),ToggleMute('music')]
+                                                action [SetField(persistent,'musicmuted',False),ToggleMute('music')]
                                         else:
-                                            imagebutton idle "gui/speaker_unmuted.png" focus_mask True:
+                                            imagebutton idle "gui/speaker_unmuted.webp" focus_mask True:
                                                 at ModZoom(.6)
                                                 ypos 5
-                                                action [SetScreenVariable('musicmuted',True),ToggleMute('music')]
+                                                action [SetField(persistent,'musicmuted',True),ToggleMute('music')]
                             if config.has_sound:
                                 vbox:
                                     maximum 325,100
@@ -3754,24 +3775,24 @@ screen preferences():
                                         text_size 20
                                     bar value Preference("sound volume"):
                                         ysize 20
-                                    $ soundvolume = int(_preferences.volumes['sfx']*100) if not soundmuted and not sfxmuted else 0
+                                    $ soundvolume = int(_preferences.volumes['sfx']*100) if not p.soundmuted and not p.sfxmuted else 0
                                     hbox:
                                         xalign .5
                                         spacing 20
                                         text "[soundvolume]":
                                             ypos 8
-                                        if sfxmuted:
-                                            imagebutton idle "gui/speaker_muted.png" focus_mask True:
+                                        if p.sfxmuted:
+                                            imagebutton idle "gui/speaker_muted.webp" focus_mask True:
                                                 at ModZoom(.6)
                                                 ypos 5
-                                                action [SetScreenVariable('sfxmuted',False),ToggleMute('sfx')]
+                                                action [SetField(persistent,'sfxmuted',False),ToggleMute('sfx')]
                                         else:
-                                            imagebutton idle "gui/speaker_unmuted.png" focus_mask True:
+                                            imagebutton idle "gui/speaker_unmuted.webp" focus_mask True:
                                                 at ModZoom(.6)
                                                 ypos 5
-                                                action [SetScreenVariable('sfxmuted',True),ToggleMute('sfx')]
+                                                action [SetField(persistent,'sfxmuted',True),ToggleMute('sfx')]
                                     if config.sample_sound:
-                                        imagebutton idle "gui/media_playback.png" action Play('sound', config.sample_sound):
+                                        imagebutton idle "gui/media_playback.webp" action Play('sound', config.sample_sound):
                                             at ModZoom(.20)
                                             ypos 15
                                             xalign .5
@@ -3784,25 +3805,25 @@ screen preferences():
                                         text_size 20
                                     bar value Preference("voice volume"):
                                         ysize 20
-                                    $ voicevolume = int(_preferences.volumes['voice']*100) if not soundmuted and not voicemuted else 0
+                                    $ voicevolume = int(_preferences.volumes['voice']*100) if not p.soundmuted and not p.voicemuted else 0
                                     hbox:
                                         xalign .5
                                         spacing 20
                                         text "[voicevolume]":
                                             ypos 8
-                                        if voicemuted:
-                                            imagebutton idle "gui/speaker_muted.png" focus_mask True:
+                                        if p.voicemuted:
+                                            imagebutton idle "gui/speaker_muted.webp" focus_mask True:
                                                 at ModZoom(.6)
                                                 ypos 5
-                                                action [SetScreenVariable('voicemuted',False),ToggleMute('voice')]
+                                                action [SetField(persistent,'voicemuted',False),ToggleMute('voice')]
                                         else:
-                                            imagebutton idle "gui/speaker_unmuted.png" focus_mask True:
+                                            imagebutton idle "gui/speaker_unmuted.webp" focus_mask True:
                                                 at ModZoom(.6)
                                                 ypos 5
-                                                action [SetScreenVariable('voicemuted',True),ToggleMute('voice')]
+                                                action [SetField(persistent,'voicemuted',True),ToggleMute('voice')]
 
                                     if config.sample_voice:
-                                        imagebutton idle "gui/media_playback.png" action Play('voice', config.sample_voice):
+                                        imagebutton idle "gui/media_playback.webp" action Play('voice', config.sample_voice):
                                             at ModZoom(.20)
                                             ypos 15
                                             xalign .5
@@ -3812,127 +3833,296 @@ screen preferences():
                             hbox:
                                 ypos 200
                                 xalign .5
-                                # textbutton _("Mute All"):
-                                if soundmuted or (musicmuted and voicemuted and sfxmuted):
+                                if p.soundmuted or (p.musicmuted and p.voicemuted and p.sfxmuted):
                                     vbox:
-                                        imagebutton idle "gui/speaker_muted.png" focus_mask True:
+                                        imagebutton idle "gui/speaker_muted.webp" focus_mask True:
                                             xalign .5
-                                            action [SetScreenVariable('soundmuted',False),SetScreenVariable('musicmuted',False),SetScreenVariable('voicemuted',False),SetScreenVariable('sfxmuted',False),Preference("all mute","toggle")]
-                                        # style "mute_all_button"
-                                        text "Sound muted"#:
-                                            # color "#000"
+                                            action [SetField(persistent,'soundmuted',False),SetField(persistent,'musicmuted',False),SetField(persistent,'voicemuted',False),SetField(persistent,'sfxmuted',False),Preference("all mute","toggle")]
+                                        text "Sound muted"
                                 else:
                                     vbox:
-                                        imagebutton idle "gui/speaker_unmuted.png" focus_mask True:
+                                        imagebutton idle "gui/speaker_unmuted.webp" focus_mask True:
                                             xalign .5
-                                            action [SetScreenVariable('soundmuted',True),SetScreenVariable('musicmuted',True),SetScreenVariable('voicemuted',True),SetScreenVariable('sfxmuted',True),Preference("all mute","toggle")]
-                                        text "Mute all sound"#:
-                                            # color "#000"
+                                            action [SetField(persistent,'soundmuted',True),SetField(persistent,'musicmuted',True),SetField(persistent,'voicemuted',True),SetField(persistent,'sfxmuted',True),Preference("all mute","toggle")]
+                                        text "Mute all sound"
+            else:
+                text "Select one of the preference subpages from the menu above":
+                    at center
+                    yoffset 100
+                    size 30
+
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"
 
 
-
-                        # vbox:
-
-            #             if config.has_music:
-            #                 label _("Music Volume")
-
-            #                 hbox:
-            #                     bar value Preference("music volume")
-
-            #             if config.has_sound:
-
-            #                 label _("Sound Volume")
-
-            #                 hbox:
-            #                     bar value Preference("sound volume")
-
-            #                     if config.sample_sound:
-            #                         textbutton _("Test") action Play("sound", config.sample_sound)
-
-
-            #             if config.has_voice:
-            #                 label _("Voice Volume")
-
-            #                 hbox:
-            #                     bar value Preference("voice volume")
-
-            #                     if config.sample_voice:
-            #                         textbutton _("Test") action Play("voice", config.sample_voice)
-
-            #             if config.has_music or config.has_sound or config.has_voice:
-            #                 null height gui.pref_spacing
-
-            #                 textbutton _("Mute All"):
-            #                     action Preference("all mute", "toggle")
-            #                     style "mute_all_button"
+screen help():
+    tag menu
+    default device = "keyboard"
+    use game_menu(_("Help"), scroll="viewport"):
+        style_prefix "help"
+        vbox:
+            xfill True
+            # spacing 23
+            first_spacing 50
+            hbox:
+                xalign .5
+                textbutton _("Keyboard") action SetScreenVariable("device", "keyboard")
+                textbutton _("Mouse") action SetScreenVariable("device", "mouse")
+                if GamepadExists():
+                    textbutton _("Gamepad") action SetScreenVariable("device", "gamepad")
+            if device == "keyboard":
+                use keyboard_help
+            elif device == "mouse":
+                use mouse_help
+            elif device == "gamepad":
+                use gamepad_help
 
 
-# style pref_label is gui_label
-# style pref_label_text is gui_label_text
-# style pref_vbox is vbox
+screen keyboard_help():
+    vbox:
+        spacing 15
+        hbox:
+            label _("Enter")
+            text _("Advances dialogue and activates the interface.")
 
-# style radio_label is pref_label
-# style radio_label_text is pref_label_text
-# style radio_button is gui_button
-# style radio_button_text is gui_button_text
-# style radio_vbox is pref_vbox
+        hbox:
+            label _("Space")
+            text _("Advances dialogue without selecting choices.")
 
-# style check_label is pref_label
-# style check_label_text is pref_label_text
-# style check_button is gui_button
-# style check_button_text is gui_button_text
-# style check_vbox is pref_vbox
+        hbox:
+            label _("Arrow Keys")
+            text _("Navigate the interface.")
 
-# style slider_label is pref_label
-# style slider_label_text is pref_label_text
-# style slider_slider is gui_slider
-# style slider_button is gui_button
-# style slider_button_text is gui_button_text
-# style slider_pref_vbox is pref_vbox
+        hbox:
+            label _("Escape")
+            text _("Accesses the game menu.")
 
-# style mute_all_button is check_button
-# style mute_all_button_text is check_button_text
+        hbox:
+            label _("Ctrl")
+            text _("Skips dialogue while held down.")
 
-# style pref_label:
-#     top_margin gui.pref_spacing
-#     bottom_margin 3
+        hbox:
+            label _("Tab")
+            text _("Toggles dialogue skipping.")
 
-# style pref_label_text:
-#     yalign 1.0
+        hbox:
+            label _("Page Up")
+            text _("Rolls back to earlier dialogue.")
 
-# style pref_vbox:
-#     xsize 338
+        hbox:
+            label _("Page Down")
+            text _("Rolls forward to later dialogue.")
 
-# style radio_vbox:
-#     spacing gui.pref_button_spacing
+        hbox:
+            label "H"
+            text _("Hides the user interface.")
 
-# style radio_button:
-#     properties gui.button_properties("radio_button")
-#     foreground "gui/button/check_[prefix_]foreground.png"
+        hbox:
+            label "S"
+            text _("Takes a screenshot.")
 
-# style radio_button_text:
-#     properties gui.button_text_properties("radio_button")
+        hbox:
+            label "V"
+            text _("Toggles assistive {a=https://www.renpy.org/l/voicing}self-voicing{/a}.")
 
-# style check_vbox:
-#     spacing gui.pref_button_spacing
+screen mouse_help():
+    vbox:
+        spacing 15
+        hbox:
+            label _("Left Click")
+            text _("Advances dialogue and activates the interface.")
 
-# style check_button:
-#     properties gui.button_properties("check_button")
-#     foreground "gui/button/check_[prefix_]foreground.png"
+        hbox:
+            label _("Middle Click")
+            text _("Hides the user interface.")
 
-# style check_button_text:
-#     properties gui.button_text_properties("check_button")
+        hbox:
+            label _("Right Click")
+            text _("Accesses the game menu.")
 
-# style slider_slider:
-#     xsize 525
+        hbox:
+            label _("Mouse Wheel Up\nClick Rollback Side")
+            text _("Rolls back to earlier dialogue.")
 
-# style slider_button:
-#     properties gui.button_properties("slider_button")
-#     yalign 0.5
-#     left_margin 15
+        hbox:
+            label _("Mouse Wheel Down")
+            text _("Rolls forward to later dialogue.")
 
-# style slider_button_text:
-#     properties gui.button_text_properties("slider_button")
+screen gamepad_help():
+    vbox:
+        spacing 15
+        hbox:
+            label _("Right Trigger\nA/Bottom Button")
+            text _("Advances dialogue and activates the interface.")
 
-# style slider_vbox:
-#     xsize 675
+        hbox:
+            label _("Left Trigger\nLeft Shoulder")
+            text _("Rolls back to earlier dialogue.")
+
+        hbox:
+            label _("Right Shoulder")
+            text _("Rolls forward to later dialogue.")
+
+        hbox:
+            label _("D-Pad, Sticks")
+            text _("Navigate the interface.")
+
+        hbox:
+            label _("Start, Guide")
+            text _("Accesses the game menu.")
+
+        hbox:
+            label _("Y/Top Button")
+            text _("Hides the user interface.")
+
+        textbutton _("Calibrate") action GamepadCalibrate()
+
+
+style help_button is gui_button
+style help_button_text is gui_button_text
+style help_label is gui_label
+style help_label_text is gui_label_text
+style help_text is gui_text
+
+style help_button:
+    properties gui.button_properties("help_button")
+    xmargin 12
+
+style help_button_text:
+    # properties gui.button_text_properties("help_button")
+    color "#555"
+    hover_color "#0cf"
+    selected_color "#0cf"
+    xalign .5
+
+style help_label:
+    xsize 375
+    right_padding 30
+    yalign .5
+
+style help_label_text:
+    size gui.text_size
+    xalign 1.0
+    text_align 1.0
+
+style help_text:
+    yalign .5
+
+screen file_slots(title):
+
+    default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
+
+    use game_menu(title):
+
+        fixed:
+            hbox:
+                xalign .5
+                ## This ensures the input will get the enter event before any of the
+                ## buttons do.
+                order_reverse True
+                textbutton _("<") action FilePagePrevious():
+                    yalign .5
+                ## The page name, which can be edited by clicking on a button.
+                button:
+                    xsize 600
+                    style "page_label"
+
+                    key_events True
+                    xalign 0.5
+                    action page_name_value.Toggle()
+
+                    input:
+                        xalign .5
+                        yalign .5
+                        yoffset 7
+                        style "page_label_text"
+                        value page_name_value
+
+                textbutton _(">") action FilePageNext():
+                    yalign .5
+                ## The grid of file slots.
+            grid gui.file_slot_cols gui.file_slot_rows:
+                style_prefix "slot"
+
+                xalign 0.5
+                yalign 0.4
+
+                xspacing 20
+                yspacing 50
+
+                for i in range(gui.file_slot_cols * gui.file_slot_rows):
+
+                    $ slot = i + 1
+
+                    button:
+                        action FileAction(slot)
+
+                        has vbox
+
+                        add FileScreenshot(slot) xalign 0.5
+
+                        text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("Empty slot")):
+                            style "slot_time_text"
+
+                        text FileSaveName(slot):
+                            style "slot_name_text"
+
+                        key "save_delete" action FileDelete(slot)
+
+            ## Buttons to access other pages.
+            hbox:
+                style_prefix "page"
+
+                xalign 0.5
+                yalign 1.0
+
+                spacing gui.page_spacing
+
+                textbutton _("<") action FilePagePrevious()
+
+                if config.has_autosave:
+                    textbutton _("{#auto_page}A") action FilePage("auto")
+
+                if config.has_quicksave:
+                    textbutton _("{#quick_page}Q") action FilePage("quick")
+
+                ## range(1, 10) gives the numbers from 1 to 9.
+                for page in range(1, 10):
+                    textbutton "[page]" action FilePage(page)
+
+                textbutton _(">") action FilePageNext()
+
+
+style page_label is gui_label
+style page_label_text is gui_label_text
+style page_button is gui_button
+style page_button_text is gui_button_text
+
+style slot_button is gui_button
+style slot_button_text is gui_button_text
+style slot_time_text is slot_button_text
+style slot_name_text is slot_button_text
+
+style page_label:
+    xpadding 75
+    ypadding 5
+
+style page_label_text:
+    text_align 0.5
+    layout "subtitle"
+    hover_color gui.hover_color
+
+style page_button:
+    properties gui.button_properties("page_button")
+
+style page_button_text:
+    properties gui.button_text_properties("page_button")
+
+style slot_button:
+    properties gui.button_properties("slot_button")
+
+style slot_button_text:
+    properties gui.button_text_properties("slot_button")

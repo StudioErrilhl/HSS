@@ -5,16 +5,16 @@
     $ renpy.pause(2)
     hide text with dissolve
     $ renpy.block_rollback()
-    if not persistent.splash_screen:
-        show image "gui/hss-logo.png" with dissolve:
+    if not p.splash_screen:
+        show image "gui/hss-logo.webp" with dissolve:
             xalign .5 yalign .5
         $ renpy.pause(2)
-        hide image "gui/hss-logo.png" with dissolve
+        hide image "gui/hss-logo.webp" with dissolve
         $ renpy.pause(.75)
-        if not persistent.accepted_splashscreen:
+        if not p.accepted_splashscreen:
             call screen confirm_age()
             $ renpy.block_rollback()
-        $ persistent.accepted_splashscreen = True
+        $ p.accepted_splashscreen = True
         call screen splash_info()
         $ renpy.block_rollback()
         show screen disclaimer()
@@ -24,7 +24,7 @@
         show text "{size=30}{color=#ffffff}Code / story by Studio Errilhl\nCharacter art by DivineChihaya{/color}{/size}"
         $ renpy.block_rollback()
         $ renpy.pause(4)
-        $ persistent.splash_screen = True
+        $ p.splash_screen = True
         $ renpy.block_rollback()
     return
 
@@ -68,7 +68,7 @@ label start:
     ## intro - this is shown only once, when starting the game from the beginning
     $ fpinput = (renpy.input("First, we'll need to know your name (default, Marten):") or "Marten").strip()
 
-    if persistent.skipintro:
+    if p.skipintro:
         menu:
             "View intro":
                 jump viewintro
@@ -91,7 +91,7 @@ label start:
             xalign .2
         with dissolve
         fp "{i}Didn't last long, though. About 5 seconds after me landing on her bedroom floor, I got hit with something hard! Then the shouting began, and 10 seconds after that, I was out in the hallway again, with a furious, but still very half-naked [fsName.role] yelling at me. I'm still amazed that [fmName.informal] didn't show up... THAT would've been embarassing, for both of us... mostly for me.{/i}"
-        $ images_unlocked.append('DCIM00001_portrait.png')
+        $ images_unlocked.append('DCIM00001_portrait.webp')
         fp "{i}Thankfully, [fsName.informal] realised what she was doing (partly because I had a raging boner in my boxer's, I guess) - turned on her heel, and went into her room again - this time locking the door.{/i}"
         hide juliette_mad_pantless
         hide juliette_reflection
@@ -100,16 +100,16 @@ label start:
         fp "{i}Me... I went to the bathroom and jerked off. Yes, I know she's [fsName.myformal], and all that, but DAMN. She's HOT!{/i}"
         fp "{i}Okay... that might have been a bit TMI. I'm sorry. I just wanted you to understand what happened. And how that sort of led to... other things that happened as well. During that summer. You know... spring. Summer. End of high-school. The time I had all planned out. The plans that really didn't happen. Like... at all.{/i}"
         "So... the coming days, weeks and months, you'll be trying to pass your exams, finish your bike, getting some action, and generally being a high school senior going on freedom!"
-        $ persistent.skipintro = True
+        $ p.skipintro = True
         $ fs_mad = True
 
     label skippedintro():
         $ fs_mad = True
         show screen ingame_menu_display()
-        if 'DCIM00001_portrait.png' not in images_unlocked:
+        if 'DCIM00001_portrait.webp' not in images_unlocked:
             if "You chose to skip the intro - which means that one of the images in the photo-gallery is not gonna be available to you" not in hints+read_hints+disabled_hints:
                 $ set_hint("You chose to skip the intro - which means that one of the images in the photo-gallery is not gonna be available to you")
-        if persistent.maininfo:
+        if p.maininfo:
             call screen maininfo()
         fp "So. Quick recap: I woke up on April 1st, tried to somewhat remotely function and seem awake, and figure out what to with the day. Then, a little later, shellshocked, and trying to figure out how to get the image of my naked [fsName.role] off my mind, I decided spending the day working on my bike would be as good a way as any..."
         $ skip_breakfast = True
@@ -123,7 +123,7 @@ label start:
         call skip_breakfast(True) from _call_skip_breakfast
 
     label day_start():
-        $ fpe = fme = fse = hje = nbe = nre = nke = nce = sne = see = spe = sje = scne = scme = False    
+        $ fpe = fme = fse = hje = nbe = nre = nke = nce = sne = see = spe = sje = scne = scme = False
         $ find_panties = True if renpy.random.random() > .75 else False
         $ find_pb_mod = .65 if fs_aro > 10 else .90
         $ find_pb = True if renpy.random.random() > find_pb_mod else False
@@ -136,8 +136,12 @@ label start:
         $ bathroom_occupied_fm = False
         $ home_from_school = False
         $ not_entered = True
+        $ tmp_filth_val = False
         if nc_action_started and nc_action_started < 8:
             $ nc_action_started += 1
+
+        $ call_nk = True if nk_rel > 20 else False
+        $ call_nk_event = 'nk_date' if call_nk and not nk_mad else False
 
         $ breakfast_jump = False
         $ had_breakfast = False
@@ -284,7 +288,7 @@ label start:
                                     $ mc_p = "{0:.2f}".format(mc_p)
                                     if mc_b == 150:
                                         $ mc_f = True
-                                        call change_loc('garage') from _call_change_loc_72                                        
+                                        call change_loc('garage') from _call_change_loc_72
                                     if mc_t == 0:
                                         $ renpy.notify("You did not improve the status of the bike this time")
                                     else:

@@ -1,5 +1,5 @@
 label night_events():
-    
+
     label end_of_day(end_called=False):
         if end_called or end_cfs:
             $ end_called = end_cfs = False
@@ -24,9 +24,9 @@ label night_events():
                     $ current_month_day += 1
                     $ day_ahead = True
             call fp_bedroom_scene from _call_fp_bedroom_scene
-            "This ends the day"            
+            "This ends the day"
             call sleep_the_night(True) from _call_sleep_the_night
-    
+
     label sleep_the_night(stn_called=False):
         if stn_called or stn_cfs:
             $ stn_called = stn_cfs = False
@@ -61,6 +61,8 @@ label night_events():
                     $ thishappened_2 = "else"
             $ after_sleep = True
             $ day_ahead = False
+            if filth_val:
+                $ filth_val += 10
             jump day_start
 
     label sleeping_day_away(sld_called=False):

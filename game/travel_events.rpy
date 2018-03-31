@@ -28,11 +28,13 @@ label travel_events(event=False):
                                     $ statschangenotify('nk_rel',-3)
                                     $ renpy.pause(.25)
                                     $ nk_sa_status = ['mad','drive']
+                                    $ walk_to_school = True
                                     call travel_events('arrive_school') from _call_travel_events_6
                                 else:
                                     $ statschangenotify("nk_rel",-1)
                                     $ renpy.pause(.25)
                                     $ nk_sa_status = ['annoyed','drive']
+                                    $ walk_to_school = True
                                     if renpy.random.random() < .35:
                                         call travel_events('arrive_school') from _call_travel_events_7
                                     else:
@@ -52,6 +54,7 @@ label travel_events(event=False):
                         "Nah... I just wanna go by myself today, I got a lot on my mind, need to think a little bit":
                             show nk_standing annoyed with dissolve
                             $ renpy.pause(.5)
+                            $ walk_to_school = True
                             call travel_events('arrive_school') from _call_travel_events_8
                         "No thanks, [nk]":
                             show nk_standing mad with dissolve
@@ -59,6 +62,7 @@ label travel_events(event=False):
                                 $ nkrel = -.5
                             else:
                                 $ nkrel = -.25
+                            $ walk_to_school = True
                             $ statschangenotify("nk_rel",nkrel)
                             $ renpy.pause(.5)
                             call travel_events('arrive_school') from _call_travel_events_9
@@ -73,6 +77,7 @@ label travel_events(event=False):
                     $ w_e = weighted_choice(t_w)
                     $ s_e = t_e[w_e]
                     $ text = "You're walking to school, when you suddenly {0}".format(s_e[0])
+                    $ walk_to_school = True
                     "[text]"
                     menu:
                         "[s_e[1]]" if s_e[1]:
@@ -89,13 +94,22 @@ label travel_events(event=False):
                             call travel_events(event) from _call_travel_events_11
                 else:
                     $ event = "arrive_school"
+                    if not mc_f:
+                        $ walk_to_school = True
                     call travel_events(event) from _call_travel_events_12
             else:
                 $ event = "arrive_school"
+                if not mc_f:
+                    $ walk_to_school = True
                 call travel_events(event) from _call_travel_events_13
         elif event == "arrive_school":
             $ current_location = 'schoolbuilding_loc'
             call schoolbuilding_scene from _call_schoolbuilding_scene
+            if bad_weather:
+                if walk_to_school:
+                    $ filth_val += 10
+                    if rainstorm:
+                        $ filth_val += 10
             if late_oh_shit:
                 $ current_time = "08:00"
                 "Barely, but on time. Close call indeed!"

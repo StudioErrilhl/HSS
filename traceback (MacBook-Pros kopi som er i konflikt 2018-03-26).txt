@@ -1,0 +1,26 @@
+﻿I'm sorry, but an uncaught exception occurred.
+
+While running game code:
+  File "game/config.rpy", line 33, in script
+    define pydisp = pygame_sdl2.display.Info()
+  File "game/config.rpy", line 33, in <module>
+    define pydisp = pygame_sdl2.display.Info()
+NameError: name 'pygame_sdl2' is not defined
+
+-- Full Traceback ------------------------------------------------------------
+
+Full traceback:
+  File "game/config.rpy", line 33, in script
+    define pydisp = pygame_sdl2.display.Info()
+  File "/Applications/renpy-6.99.14.1-sdk/renpy/ast.py", line 1912, in execute
+    value = renpy.python.py_eval_bytecode(self.code.bytecode)
+  File "/Applications/renpy-6.99.14.1-sdk/renpy/python.py", line 1836, in py_eval_bytecode
+    return eval(bytecode, globals, locals)
+  File "game/config.rpy", line 33, in <module>
+    define pydisp = pygame_sdl2.display.Info()
+NameError: name 'pygame_sdl2' is not defined
+
+Darwin-17.4.0-x86_64-i386-64bit
+Ren'Py 6.99.14.1.3218
+ 
+Mon Mar 26 16:25:28 2018

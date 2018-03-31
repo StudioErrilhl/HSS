@@ -85,8 +85,8 @@ define gui.title_text_size = 75
 ## Main and Game Menus #########################################################
 
 ## The images used for the main and game menus.
-define gui.main_menu_background = "gui/main_menu.png"
-define gui.game_menu_background = "gui/game_menu.png"
+define gui.main_menu_background = "gui/main_menu.webp"
+define gui.game_menu_background = "gui/game_menu.webp"
 
 
 ## Dialogue ####################################################################
@@ -176,7 +176,7 @@ define gui.button_text_insensitive_color = gui.insensitive_color
 ## The horizontal alignment of the button text. (0.0 is left, 0.5 is center, 1.0
 ## is right).
 define gui.button_text_xalign = 0.0
-
+define gui.button_image_extension = '.webp'
 
 ## These variables override settings for different kinds of buttons. Please see
 ## the gui documentation for the kinds of buttons available, and what each is

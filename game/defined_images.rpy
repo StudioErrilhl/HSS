@@ -66,8 +66,8 @@ transform active_talk:
 
 transform fm_standing_ahead_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/anne/body/standing/ahead_night.png",
-        True,"images/characters/anne/body/standing/ahead.png"
+        "int(current_time[:2]) in night","images/characters/anne/body/standing/ahead_night.webp",
+        True,"images/characters/anne/body/standing/ahead.webp"
         )
     choice:
         pause 2
@@ -76,16 +76,16 @@ transform fm_standing_ahead_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/anne/body/standing/ahead_eyes_closed_night.png",
-        True,"images/characters/anne/body/standing/ahead_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/anne/body/standing/ahead_eyes_closed_night.webp",
+        True,"images/characters/anne/body/standing/ahead_eyes_closed.webp"
     )
     pause .25
     repeat
 
 transform fm_standing_blushing_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/anne/body/standing/blushing_night.png",
-        True, "images/characters/anne/body/standing/blushing.png"
+        "int(current_time[:2]) in night","images/characters/anne/body/standing/blushing_night.webp",
+        True, "images/characters/anne/body/standing/blushing.webp"
         )
     choice:
         pause 2
@@ -94,16 +94,16 @@ transform fm_standing_blushing_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/anne/body/standing/blushing_eyes_closed_night.png",
-        True, "images/characters/anne/body/standing/blushing_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/anne/body/standing/blushing_eyes_closed_night.webp",
+        True, "images/characters/anne/body/standing/blushing_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fm_standing_crying_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/anne/body/standing/crying_night.png",
-        True, "images/characters/anne/body/standing/crying.png"
+        "int(current_time[:2]) in night","images/characters/anne/body/standing/crying_night.webp",
+        True, "images/characters/anne/body/standing/crying.webp"
         )
     choice:
         pause 2
@@ -112,16 +112,16 @@ transform fm_standing_crying_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/anne/body/standing/crying_eyes_closed_night.png",
-        True, "images/characters/anne/body/standing/crying_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/anne/body/standing/crying_eyes_closed_night.webp",
+        True, "images/characters/anne/body/standing/crying_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fm_standing_mad_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/anne/body/standing/mad_night.png",
-        True, "images/characters/anne/body/standing/mad.png"
+        "int(current_time[:2]) in night","images/characters/anne/body/standing/mad_night.webp",
+        True, "images/characters/anne/body/standing/mad.webp"
         )
     choice:
         pause 2
@@ -130,16 +130,16 @@ transform fm_standing_mad_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/anne/body/standing/mad_eyes_closed_night.png",
-        True, "images/characters/anne/body/standing/mad_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/anne/body/standing/mad_eyes_closed_night.webp",
+        True, "images/characters/anne/body/standing/mad_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fm_standing_sad_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/anne/body/standing/sad_night.png",
-        True, "images/characters/anne/body/standing/sad.png"
+        "int(current_time[:2]) in night","images/characters/anne/body/standing/sad_night.webp",
+        True, "images/characters/anne/body/standing/sad.webp"
         )
     choice:
         pause 2
@@ -148,16 +148,16 @@ transform fm_standing_sad_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/anne/body/standing/sad_eyes_closed_night.png",
-        True, "images/characters/anne/body/standing/sad_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/anne/body/standing/sad_eyes_closed_night.webp",
+        True, "images/characters/anne/body/standing/sad_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fm_standing_smile_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/anne/body/standing/smile_night.png",
-        True, "images/characters/anne/body/standing/smile.png"
+        "int(current_time[:2]) in night","images/characters/anne/body/standing/smile_night.webp",
+        True, "images/characters/anne/body/standing/smile.webp"
         )
     choice:
         pause 2
@@ -166,16 +166,16 @@ transform fm_standing_smile_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/anne/body/standing/smile_eyes_closed_night.png",
-        True, "images/characters/anne/body/standing/smile_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/anne/body/standing/smile_eyes_closed_night.webp",
+        True, "images/characters/anne/body/standing/smile_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fs_standing_ahead_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/ahead_night.png",
-        True, "images/characters/juliette/body/standing/ahead.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/ahead_night.webp",
+        True, "images/characters/juliette/body/standing/ahead.webp"
         )
     choice:
         pause 2
@@ -184,16 +184,16 @@ transform fs_standing_ahead_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/ahead_eyes_closed_night.png",
-        True, "images/characters/juliette/body/standing/ahead_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/ahead_eyes_closed_night.webp",
+        True, "images/characters/juliette/body/standing/ahead_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fs_standing_blushing_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/blushing_night.png",
-        True, "images/characters/juliette/body/standing/blushing.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/blushing_night.webp",
+        True, "images/characters/juliette/body/standing/blushing.webp"
         )
     choice:
         pause 2
@@ -202,16 +202,16 @@ transform fs_standing_blushing_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/blushing_eyes_closed_night.png",
-        True, "images/characters/juliette/body/standing/blushing_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/blushing_eyes_closed_night.webp",
+        True, "images/characters/juliette/body/standing/blushing_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fs_standing_blushing_sad_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/blushing_sad_night.png",
-        True, "images/characters/juliette/body/standing/blushing_sad.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/blushing_sad_night.webp",
+        True, "images/characters/juliette/body/standing/blushing_sad.webp"
         )
     choice:
         pause 2
@@ -220,16 +220,16 @@ transform fs_standing_blushing_sad_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/blushing_sad_eyes_closed_night.png",
-        True, "images/characters/juliette/body/standing/blushing_sad_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/blushing_sad_eyes_closed_night.webp",
+        True, "images/characters/juliette/body/standing/blushing_sad_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fs_standing_crying_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/crying_night.png",
-        True, "images/characters/juliette/body/standing/crying.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/crying_night.webp",
+        True, "images/characters/juliette/body/standing/crying.webp"
         )
     choice:
         pause 2
@@ -238,16 +238,16 @@ transform fs_standing_crying_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/crying_eyes_closed_night.png",
-        True, "images/characters/juliette/body/standing/crying_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/crying_eyes_closed_night.webp",
+        True, "images/characters/juliette/body/standing/crying_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fs_standing_devious_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/devious_night.png",
-        True, "images/characters/juliette/body/standing/devious.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/devious_night.webp",
+        True, "images/characters/juliette/body/standing/devious.webp"
         )
     choice:
         pause 2
@@ -256,8 +256,8 @@ transform fs_standing_devious_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/devious_eyes_closed_night.png",
-        True, "images/characters/juliette/body/standing/devious_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/devious_eyes_closed_night.webp",
+        True, "images/characters/juliette/body/standing/devious_eyes_closed.webp"
         )
     pause .25
     repeat
@@ -265,8 +265,8 @@ transform fs_standing_devious_ani:
 
 transform fs_standing_flustered_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/flustered_night.png",
-        True, "images/characters/juliette/body/standing/flustered.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/flustered_night.webp",
+        True, "images/characters/juliette/body/standing/flustered.webp"
         )
     choice:
         pause 2
@@ -275,16 +275,16 @@ transform fs_standing_flustered_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/flustered_eyes_closed_night.png",
-        True, "images/characters/juliette/body/standing/flustered_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/flustered_eyes_closed_night.webp",
+        True, "images/characters/juliette/body/standing/flustered_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fs_standing_mad_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/mad_night.png",
-        True, "images/characters/juliette/body/standing/mad.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/mad_night.webp",
+        True, "images/characters/juliette/body/standing/mad.webp"
         )
     choice:
         pause 2
@@ -293,16 +293,16 @@ transform fs_standing_mad_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/mad_eyes_closed_night.png",
-        True, "images/characters/juliette/body/standing/mad_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/mad_eyes_closed_night.webp",
+        True, "images/characters/juliette/body/standing/mad_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fs_standing_sad_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/sad_night.png",
-        True, "images/characters/juliette/body/standing/sad.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/sad_night.webp",
+        True, "images/characters/juliette/body/standing/sad.webp"
         )
     choice:
         pause 2
@@ -311,16 +311,16 @@ transform fs_standing_sad_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/sad_eyes_closed_night.png",
-        True, "images/characters/juliette/body/standing/sad_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/sad_eyes_closed_night.webp",
+        True, "images/characters/juliette/body/standing/sad_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fs_standing_smile_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/smile_night.png",
-        True, "images/characters/juliette/body/standing/smile.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/smile_night.webp",
+        True, "images/characters/juliette/body/standing/smile.webp"
         )
     choice:
         pause 2
@@ -329,16 +329,16 @@ transform fs_standing_smile_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/smile_eyes_closed_night.png",
-        True, "images/characters/juliette/body/standing/smile_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/smile_eyes_closed_night.webp",
+        True, "images/characters/juliette/body/standing/smile_eyes_closed.webp"
         )
     pause .25
     repeat
 
 transform fs_standing_smile_open_ani:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/smile_open_night.png",
-        True, "images/characters/juliette/body/standing/smile_open.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/smile_open_night.webp",
+        True, "images/characters/juliette/body/standing/smile_open.webp"
         )
     choice:
         pause 2
@@ -347,8 +347,8 @@ transform fs_standing_smile_open_ani:
     choice:
         pause 6
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/smile_open_eyes_closed_night.png",
-        True, "images/characters/juliette/body/standing/smile_open_eyes_closed.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/smile_open_eyes_closed_night.webp",
+        True, "images/characters/juliette/body/standing/smile_open_eyes_closed.webp"
         )
     pause .25
     repeat
@@ -363,8 +363,8 @@ image fs_standing ahead:
 
 image fs_standing annoyed:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/characters/juliette/body/standing/annoyed_night.png",
-        True, "images/characters/juliette/body/standing/annoyed.png"
+        "int(current_time[:2]) in night","images/characters/juliette/body/standing/annoyed_night.webp",
+        True, "images/characters/juliette/body/standing/annoyed.webp"
         )
     zoom .65
     xpos .7
@@ -445,120 +445,120 @@ image fs_standing smile_open:
     yanchor .75
 
 transform nk_standing_ahead_ani:
-    "images/characters/karen/body/standing/ahead.png"
+    "images/characters/karen/body/standing/ahead.webp"
     choice:
         pause 2
     choice:
         pause 4
     choice:
         pause 6
-    "images/characters/karen/body/standing/ahead_eyes_closed.png"
+    "images/characters/karen/body/standing/ahead_eyes_closed.webp"
     pause .25
     repeat
 
 transform nk_standing_blushing_ani:
-    "images/characters/karen/body/standing/blushing.png"
+    "images/characters/karen/body/standing/blushing.webp"
     choice:
         pause 2
     choice:
         pause 4
     choice:
         pause 6
-    "images/characters/karen/body/standing/blushing_eyes_closed.png"
+    "images/characters/karen/body/standing/blushing_eyes_closed.webp"
     pause .25
     repeat
 
 transform nk_standing_blushing_sad_ani:
-    "images/characters/karen/body/standing/blushing_sad.png"
+    "images/characters/karen/body/standing/blushing_sad.webp"
     choice:
         pause 2
     choice:
         pause 4
     choice:
         pause 6
-    "images/characters/karen/body/standing/blushing_sad_eyes_closed.png"
+    "images/characters/karen/body/standing/blushing_sad_eyes_closed.webp"
     pause .25
     repeat
 
 transform nk_standing_crying_ani:
-    "images/characters/karen/body/standing/crying.png"
+    "images/characters/karen/body/standing/crying.webp"
     choice:
         pause 4
     choice:
         pause 6
-    "images/characters/karen/body/standing/crying_eyes_closed.png"
+    "images/characters/karen/body/standing/crying_eyes_closed.webp"
     pause .25
     repeat
 
 transform nk_standing_devious_ani:
-    "images/characters/karen/body/standing/devious.png"
+    "images/characters/karen/body/standing/devious.webp"
     choice:
         pause 2
     choice:
         pause 4
     choice:
         pause 6
-    "images/characters/karen/body/standing/devious_eyes_closed.png"
+    "images/characters/karen/body/standing/devious_eyes_closed.webp"
     pause .25
     repeat
 
 transform nk_standing_flustered_ani:
-    "images/characters/karen/body/standing/flustered.png"
+    "images/characters/karen/body/standing/flustered.webp"
     choice:
         pause 2
     choice:
         pause 4
     choice:
         pause 6
-    "images/characters/karen/body/standing/flustered_eyes_closed.png"
+    "images/characters/karen/body/standing/flustered_eyes_closed.webp"
     pause .25
     repeat
 
 transform nk_standing_mad_ani:
-    "images/characters/karen/body/standing/mad.png"
+    "images/characters/karen/body/standing/mad.webp"
     choice:
         pause 2
     choice:
         pause 4
     choice:
         pause 6
-    "images/characters/karen/body/standing/mad_eyes_closed.png"
+    "images/characters/karen/body/standing/mad_eyes_closed.webp"
     pause .25
     repeat
 
 transform nk_standing_sad_ani:
-    "images/characters/karen/body/standing/sad.png"
+    "images/characters/karen/body/standing/sad.webp"
     choice:
         pause 2
     choice:
         pause 4
     choice:
         pause 6
-    "images/characters/karen/body/standing/sad_eyes_closed.png"
+    "images/characters/karen/body/standing/sad_eyes_closed.webp"
     pause .25
     repeat
 
 transform nk_standing_smile_ani:
-    "images/characters/karen/body/standing/smile.png"
+    "images/characters/karen/body/standing/smile.webp"
     choice:
         pause 2
     choice:
         pause 4
     choice:
         pause 6
-    "images/characters/karen/body/standing/smile_eyes_closed.png"
+    "images/characters/karen/body/standing/smile_eyes_closed.webp"
     pause .25
     repeat
 
 transform nk_standing_smile_open_ani:
-    "images/characters/karen/body/standing/smile_open.png"
+    "images/characters/karen/body/standing/smile_open.webp"
     choice:
         pause 2
     choice:
         pause 4
     choice:
         pause 6
-    "images/characters/karen/body/standing/smile_open_eyes_closed.png"
+    "images/characters/karen/body/standing/smile_open_eyes_closed.webp"
     pause .25
     repeat
 
@@ -571,7 +571,7 @@ image nk_standing ahead:
     yanchor .75
 
 image nk_standing annoyed:
-    "images/characters/karen/body/standing/annoyed.png"
+    "images/characters/karen/body/standing/annoyed.webp"
     zoom .6
     xpos .7
     ypos 1.0
@@ -651,142 +651,142 @@ image nk_standing smile_open:
     yanchor .75
 
 image side fp_talkside:
-    "images/characters/marten/expressions/marten_hair_parted_ahead.png"
+    "images/characters/marten/expressions/marten_hair_parted_ahead.webp"
     zoom .7
 
 image side nr_talkside:
-    "images/characters/ron/expressions/ahead.png"
+    "images/characters/ron/expressions/ahead.webp"
     zoom .7
 
 image side nr_talkside blushing:
-    "images/characters/ron/expressions/blushing.png"
+    "images/characters/ron/expressions/blushing.webp"
     zoom .7
 
 image side fm_talkside ahead:
-    "images/characters/anne/expressions/ahead.png"
+    "images/characters/anne/expressions/ahead.webp"
     zoom .7
 image side fm_talkside ahead_eyes_closed:
-    "images/characters/anne/expressions/ahead_eyes_closed.png"
+    "images/characters/anne/expressions/ahead_eyes_closed.webp"
     zoom .7
 image side fm_talkside blushing:
-    "images/characters/anne/expressions/blushing.png"
+    "images/characters/anne/expressions/blushing.webp"
     zoom .7
 image side fm_talkside crying:
-    "images/characters/anne/expressions/crying.png"
+    "images/characters/anne/expressions/crying.webp"
     zoom .7
 image side fm_talkside mad:
-    "images/characters/anne/expressions/mad.png"
+    "images/characters/anne/expressions/mad.webp"
     zoom .7
 image side fm_talkside sad:
-    "images/characters/anne/expressions/sad.png"
+    "images/characters/anne/expressions/sad.webp"
     zoom .7
 image side fm_talkside smile:
-    "images/characters/anne/expressions/smile.png"
+    "images/characters/anne/expressions/smile.webp"
     zoom .7
 
 image side fs_talkside ahead:
-    "images/characters/juliette/expressions/ahead.png"
+    "images/characters/juliette/expressions/ahead.webp"
     zoom .7
 image side fs_talkside ahead_eyes_closed:
-    "images/characters/juliette/expressions/ahead_eyes_closed.png"
+    "images/characters/juliette/expressions/ahead_eyes_closed.webp"
     zoom .7
 image side fs_talkside annoyed:
-    "images/characters/juliette/expressions/annoyed.png"
+    "images/characters/juliette/expressions/annoyed.webp"
     zoom .7
 image side fs_talkside blushing:
-    "images/characters/juliette/expressions/blushing.png"
+    "images/characters/juliette/expressions/blushing.webp"
     zoom .7
 image side fs_talkside blushing_sad:
-    "images/characters/juliette/expressions/blushing_sad.png"
+    "images/characters/juliette/expressions/blushing_sad.webp"
     zoom .7
 image side fs_talkside crying:
-    "images/characters/juliette/expressions/crying.png"
+    "images/characters/juliette/expressions/crying.webp"
     zoom .7
 image side fs_talkside devious:
-    "images/characters/juliette/expressions/devious.png"
+    "images/characters/juliette/expressions/devious.webp"
     zoom .7
 image side fs_talkside flustered:
-    "images/characters/juliette/expressions/flustered.png"
+    "images/characters/juliette/expressions/flustered.webp"
     zoom .7
 image side fs_talkside mad:
-    "images/characters/juliette/expressions/mad.png"
+    "images/characters/juliette/expressions/mad.webp"
     zoom .7
 image side fs_talkside sad:
-    "images/characters/juliette/expressions/sad.png"
+    "images/characters/juliette/expressions/sad.webp"
     zoom .7
 image side fs_talkside smile:
-    "images/characters/juliette/expressions/smile.png"
+    "images/characters/juliette/expressions/smile.webp"
     zoom .7
 image side fs_talkside smile_open:
-    "images/characters/juliette/expressions/smile_open.png"
+    "images/characters/juliette/expressions/smile_open.webp"
     zoom .7
 
 image side nk_talkside ahead:
-    "images/characters/karen/expressions/ahead.png"
+    "images/characters/karen/expressions/ahead.webp"
     zoom .7
 image side nk_talkside annoyed:
-    "images/characters/karen/expressions/annoyed.png"
+    "images/characters/karen/expressions/annoyed.webp"
     zoom .7
 image side nk_talkside blushing:
-    "images/characters/karen/expressions/blushing.png"
+    "images/characters/karen/expressions/blushing.webp"
     zoom .7
 image side nk_talkside blushing_sad:
-    "images/characters/karen/expressions/blushing_sad.png"
+    "images/characters/karen/expressions/blushing_sad.webp"
     zoom .7
 image side nk_talkside crying:
-    "images/characters/karen/expressions/crying.png"
+    "images/characters/karen/expressions/crying.webp"
     zoom .7
 image side nk_talkside devious:
-    "images/characters/karen/expressions/devious.png"
+    "images/characters/karen/expressions/devious.webp"
     zoom .7
 image side nk_talkside flustered:
-    "images/characters/karen/expressions/flustered.png"
+    "images/characters/karen/expressions/flustered.webp"
     zoom .7
 image side nk_talkside mad:
-    "images/characters/karen/expressions/mad.png"
+    "images/characters/karen/expressions/mad.webp"
     zoom .7
 image side nk_talkside sad:
-    "images/characters/karen/expressions/sad.png"
+    "images/characters/karen/expressions/sad.webp"
     zoom .7
 image side nk_talkside smile:
-    "images/characters/karen/expressions/smile.png"
+    "images/characters/karen/expressions/smile.webp"
     zoom .7
 image side nk_talkside smile_open:
-    "images/characters/karen/expressions/smile_open.png"
+    "images/characters/karen/expressions/smile_open.webp"
     zoom .7
 
 image juliette_mad_pantless:
-    "images/characters/juliette/mad_pantless.png"
+    "images/characters/juliette/mad_pantless.webp"
 
 image juliette_reflection:
-    "images/backgrounds/upper_hallway_juliette_reflection.png"
+    "images/backgrounds/upper_hallway_juliette_reflection.webp"
 
 image books_on_dresser:
-    "images/backgrounds/interactions_item/fp_bedroom_morning_dresser_idle.png"
+    "images/backgrounds/interactions_item/fp_bedroom_morning_dresser_idle.webp"
 
 image livingroom_morning_bad_weather_windows:
-    "images/backgrounds/livingroom_morning_bad_weather_windows.png"
+    "images/backgrounds/livingroom_morning_bad_weather_windows.webp"
 
 image rain:
-    "images/rain1.png"
+    "images/rain1.webp"
     0.2
-    "images/rain2.png"
+    "images/rain2.webp"
     0.25
-    "images/rain3.png"
+    "images/rain3.webp"
     0.2
     repeat
 
 image black_car:
     ConditionSwitch(
-        "int(current_time[:2]) in night","images/black_car_night_idle.png",
-        True,"images/black_car_morning_idle.png"
+        "int(current_time[:2]) in night","images/black_car_night_idle.webp",
+        True,"images/black_car_morning_idle.webp"
         )
 
 image stats_hover:
-    "gui/stats_hover.png"
+    "gui/stats_hover.webp"
 
 image tshirt_overlay:
-    "gui/tshirt_overlay.png"
+    "gui/tshirt_overlay.webp"
 
 transform alpha_transform(a):
     alpha a

@@ -77,9 +77,9 @@ init -1 python:
 init -1 python:
     def updateInventory():
         for file in renpy.list_files():
-            if file.startswith('images/inventory/') and file.endswith('.png'):
+            if file.startswith('images/inventory/') and file.endswith('.webp'):
                 if 'hover' in file:
-                    name = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.png','')
+                    name = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.webp','')
                     if not hasattr( store, ""+name+"_item" ):
                         weight = item_weights[name]
                         desc = item_desc[name]
