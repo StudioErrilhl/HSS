@@ -7,18 +7,24 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
             $ current_location = locname.replace(' ','_')+"_loc"
         else:
             $ current_location = locname.replace(' ','_')
-            $ locname = locname.replace('_loc','').replace('bad_weather','').replace('_',' ')
-        $ tmpname = locname.replace(' ','_').replace('_loc','')+"_scene"
+            $ locname = locname.replace('_loc','').replace('bad_weather','').replace('light','').replace('after_shower','').replace('_',' ')
+        $ tmpname = locname.replace(' ','_').replace('_after_shower','').replace('_light','').replace('_loc','')+"_scene"
         if loctrans:
             $ loctrans = False
+            $ print(tmpname+"_loctrans")
             if showerstat:
+                $ print(tmpname+'_showerstat')
                 call expression tmpname pass (trans=False,wetshower=showerstat) from _call_expression
             else:
+                $ print(tmpname+'_not_showerstat')
                 call expression tmpname pass (trans=False) from _call_expression_1
         else:
+            $ print(tmpname+"_not_loctrans")
             if showerstat:
+                $ print(tmpname+'_showerstat')
                 call expression tmpname pass (wetshower=showerstat) from _call_expression_3
             else:
+                $ print(tmpname+'_not_showerstat')
                 call expression tmpname from _call_expression_4
         show screen location(locname)
         if locname in firstday_talk_list:

@@ -767,6 +767,12 @@ image books_on_dresser:
 image livingroom_morning_bad_weather_windows:
     "images/backgrounds/livingroom_morning_bad_weather_windows.webp"
 
+image juliette_shower:
+    "images/backgrounds/upper_hallway_bathroom_juliette_shower_bubbles.webp"
+
+image juliette_shower_night:
+    "images/backgrounds/upper_hallway_bathroom_night_juliette_shower_bubbles.webp"
+
 image rain:
     "images/rain1.webp"
     0.2

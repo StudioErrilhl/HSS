@@ -269,17 +269,28 @@ label upper_hallway_scene(trans=True):
         scene upper_hallway_morning with Dissolve(.25)
     return
 
-label upper_hallway_bathroom_peek_scene(trans=True):
+label upper_hallway_bathroom_peek_scene(trans=True,wetshower=False):
     if not uhl_bathroom_ach:
         $ uhl_bathroom_ach = True
         $ update_been_everywhere_achievement()
     if trans:
-        scene upper_hallway_bathroom_morning
-        show upper_hallway_bathroom_juliette_shower_bubbles
-        with Dissolve(.25)
+        if int(current_time[:2]) in night:
+            scene upper_hallway_bathroom_night_after_shower_light with Dissolve(.25)
+            show juliette_shower_night
+        else:
+            $ print('showerscene during morning with trans')
+            scene upper_hallway_bathroom_morning with Dissolve(.25)
+            show juliette_shower
+            # with Dissolve(.25)
     else:
-        scene upper_hallway_bathroom_morning
-        show upper_hallway_bathroom_juliette_shower_bubbles
+        if int(current_time[:2]) in night:
+            $ print('showerscene during night')
+            scene upper_hallway_bathroom_night_after_shower_light
+            show juliette_shower_night
+        else:
+            $ print('showerscene during morning')
+            scene upper_hallway_bathroom_morning
+            show juliette_shower
     return
 
 label upper_hallway_bathroom_scene(trans=True,wetshower=False):
