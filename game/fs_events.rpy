@@ -172,12 +172,12 @@ label fs_talk(fst_called=False):
                             $ morning_event_done = True
                             $ fdtfs_after = False
                             if int(current_time[:2]) in night:
-                                call end_of_day(True)
+                                call end_of_day(True) from _call_end_of_day
                         else:
                             $ morning_event_done = True
                             $ fdtfs_after = False
                             if int(current_time[:2]) in night:
-                                call end_of_day(True)
+                                call end_of_day(True) from _call_end_of_day_1
             elif day_week <= 4:
                 if int(current_time[:2]) > 17:
                     $ settime(22,False,True,'fs_where')

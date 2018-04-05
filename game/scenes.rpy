@@ -111,25 +111,25 @@ label garage_scene(trans=True):
     if mc_f:
         if int(current_time[:2]) in night:
             if trans:
-                scene honda_cx_500_finished_night with Dissolve(.25)
+                scene garage_finished_night with Dissolve(.25)
             else:
-                scene honda_cx_500_finished_night
+                scene garage_finished_night
         else:
             if trans:
-                scene honda_cx_500_finished_morning with Dissolve(.25)
+                scene garage_finished_morning with Dissolve(.25)
             else:
-                scene honda_cx_500_finished_morning
+                scene garage_finished_morning
     else:
         if int(current_time[:2]) in night:
             if trans:
-                scene honda_cx_500_build_night with Dissolve(.25)
+                scene garage_build_night with Dissolve(.25)
             else:
-                scene honda_cx_500_build_night
+                scene garage_build_night
         else:
             if trans:
-                scene honda_cx_500_build_morning with Dissolve(.25)
+                scene garage_build_morning with Dissolve(.25)
             else:
-                scene honda_cx_500_build_morning
+                scene garage_build_morning
     return
 
 label icafe_scene(trans=True):
@@ -163,7 +163,16 @@ label livingroom_scene(trans=True):
         $ livingroom_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
-        scene livingroom_night with Dissolve(.25)
+        if bad_weather:
+            scene livingroom_night_bad_weather with Dissolve(.25)
+        else:
+            scene livingroom_night with Dissolve(.25)
+        if bad_weather:
+            if rainstorm:
+                show rain behind livingroom_night_bad_weather
+                show livingroom_night_bad_weather_windows behind rain
+            else:
+                show livingroom_night_bad_weather_windows
     else:
         if bad_weather:
             scene livingroom_morning_bad_weather with Dissolve(.25)

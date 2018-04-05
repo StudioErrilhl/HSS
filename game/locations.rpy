@@ -7,8 +7,12 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
             $ current_location = locname.replace(' ','_')+"_loc"
         else:
             $ current_location = locname.replace(' ','_')
-            $ locname = locname.replace('_loc','').replace('bad_weather','').replace('light','').replace('after_shower','').replace('_',' ')
-        $ tmpname = locname.replace(' ','_').replace('_after_shower','').replace('_light','').replace('_loc','')+"_scene"
+            $ locname = locname.replace('_loc','').replace('bad_weather','').replace('light','').replace('windows','').replace('after_shower','').replace('_',' ').replace('__',' ')
+        $ tmpname = locname.replace(' ','_').replace('_bad_weather','').replace('_build','').replace('_finished','').replace('_windows','').replace('_after_shower','').replace('_light','').replace('_loc','').replace('__','_')
+        if 'scene' not in tmpname:
+            if tmpname.endswith('_'):
+                $ tmpname = tmpname[:-1]
+            $ tmpname = tmpname+'_scene'
         if loctrans:
             $ loctrans = False
             $ print(tmpname+"_loctrans")
@@ -33,7 +37,7 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
                     call fs_talk(True) from _call_fs_talk
         if nk_school_assignment_evening:
             if 18 <= int(current_time[:2]) < 20:
-                call evening_event_label(True)
+                call evening_event_label(True) from _call_evening_event_label_1
 
         if char and imgname:
             show expression "images/characters/[char]/body/standing/[imgname].webp" as character: # at fs_standing_ahead_ani with dissolve:
@@ -773,9 +777,9 @@ label tv_games_evening(tvg_called=False,trans=False):
             $ addtime(2)
         menu:
             "You decide to see if there is anything else you can do today":
-                call change_loc(current_location)
+                call change_loc(current_location) from _call_change_loc_79
             "You're feeling kinda exhausted, and decide to just go to bed":
-                call end_of_day(True)
+                call end_of_day(True) from _call_end_of_day_10
 
 label beach_loc(br_called=False,br_cfs=False):
     if br_called or br_cfs:

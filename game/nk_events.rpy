@@ -62,7 +62,7 @@ label nk_talk(event=False,callrand=False):
                     $ nk_day_date += 6
                 $ renpy.hide_screen('phone')
                 $ call_nk_event = False
-                call change_loc(current_location)
+                call change_loc(current_location) from _call_change_loc_78
         elif nktr < .5 and day_week <= 4 and not shitty_morning:
             show nk_standing ahead with dissolve
             nk ahead "Hi [fp]! Wanna walk to school with me?"

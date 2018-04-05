@@ -68,6 +68,13 @@ label start:
     ## intro - this is shown only once, when starting the game from the beginning
     $ fpinput = (renpy.input("First, we'll need to know your name (default, Marten):") or "Marten").strip()
 
+    $ dinner = [ # food, reply, comeback, modifier, stat, weight-mod
+                ["I just made mac n' cheese today","Okay, "+fmName.informal+", I like mac n' cheese","Well, that's good",1,"fm_rel",.5],
+                ["I made pizza - ham, cheese and tomato","Aw, no pepperoni?","No pepperoni today, "+fpinput+"",1,"fm_rel",.35],
+                ["I made steak","Oh, neat, I love steak","I know, "+fpinput+"",2,"fm_rel",.5],
+                ["I went vegetarian today","Oh...","You will try it before you go all mopey!",-1,"fm_rel",.25]
+            ]
+
     if p.skipintro:
         menu:
             "View intro":
@@ -76,7 +83,7 @@ label start:
                 jump skippedintro
     label viewintro:
         fp "{i}Hi! I'm [fp], and this is the story of what happens this summer. Did that come out a little stilted? I felt that it did. Oh, well, I'm not that well versed in being a narrator. Hence, I will mostly conduct this in a first-person perspective - you know, \"Hi, I'm [fp] and you're about to be taken for a wild ride!\" That sound good? {b}GREAT!{/b}{/i}"
-        fp "{i}Now, where were we? Oh, right. Yeah. This summer. You know, the one you're gonna be playing through? So much have happened, I don't even really know where to start. Hmm... Maybe May? Or... no, I think we'll have to go all the way back to April, actually. You see, I was attending my last high-school semester. Grinding away, trying to get my grades up that last bit, all the while trying not to become a total geek.{/i}"
+        fp "{i}Now, where were we? Oh, right. Yeah. This summer. You know, the one you're gonna be playing through? So much has happened, I don't even really know where to start. Hmm... Maybe May? Or... no, I think we'll have to go all the way back to April, actually. You see, I was attending my last high-school semester. Grinding away, trying to get my grades up that last bit, all the while trying not to become a total geek.{/i}"
         fp "{i}Sorta failing, but I wasn't too worried. I had plans, both for the summer after end of high school, and for the year after. Oh, I was gonna go to college, of course, but I was planning on taking some time off before that, and take a cross-country trip. I'd been working on my bike for over a year, and now it was just a little bit left to do, before I could put on the very last, finishing touches. And, when it got done, I'd be taking it, and myself across the country.{/i}"
         fp "{i}I was planning on starting more or less were I've grown up, on the East coast, and just drive - visiting as many states, online friends and aquaintances, landmarks and interesting spots I could possibly manage over the 3-4 months I was planning to spend. That was basically what was on my mind those last couple months of high school. \"What to do AFTER high school\". I completely failed to take into account what would happen BEFORE I finished...{/i}"
         fp "{i}So, there we are. April 1st, a Saturday, if I'm not mistaken. I'd just woken up, and was on my way downstairs to the kitchen when I heard noises coming from [fsName.formal]'s room. Usually I wouldn't care, but those sounds sounded... muffled. Like she was trying to keep it down, but failing. And I was curious what the hell she was doing. So, I walked up to her door, thinking I would just try to listen in, see if I could figure out what was going on.{/i}"
@@ -111,7 +118,7 @@ label start:
                 $ set_hint("You chose to skip the intro - which means that one of the images in the photo-gallery is not gonna be available to you")
         if p.maininfo:
             call screen maininfo()
-        fp "So. Quick recap: I woke up on April 1st, tried to somewhat remotely function and seem awake, and figure out what to with the day. Then, a little later, shellshocked, and trying to figure out how to get the image of my naked [fsName.role] off my mind, I decided spending the day working on my bike would be as good a way as any..."
+        fp "So. Quick recap: I woke up on April 1st, tried to somewhat remotely function and seem awake, and figure out what to with my day. Then, a little later, shellshocked, and trying to figure out how to get the image of my naked [fsName.role] off my mind, I decided spending the day working on my bike would be as good a way as any..."
         $ skip_breakfast = True
         $ resolved = breakfast_nice_att = breakfast_nice_mod = breakfast_mean_att1 = breakfast_mean_att2 = breakfast_mean_mod1 = breakfaste_mean_mod2 = False
         $ breakfast_food = False
@@ -287,7 +294,9 @@ label start:
                                     $ mc_p = min((float(mc_b)/float(mc_b_max))*100,100)
                                     $ mc_p = "{0:.2f}".format(mc_p)
                                     if mc_b == 150:
+                                        $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")
                                         $ mc_f = True
+                                        $ update_mc_achievement(mc_b,mc_f)
                                         call change_loc('garage') from _call_change_loc_72
                                     if mc_t == 0:
                                         $ renpy.notify("You did not improve the status of the bike this time")
@@ -307,7 +316,9 @@ label start:
                                     $ mc_p = min((float(mc_b)/float(mc_b_max))*100,100)
                                     $ mc_p = "{0:.2f}".format(mc_p)
                                     if mc_b == 150:
+                                        $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")
                                         $ mc_f = True
+                                        $ update_mc_achievement(mc_b,mc_f)
                                         call change_loc('garage') from _call_change_loc_73
                                     if mc_t == 0:
                                         $ renpy.notify("You did not improve the status of the bike this time")

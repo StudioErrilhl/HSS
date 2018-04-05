@@ -81,6 +81,11 @@ init python:
                 for achievement in self.next_tier:
                     achievement.unhide()
 
+    def update_mc_achievement(mc_b=None,mc_f=False):
+        if mc_b is not None:
+            if mc_b == 150 and mc_f:
+                achievement_mc_finished.update()
+
     def update_panties_achievements():
         if panties_sniffer:
             achievement_fs_panties_sniffer.update()

@@ -572,7 +572,9 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
 
                 add "gui/menu_phone_overlay.webp" at ModZoom(.8):
                     # xpos -340
-                    ypos -119
+                    # ypos -122
+                    yoffset -128
+                    xoffset 1
                     if int(current_time[:2]) not in night:
                         alpha 0.0
                     else:
@@ -1425,7 +1427,10 @@ screen location(room=False):
     if room == "livingroom":
         if not backpack.has_item(carkeys_item) and int(current_time[:2]) > 15:
             imagebutton auto "images/inventory/carkeys_%s.webp" focus_mask True action [SetVariable('carkeys_added',True),SetVariable('lvr_cfs',True),Jump('livingroom_loc')] at ModZoom(.6):
-                yalign .9
+                if bad_weather:
+                    yalign .78
+                else:
+                    yalign .9
                 xalign .65
         $ exitright_event_var = "kit_cfs"
         $ exitright_event = "kitchen_loc"

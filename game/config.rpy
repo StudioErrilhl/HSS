@@ -31,7 +31,7 @@ init -10 python:
 define config.quit_action = [Show('phone'),SetVariable('show_icons',False),Show('custom_confirm',None,'quit')]
 if config.developer:
     if renpy.windows:
-        define config.screenshot_pattern = "D:\Dropbox\RenPy-games\Screenshots\HSS-screenshot%04d.webp"
+        define config.screenshot_pattern = "D:\Dropbox\RenPy-games\Screenshots\HSS-screenshot%04d.png"
 if not config.developer:
     define config.console = False
 
@@ -505,12 +505,7 @@ default breakfast_mean_list = [
 ]
 
 default dinner_weights = [(0,3),(1,2),(2,5),(3,1)]
-default dinner = [ # food, reply, comeback, modifier, stat, weight-mod
-            ["I just made mac n' cheese today","Okay, "+fmName.informal+", I like mac n' cheese","Well, that's good",1,"fm_rel",.5],
-            ["I made pizza - ham, cheese and tomato","Aw, no pepperoni?","No pepperoni today, "+fpinput+"",1,"fm_rel",.35],
-            ["I made steak","Oh, neat, I love steak","I know, "+fpinput+"",2,"fm_rel",.5],
-            ["I went vegetarian today","Oh...","You will try it before you go all mopey!",-1,"fm_rel",.25]
-        ]
+
 default images_unlocked = []
 
 default home_events = [
