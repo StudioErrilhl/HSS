@@ -538,19 +538,8 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 else:
                     alpha 0.5
 
-    if backpack.has_item(wallet_item):
-        vbox:
-            xpos 1520
-            xsize 200
-            ysize 100
-            ypos 20
-            text "$ [fp_money]":
-                size 40
-                yalign .5
-                xalign 1.0
-
     frame: ## phone-menu
-        xpos 1730
+        xpos 1720
         ypos 15
         xpadding 0
         ypadding 0
@@ -676,6 +665,25 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 alpha 0.0
             else:
                 alpha 0.5
+
+
+        if backpack.has_item(wallet_item):
+            vbox:
+                xsize 100
+                ysize 30
+                ypos 30
+                if p.cheat:
+                    textbutton "$ [fp_money]" action SetVariable('fp_money',int(math.floor(getattr(store,"fp_money")+100))):
+                        text_size 20
+                        yalign .5
+                        xalign .5
+                        text_color "#fff"
+                else:
+                    text "$ [fp_money]":
+                        size 20
+                        yalign .5
+                        xalign .5
+
 
     if GetTooltip() is not None:
         frame:

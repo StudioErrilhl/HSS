@@ -5,7 +5,7 @@ label beach_scene(trans=True):
     if int(current_time[:2]) in night:
         scene beach_night with Dissolve(.25)
     else:
-        scene beach_morning with Dissolve(.25)
+        scene beach morning with Dissolve(.25)
     return
 
 label entrance_scene(trans=True):

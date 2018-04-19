@@ -52,6 +52,20 @@ init 1:
         myinformal "my housemate"
         yourinformal "your housemate"
 
+init python:
+    import os
+    def define_images(imageFolder, excludeFolders=0):
+        for path in renpy.list_files():
+            if path.startswith(imageFolder):
+                path_list = ("/".join(path.split())).split("/")
+                path_list[-1] = os.path.splitext(path_list[-1])[0]
+                path_list = tuple(path_list[excludeFolders:])
+                renpy.image(path_list, path)
+                print(path_list)
+
+
+    define_images('test')
+
 label start:
     $ updateInventory()
     $ conditions = Conditions() ## enables the conditions-parameter used for assigning conditions to disable / enable choice-items
@@ -76,8 +90,12 @@ label start:
             ]
 
     if p.skipintro:
+        $ this_is_a_test = False
         menu:
-            "View intro":
+            "View intro" if not this_is_a_test:
+                $ this_is_a_test = True
+                jump viewintro
+            "View intro again" if this_is_a_test:
                 jump viewintro
             "Skip intro":
                 jump skippedintro
