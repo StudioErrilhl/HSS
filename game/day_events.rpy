@@ -30,7 +30,7 @@ label day_events():
             $ wsun_called = False
             if sun_event:
                 if renpy.random.random() <= .5:
-                    show fm_standing ahead
+                    show anne with dissolve
                     fm ahead "Could you help me open this, [fp]? I can't seem to get it open, and I need this for dinner today"
                     menu:
                         "Yes, [fmName.informal], no problem. *you open the jar*":
@@ -40,11 +40,11 @@ label day_events():
                             else:
                                 $ statschangenotify("fm_rel",.5)
                         "No, [fmName.informal], I don't have time to help you right now":
-                            show fm_standing mad
+                            show anne angry
                             $ statschangenotify("fm_dom",.5,True)
                             $ statschangenotify("fm_rel",-.5)
                 $ sun_event = False
-                hide fm_standing
+                hide anne
                 call change_loc(current_location) from _call_change_loc_70
 
     label dinner_events(de_called=False):
@@ -52,19 +52,19 @@ label day_events():
             $ de_called = False
             if dinner_event:
                 if fs_mad:
-                    show fm_standing smile with dissolve
+                    show anne smile with dissolve
                     fm smile "Hey [fp]. It's dinnertime soon, do you wanna go see if you can find [fsName.name], and tell her to get ready?"
                     fp "Well... [fsName.name] isn't really speaking to me at the moment..."
-                    show fm_standing ahead
+                    show anne with dissolve
                     fm ahead "Oh? What did you do now?"
                     fp "Why do you just assume I did anything? I'll talk to her, but now might not be the best time... I'll tell her dinner is ready if I see her, okay?"
                     fm ahead "Fine. But you fix this with [fsName.yourformal], okay?"
                     fp "I will, [fmName.informal], I will"
                     $ dinner_event = False
                     $ talk_later = True
-                    hide fm_standing
+                    hide anne
                 elif dinner_food:
-                    show fm_standing smile with dissolve
+                    show anne smile with dissolve
                     fm smile "Hey [fp]. Dinner is ready soon"
                     fp "Nice. What are we having?"
                     fm smile "[dinner_food]"
@@ -74,13 +74,13 @@ label day_events():
                     else:
                         fm ahead "[dinner_comeback]"
                     if dinner_mod > 0:
-                        show fm_standing smile with dissolve
+                        show anne smile with dissolve
                     else:
-                        show fm_standing ahead with dissolve
+                        show anne with dissolve
                     $ statschangenotify(dinner_att,dinner_mod)
                     $ dinner_event = False
                     $ renpy.pause(.25)
-                    hide fm_standing with dissolve
+                    hide anne with dissolve
                     $ addtime(1)
                 call change_loc('kitchen',loctrans=True) from _call_change_loc_45
 
@@ -180,7 +180,7 @@ label day_events():
     # label talk_fs(tfs_called=False):
     #     if tfs_called or tfs_cfs:
     #         $ tfs_called = tfs_cfs = False
-    #         show fs_standing ahead with dissolve
+    #         show jules ahead with dissolve
     #         if not pb_return:
     #             fs ahead "Hey [fp]!"
     #             fp "Hey, [fsName.informal] - what's up?"
@@ -232,7 +232,7 @@ label day_events():
     #                 $ statschangenotify('fs_rel',-1)
     #             else:
     #                 fs "That's actually refreshing. Truth!"
-    #         hide fs_standing with dissolve
+    #         hide jules with dissolve
     #         $ renpy.pause()
     #         return
 

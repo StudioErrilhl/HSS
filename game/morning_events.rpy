@@ -5,7 +5,7 @@ label morning_events():
         $ fpmc_r = renpy.random.random()
         if (fpmc_r < .35 and day_week <= 4 and overslept and int(current_time[:2]) > 7) or (int(current_time[:2]) > 7 and day_week <= 4):
             $ overslept = False
-            show fm_standing mad
+            show anne angry
             fm mad "[fp]! Wake UP!"
             fp "uuuhh..."
             fm mad "[fp]! Get out of bed THIS INSTANT!"
@@ -106,7 +106,7 @@ label morning_events():
                                     "Your outburst startles [fmName.yourshort] - she looks at, you, a bit worried"
                                     fp "I would love to continue this, but I'm gonna be late for school. That shouldn't prevent {b}you{/b} from enjoying yourself, though. Finish up. Then send me a picture when you're done!"
                                     "With that, you leave [fmName.yourshort], half naked, on your bed, and head for the door"
-                                    hide fm_standing
+                                    hide anne
                                     call late_morning() from _call_late_morning
                             "Tell her to get your cock out and start sucking":
                                 $ statschangenotify("fm_dom",1,True)
@@ -136,14 +136,14 @@ label morning_events():
                                 $ statschangenotify("fm_dom",1,True)
                                 $ statschangenotify("fm_cor",1,True)
                                 $ statschangenotify("fm_rel",-5)
-                                hide fm_standing
+                                hide anne
                                 call morning_strip() from _call_morning_strip
                             "{b}I'll be late for school{/b}":
-                                hide fm_standing
+                                hide anne
                                 call late_morning() from _call_late_morning_1
                             "Have your mom drive you to school, and make sure you're not late":
                                 $ statschangenotify("fm_dom",.5)
-                                hide fm_standing
+                                hide anne
                                 call drive_to_school() from _call_drive_to_school
                     elif fm_dom >= 20:
                         fp "Oh, shut it, [fmName.name]. \"Respect\". Don't make me laugh!"
@@ -156,7 +156,7 @@ label morning_events():
                         $ addtime(False,10)
                         "[yourCapsfM] walks out of the room"
                         $ morning_event_done = True
-                        hide fm_standing
+                        hide anne
                         call late_morning() from _call_late_morning_2
 
             label fm_morningchoice_reldom(called=False):
@@ -225,10 +225,10 @@ label morning_events():
                     if debug:
                         "test books on dresser"
                     show books_on_dresser
-            show fm_standing ahead
+            show anne with dissolve
             fm ahead "[fp], time to get out of bed and have some breakfast"
             fp "Sure, [fmName.informal] - I'll be right down"
-            hide fm_standing
+            hide anne
             $ breakfast_jump = True
             call fp_bedroom_loc(True) from _call_fp_bedroom_loc_3
         else:
@@ -340,7 +340,8 @@ label morning_events():
         if bin_called and not had_breakfast:
             $ bin_called = False
             if breakfast_food:
-                show fm_standing ahead
+                show anne at left, ModOffsetX(200)
+                with dissolve
                 if breakfast_food == 'cereal':
                     fm ahead "I poured you some [breakfast_food]. We're sort of out of everything. Need to go shopping"
                     fp "Cereal is fine, [fmName.informal]"
@@ -357,16 +358,16 @@ label morning_events():
                     fp "[breakfast_reply], [fmName.informal]"
                 if resolved == 'nice':
                     $ resolved = False
-                    show fm_standing smile with dissolve
+                    show anne smile with dissolve
                     $ statschangenotify(breakfast_nice_att,breakfast_nice_mod)
                 elif resolved == 'mean':
                     $ resolved = False
-                    show fm_standing mad with dissolve
+                    show anne angry with dissolve
                     $ statschangenotify(breakfast_mean_att1,breakfast_mean_mod1,True)
                     $ statschangenotify(breakfast_mean_att2,breakfast_mean_mod2)
                 $ resolved = breakfast_nice_att = breakfast_nice_mod = breakfast_mean_att1 = breakfast_mean_att2 = breakfast_mean_mod1 = breakfaste_mean_mod2 = False
                 $ had_breakfast = True
-                hide fm_standing with dissolve
+                hide anne with dissolve
             $ addtime(False,30)
             if day_week <= 4:
                 if debug:
@@ -376,9 +377,9 @@ label morning_events():
                         "renpy random more than 5"
                     if not fs_mad:
                         if renpy.random.random() > .5:
-                            show fs_standing ahead flip
+                            show jules ahead flip
                         else:
-                            show fs_standing ahead
+                            show jules ahead
                         fs ahead "Good morning, [fp]"
                         fp "Hi, [fsName.informal]"
                         if renpy.random.random() > .90:
@@ -399,11 +400,11 @@ label morning_events():
                         $ morning_event_done = True
                     else:
                         if renpy.random.random() > .5:
-                            show fs_standing annoyed flip
+                            show jules annoyed flip
                         else:
-                            show fs_standing annoyed
+                            show jules annoyed
                         fp "Hi [fsName.informal]"
-                        show fs_standing mad with dissolve
+                        show jules mad with dissolve
                         fs mad "Fuck off, [fp]"
                         fp "... okay..."
                         $ statschangenotify("fs_rel",-1)
@@ -456,9 +457,9 @@ label morning_events():
                 if renpy.random.random() > .95: #changed from 6
                     if not fs_mad:
                         if renpy.random.random() > .5:
-                            show fs_standing ahead flip
+                            show jules ahead flip
                         else:
-                            show fs_standing ahead:
+                            show jules ahead:
                                 yalign 0.0
                         fs ahead "Good morning, [fp]"
                         fp "Hi, [fsName.informal]"
@@ -485,11 +486,11 @@ label morning_events():
                                 call kitchen_loc(True) from _call_kitchen_loc_1
                     else:
                         if renpy.random.random() > .5:
-                            show fs_standing annoyed flip with dissolve
+                            show jules annoyed flip with dissolve
                         else:
-                            show fs_standing annoyed with dissolve
+                            show jules annoyed with dissolve
                         fp "Hi [fsName.informal]"
-                        show fs_standing mad with dissolve
+                        show jules mad with dissolve
                         fs mad "Fuck off, [fp]"
                         fp "... okay..."
                         $ statschangenotify("fs_rel",-1)

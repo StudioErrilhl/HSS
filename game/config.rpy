@@ -33,7 +33,7 @@ if config.developer:
     if renpy.windows:
         define config.screenshot_pattern = "D:\Dropbox\RenPy-games\Screenshots\HSS-screenshot%04d.png"
 if not config.developer:
-    define config.console = False
+    define config.console = True
 
 define p = persistent
 define config.default_music_volume = .5
@@ -50,6 +50,7 @@ default p.statscreen_infotext = True
 default p.backpack_info = True
 default p.cheat = False
 default p.side_image_zoom = True
+default p.achievement_cheat = False
 # persistent preferences variables
 default p.selectedmenu = False
 default p.displayresolutions = False

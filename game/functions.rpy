@@ -447,6 +447,12 @@ init 10 python:
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+
+    # def closeimage():
+    #     imagebutton auto "gui/imggal_close_%s.webp" focus_mask None action[Hide('phone_gallery_show'),Show('phone_gallery_screen')] at ModZoom(.65):
+    #         xalign 1.0
+
+
     def alarm_setting(hour=False,minute=False):
         if hour:
             if alarmhour < 23:

@@ -40,11 +40,11 @@ label travel_events(event=False):
                                     else:
                                         call school_events('sn_punishment_late') from _call_school_events_2
                 elif not shitty_morning and int(current_time[:2]) <= 7 and renpy.random.random() < .5:
-                    show nk_standing ahead with dissolve
+                    show karen with dissolve
                     nk ahead "Hi [fp]! Wanna walk to school with me?"
                     menu:
                         "Sure, [nk]":
-                            show nk_standing smile with dissolve
+                            show karen smile with dissolve
                             if nk_rel < 15:
                                 $ nkrel = 1
                             else:
@@ -52,12 +52,12 @@ label travel_events(event=False):
                             $ statschangenotify("nk_rel",nkrel)
                             call nk_walk_with(True) from _call_nk_walk_with_1
                         "Nah... I just wanna go by myself today, I got a lot on my mind, need to think a little bit":
-                            show nk_standing annoyed with dissolve
+                            show karen annoyed with dissolve
                             $ renpy.pause(.5)
                             $ walk_to_school = True
                             call travel_events('arrive_school') from _call_travel_events_8
                         "No thanks, [nk]":
-                            show nk_standing mad with dissolve
+                            show karen angry with dissolve
                             if nk_rel < 15:
                                 $ nkrel = -.5
                             else:
@@ -173,7 +173,7 @@ label travel_events(event=False):
 label nk_walk_with(nkww_called=False):
     if nkww_called:
         $ nkww_called = False
-        show nk_standing smile with dissolve
+        show karen smile with dissolve
         "[fp] starts walking with [nk] towards their school, talking about everything and nothing. It's a nice day, and [nk] is, as always, nice to be around"
         if nk_rel > 5:
             fp "So, did you finish the assignment yet?"
@@ -181,23 +181,23 @@ label nk_walk_with(nkww_called=False):
                 nk ahead "Yeah, I did. Wasn't that much work, so I finished it last night. Why?"
                 fp "Well... I was hoping you'd lemme look at your assignment, maybe gimme a few pointers. I'm a bit lost"
                 if nk_rel > 15:
-                    show nk_standing smile_open with dissolve
+                    show karen smile_open with dissolve
                     nk smile_open "Sure. How about I come over after school, and we can look at it together?"
                     fp "That would be awesome, [nk]! Thanks a million"
                     nk devious "Oh, you'll make it up to me... ;)"
                     $ nk_sa_status = ['happy','walk']
                     call travel_events('arrive_school') from _call_travel_events_14
                 else:
-                    show nk_standing annoyed with dissolve
+                    show karen annoyed with dissolve
                     nk annoyed "I don't think so, [fp]. Wouldn't feel right you looking at my work..."
                     "Seems your relationship with [nk] isn't strong enough to ask her for help yet"
                     $ nk_sa_status = ['annoyed','walk']
                     call travel_events('arrive_school') from _call_travel_events_15
             else:
-                show nk_standing sad with dissolve
+                show karen sad with dissolve
                 nk sad "No, I haven't even started yet. There is so much schoolwork, and I'm behind on studying for finals... {i}she trails off, looking a bit troubled{/i}"
                 fp "How about you come over to my house this evening, and we can work on it together?"
-                show nk_standing smile with dissolve
+                show karen smile with dissolve
                 nk smile "Oh, that would be nice. Sure, I can do that. Let's say around seven?"
                 fp "Sure, that works for me. I'll be working on my bike till then"
                 $ statschangenotify("nk_rel",.5)

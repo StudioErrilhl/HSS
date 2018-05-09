@@ -12,6 +12,19 @@ default show_hidden_achievements = False
 
 ### Achievements ###
 
+# if persistent.achivement_cheat = True:
+#     $ achievement_trophy_case.update()
+#     $ achievement_all_the_stuff.update(16)
+#     $ achievement_mc_finished.update()
+#     $ achievement_even_more_wine.update(10)
+#     $ achievement_all_the_wine.update(5)
+#     $ achievement_wine_collector.update()
+#     $ achievement_been_everywhere.update(13)
+#     $ achievement_diverse_panties.update()
+#     $ achievement_fs_panties_5.update(5)
+#     $ achievement_fs_panties_1.update(1)
+#     $ achievement_fs_panties_sniffer.update()
+
 init 10:
     # A special achievement, which takes the place of any achievement when it is hidden
     default achievement_hidden = NewAchievement("???", "This achievement is hidden.\nPlay the game to figure out what it is", 1, 'gui/hidden.webp', register=False)
@@ -32,6 +45,7 @@ init 10:
     default achievement_fs_panties_5 = NewAchievement("Collector","You're building a collection",5,'inventory/fs_bright_pink_panties_idle.webp','lewdness',True)
     default achievement_fs_panties_1 = NewAchievement("The start of a budding\ncollection...", "You're a perv! And you have panties!",1,'inventory/fs_bright_pink_panties_idle.webp','lewdness',True,next_tier=[achievement_fs_panties_5])
     default achievement_fs_panties_sniffer = NewAchievement("Panty sniffer", "You're a perv! And you have panties!",1,'inventory/fs_bright_pink_panties_idle.webp','lewdness',True)
+
 
 init python:
     class NewAchievement(object):

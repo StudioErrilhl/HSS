@@ -7,6 +7,9 @@ style infoscreen_button_text:
     color "#fff"
     hover_color "#0cf"
 
+style statscreen_text:
+    size 18
+
 style tooltip_hover:
     yalign 0.5
     xmaximum 600
@@ -36,7 +39,7 @@ style prefs_button_text:
     color "#555"
     hover_color "#0cf"
     selected_color "#0cf"
-    xalign .5
+    xalign 1.0
 
 style prefs_button:
     xsize 200
@@ -547,16 +550,16 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
         vbox:
             if carry_phone:
                 if not (hints or calls or messages):
-                    imagebutton auto "gui/menu_phone_%s.webp" focus_mask True action Show('phone') at ModZoom(.8):
+                    imagebutton auto "gui/menu_phone_%s.webp" focus_mask True action ToggleScreen('phone') at ModZoom(.8):
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more"
                 elif calls:
-                    imagebutton auto "gui/menu_phone_call_%s.webp" focus_mask True action Show('phone') at ModZoom(.8):
+                    imagebutton auto "gui/menu_phone_call_%s.webp" focus_mask True action ToggleScren('phone') at ModZoom(.8):
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, unanswered calls"
                 elif messages:
-                    imagebutton auto "gui/menu_phone_message_%s.webp" focus_mask True action Show('phone') at ModZoom(.8):
+                    imagebutton auto "gui/menu_phone_message_%s.webp" focus_mask True action ToggleScreen('phone') at ModZoom(.8):
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new messages"
                 elif hints:
-                    imagebutton auto "gui/menu_phone_hint_%s.webp" focus_mask True action Show('phone') at ModZoom(.8):
+                    imagebutton auto "gui/menu_phone_hint_%s.webp" focus_mask True action ToggleScreen('phone') at ModZoom(.8):
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new hints"
 
                 add "gui/menu_phone_overlay.webp" at ModZoom(.8):
@@ -666,7 +669,6 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
             else:
                 alpha 0.5
 
-
         if backpack.has_item(wallet_item):
             vbox:
                 xsize 100
@@ -683,7 +685,6 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                         size 20
                         yalign .5
                         xalign .5
-
 
     if GetTooltip() is not None:
         frame:
@@ -747,6 +748,7 @@ screen stat_screen():
     default clicked = None
     $ keyclose = True
     frame:
+        style_prefix "statscreen"
         xalign .5 ypos .1
         xsize 800
         ysize 800
@@ -2410,8 +2412,10 @@ screen phone_gallery_show():
                     xalign .5
                     yalign .5
                 if imggal_showbuttons:
-                    imagebutton auto "gui/imggal_close_%s.webp" focus_mask None action[Hide('phone_gallery_show'),Show('phone_gallery_screen')] at ModZoom(.65):
+                    imagebutton idle "gui/imggal_close_hover.webp" focus_mask None action[Hide('phone_gallery_show'),Show('phone_gallery_screen')] at ModZoom(.5):
+                        xalign 1.0
                         ypos -30
+                        xoffset 15
                 else:
                     imagebutton idle "gui/imggal_transparent_idle.webp" focus_mask None action NullAction() at ModZoom(.65):
                         ypos -30

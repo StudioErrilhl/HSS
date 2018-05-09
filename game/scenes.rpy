@@ -98,10 +98,16 @@ label fs_bedroom_scene(trans=True):
     return
 
 label fs_intro_scene:
-    if day_week == 0 and current_month == 4:
-        scene fs_intro_scene with Dissolve(.25)
-    else:
-        scene fs_intro_scene with Dissolve(.25)
+    if day_week == 5 and current_month == 3:
+        scene fs_bedroom_morning_intro with Dissolve(.25)
+        show juliette_on_bed_intro with Dissolve(.25):
+            zoom .6
+            xalign .5
+            yalign 1.0
+            xoffset -100
+            yoffset -65
+    # else:
+    #     scene fs_intro_scene with Dissolve(.25)
     return
 
 label garage_scene(trans=True):

@@ -3,8 +3,8 @@ label night_events():
     label end_of_day(end_called=False):
         if end_called or end_cfs:
             $ end_called = end_cfs = False
-            hide fs_standing
-            hide fm_standing
+            hide jules
+            hide anne
             hide nk_standing
             with dissolve
             $ nh = format(int(night[renpy.random.randint(0,(len(night)-1))]),"02d")

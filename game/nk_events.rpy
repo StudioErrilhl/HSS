@@ -19,7 +19,7 @@ label nk_talk(event=False,callrand=False):
                 if text1 or text2:
                     menu:
                         "[text1]" if text1:
-                            $ statschangenotify("nk_rel",1.5)                                    
+                            $ statschangenotify("nk_rel",1.5)
                             $ renpy.pause(.25)
                             call travel_events('arrive_school') from _call_travel_events_1
                         "[text2]" if text2:
@@ -64,11 +64,11 @@ label nk_talk(event=False,callrand=False):
                 $ call_nk_event = False
                 call change_loc(current_location) from _call_change_loc_78
         elif nktr < .5 and day_week <= 4 and not shitty_morning:
-            show nk_standing ahead with dissolve
+            show karen with dissolve
             nk ahead "Hi [fp]! Wanna walk to school with me?"
             menu:
                 "Sure, [nk]":
-                    show nk_standing smile with dissolve
+                    show karen smile with dissolve
                     if nk_rel < 15:
                         $ nkrel = 1
                     else:
@@ -76,11 +76,11 @@ label nk_talk(event=False,callrand=False):
                     $ statschangenotify("nk_rel",nkrel)
                     call nk_walk_with(True) from _call_nk_walk_with
                 "Nah... I just wanna go by myself today, I got a lot on my mind, need to think a little bit":
-                    show nk_standing annoyed with dissolve
+                    show karen annoyed with dissolve
                     $ renpy.pause(.5)
                     call travel_events('arrive_school') from _call_travel_events_3
                 "No thanks, [nk]":
-                    show nk_standing mad with dissolve
+                    show karen angry with dissolve
                     if nk_rel < 15:
                         $ nkrel = -.5
                     else:
