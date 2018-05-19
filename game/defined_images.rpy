@@ -768,7 +768,7 @@ image livingroom_morning_bad_weather_windows:
     "images/backgrounds/livingroom_morning_bad_weather_windows.webp"
 
 image juliette_shower:
-    "images/backgrounds/upper_hallway_bathroom_juliette_shower_bubbles.webp"
+    "images/characters/juliette/scenes/upper_hallway_bathroom_juliette_shower_bubbles.webp"
 
 image juliette_shower_night:
     "images/backgrounds/upper_hallway_bathroom_night_juliette_shower_bubbles.webp"
@@ -826,6 +826,20 @@ image juliette_intro_ani:
     0.4
 
 
+layeredimage marten:
+    pos(.25,1.0)
+    yoffset 180
+    group base auto:
+        attribute regoutfit default
+
+    group head auto:
+        xoffset 195
+        yoffset 32
+        attribute ahead default null
+
+    group eyes if_any "angry" auto variant "closed" prefix "angry"
+    group eyes if_any "ahead" auto variant "closed" prefix "ahead"
+
 layeredimage anne:
     pos(.75, 1.0)
     yoffset 180
@@ -860,6 +874,20 @@ layeredimage karen:
     yoffset 140
     group base auto:
         attribute outside default
+
+    group head auto:
+        xoffset 190
+        yoffset 60
+        attribute ahead default null
+
+    group eyes if_any "angry" auto variant "closed" prefix "angry"
+    group eyes if_any "ahead" auto variant "closed" prefix "ahead"
+
+layeredimage ron:
+    pos (.75,1.0)
+    yoffset 140
+    group base auto:
+        attribute regoutfit default
 
     group head auto:
         xoffset 190

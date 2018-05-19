@@ -341,6 +341,7 @@ label morning_events():
             $ bin_called = False
             if breakfast_food:
                 show anne at left, ModOffsetX(200)
+                show marten angry at right, ModOffsetX(-200)
                 with dissolve
                 if breakfast_food == 'cereal':
                     fm ahead "I poured you some [breakfast_food]. We're sort of out of everything. Need to go shopping"
@@ -356,6 +357,7 @@ label morning_events():
                             $ resolved = 'mean'
                             $ breakfast_reply = breakfast_mean.format(breakfast_food).capitalize()
                     fp "[breakfast_reply], [fmName.informal]"
+                show marten ahead at right, ModOffsetX(-200)
                 if resolved == 'nice':
                     $ resolved = False
                     show anne smile with dissolve

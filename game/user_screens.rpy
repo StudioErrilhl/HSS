@@ -757,10 +757,12 @@ screen stat_screen():
             mousewheel True
             pagekeys True
             ysize 500
+            # scrollbars "vertical"
             vpgrid:
                 cols 6
                 mousewheel True
                 spacing 20
+                scrollbars "vertical"
                 for i in chars:
                     if i[1] == "fp":
                         imagebutton auto "images/characters/marten/marten_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable('setstate',i[1]),SetScreenVariable('stats',i)]:
@@ -1586,7 +1588,7 @@ screen location(room=False):
                 imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.webp" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('occupied_bath',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
             imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.webp" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpshower",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
             if room == 'upper hallway bathroom peek':
-                add "images/backgrounds/upper_hallway_bathroom_juliette_shower_bubbles.webp"
+                add "images/characters/juliette/scenes/upper_hallway_bathroom_juliette_shower_bubbles.webp"
             imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.webp" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpsink",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
             add "images/backgrounds/interactions_item/bathroom_lightswitch_morning_off_idle.webp"
         if wetshower:
@@ -2198,23 +2200,24 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
         xalign .5
         yalign .44
         maximum 370,686
-        $ get_char_name = getattr(store,char)
-        if char in ['fm','fs']:
-            if char == 'fm':
-                $ char_name_lowered = fmName.name
-            else:
-                $ char_name_lowered = fsName.name
+        $ get_char = getattr(store,char)
+        if char == 'fm':
+            # $ char_name_lowered = fmName.name.lower()
+            $ phone_img = "images/characters/"+fmName.name.lower()+"/"+fmName.name.lower()+"_phone_image.webp"
+        elif char == 'fs':
+            $ phone_img = "images/characters/"+fsName.name.lower()+"/"+fsName.name.lower()+"_phone_image.webp"
         else:
-            $ char_name_lowered = get_char_name.name.lower().replace(' ','_')
+            # $ char_name_lowered = get_char_name.name.lower().replace(' ','_')
+            $ phone_img = "images/characters/"+get_char.name.lower()+"/"+get_char.name.lower()+"_phone_image.webp"
         vbox:
             ysize 500
             yalign 0.0
             yoffset 50
-            add "images/characters/[char_name_lowered]/[char_name_lowered]_phone_image.webp":
+            add phone_img:
                 zoom .8
                 xalign .5
                 yalign .5
-            text "[get_char_name]":
+            text "[get_char]":
                 xalign .5
                 text_align .5
                 ypos 20
@@ -3181,6 +3184,30 @@ screen custom_preferences():
                         ypos 100
                         xsize 370
                         textbutton _("Enable") action SetField(persistent,'side_image_zoom',True):
+                            foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            yalign .5
+
+                fixed:
+                    xsize 370
+                    ysize 200
+                    style_prefix "custom_radio"
+                    hbox:
+                        ysize 50
+                        xalign .5
+                        label _("Quick Menu"):
+                            text_color "#fff"
+                    hbox:
+                        ysize 50
+                        ypos 50
+                        xsize 370
+                        textbutton _("Disable") action SetField(persistent,'quick_menu', False):
+                            foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            yalign .5
+                    hbox:
+                        ysize 50
+                        ypos 100
+                        xsize 370
+                        textbutton _("Enable") action SetField(persistent,'quick_menu', True):
                             foreground "gui/button/check_[prefix_]foreground_white.webp"
                             yalign .5
 

@@ -245,7 +245,7 @@ screen quick_menu():
     ## Ensure this appears on top of other screens.
     zorder 100
 
-    if quick_menu:
+    if p.quick_menu:
 
         hbox:
             style_prefix "quick"
@@ -267,8 +267,6 @@ screen quick_menu():
 ## the player has not explicitly hidden the interface.
 init python:
     config.overlay_screens.append("quick_menu")
-
-default quick_menu = False
 
 style quick_button is default
 style quick_button_text is button_text

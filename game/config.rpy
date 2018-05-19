@@ -62,6 +62,8 @@ default p.skipunseen = False
 default p.skipafterchoices = False
 default p.skiptransitions = False
 
+default p.quick_menu = False
+
 # character definitions
 define narrator = Character(None, what_italic=True)
 define unk_f = Character('Unknown female',who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])

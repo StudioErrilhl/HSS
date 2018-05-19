@@ -21,7 +21,7 @@ label splashscreen:
         $ renpy.block_rollback()
         $ renpy.pause(4)
         hide screen disclaimer
-        show text "{size=30}{color=#ffffff}Code / story by Studio Errilhl\nCharacter art by DivineChihaya{/color}{/size}"
+        show text "{size=30}{color=#ffffff}Code / story / art by Studio Errilhl{/color}{/size}"
         $ renpy.block_rollback()
         $ renpy.pause(4)
         $ p.splash_screen = True

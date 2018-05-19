@@ -547,7 +547,7 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                     if not uhl_bathroom_ach:
                         $ uhl_bathroom_ach = True
                         $ update_been_everywhere_achievement()
-                    $ images_unlocked.append('DCIM00002_portrait.webp')
+                    $ images_unlocked.append('DCIM00004_portrait.webp')
                     call change_loc('upper hallway bathroom peek',sec_call='peek_scene_happening') from _call_change_loc_17
                     label peek_scene_happening(True):
                         fp "{i}Oh {b}SHIT{/b}! That is definitely something worth getting thwapped for! But... maybe I should get the hell outta here before I get caught!{/i}"
