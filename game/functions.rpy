@@ -413,40 +413,6 @@ init 10 python:
                         inv_list.append(file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.webp','').replace('fs_','').replace('_',' '))
         return inv_list
 
-    # if day_week <= 4:
-    #     $ morning = True if int(current_time[:2]) >= 6 and int(current_time[:2]) < 9 else False
-    #     $ day = True if int(current_time[:2]) >= 9 and int(current_time[:2]) <= 17 else False
-    #     $ evening = True if int(current_time[:2]) > 17 and int(current_time[:2]) < 22 else False
-    #     $ night = True if int(current_time[:2]) >= 22 or int(current_time[:2]) >= 0 and int(current_time[:2]) < 6 else False
-    # elif day_week >= 5:
-    #     $ morning = True if int(current_time[:2]) >= 7 and int(current_time[:2]) <= 12 else False
-    #     $ day = True if int(current_time[:2]) > 12 and int(current_time[:2]) <= 19 else False
-    #     $ evening = True if int(current_time[:2]) > 19 and int(current_time[:2]) <= 23 else False
-    #     $ night = True if int(current_time[:2]) >= 0 and int(current_time[:2]) < 7 else False
-    # return
-
-# Copyright 2017  Anne O'Nymous - AON/SC4X
-#
-#  Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are met:
-#
-# 1. Redistributions of source code must retain the above copyright notice, this
-#   list of conditions and the following disclaimer.
-# 2. Redistributions in binary form must reproduce the above copyright notice,
-#   this list of conditions and the following disclaimer in the documentation
-#   and/or other materials provided with the distribution.
-#
-#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 
     # def closeimage():
     #     imagebutton auto "gui/imggal_close_%s.webp" focus_mask None action[Hide('phone_gallery_show'),Show('phone_gallery_screen')] at ModZoom(.65):
@@ -465,8 +431,42 @@ init 10 python:
             else:
                 setattr(store, 'alarmminute', 0)
 
+    def randomize_appstorelists():
+        random.shuffle(playstore_recommended)
+        random.shuffle(playstore_games)
+        random.shuffle(playstore_apps)
+
+# def searchmemory(usersearchlist, usersearchitem):
+#     if (usersearchlist in lists and usersearchitem in lists[usersearchlist]):
+#         return lists[usersearchlist].index(usersearchitem)
+#     else:
+#         return -1
+
+
+    def realtime_search(searchterm=False,listname=False):
+        if searchterm and listname:
+            returnlist = []
+            for li in listname:
+                currentlist = eval(str(li))
+                result = [[l.lower().find(searchterm) >= 0 for l in thisList] for thisList in currentlist]
+                indices = [i for i, s in enumerate(result) if True in s]
+                if indices:
+                    for c in indices:
+                        if currentlist[c] not in returnlist:
+                            returnlist.append(currentlist[c])
+            if returnlist:
+                return returnlist
+            else:
+                return False
+
+
+
     def hide_phone_screens():
         renpy.hide_screen('phonescreen')
+        renpy.hide_screen('warning_screen')
+
+    def hide_tablet_screens():
+        renpy.hide_screen('tabletscreen')
         renpy.hide_screen('warning_screen')
 
     def read_hint(hint=False):
@@ -539,11 +539,46 @@ init 10 python:
             else:
                 disabled_messages.remove(message)
 
-    def set_message(char=False,charobj=False,message=False):
+    def set_message(char=False,charobj=False,message=False,image=False):
         global messages,read_messages,default_messages
         if message:
             # if message not in messages+read_messages+disabled_messages:
             messages.append((char,charobj,message))
+
+
+    # if day_week <= 4:
+    #     $ morning = True if int(current_time[:2]) >= 6 and int(current_time[:2]) < 9 else False
+    #     $ day = True if int(current_time[:2]) >= 9 and int(current_time[:2]) <= 17 else False
+    #     $ evening = True if int(current_time[:2]) > 17 and int(current_time[:2]) < 22 else False
+    #     $ night = True if int(current_time[:2]) >= 22 or int(current_time[:2]) >= 0 and int(current_time[:2]) < 6 else False
+    # elif day_week >= 5:
+    #     $ morning = True if int(current_time[:2]) >= 7 and int(current_time[:2]) <= 12 else False
+    #     $ day = True if int(current_time[:2]) > 12 and int(current_time[:2]) <= 19 else False
+    #     $ evening = True if int(current_time[:2]) > 19 and int(current_time[:2]) <= 23 else False
+    #     $ night = True if int(current_time[:2]) >= 0 and int(current_time[:2]) < 7 else False
+    # return
+
+# Copyright 2017  Anne O'Nymous - AON/SC4X
+#
+#  Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+# 1. Redistributions of source code must retain the above copyright notice, this
+#   list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 init python hide:
     notice = """
@@ -553,14 +588,12 @@ init python hide:
     """
 
 python early:
-
     #  In version previous to 6.99.13, lex.require can generate a crash if the
     # file is in UTF. Prefer the following line (lex.match) unless you use
     # Ren'py 6.99.13 or further. Note that it's always one or the other, never
     # both.
     def dynamicNamesParse( lex ):
         vName = lex.require( lex.word )
-#        lex.require(":")
         if lex.match(":") is None: lex.error( "':' expected." )
         lex.expect_eol()
         kwargs = {}
@@ -599,7 +632,6 @@ python early:
             if not aName in self._alls: return "I FORGET TO SET THIS"
             aValue = ""
             for atom in self._alls[aName]: aValue += atom() if callable( atom ) else atom
-            # return aValue if ord( aName[:1] ) >= 97 else aValue[:1].upper() + aValue[1:]
             if ord(aName[:1]) >= 97:
                 return aValue
             elif (65 < ord(aName[:1]) < 90) and (65 < ord(aName[-1:]) < 90):

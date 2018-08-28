@@ -1,20 +1,22 @@
-label splashscreen:
+﻿label splashscreen:
     scene black
     $ renpy.pause(1)
-    show text "{size=60}{color=#ffffff}Studio Errilhl Presents ... {/color}{/size}" with dissolve
+    # show text "{size=60}{color=#ffffff}Studio Errilhl Presents ... {/color}{/size}" with dissolve
+    show image "gui/studioerrilhl_logo.webp" with dissolve
     $ renpy.pause(2)
-    hide text with dissolve
+    # hide text with dissolve
+    hide image "gui/studioerrilhl_logo.webp" with dissolve
     $ renpy.block_rollback()
-    if not p.splash_screen:
+    if not persistent.splash_screen:
         show image "gui/hss-logo.webp" with dissolve:
             xalign .5 yalign .5
         $ renpy.pause(2)
         hide image "gui/hss-logo.webp" with dissolve
         $ renpy.pause(.75)
-        if not p.accepted_splashscreen:
+        if not persistent.accepted_splashscreen:
             call screen confirm_age()
             $ renpy.block_rollback()
-        $ p.accepted_splashscreen = True
+        $ persistent.accepted_splashscreen = True
         call screen splash_info()
         $ renpy.block_rollback()
         show screen disclaimer()
@@ -24,7 +26,7 @@ label splashscreen:
         show text "{size=30}{color=#ffffff}Code / story / art by Studio Errilhl{/color}{/size}"
         $ renpy.block_rollback()
         $ renpy.pause(4)
-        $ p.splash_screen = True
+        $ persistent.splash_screen = True
         $ renpy.block_rollback()
     return
 
@@ -33,8 +35,12 @@ label after_load:
     return
 
 init 1:
+    defineDynamicName gameName:
+        name "HSS"
+        shortname "HSS"
     defineDynamicName fmName:
         name "Anne"
+        shortname "Anne"
         informal "Anne"
         formal "Anne"
         role "landlady"
@@ -42,8 +48,10 @@ init 1:
         yourformal "your landlady"
         myinformal "my landlady"
         yourinformal "your landlady"
+        relation "extended \"family\""
     defineDynamicName fsName:
         name "Juliette"
+        shortname "Jules"
         informal "Jules"
         formal "Juliette"
         role "housemate"
@@ -51,6 +59,7 @@ init 1:
         yourformal "your housemate"
         myinformal "my housemate"
         yourinformal "your housemate"
+        relation "extended \"family\""
 
 init python:
     import os
@@ -89,7 +98,7 @@ label start:
                 ["I went vegetarian today","Oh...","You will try it before you go all mopey!",-1,"fm_rel",.25]
             ]
 
-    if p.skipintro:
+    if persistent.skipintro:
         $ this_is_a_test = False
         menu:
             "View intro" if not this_is_a_test:
@@ -104,35 +113,34 @@ label start:
         fp "{i}Now, where were we? Oh, right. Yeah. This summer. You know, the one you're gonna be playing through? So much has happened, I don't even really know where to start. Hmm... Maybe May? Or... no, I think we'll have to go all the way back to April, actually. You see, I was attending my last high-school semester. Grinding away, trying to get my grades up that last bit, all the while trying not to become a total geek.{/i}"
         fp "{i}Sorta failing, but I wasn't too worried. I had plans, both for the summer after end of high school, and for the year after. Oh, I was gonna go to college, of course, but I was planning on taking some time off before that, and take a cross-country trip. I'd been working on my bike for over a year, and now it was just a little bit left to do, before I could put on the very last, finishing touches. And, when it got done, I'd be taking it, and myself across the country.{/i}"
         fp "{i}I was planning on starting more or less were I've grown up, on the East coast, and just drive - visiting as many states, online friends and aquaintances, landmarks and interesting spots I could possibly manage over the 3-4 months I was planning to spend. That was basically what was on my mind those last couple months of high school. \"What to do AFTER high school\". I completely failed to take into account what would happen BEFORE I finished...{/i}"
-        call change_loc('upper hallway',sec_call='intro_hallway')
+        call change_loc('upstairs topofstairs',sec_call='intro_hallway') from _call_change_loc_80
         label intro_hallway(intro_cont=False):
         fp "{i}So, there we are. April 1st, a Saturday, if I'm not mistaken. I'd just woken up, and was on my way downstairs to the kitchen when I heard noises coming from [fsName.formal]'s room. Usually I wouldn't care, but those sounds sounded... muffled. Like she was trying to keep it down, but failing. And I was curious what the hell she was doing. So, I walked up to her door, thinking I would just try to listen in, see if I could figure out what was going on.{/i}"
         fp "{i}Unfortunately, spying has never been my strong suit, and the door wasn't closed all the way... so when I leaned against it, I suddenly found myself tumbling into her room. Not very elegantly, mind. Quite ungracefully, in fact. But... that wasn't what was on my mind AT ALL.{/i}"
-        call fs_intro_scene
+        call fs_intro_scene from _call_fs_intro_scene
+        play sound "sounds/medium_camera_shutter.mp3"
         $ images_unlocked.append('DCIM00001_portrait.webp')
         fp "{i}[fsName.Myformal]'s room has the bed opposed the door. So right in front of my prone body, on her bed... well, half off her bed, was [fsName.informal], naked from the waist down, with most of her right hand buried between her legs, which, mind you, was spread quite wide over the edge of the bed. I couldn't really have had a better viewpoint even if I was sitting right in front of a porn-shoot.{/i}"
         fp "{i}Didn't last long, though. About 5 seconds after me landing on her bedroom floor, I got hit with something hard!{/i}"
-        call upper_hallway_scene
+        call upstairs_scene
+        play sound "sounds/medium_camera_shutter.mp3"
         $ images_unlocked.append('DCIM00002_portrait.webp')
         show juliette_intro
         with dissolve
         fp "{i}Then the shouting began, and 10 seconds after that, I was out in the hallway again, with a furious, but still very half-naked [fsName.role] yelling at me. I'm still amazed that [fmName.informal] didn't show up... THAT would've been embarassing, for both of us... mostly for me.{/i}"
         hide juliette_intro
         show juliette_intro_ani
-        pause(3.5)
+        pause(1.5)
+        play sound "sounds/medium_camera_shutter.mp3"
         $ images_unlocked.append('DCIM00003_portrait.webp')
         hide juliette_intro_ani
         with dissolve
         fp "{i}Thankfully, [fsName.informal] realised what she was doing (partly because I had a raging boner in my boxer's, I guess) - turned on her heel, and went into her room again - this time locking the door.{/i}"
-        # hide juliette_mad_pantless
-        # hide juliette_reflection
-        # with dissolve
-        # with dissolve
         call upper_hallway_bathroom_scene from _call_upper_hallway_bathroom_scene
         fp "{i}Me... I went to the bathroom and jerked off. Yes, I know she's [fsName.myformal], and all that, but DAMN. She's HOT!{/i}"
         fp "{i}Okay... that might have been a bit TMI. I'm sorry. I just wanted you to understand what happened. And how that sort of led to... other things that happened as well. During that summer. You know... spring. Summer. End of high-school. The time I had all planned out. The plans that really didn't happen. Like... at all.{/i}"
         "So... the coming days, weeks and months, you'll be trying to pass your exams, finish your bike, getting some action, and generally being a high school senior going on freedom!"
-        $ p.skipintro = True
+        $ persistent.skipintro = True
         $ fs_mad = True
 
     label skippedintro():
@@ -141,7 +149,7 @@ label start:
         if 'DCIM00001_portrait.webp' not in images_unlocked:
             if "You chose to skip the intro - which means that a couple of the images in the photo-gallery is not gonna be available to you" not in hints+read_hints+disabled_hints:
                 $ set_hint("You chose to skip the intro - which means that a couple of the images in the photo-gallery is not gonna be available to you")
-        if p.maininfo:
+        if persistent.maininfo:
             call screen maininfo()
         fp "So. Quick recap: I woke up on April 1st, tried to somewhat remotely function and seem awake, and figure out what to with my day. Then, a little later, shellshocked, and trying to figure out how to get the image of my naked [fsName.role] off my mind, I decided spending the day working on my bike would be as good a way as any..."
         $ skip_breakfast = True
@@ -171,6 +179,18 @@ label start:
         $ tmp_filth_val = False
         if nc_action_started and nc_action_started < 8:
             $ nc_action_started += 1
+        if hacker_6:
+            if check_nc_event_status == 0:
+                $ nc_event = 'nc_meet_hacker'
+                $ check_nc_event_status = 1
+            elif check_nc_event_status == 1:
+                $ hacker_6 = False
+                $ hacker_event_not_happen = True
+        if hacker_event_not_happen:
+            $ hacker_event_not_happen = False
+            $ nc_event = False
+            $ set_message('unk',unk,"You stay away from "+str(nc)+"! You forget about the issues at the school. You basically make yourself scarce. Else, I'll hurt both you and her")
+            #$ set_message('???',???,"","image_file")
 
         $ call_nk = True if nk_rel > 20 else False
         $ call_nk_event = 'nk_date' if call_nk and not nk_mad else False

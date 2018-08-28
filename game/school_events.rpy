@@ -7,7 +7,7 @@ label school_events(event=False):
                 $ current_time = "15:05"
                 call school_hacker_talk(True) from _call_school_hacker_talk
             "After school, you decide to just trek back home. No plans for today, and not that much interesting happening in town anyway"
-            call change_loc('livingroom',sec_call='evening_home') from _call_change_loc_54
+            call change_loc('outside',sec_call='evening_home') from _call_change_loc_54
 
         if event == 'sn_punishment_late':
             $ addtime(False,25)

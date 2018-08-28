@@ -12,7 +12,7 @@
 ##
 ## The _() surrounding the string marks it as eligible for translation.
 
-define config.name = _("High School Shenaningans")
+define config.name = _("HSS")
 
 
 ## Determines if the title given above is shown on the main menu screen. Set
@@ -29,7 +29,7 @@ define config.version = "0.026-(Alpha)"
 ## Text that is placed on the game's about screen. To insert a blank line
 ## between paragraphs, write \n\n.
 
-define gui.about = _("{b}HSS (or HighSchool Shenanigans){/b} is an adult-themed visual novel, with a non-linear story, plenty of sexy content, and an actual story as well. You're playing as <player> (pick your name, or default to Marten), an 18 year old boy who's finishing high school, and is mildly anxious about his exams, the lack of a girlfriend, noone to take to the after-graduation party, and how to get his motorcycle rebuilt properly. Add to this an abundance of hot girls in his vicinity, and you got most of the plot right there. At least on the surface... and if you only knew what opportunities you have... right at your feet.\n\nThe game is about discovering those opportunities, figuring out the real story, and realising what you can do, not to mention {i}who{/i} you can do!")
+define gui.about = _("{b}HSS{/b} is an adult-themed visual novel, with a non-linear story, plenty of sexy content, and an actual story as well. You're playing as <player> (pick your name, or default to Marten), an 18 year old boy who's finishing high school, and is mildly anxious about his exams, the lack of a girlfriend, noone to take to the after-graduation party, and how to get his motorcycle rebuilt properly. Add to this an abundance of hot girls in his vicinity, and you got most of the plot right there. At least on the surface... and if you only knew what opportunities you have... right at your feet.\n\nThe game is about discovering those opportunities, figuring out the real story, and realising what you can do, not to mention {i}who{/i} you can do!")
 
 define gui.about_2_head = _("{b}Disclaimer!{/b}")
 

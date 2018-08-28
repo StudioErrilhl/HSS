@@ -8,7 +8,7 @@ style infoscreen_button_text:
     hover_color "#0cf"
 
 style statscreen_text:
-    size 18
+    size 20
 
 style tooltip_hover:
     yalign 0.5
@@ -249,6 +249,7 @@ screen main_menu():
             hotspot (44, 650, 381, 110)
             hotspot (44, 760, 356, 110) action ShowMenu("help")
             hotspot (44, 870, 324, 110) action Quit(confirm=not main_menu)
+
 
     style_prefix "main_menu"
 
@@ -539,7 +540,7 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 if int(current_time[:2]) not in night:
                     alpha 0.0
                 else:
-                    alpha 0.5
+                    alpha 0.0
 
     frame: ## phone-menu
         xpos 1720
@@ -674,7 +675,7 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 xsize 100
                 ysize 30
                 ypos 30
-                if p.cheat:
+                if persistent.cheat:
                     textbutton "$ [fp_money]" action SetVariable('fp_money',int(math.floor(getattr(store,"fp_money")+100))):
                         text_size 20
                         yalign .5
@@ -718,10 +719,10 @@ style about_text is gui_text
 style about_label_text:
     size gui.label_text_size
 
-screen splash():
-    timer 2.0 action Hide("splash",dissolve)
-    add "#555"
-    text "Errilhl Studios Presents..." size 60 color "#fff" yalign .5 xalign .5
+# screen splash():
+#     timer 2.0 action Hide("splash",dissolve)
+#     add "#555"
+#     text "Errilhl Studios Presents..." size 60 color "#fff" yalign .5 xalign .5
 
 screen statscreen_infotext():
     modal True
@@ -733,7 +734,7 @@ screen statscreen_infotext():
         yalign .5
         xalign .5
         text "The statscreen consists of thumbnails for each character. When hovering over an image, it will display the stats for that character. The stats change over time, so you might wanna keep an eye on them. If you click on a character image, the stats for that character will show permanently and revert back to that character if you hover over another character."
-        if p.cheat:
+        if persistent.cheat:
             text "If you have enabled the cheat-mode, this will allow you to manipulate stats."
         imagebutton auto "gui/closebutton_%s.webp" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),SetField(persistent,'statscreen_infotext',False),Hide("statscreen_infotext")]
         if keyclose:
@@ -741,7 +742,7 @@ screen statscreen_infotext():
 
 screen stat_screen():
     modal True
-    if p.statscreen_infotext:
+    if persistent.statscreen_infotext:
         on "show" action Show('statscreen_infotext')
     zorder 800
     default stats = None
@@ -756,7 +757,7 @@ screen stat_screen():
         viewport:
             mousewheel True
             pagekeys True
-            ysize 500
+            ysize 650
             # scrollbars "vertical"
             vpgrid:
                 cols 6
@@ -767,30 +768,40 @@ screen stat_screen():
                     if i[1] == "fp":
                         imagebutton auto "images/characters/marten/marten_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable('setstate',i[1]),SetScreenVariable('stats',i)]:
                             hovered SetScreenVariable('stats',i)
+                            if clicked:
+                                selected clicked[1] == 'fp'
                             if not setstate == i[1]:
                                 unhovered SetScreenVariable('stats',clicked)
                         text "[i[0]]" ypos 35
                     elif i[1] == "fs":
                         imagebutton auto "images/characters/juliette/juliette_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
                             hovered SetScreenVariable("stats",i)
+                            if clicked:
+                                selected clicked[1] == 'fs'
                             if not setstate == i[1]:
                                 unhovered SetScreenVariable("stats",clicked)
                         text "[i[0]]" ypos 35
                     elif i[1] == "fm":
                         imagebutton auto "images/characters/anne/anne_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
                             hovered SetScreenVariable("stats",i)
+                            if clicked:
+                                selected clicked[1] == 'fm'
                             if not setstate == i[1]:
                                 unhovered SetScreenVariable("stats",clicked)
                         text "[i[0]]" ypos 35
                     elif i[1] == "nk":
                         imagebutton auto "images/characters/karen/karen_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
                             hovered SetScreenVariable("stats",i)
+                            if clicked:
+                                selected clicked[1] == 'nk'
                             if not setstate == i[1]:
                                 unhovered SetScreenVariable("stats",clicked)
                         text "[i[0]]" ypos 35
                     elif i[1] == "nr":
                         imagebutton auto "images/characters/ron/ron_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable('setstate',i[1]),SetScreenVariable('stats',i)]:
                             hovered SetScreenVariable('stats',i)
+                            if clicked:
+                                selected clicked[1] == 'nr'
                             if not setstate == i[1]:
                                 unhovered SetScreenVariable('stats',clicked)
                         text "[i[0]]" ypos 35
@@ -810,7 +821,7 @@ screen stat_screen():
         if stats:
             vbox:
                 xalign .5
-                yalign .8
+                yalign 1.0
                 text "{b}[stats[0]]'s stats{/b}"
                 $ mc_p = (float(mc_b)/float(mc_b_max))*100
                 $ mc_p = "{0:.2f}".format(mc_p)
@@ -831,7 +842,7 @@ screen stat_screen():
                             text "Dom:"
                             text "["+stats[1]+"_dom]":
                                 xpos 10
-                        if p.cheat:
+                        if persistent.cheat:
                             imagebutton auto "gui/minusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_dom",math.floor(getattr(store,stats[1]+"_dom")-1)):
                                 ypos 5
                                 xpos 40
@@ -844,7 +855,7 @@ screen stat_screen():
                             text "Rel:"
                             text "["+stats[1]+"_rel]":
                                 xpos 20
-                        if p.cheat:
+                        if persistent.cheat:
                             imagebutton auto "gui/minusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")-1)):
                                 ypos 5
                                 xpos 40
@@ -857,7 +868,7 @@ screen stat_screen():
                             text "Aro:"
                             text "["+stats[1]+"_aro]":
                                 xpos 20
-                        if p.cheat:
+                        if persistent.cheat:
                             imagebutton auto "gui/minusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")-1)):
                                 ypos 5
                                 xpos 40
@@ -1271,12 +1282,12 @@ screen say(who, what):
         if not renpy.variant("small"):
             if who is not None:
                 if who.upper() == fpinput.upper():
-                    if p.side_image_zoom:
+                    if persistent.side_image_zoom:
                         add SideImage() xalign 1.0 yalign 1.0 at easeIn(.5)
                     else:
                         add SideImage() xalign 1.0 yalign 1.0
                 else:
-                    if p.side_image_zoom:
+                    if persistent.side_image_zoom:
                         add SideImage() xalign .5 xpos 250 yalign 1.0 at easeIn(.5)
                     else:
                         add SideImage() xalign .5 xpos 250 yalign 1.0
@@ -1349,7 +1360,7 @@ screen location(room=False):
                 tooltip 'Kitchen'
             imagebutton auto ("images/backgrounds/interactions_move/livingroom_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/livingroom_door_morning_%s.webp") focus_mask True action [SetVariable('lvr_cfs',True),Jump('livingroom_loc')]:
                 tooltip "Livingroom"
-            imagebutton auto ("images/backgrounds/interactions_move/stairs_up_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_up_morning_%s.webp") focus_mask True action [SetVariable('uhl_cfs',True),Jump('upper_hallway_loc')]:
+            imagebutton auto ("images/backgrounds/interactions_move/stairs_up_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_up_morning_%s.webp") focus_mask True action [SetVariable('uts_cfs',True),Jump('upstairs_topofstairs_loc')]:
                 tooltip "Bedrooms / Bathroom"
             imagebutton auto ("images/backgrounds/interactions_move/stairs_basement_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_basement_morning_%s.webp") focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]:
                 tooltip "Downstairs / Garage"
@@ -1381,6 +1392,20 @@ screen location(room=False):
                 $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_morning_wallet_%s.webp"
             imagebutton auto walletimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('wallet_added',True),Jump('fp_bedroom_loc')]
 
+        if fp_sofa_aquired:
+            imagebutton idle "images/backgrounds/interactions_item/fp_bedroom_morning_sofaitem.webp" focus_mask True action NullAction()
+
+        if wallart['ferrari']:
+            imagebutton idle "images/backgrounds/interactions_item/wallart_ferrari.webp" focus_mask True action NullAction()
+        if wallart['parkinglot']:
+            imagebutton idle "images/backgrounds/interactions_item/wallart_parkinglot.webp" focus_mask True action NullAction()
+        if wallart['roadtrip']:
+            imagebutton idle "images/backgrounds/interactions_item/wallart_roadtrip.webp" focus_mask True action NullAction()
+        if wallart['sincity']:
+            imagebutton idle "images/backgrounds/interactions_item/wallart_sincity.webp" focus_mask True action NullAction()
+        if wallart['peekaboo']:
+            imagebutton idle "images/backgrounds/interactions_item/wallart_peekaboo.webp" focus_mask True action NullAction()
+
         if not carry_phone:
             if int(current_time[:2]) in night:
                 $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_%s.webp"
@@ -1390,9 +1415,15 @@ screen location(room=False):
                 $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_morning_phone_%s.webp"
             imagebutton auto phoneimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-            $ exitdown_event_var = "uhl_cfs"
-            $ exitdown_event = "upper_hallway_loc"
-            $ exitdown = "Upper hallway"
+            # $ exitdown_event_var = "uts_cfs"
+            # $ exitdown_event = "upper_hallway_loc"
+            # $ exitdown = "Upper hallway"
+            imagebutton auto ("images/backgrounds/interactions_move/fp_bedroom_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/fp_bedroom_door_morning_%s.webp") focus_mask True action [SetVariable('ups_cfs',True),Call('upstairs_loc')]:
+                tooltip "Upper Hallway"
+
+            # imagebutton auto ("images/backgrounds/interactions_move/front_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/front_door_morning_%s.webp") focus_mask True action [SetVariable('trans',True),SetVariable('out_cfs',True),Jump('outside_loc')]:
+            #     tooltip "Go outside"
+
 
     if room == "fs bedroom":
         if find_panties:
@@ -1403,8 +1434,8 @@ screen location(room=False):
             if not backpack.has_item(princessplug_item):
                 imagebutton auto ("images/backgrounds/interactions_item/pink_buttplug_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/pink_buttplug_morning_%s.webp") focus_mask True action [SetVariable('find_pb',False),SetVariable('pb_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-            $ exitdown_event_var = "uhl_cfs"
-            $ exitdown_event = "upper_hallway_loc"
+            $ exitdown_event_var = "uts_cfs"
+            $ exitdown_event = "upstairs_topofstairs_loc"
             $ exitdown = "Upper hallway"
 
     if room == "garage":
@@ -1558,19 +1589,46 @@ screen location(room=False):
             $ exitdown_event = 'outside_loc'
             $ exitdown = "Outside"
 
-    if room == "upper hallway":
-            imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_fp_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fp_door_morning_%s.webp") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]:
-                tooltip "Enter your room"
+    if room == "upstairs":
+        #imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_fp_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fp_door_morning_%s.webp") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]:
+         #   tooltip "Enter your room"
+        if fs_rel >= 30 or fs_invitation:
+            imagebutton auto ("images/backgrounds/interactions_move/upstairs_fs_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upstairs_fs_door_morning_%s.webp") focus_mask True action [SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]:
+                tooltip "Enter [fsName.yourformal]'s room"
+        else:
+            imagebutton idle ("images/backgrounds/interactions_move/upstairs_fs_door_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upstairs_fs_door_morning_idle.webp") focus_mask True action NullAction():
+                tooltip "You need a relationship of 30+ with [fsName.yourformal], or an invitation, to enter her room"
+        imagebutton auto ("images/backgrounds/interactions_move/upstairs_bathroom_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upstairs_bathroom_door_morning_%s.webp") focus_mask True action [Call('upper_hallway_bathroom_loc',uhlbcfs=True)]:
+            tooltip "Enter bathroom"
+        imagebutton auto ("images/backgrounds/interactions_move/upstairs_stairs_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upstairs_stairs_morning_%s.webp") focus_mask True action Jump('entrance_loc'):
+            tooltip "Downstairs"
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+            # $ exitdown_event_var = "uts_cfs"
+            # $ exitdown_event = "upstairs_endofhallway_loc"
+            # $ exitdown = "Endofhallway room"
+            $ exitright_event_var = "uhl_fpb_cfs"
+            $ exitright_event = "fp_bedroom_loc"
+            $ exitright = "Enter your room"
+
+    if room == "upstairs topofstairs":
+        imagebutton auto ("images/backgrounds/interactions_move/upstairs_topofstairs_bathroom_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upstairs_topofstairs_bathroom_door_morning_%s.webp") focus_mask True action [Call('upper_hallway_bathroom_loc',uhlbcfs=True)]:
+            tooltip 'Enter bathroom'
+        imagebutton auto ("images/backgrounds/interactions_move/upstairs_topofstairs_fp_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upstairs_topofstairs_fp_door_morning_%s.webp") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Call('fp_bedroom_loc')]:
+            tooltip "Enter your room"
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+        # $ exitdown_event_var = "uts_cfs"
+            # $ exitdown_event = "upstairs_endofhallway_loc"
+            # $ exitdown = "Endofhallway room"
             if fs_rel >= 30 or fs_invitation:
-                imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_fs_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fs_door_morning_%s.webp") focus_mask True action [SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]:
-                    tooltip "Enter [fsName.yourformal]'s room"
+                $ exitleft_event_var = "uhl_fsb_cfs"
+                $ exitleft_event = "fs_bedroom_loc"
+                $ exitleft = "Enter [fsName.yourformal]'s room"
             else:
-                imagebutton idle ("images/backgrounds/interactions_move/upper_hallway_fs_door_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_fs_door_morning_idle.webp") focus_mask True action NullAction():
-                    tooltip "You need a relationship of 30+ with [fsName.yourformal], or an invitation, to enter her room"
-            imagebutton auto ("images/backgrounds/interactions_move/upper_hallway_bathroom_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/upper_hallway_bathroom_morning_%s.webp") focus_mask True action [Call('upper_hallway_bathroom_loc',uhlbcfs=True)]:
-                tooltip "Enter bathroom"
-            imagebutton auto ("images/backgrounds/interactions_move/stairs_down_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/stairs_down_morning_%s.webp") focus_mask True action Jump('entrance_loc'):
-                tooltip "Downstairs"
+                $ exitleft_event_var = "uhl_fsb_cfs"
+                $ exitleft_event = "fs_bedroom_loc"
+                $ exitleft = "You need a relationship of 30+ with [fsName.yourformal], or an invite, to enter her room"
+            $ exitdown_event = "entrance_loc"
+            $ exitdown = "Downstairs"
 
     if room == "upper hallway bathroom" or room == "upper hallway bathroom peek":
         if int(current_time[:2]) >= 6 and int(current_time[:2]) <= 14 and not backpack.has_item(small_keys_item) and keys_mentioned:
@@ -1594,8 +1652,8 @@ screen location(room=False):
         if wetshower:
             add "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_wet_glass.webp"
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-            $ exitdown_event_var = "uhl_cfs"
-            $ exitdown_event = "upper_hallway_loc"
+            $ exitdown_event_var = "uts_cfs"
+            $ exitdown_event = "upstairs_topofstairs_loc"
             $ exitdown = "Upper hallway"
 
     if exitdown:
@@ -1608,9 +1666,9 @@ screen location(room=False):
                     yalign 1.0
                     tooltip exitdown
                     if required_shower:
-                        action [SetVariable('occupied_bath',False),SetVariable('bathroom_occupied_fm',False),SetVariable('bathroom_occupied_fs',False),SetVariable('required_shower',True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+                        action [SetVariable('leave_lock',False),SetVariable('fp_bath_lock',False),SetVariable('occupied_bath',False),SetVariable('bathroom_occupied_fm',False),SetVariable('bathroom_occupied_fs',False),SetVariable('required_shower',True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
                     else:
-                        action [SetVariable('occupied_bath',randomchoice),SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',returnbfp),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]
+                        action [SetVariable('leave_lock',False),SetVariable('fp_bath_lock',False),SetVariable('occupied_bath',randomchoice),SetVariable('fpshower',False),SetVariable('bathroom_panties_added',False),SetVariable('bathroom_find_panties',returnbfp),SetVariable(exitdown_event_var,True),Jump(exitdown_event)]
             elif current_location == 'beach_loc':
                 imagebutton auto "gui/exit_down_%s.webp" focus_mask True action [SetVariable(exitdown_event_var,True),Function(addtime,1,30),Jump('outside_loc')]:
                     xalign .5
@@ -1657,6 +1715,11 @@ screen location(room=False):
         if exitleft_event_var:
             if current_location == 'kitchen_loc' and wine_added:
                 imagebutton auto "gui/exit_left_%s.webp" focus_mask True action [SetVariable('wine_added',False),SetVariable(exitleft_event_var,True),Jump(exitleft_event)]:
+                    xalign 0.0
+                    yalign .5
+                    tooltip exitleft
+            elif current_location == 'upstairs_topofstairs_loc' and fs_rel <= 30:
+                imagebutton auto "gui/exit_left_%s.webp" focus_mask True action NullAction():
                     xalign 0.0
                     yalign .5
                     tooltip exitleft
@@ -1715,7 +1778,7 @@ screen phone():
         xval = 1.0 if x > config.screen_width/2 else .0
         yval = 1.0 if y > config.screen_height/2 else .0
 
-    if p.phone_firstshow:
+    if persistent.phone_firstshow:
         on 'show' action [SetVariable('show_icons',False),Show('phone_info_screen')]
     $ keyclose = True
     fixed:
@@ -1765,7 +1828,10 @@ screen phone():
                         tooltip "Read your messages"
                     imagebutton auto "gui/phone_button_alarm_clock_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_alarm')] at ModZoom(.9):
                         tooltip "Set the alarm"
-                        xoffset -110
+                        xoffset -48
+                    imagebutton auto "gui/phone_button_playstore_%s.webp" focus_mask True action [SetVariable('show_icons',False),Function(randomize_appstorelists),Show('phone_playstore')] at ModZoom(.9):
+                        tooltip "Go to the PlayStore"
+                        xoffset -96
 
 
         hbox:
@@ -1834,6 +1900,291 @@ screen phone_hint_screen(hintselect='new'):
     if keyclose:
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
 
+screen phone_playstore():
+    tag phonescreen
+    modal True
+    zorder 800
+    default x = 500
+    default y = 400
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
+    $ keyclose = True
+    fixed:
+        maximum 370,710
+        xalign .5
+        yalign .525
+        add "gui/phone_background_playstore.webp" at ModZoom(.85):
+            yalign .5
+            xalign .5
+
+        if not playstore_search_saved.strip() and not playstore_search.strip():
+            use phone_playstore_main_icons
+        elif playstore_search.strip(): # and not playstore_search_saved.strip():
+            $ tempsearch = playstore_search.strip() #.lower() #.strip()
+            $ realtimesearchresult = realtime_search(tempsearch,[playstore_recommended,playstore_games,playstore_apps]) #,playstore_apps)
+            vbox:
+                xalign .5
+                yalign .23
+                spacing -140
+                vbox:
+                    add "gui/phone_background_playstore_icons.webp" at ModZoom(.85)
+                    vbox:
+                        xsize 330
+                        xalign .5
+                        xoffset 7
+                        text "{b}Search results{/b}":
+                            xalign 0.0
+                            text_align 0.0
+                            yalign 0.0
+                            yoffset -165
+                            size 16
+                            color "#222"
+                    if realtimesearchresult:
+                        vpgrid:
+                            xsize 330
+                            ysize 140
+                            scrollbars None
+                            mousewheel True
+                            draggable True
+                            rows 1
+                            yoffset -165
+                            xoffset 65
+                            for r in realtimesearchresult:
+                                $ loadval = r
+                                hbox:
+                                    button:
+                                        hover_background "#EEE"
+                                        padding 0,0
+                                        vbox:
+                                            xsize 110
+                                            add "gui/appicon_"+r[2]+".webp" at ModZoom(.70):
+                                                xalign .5
+                                            text "{b}"+r[0]+"{/b}\n by "+r[1]:
+                                                xalign .5
+                                                text_align .5
+                                                size 12
+                                                color "#222"
+                                        action [SetVariable('keyclose',False),SetVariable('appselect',loadval),Hide('phone_playstore'),Show('phone_playstore_apppage')]
+                    else:
+                        vpgrid:
+                            xsize 330
+                            ysize 140
+                            scrollbars None
+                            mousewheel True
+                            draggable True
+                            rows 1
+                            yoffset -165
+                            xoffset 65
+                            hbox:
+                                text "nothing was found":
+                                    color "#F00"
+                                    yoffset 50
+                                timer 2.0 action [SetVariable('playstore_search','  '),Hide('phone_playstore'),Hide('phone_playstore_apppage'),Show('phone_playstore')]
+
+        vbox:
+            xalign .5
+            yalign 0.0
+            yoffset 24
+            xsize 350
+            ysize 35
+            add Solid("#FFF")
+            text "Enter search":
+                xalign 0.05
+                yalign 0.0
+                yoffset -26
+                size 17
+                color "#777"
+            input default "0" length 20 value VariableInputValue('playstore_search'):
+                xalign 1.0
+                yalign 0.0
+                yoffset -46
+                size 17
+            key "K_RETURN" action [SetVariable('playstore_search',playstore_search)]
+
+    use phone_overlay
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"
+
+    if keyclose:
+        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
+
+screen phone_playstore_main_icons():
+    tag phonescreen
+    zorder 960
+    modal True
+    default categories = ['Games','Recommended','Apps']
+    fixed:
+        maximum 380,710
+        xalign .5
+        yalign .5
+        vbox:
+            xalign .5
+            yalign .5
+            yoffset 90
+            spacing -140
+
+            for i in categories:
+                vbox:
+                    add "gui/phone_background_playstore_icons.webp" at ModZoom(.85)
+                    vbox:
+                        xsize 330
+                        # ysize 20
+                        xalign .5
+                        xoffset 7
+                        text "{b}"+i+"{/b}":
+                            xalign 0.0
+                            text_align 0.0
+                            yalign 0.0
+                            yoffset -165
+                            size 16
+                            color "#222"
+                    if i.lower() == 'recommended':
+                        $ currentlist = playstore_recommended
+                        $ listname = 'recommended'
+                    elif i.lower() == 'games':
+                        $ currentlist = playstore_games
+                        $ listname = 'games'
+                    elif i.lower() == 'apps':
+                        $ currentlist = playstore_apps
+                        $ listname = 'apps'
+                    vpgrid:
+                        xsize 330
+                        ysize 140
+                        scrollbars None
+                        mousewheel True
+                        draggable True
+                        rows 1
+                        yoffset -165
+                        xoffset 65
+                        for r in currentlist:
+                            $ loadval = r
+                            hbox:
+                                button:
+                                    hover_background "#EEE"
+                                    padding 0,0
+                                    vbox:
+                                        xsize 110
+                                        add "gui/appicon_"+r[2]+".webp" at ModZoom(.70):
+                                            xalign .5
+                                        text "{b}"+r[0]+"{/b}\n by "+r[1]:
+                                            xalign .5
+                                            text_align .5
+                                            size 12
+                                            color "#222"
+                                    action [SetVariable('keyclose',False),SetVariable('appselect',loadval),Hide('phone_playstore'),Show('phone_playstore_apppage')]
+
+screen phone_playstore_apppage():
+    tag phonescreen
+    modal True
+    zorder 800
+    default x = 500
+    default y = 400
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
+    $ keyclose = True
+    fixed:
+        maximum 370,710
+        xalign .5
+        yalign .525
+        add "gui/phone_background_playstore.webp" at ModZoom(.85):
+            yalign .5
+            xalign .5
+        add "gui/phone_background_apppage.webp" at ModZoom(.85):
+            yalign .475
+            xalign .5
+        vbox:
+            yoffset 85
+            xalign .5
+            vbox:
+                ysize 40
+                yalign .5
+                xalign .5
+                text "{b}"+appselect[0]+"{/b}":
+                    yalign 1.0
+                    xalign .5
+                    text_align .5
+                    color "#333"
+                    size 30
+            vbox:
+                ysize 60
+                yalign .5
+                xalign .5
+                text "by\n"+appselect[1]:
+                    yalign .35
+                    xalign .5
+                    text_align .5
+                    color "#333"
+                    size 18
+            vbox:
+                yalign .5
+                xalign .5
+                ysize 240
+                add "gui/appicon_"+appselect[2]+".webp" at ModZoom(1.5):
+                    xalign .5
+                    yalign .5
+            text appselect[3]:
+                yalign .5
+                xalign .5
+                xsize 310
+                ysize 150
+                color "#333"
+                size 18
+                justify True
+                layout "subtitle"
+            if appselect[4]:
+                vbox:
+                    yalign 1.0
+                    xalign .5
+                    yoffset 15
+                    if 'itch' in appselect[4]:
+                        imagebutton:
+                            xalign .5
+                            idle "gui/itch_idle.webp"
+                            hover "gui/itch_hover.webp"
+                            at ModZoom(.80)
+                            action OpenURL(appselect[4])
+                            tooltip "Opens the Itch.io link in your browser"
+                    elif 'patreon' in appselect[4]:
+                        imagebutton:
+                            xalign .5
+                            idle "gui/patreon_idle.webp"
+                            hover "gui/patreon_hover.webp"
+                            at ModZoom(.80)
+                            action OpenURL(appselect[4])
+                            tooltip "Opens the Patreon link in your browser"
+                    else:
+                        textbutton appselect[4]:
+                            xalign .5
+                            action OpenURL(appselect[4])
+                            tooltip "Opens the link in your browser"
+
+        vbox:
+            xalign .5
+            yalign 0.0
+            yoffset 24
+            xsize 350
+            ysize 35
+            imagebutton idle "gui/back_arrow.webp" at ModZoom(.5):
+                tooltip "Back to applist"
+                action [SetVariable('playstore_search','  '),Hide('phone_playstore_apppage'),Show('phone_playstore')]
+
+    use phone_overlay
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"
+
+    if keyclose:
+        key "K_ESCAPE" action [SetVariable('keyclose',False),Hide('phone_playstore_apppage'),Show('phone_playstore')]
+
 screen phone_text_screen():
     tag phonescreen
     modal True
@@ -1851,12 +2202,10 @@ screen phone_text_screen():
     fixed:
         maximum 370,686
         xalign .5
-        yalign .5
-        vbox:
-            xalign .5
+        yalign .525
+        add "gui/phone_background_contacts.webp" at ModZoom(.85):
             yalign .5
-            yoffset 20
-            add "gui/phone_background_contacts.webp" at ModZoom(.85)
+            xalign .5
 
         frame:
             background None
@@ -1871,7 +2220,7 @@ screen phone_text_screen():
                 ysize 20
                 xsize 370
                 yalign 0.0
-                yoffset -20
+                yoffset -30
                 text "{b}All Messages{/b}":
                     text_align .5
                     xalign .5
@@ -1904,6 +2253,9 @@ screen phone_text_screen():
                                 elif k == 'nr':
                                     $ charimg = "images/characters/ron/ron_idle.webp"
                                     $ charimg_hover = "images/characters/ron/ron_hover.webp"
+                                elif k == 'nc':
+                                    $ charimg = "images/characters/catherina/catherina_idle.webp"
+                                    $ charimg_hover = "images/characters/chatherina/catherina_hover.webp"
                                 else:
                                     $ charimg = "gui/question_mark_idle.webp"
                                     $ charimg_hover = "gui/question_mark_hover.webp"
@@ -2028,6 +2380,9 @@ screen show_text_msg(compchar=False,char=False):
                             elif k == 'nr':
                                 $ charimg = "images/characters/ron/ron_idle.webp"
                                 $ charimg_hover = "images/characters/ron/ron_hover.webp"
+                            elif k == 'nc':
+                                $ charimg = "images/characters/catherina/catherina_idle.webp"
+                                $ charimg_hover = "images/characters/chatherina/catherina_hover.webp"
                             else:
                                 $ charimg = "gui/question_mark_idle.webp"
                                 $ charimg_hover = "gui/question_mark_hover.webp"
@@ -2043,6 +2398,10 @@ screen show_text_msg(compchar=False,char=False):
                                         action [Function(read_message,k,b,v),Function(set_hint,"You've gotten the info from "+nr.name+". Maybe you should try calling "+nc.name+""),Hide('show_text_msg'),Show('phone_text_screen')]
                                 else:
                                     action [Function(read_message,k,b,v),Hide('show_text_msg'),Show('phone_text_screen')]
+
+                        if nc_message_after_hacker:
+                            if k == 'nc':
+                                $ print('test')
 
     use phone_overlay
     if GetTooltip() is not None:
@@ -2067,12 +2426,10 @@ screen phone_call_screen():
     fixed:
         maximum 370,686
         xalign .5
-        yalign .5
-        vbox:
-            xalign .5
+        yalign .525
+        add "gui/phone_background_contacts.webp" at ModZoom(.85):
             yalign .5
-            yoffset 20
-            add "gui/phone_background_contacts.webp" at ModZoom(.85)
+            xalign .5
         frame:
             background None
             xpadding 0
@@ -2086,7 +2443,7 @@ screen phone_call_screen():
                 ysize 20
                 xsize 370
                 yalign 0.0
-                yoffset -20
+                yoffset -30
                 text "{b}All Contacts{/b}":
                     text_align .5
                     xalign .5
@@ -2117,6 +2474,9 @@ screen phone_call_screen():
                             elif i[1] == 'nr':
                                 $ charimg = "images/characters/ron/ron_idle.webp"
                                 $ charimg_hover = "images/characters/ron/ron_hover.webp"
+                            elif i[1] == 'nc':
+                                $ charimg = "images/characters/catherina/catherina_idle.webp"
+                                $ charimg_hover = "images/characters/catherina/catherina_hover.webp"
                             else:
                                 $ charimg = "gui/question_mark_idle.webp"
                                 $ charimg_hover = "gui/question_mark_hover.webp"
@@ -2457,7 +2817,7 @@ screen phone_info_screen():
     tag phonescreen
     zorder 950
     $ keyclose = True
-    if p.phone_firstshow:
+    if persistent.phone_firstshow:
         hbox:
             imagebutton:
                 idle "gui/phone_white_power_hover.webp"
@@ -2592,6 +2952,13 @@ screen phone_info_screen():
                                     textbutton "Alarm Clock" action [Hide('phone_info_screen'),Show('phone_alarm')]:
                                         text_size 22
                                         yalign .5
+                                hbox:
+                                    xpos .2
+                                    imagebutton auto "gui/phone_button_playstore_%s.webp" focus_mask True action [Hide('phone_info_screen'),Show('phone_playstore')] at ModZoom(.6):
+                                        yalign .5
+                                    textbutton "PlayStore" action [Hide('phone_info_screen'),Show('phone_playstore')]:
+                                        text_size 22
+                                        yalign .5
                                 vbox:
                                     ypos 10
                                     text "\nand more as the game is being developed.\n\nYou close the phone by pressing the power button on the right side of the phone, or by clicking the home-button when on the main screen. If there is an app / screen showing on the phone, the home button takes you back to the main screen. You can also use \"ESC\" to close screens, and the phone itself, if you're on the home-screen. Right-clicking on the home-button / long-pressing (if on touch-screen) (at any time) will close the phone\n\n"
@@ -2645,7 +3012,7 @@ screen phone_alarm(pa_chosen=False):
                     text_hover_color "#000"
                     text_size 24
                     xalign .5
-                    action [Function(renpy.notify,"Alarm is set to "+usehour+":"+useminute+""),SetVariable('alarmclock_time',""+usehour+":"+useminute+""),SetVariable('alarmclock',True)]
+                    action [Function(renpy.notify,"Alarm is set to "+usehour+":"+useminute+""),SetVariable('alarmclock_time',""+usehour+":"+useminute+""),SetVariable('alarmclock_icon',True),SetVariable('alarmclock',True)]
         vbox:
             xalign .5
             yalign .5
@@ -2657,7 +3024,7 @@ screen phone_alarm(pa_chosen=False):
                 text_hover_color "#000"
                 text_size 18
                 xalign .5
-                action [Function(renpy.notify,"Alarm is turned off"),SetVariable('alarmclock_time',"00:00"),SetVariable('alarmclock',False)]
+                action [Function(renpy.notify,"Alarm is turned off"),SetVariable('alarmclock_time',"00:00"),SetVariable('alarmhour',0),SetVariable('alarmminute',0),SetVariable('alarmclock_icon',False),SetVariable('alarmclock',False)]
 
 screen custom_confirm(cc_chosen=False):
     tag phonescreen
@@ -3308,7 +3675,11 @@ screen phone_overlay():
                 font "gui/fonts/texgyreheroes_regular.otf"
                 size 18
                 color "#000"
-
+    hbox:
+        if alarmclock_icon:
+            add "gui/phone_alarmclock_icon.webp" at ModZoom(.48)
+            xalign .556
+            yalign .179
     frame:
         background None
         xalign .5
@@ -3329,7 +3700,10 @@ screen phone_overlay():
                 imagebutton auto "gui/phone_white_home_%s.webp" focus_mask True:
                     at ModZoom(.85)
                     alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-                    if renpy.get_screen('phonescreen'):
+                    if renpy.get_screen('phone_playstore_apppage'):
+                        action [SetVariable('keyclose',False),Hide('phone_playstore_apppage'),Show('phone_playstore')]
+                        tooltip "Go back to the store"
+                    elif renpy.get_screen('phonescreen'):
                         action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)]
                         tooltip "Go back to the home-screen"
                     else:
@@ -3358,6 +3732,8 @@ screen phone_overlay():
             key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone_text_screen')]
         else:
             key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens)]
+    elif keyclose and renpy.get_screen('phone_playstore_apppage'):
+        key "K_ESCAPE" action [SetVariable('keyclose',False),Hide('phone_playstore_apppage'),Show('phone_playstore')]
     else:
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
 
@@ -3488,6 +3864,12 @@ screen fs_tablet():
     modal True
     zorder 800
     $ keyclose = True
+    default x = 500
+    default y = 400
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
     fixed:
         fit_first True
         xmaximum 600
@@ -3500,19 +3882,24 @@ screen fs_tablet():
             yalign .5
             xalign .5
             add "gui/tablet.webp" at ModZoom(.85)
+        add "gui/tablet_background.webp" at ModZoom(.85)
         hbox: #backgrounds
             yalign .5
             xalign .5
-            if len(ic_num) == 4:
+            text str(len(ic_num))
+            if (len(ic_num) == 4):
                 $ ic_num_str = ''.join(map(str, ic_num))
                 if int(ic_num_str) == tablet_stored_code:
                     $ tablet_code = True
                     $ ic_num = []
-                    add "gui/tablet_no_content_warning.webp" at ModZoom(.85)
+                    imagebutton auto "gui/phone_button_gallery_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('tablet_gallery_screen')] at ModZoom(.9):
+                        tooltip "Open the image gallery"
                 else:
                     $ ic_num = []
             elif tablet_code:
-                add "gui/tablet_background.webp" at ModZoom(.85)
+                imagebutton auto "gui/phone_button_gallery_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('tablet_gallery_screen')] at ModZoom(.9):
+                    tooltip "Open the image gallery"
+
         hbox:
             xalign .5
             yalign .5
@@ -3561,9 +3948,233 @@ screen fs_tablet():
                         hotspot (464, 839, 71, 33) action [SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()]:
                             sensitive True
 
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"
+
+screen tablet_gallery_screen():
+    tag tabletscreen
+    zorder 950
+    $ keyclose = True
+    frame:
+        background None
+        xpadding 0
+        top_padding 40
+        bottom_padding 10
+        xalign .5
+        yalign .44
+        maximum 370,686
+        $ pgsxp = 0
+        $ pgsyp = 0
+        $ pgs = 0
+        viewport:
+            mousewheel True
+            pagekeys True
+            vbox:
+                for file in renpy.list_files():
+                    if file.startswith('images/tablet_gallery/') and file.endswith('.webp'):
+                        $ name = file.replace('images/tablet_gallery/','')
+                        if name in images_unlocked:
+                            imagebutton idle Transform(file,maxsize=(215,215)):
+                                xpos pgsxp
+                                if not 'portrait' in name:
+                                    ypos pgsyp +50
+                                else:
+                                    ypos pgsyp
+                                action [SetVariable('current_file',file),SetVariable('show_icons',False),Hide('tablet_gallery_screen'),Show('tablet_gallery_show')]
+                        else:
+                            imagebutton idle Transform(file,maxsize=(215,215),alpha=.2):
+                                xpos pgsxp
+                                if not 'portrait' in name:
+                                    ypos pgsyp +50
+                                else:
+                                    ypos pgsyp
+                                # action [SetVariable('current_file',file),SetVariable('show_icons',False),Hide('tablet_gallery_screen'),Show('tablet_gallery_show')]
+                                action NullAction()
+                        if 'portrait' in name:
+                            $ pgsxp += 125
+                        else:
+                            $ pgsxp += 215
+                        if not 'portrait' in name:
+                            $ pgsyp -= 115
+                        else:
+                            $ pgsyp -= 215
+                        if 'portrait' in name:
+                            $ pgs += 1
+                        else:
+                            $ pgs += 2
+                        if pgs >= 3:
+                            $ pgs = 0
+                            $ pgsxp = 0
+                            $ pgsyp += 220
+                if keyclose:
+                    key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_tablet_icons',True),Function(hide_tablet_screens),Show('fs_tablet')]
+
+screen tablet_gallery_show():
+    tag phonescreen
+    zorder 950
+    default x = 500
+    default y = 400
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
+    $ keyclose = True
+    frame:
+        style_prefix "infoscreen"
+        background None
+        xpadding 0
+        top_padding 60
+        bottom_padding 10
+        xalign .5
+        yalign .44
+        maximum 370,686
+        if current_file:
+            $ filename = current_file
+            button:
+                add filename at Transform(maxsize=(410,700)):
+                    xalign .5
+                    yalign .5
+                if imggal_showbuttons:
+                    imagebutton idle "gui/imggal_close_hover.webp" focus_mask None action[Hide('tablet_gallery_show'),Show('tablet_gallery_screen')] at ModZoom(.5):
+                        xalign 1.0
+                        ypos -30
+                        xoffset 15
+                else:
+                    imagebutton idle "gui/imggal_transparent_idle.webp" focus_mask None action NullAction() at ModZoom(.65):
+                        ypos -30
+                action [Show('fullscreen_image',None,filename)]
+            if imggal_showbuttons:
+                key "K_h" action SetVariable('imggal_showbuttons',False)
+            else:
+                key "K_h" action SetVariable('imggal_showbuttons',True)
+    hbox:
+        imagebutton auto "gui/tablet_white_power_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_tablet_screens),Hide('fs_tablet')] at ModZoom(.85):
+            tooltip "Shut off the tablet"
+        xalign .5
+        yalign .5
+        if keyclose:
+            key "K_ESCAPE" action [SetVariable('keyclose',False),Function(hide_tablet_screens),Show('fs_tablet'),Show('tablet_gallery_screen')]
+    hbox:
+        if battery_text != 0 and not renpy.get_screen('say') and not renpy.get_screen('choice'):
+            imagebutton auto "gui/tablet_white_home_%s.webp" focus_mask True action [SetVariable('keyclose',False),Function(hide_tablet_screens),Show('tablet_gallery_show')] at ModZoom(.85):
+                tooltip "Go back to the home-screen"
+                alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_tablet_screens),Hide('fs_tablet')]
+            xalign .5
+            yalign .5
+    hbox:
+        add "gui/tablet_white.webp" at ModZoom(.85)
+        xalign .5
+        yalign .5
+
+    use tablet_overlay
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"
+
+
+
+screen tablet_overlay():
+    # default ic_num_str = 0
+    # modal True
+    zorder 800
+    $ keyclose = True
+    default x = 500
+    default y = 400
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
+    fixed:
+        # fit_first True
+        # xmaximum 600
+        # ymaximum 800
+        # xalign .5
+        # yalign .5
+        # if len(ic_num) == 4:
+        #     $ ic_num_str = ''.join(map(str, ic_num))
+        # hbox:
+        #     yalign .5
+        #     xalign .5
+        #     add "gui/tablet.webp" at ModZoom(.85)
+        # hbox: #backgrounds
+        #     yalign .5
+        #     xalign .5
+        #     if len(ic_num) == 4:
+        #         $ ic_num_str = ''.join(map(str, ic_num))
+        #         if int(ic_num_str) == tablet_stored_code:
+        #             $ tablet_code = True
+        #             $ ic_num = []
+        #             # add "gui/tablet_no_content_warning.webp" at ModZoom(.85)
+        #             # if fs_rel > 30 and fs_aro > 10:
+        #             imagebutton auto "gui/phone_button_gallery_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('tablet_gallery_screen')] at ModZoom(.9):
+        #                 tooltip "Open the image gallery"
+        #         else:
+        #             $ ic_num = []
+        #     elif tablet_code:
+        #         add "gui/tablet_background.webp" at ModZoom(.85)
+        hbox:
+            xalign .5
+            yalign .5
+            imagebutton auto "gui/tablet_power_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()] at ModZoom(.85)
+            if keyclose:
+                key 'K_ESCAPE' action [SetVariable('keyclose',False),SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()]
+
+        # if not tablet_code:
+        #     hbox:
+        #         imagemap:
+        #             alpha False
+        #             if len(ic_num) == 1:
+        #                 add "gui/tablet_unlock_1.webp"
+        #             elif len(ic_num) == 2:
+        #                 add "gui/tablet_unlock_2.webp"
+        #             elif len(ic_num) == 3:
+        #                 add "gui/tablet_unlock_3.webp"
+        #             elif len(ic_num) == 4:
+        #                 add "gui/tablet_unlock_4.webp"
+        #             ground "gui/tablet_unlock.webp"
+        #             hover "gui/tablet_unlock_hover.webp"
+        #             at ModZoom(.85)
+        #             yalign .5
+        #             xalign .5
+        #             if int(ic_num_str) != tablet_stored_code:
+        #                 hotspot (204, 392, 94, 96) action [AddToSet(ic_num,1)]:
+        #                     sensitive True
+        #                 hotspot (318, 392, 94, 96) action [AddToSet(ic_num,2)]:
+        #                     sensitive True
+        #                 hotspot (436, 394, 94, 96) action [AddToSet(ic_num,3)]:
+        #                     sensitive True
+        #                 hotspot (204, 502, 94, 96) action [AddToSet(ic_num,4)]:
+        #                     sensitive True
+        #                 hotspot (318, 502, 94, 96) action [AddToSet(ic_num,5)]:
+        #                     sensitive True
+        #                 hotspot (436, 502, 94, 96) action [AddToSet(ic_num,6)]:
+        #                     sensitive True
+        #                 hotspot (204, 610, 94, 96) action [AddToSet(ic_num,7)]:
+        #                     sensitive True
+        #                 hotspot (318, 610, 94, 96) action [AddToSet(ic_num,8)]:
+        #                     sensitive True
+        #                 hotspot (436, 610, 94, 96) action [AddToSet(ic_num,9)]:
+        #                     sensitive True
+        #                 hotspot (318, 718, 94, 96) action [AddToSet(ic_num,0)]:
+        #                     sensitive True
+        #                 hotspot (464, 839, 71, 33) action [SetVariable('tablet_added',False),SetVariable('find_tablet',True),Return()]:
+        #                     sensitive True
+
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"
+
+
 screen maininfo():
     frame:
-        if p.maininfo:
+        if persistent.maininfo:
             style_prefix "infoscreen"
             xalign .5
             yalign .5
@@ -3617,11 +4228,11 @@ screen maininfo():
                     first_indent 130
                 text "Up to the right there is a calendar, showing month, date, weather, day and time. {b}The time / clock is clickable, to advance time - clicking on the hour advances time by 1 hour, clicking on the minutes advances time by 30 minutes{/b}\n":
                     ypos -170
-                if p.maininfo:
+                if persistent.maininfo:
                     text "{color=#f00}{size=28}Once closed, this infoscreen will not show again like this, but the info will be available via the help-screen in-game.{/size}{/color}":
                         xalign .5
                         ypos -180
-        if p.maininfo:
+        if persistent.maininfo:
             imagebutton auto "gui/closebutton_%s.webp" xalign 1.0 yalign 1.0 focus_mask True action [SetField(persistent,'maininfo',False),Hide("maininfo"),Return()]
             if keyclose:
                 key 'K_ESCAPE' action [SetVariable('keyclose',False),Hide('phone_info_screen'),SetField(persistent,'maininfo',False),Hide("maininfo"),Return()]
@@ -3673,21 +4284,21 @@ screen preferences():
                     textbutton _("Display") action SetField(persistent,'selectedmenu','displaycontrol'):
                         xsize 200
                         ysize 60
-                        if p.selectedmenu == 'displaycontrol':
+                        if persistent.selectedmenu == 'displaycontrol':
                             text_size 40
                     textbutton _("Skip and Speed settings") action SetField(persistent,'selectedmenu','skipcontrol'):
                         xsize 600
                         ysize 60
-                        if p.selectedmenu == 'skipcontrol':
+                        if persistent.selectedmenu == 'skipcontrol':
                             text_size 40
                     textbutton _("Sound") action SetField(persistent,'selectedmenu','soundsettings'):
                         xsize 200
                         ysize 60
-                        if p.selectedmenu == "soundsettings":
+                        if persistent.selectedmenu == "soundsettings":
                             text_size 40
 
-            if p.selectedmenu:
-                if p.selectedmenu == 'displaycontrol':
+            if persistent.selectedmenu:
+                if persistent.selectedmenu == 'displaycontrol':
                     vbox:
                         ypos 100
                         xfill True
@@ -3702,7 +4313,7 @@ screen preferences():
                             textbutton _("Fullscreen") action [Preference("display", "fullscreen"),SetField(persistent,'displayresolutions',False)]:
                                 selected preferences.fullscreen
 
-                    if p.displayresolutions or not preferences.fullscreen:
+                    if persistent.displayresolutions or not preferences.fullscreen:
                         vbox:
                             ypos 175
                             xfill True
@@ -3723,7 +4334,7 @@ screen preferences():
                                     elif get_max_res[0] == x:
                                         textbutton "[x]x[y]" action [Preference("display","fullscreen"),SetField(persistent,'displayresolutions',False)]
 
-                if p.selectedmenu == 'skipcontrol':
+                if persistent.selectedmenu == 'skipcontrol':
                     vbox:
                         ypos 100
                         xfill True
@@ -3738,21 +4349,21 @@ screen preferences():
                                 # ysize 60
                                 textbutton _("Skip Unseen Text") action [ToggleField(persistent,'skipunseen',True,False),Preference("skip", "toggle")]:
                                     xsize 310
-                                if p.skipunseen:
+                                if persistent.skipunseen:
                                     add "gui/blue_checkmark.webp" at ModZoom(.2)
                             hbox:
                                 xsize 365
                                 # ysize 60
                                 textbutton _("Skip After Choices") action [ToggleField(persistent,'skipafterchoices',True,False),Preference("after choices", "toggle")]:
                                     xsize 310
-                                if p.skipafterchoices:
+                                if persistent.skipafterchoices:
                                     add "gui/blue_checkmark.webp" at ModZoom(.2)
                             hbox:
                                 xsize 365
                                 # ysize 60
                                 textbutton _("Skip Transitions") action [ToggleField(persistent,'skiptransitions',True,False),InvertSelected(Preference("transitions", "toggle"))]:
                                     xsize 310
-                                if p.skiptransitions:
+                                if persistent.skiptransitions:
                                     add "gui/blue_checkmark.webp" at ModZoom(.2)
                     vbox:
                         ypos 175
@@ -3777,7 +4388,7 @@ screen preferences():
                                     text_size 20
                                 bar value Preference("auto-forward time")
 
-                if p.selectedmenu == 'soundsettings':
+                if persistent.selectedmenu == 'soundsettings':
                     vbox:
                         ypos 100
                         xfill True
@@ -3795,13 +4406,13 @@ screen preferences():
                                         text_size 20
                                     bar value Preference("music volume"):
                                         ysize 20
-                                    $ musicvolume = int(_preferences.volumes['music']*100) if not p.soundmuted and not p.musicmuted else 0
+                                    $ musicvolume = int(_preferences.volumes['music']*100) if not persistent.soundmuted and not p.musicmuted else 0
                                     hbox:
                                         xalign .5
                                         spacing 20
                                         text "[musicvolume]":
                                             ypos 8
-                                        if p.musicmuted:
+                                        if persistent.musicmuted:
                                             imagebutton idle "gui/speaker_muted.webp" focus_mask True:
                                                 at ModZoom(.6)
                                                 ypos 5
@@ -3819,13 +4430,13 @@ screen preferences():
                                         text_size 20
                                     bar value Preference("sound volume"):
                                         ysize 20
-                                    $ soundvolume = int(_preferences.volumes['sfx']*100) if not p.soundmuted and not p.sfxmuted else 0
+                                    $ soundvolume = int(_preferences.volumes['sfx']*100) if not persistent.soundmuted and not p.sfxmuted else 0
                                     hbox:
                                         xalign .5
                                         spacing 20
                                         text "[soundvolume]":
                                             ypos 8
-                                        if p.sfxmuted:
+                                        if persistent.sfxmuted:
                                             imagebutton idle "gui/speaker_muted.webp" focus_mask True:
                                                 at ModZoom(.6)
                                                 ypos 5
@@ -3849,13 +4460,13 @@ screen preferences():
                                         text_size 20
                                     bar value Preference("voice volume"):
                                         ysize 20
-                                    $ voicevolume = int(_preferences.volumes['voice']*100) if not p.soundmuted and not p.voicemuted else 0
+                                    $ voicevolume = int(_preferences.volumes['voice']*100) if not persistent.soundmuted and not p.voicemuted else 0
                                     hbox:
                                         xalign .5
                                         spacing 20
                                         text "[voicevolume]":
                                             ypos 8
-                                        if p.voicemuted:
+                                        if persistent.voicemuted:
                                             imagebutton idle "gui/speaker_muted.webp" focus_mask True:
                                                 at ModZoom(.6)
                                                 ypos 5
@@ -3877,7 +4488,7 @@ screen preferences():
                             hbox:
                                 ypos 200
                                 xalign .5
-                                if p.soundmuted or (p.musicmuted and p.voicemuted and p.sfxmuted):
+                                if persistent.soundmuted or (p.musicmuted and p.voicemuted and p.sfxmuted):
                                     vbox:
                                         imagebutton idle "gui/speaker_muted.webp" focus_mask True:
                                             xalign .5

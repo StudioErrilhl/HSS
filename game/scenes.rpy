@@ -5,7 +5,7 @@ label beach_scene(trans=True):
     if int(current_time[:2]) in night:
         scene beach_night with Dissolve(.25)
     else:
-        scene beach morning with Dissolve(.25)
+        scene beach_morning with Dissolve(.25)
     return
 
 label entrance_scene(trans=True):
@@ -44,7 +44,10 @@ label fp_bedroom_scene(trans=True): #this is the starting scene, and the one tha
                 scene fp_bedroom_night_backpack
         else:
             if not carry_phone and not carry_wallet:
-                scene fp_bedroom_morning_phone_backpack_wallet
+                if not fp_sofa_aquired:
+                    scene fp_bedroom_morning_phone_backpack_wallet
+                else:
+                    scene fp_bedroom_morning_sofa_phone_wallet_backpack
             elif not carry_phone:
                 scene fp_bedroom_morning_phone_backpack
             elif not carry_wallet:
@@ -78,7 +81,36 @@ label fp_bedroom_scene(trans=True): #this is the starting scene, and the one tha
             elif not carry_wallet:
                 scene fp_bedroom_morning_wallet
             else:
-                scene fp_bedroom_morning
+                if wallart['ferrari']:
+                    if not fp_sofa_aquired:
+                        scene fp_bedroom_morning_empty_wallart_ferrari
+                    else:
+                        scene fp_bedroom_morning_sofa_wallart_ferrari
+                elif wallart['parkinglot']:
+                    if not fp_sofa_aquired:
+                        scene fp_bedroom_morning_empty_wallart_parkinglot
+                    else:
+                        scene fp_bedroom_morning_sofa_wallart_parkinglot
+                elif wallart['roadtrip']:
+                    if not fp_sofa_aquired:
+                        scene fp_bedroom_morning_empty_wallart_roadtrip
+                    else:
+                        scene fp_bedroom_morning_sofa_wallart_roadtrip
+                elif wallart['peekaboo']:
+                    if not fp_sofa_aquired:
+                        scene fp_bedroom_morning_empty_wallart_peekaboo
+                    else:
+                        scene fp_bedroom_morning_sofa_wallart_peekaboo
+                elif wallart['sincity']:
+                    if not fp_sofa_aquired:
+                        scene fp_bedroom_morning_empty_wallart_sincity
+                    else:
+                        scene fp_bedroom_morning_sofa_wallart_sincity
+                else:
+                    if not fp_sofa_aquired:
+                        scene fp_bedroom_morning
+                    else:
+                        scene fp_bedroom_morning_sofa
     return
 
 label fs_bedroom_scene(trans=True):
@@ -97,7 +129,7 @@ label fs_bedroom_scene(trans=True):
             scene fs_bedroom_morning
     return
 
-label fs_intro_scene:
+label fs_intro_scene():
     if day_week == 5 and current_month == 3:
         scene fs_bedroom_morning_intro with Dissolve(.25)
         show juliette_on_bed_intro with Dissolve(.25):
@@ -274,14 +306,24 @@ label school_po_scene(trans=True):
         scene school_principal_office_morning with Dissolve(.25)
     return
 
-label upper_hallway_scene(trans=True):
+label upstairs_topofstairs_scene(trans=True):
     if not uhl_ach:
         $ uhl_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
-        scene upper_hallway_night with Dissolve(.25)
+        scene upstairs_topofstairs_night with Dissolve(.25)
     else:
-        scene upper_hallway_morning with Dissolve(.25)
+        scene upstairs_topofstairs_morning with Dissolve(.25)
+    return
+
+label upstairs_scene(trans=True):
+    if not uhl_ach:
+        $ uhl_ach = True
+        $ update_been_everywhere_achievement()
+    if int(current_time[:2]) in night:
+        scene upstairs_night with Dissolve(.25)
+    else:
+        scene upstairs_morning with Dissolve(.25)
     return
 
 label upper_hallway_bathroom_peek_scene(trans=True,wetshower=False):

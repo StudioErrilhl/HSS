@@ -32,7 +32,7 @@ label fs_talk(fst_called=False):
             if fs_si_2 and not fse:
                 show jules ahead
                 fp "How did it go with the issue you had with the school?"
-                if p.first_playthrough:
+                if persistent.first_playthrough:
                     fs ahead "Oh, it was nothing, really. We talked, and ended up going through all the entries made about me the last year. [fmName.Informal] confirmed she hadn't received any of the notes or calls that were registered in the system, which sort of made my teacher go a little pale, and become a little upset."
                     fp "Who?"
                     fs annoyed "Oh, [se]. She can be a real bitch!"
@@ -43,15 +43,21 @@ label fs_talk(fst_called=False):
                     fp "{i}Hmm... sounds weird that they would make so many mistakes, all pertaining to [fsName.myformal]. Either they're completely incompetent, or there is something else going on...{/i}"
                     $ fs_si_2 = False
                     $ hacker_1 = True
+                    $ statschangenotify('fs_rel',1)
                     hide jules
                 else:
-                    fs mad "Oh, the damn idiots didn't even wanna listen to me. Or [fmName.informal], for that matter. Just went on about how their system didn't make mistakes."
+                    fs angry "Oh, the damn idiots didn't even wanna listen to me. Or [fmName.informal], for that matter. Just went on about how their system didn't make mistakes."
                     fp "Okay...? So, they're still threathening with disallowing you for your finals?"
-                    fs mad "Yeah. Bloody [se] had the audacity to say, to my face, that if I wasn't causing so much trouble, she wouldn't need to make such a harsh judgement. I think she's getting senile - I haven't even raised my voice in her classroom {b}once{/b}!"
+                    fs angry "Yeah. Bloody [se] had the audacity to say, to my face, that if I wasn't causing so much trouble, she wouldn't need to make such a harsh judgement. I think she's getting senile - I haven't even raised my voice in her classroom {b}once{/b}!"
                     fp "Did you have a talk to [scn] or [scm] at the principal's office?"
                     fs annoyed "No. Don't even know who they are, [fp]!"
                     fp "Okay, sorry... they're both on the office staff. They're the ones keeping the books, doing all the grunt-work. They would normally know if anything fishy was going on"
                     "{i}Hm... maybe I can score some points with [fsName.myformal], if I figure this out?{/i}"
+                    fp "I can talk to [scn] and see if there's anything she can tell me, if you want?"
+                    fs "Really?"
+                    fp "Sure, it's no problem. She has a soft-spot for me, so I might be able to get something, at least"
+                    fs smile "Oh, that's awesome, [fp]"
+                    $ statschangenotify('fs_rel',1)
                     $ fs_si_2 = False
                     $ scs = True
                     hide jules
@@ -88,6 +94,7 @@ label fs_talk(fst_called=False):
                                 fp "Sorry, [scn]. I didn't think. Still grateful, though!"
                                 # scn smiles
                                 # scene change to outside school?
+                                call schoolbuilding_scene
                                 fp "{i}So, there {b}is{/b} a chance someone did this on purpose - or, maybe even just by accident, messing with the internal systems. Damn, I wish I was a computer geek... No idea how this could be done. I need to talk to [nr]. If he doesn't know, I'm sure he'll know someone who does.{/i}"
                                 $ hacker_1 = False
                                 $ hacker_2 = True
@@ -118,6 +125,7 @@ label fs_talk(fst_called=False):
                 fs ahead "Oh, I'm good. Got a call from school the other day that they've figured out that I was right. No excuses or anything, just... \"You were right, you can take your exams\". Fuck 'em. But I'm happy I don't have to do summer-school or something like that!"
                 fp "Yeah... I went to talk to the clerks. They know me. Got [clerk_talked_to] to look it over. Guess she found something"
                 $ fse = True
+                $ statschangenotify('fs_rel',1)
 
         else:
             if (firstday_talk or talk_later) and not fse:
@@ -137,12 +145,12 @@ label fs_talk(fst_called=False):
                 fp "Hi, [fsName.informal]. Can we talk?"
                 hide jules_sitting_test
                 show jules angry with dissolve
-                fs mad "{b}Fuck you!{/b}"
+                fs angry "{b}Fuck you!{/b}"
                 show jules with dissolve
                 $ text = "Look, I'm really sorry about {0}! I didn't mean to perv on you, {1}.".format("this morning" if first_day else "the other day", fsName.informal )
                 fp "[text]"
                 show jules with dissolve
-                fs mad "So, you just happened to be leaning against my door because...?"
+                fs angry "So, you just happened to be leaning against my door because...?"
                 fp "Well, that bit is true, but I was just trying to figure out what the sounds coming from your bedroom was. Honestly!"
                 show jules annoyed with dissolve
                 fs annoyed "So... you heard noises coming from my bedroom, and your first instinct is \"Let's check out the sounds from [fsName.myformal]s bedroom\"?"
@@ -198,3 +206,4 @@ label fs_talk(fst_called=False):
                     call change_loc(current_location) from _call_change_loc_1
             else:
                 $ settime(22,False,True,'fs_where')
+

@@ -91,10 +91,12 @@ label nc_talk(event=False,callrand=False):
         nc "For a new laptop?"
         fp "Yeah"
         nc "A couple grand should do it"
+        $ nc_owed = 2000
         if fp_money > 2000:
             fp "No problem"
             "[nc] looks a little perplexed with your seeming indifference to the amount she asked for"
             nc "O... kay. Money up front, then tell me what you need"
+            $ fp_money -= nc_owed
             $ nc_owed = 0
             $ visit_icafe_2 = False
             $ visit_icafe_3 = True
@@ -160,7 +162,7 @@ label nc_talk(event=False,callrand=False):
                     fp "Because... they messed with [fsName.shortname], okay?"
                     nc "Jules... oh, [fsName.yourformal]"
                     fp "Yeah..."
-                    nc "Hm, okay - noone messes with family. I can see how that would be a trigger"
+                    nc "Hm, okay - noone messes with [fsName.relation]. I can see how that would be a trigger"
                     nc "What do you need?"
                     fp "Well... I would like for you to check out the system. Maybe you can find something, or at least figure out if it's just the system being crappy, or if someone is actually messing with it"
                     nc "I can probably do that... I'm guessing this isn't sanctioned by the school, hm?"
@@ -217,12 +219,30 @@ label nc_talk(event=False,callrand=False):
         fp "Okay, no problem. I don't really care who you boink, what I do care about is whether or not I can get a hold of him"
         nc "I can probably get him here..."
         fp "Okay. Have him show up, then text me. I can be here in 30 minutes max!"
-        nc "I'll text you when I got him"
+        nc "I'll text you when I get a hold of him. No promises though"
         "You head out, going back home seems like a good plan for now"
         $ nc_action_started = 1
+        $ hacker_5 = True
         $ nce = True
         call change_loc('outside') from _call_change_loc_69
 
+    if event == 'nc_text' and hacker_5 and not nce:
+        $ hacker_5 = False
+        $ set_message('nc',nc,"Hey! I've got him. He agreed to meet me at [icafe] tomorrow, around 23")
+        $ hacker_6 = True
+
+    if event == 'nc_meet_hacker' and hacker_6 and (int(current_time[:2]) >= 22 and int(current_time[:2]) <= 23) and not nce:
+        $ hacker_6 = False
+        "Heading into the darkest, inner corners of [icafe], you scan the surroundings, trying to spot [nc], and more importantly, her friend, before they spot you"
+        fp "{i}Hm... can't see them anywhere...{/i}"
+        $ settime(23,00)
+        "You stay for a few minutes, thinking they might be running late, or just messing with you, for that matter"
+        $ addtime(False, 15)
+        fp "{i}This isn't like her... telling me to meet her at 23:00 and not showing up... and no message, nothing{/i}"
+        fp "{i}Let's send her a message and see if she replies...{/i}"
+        $ nc_message_after_hacker = True
+
     if event == 'icafe_talk_hj' and not nce:
         "This is as far as this story goes for now"
+
         $ nce = True

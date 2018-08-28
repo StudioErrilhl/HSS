@@ -30,7 +30,7 @@ label day_events():
             $ wsun_called = False
             if sun_event:
                 if renpy.random.random() <= .5:
-                    show anne with dissolve
+                    show anne with easeinleft #dissolve
                     fm ahead "Could you help me open this, [fp]? I can't seem to get it open, and I need this for dinner today"
                     menu:
                         "Yes, [fmName.informal], no problem. *you open the jar*":
@@ -81,6 +81,18 @@ label day_events():
                     $ dinner_event = False
                     $ renpy.pause(.25)
                     hide anne with dissolve
+                    if renpy.random.random() > .3:
+                        show jules smile with dissolve
+                        fs "Hey, [fp]. What's for dinner?"
+                        fp "We're having [dinner_food]"
+                        fs "Oh, that's nice"
+                        "You sit down at the table, and have a relatively quick, but nice dinner with [fsName.yourinformal] and [fmName.yourinformal]"
+                        $ statschangenotify('fs_rel',1,True)
+                        $ statschangenotify('fm_rel',1)
+                    else:
+                        "You sit down at the table, and have a nice conversation with [fmName.yourinformal]"
+                        $ statschangenotify('fm_rel',1)
+                        # need to add a dinner image for both events here
                     $ addtime(1)
                 call change_loc('kitchen',loctrans=True) from _call_change_loc_45
 
@@ -93,7 +105,6 @@ label day_events():
                     $ current_time = "17:45"
                 else:
                     $ current_time = "15:30"
-
                 if n == 1:
                     call change_loc('outside',sec_call="harsh_homecoming") from _call_change_loc_46
                     label harsh_homecoming(True):
@@ -127,6 +138,8 @@ label day_events():
                         $ call_nr = False
                         $ hacker_4 = True
                         call nr_talk('nr_intro') from _call_nr_talk
+                    elif hacker_5:
+                        call nc_talk('nc_text')
 
                 if home_events[n][1] and fs_mad:
                     call fs_talk(True) from _call_fs_talk_4

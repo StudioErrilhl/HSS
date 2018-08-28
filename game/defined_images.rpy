@@ -799,31 +799,31 @@ image juliette_intro_ani:
     zoom .8
     xoffset -320
     yoffset 0
-    1
+    .35
     "images/characters/juliette/scenes/juliette_intro_hallway_2_embarrassed.webp"
-    0.5
+    0.25
     "images/characters/juliette/scenes/juliette_intro_hallway_3_turning_away.webp"
-    0.5
+    0.2
     "images/characters/juliette/scenes/juliette_intro_hallway_4_moving_away.webp"
     zoom .70
     xoffset -400
     yoffset -100
-    0.35
+    0.2
     "images/characters/juliette/scenes/juliette_intro_hallway_5_moving_away.webp"
     zoom .60
     xoffset -450
     yoffset -150
-    0.4
+    0.2
     "images/characters/juliette/scenes/juliette_intro_hallway_4_moving_away.webp"
     zoom .55
     xoffset -500
     yoffset -200
-    0.4
+    0.1
     "images/characters/juliette/scenes/juliette_intro_hallway_5_moving_away.webp"
     zoom .45
     xoffset -550
     yoffset -250
-    0.4
+    0.1
 
 
 layeredimage marten:
@@ -847,8 +847,8 @@ layeredimage anne:
         attribute redcasual default
 
     group head auto:
-        xoffset 188
-        yoffset 26
+        xoffset 202
+        yoffset 12
         attribute ahead default null
 
     group eyes if_any "angry" auto variant "closed" prefix "angry"
@@ -868,6 +868,21 @@ layeredimage jules:
 
     group eyes if_any "angry" auto variant "closed" prefix "angry"
     group eyes if_any "ahead" auto variant "closed" prefix "ahead"
+
+layeredimage side jules:
+    group outfit auto:
+        attribute jeans default
+
+    group head auto:
+        xoffset 164
+        yoffset 106
+        attribute ahead default
+
+    group eyes if_any "angry" auto variant "closed" prefix "angry"
+    group eyes if_any "ahead" auto variant "closed" prefix "ahead"
+
+    # group eyes auto:
+    #     attribute eo default
 
 layeredimage karen:
     pos (.75,1.0)

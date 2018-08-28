@@ -70,3 +70,4 @@ label night_events():
             $ sld_called = False
             $ settime(22,False)
             call fp_bedroom_loc(True) from _call_fp_bedroom_loc_2
+

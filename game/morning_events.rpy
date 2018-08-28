@@ -341,7 +341,7 @@ label morning_events():
             $ bin_called = False
             if breakfast_food:
                 show anne at left, ModOffsetX(200)
-                show marten angry at right, ModOffsetX(-200)
+                show marten ahead at right, ModOffsetX(-200)
                 with dissolve
                 if breakfast_food == 'cereal':
                     fm ahead "I poured you some [breakfast_food]. We're sort of out of everything. Need to go shopping"
@@ -378,10 +378,9 @@ label morning_events():
                     if debug:
                         "renpy random more than 5"
                     if not fs_mad:
-                        if renpy.random.random() > .5:
-                            show jules ahead flip
-                        else:
-                            show jules ahead
+                        show jules ahead at left, ModOffsetX(200)
+                        show marten ahead at right, ModOffsetX(-200)
+                        with dissolve
                         fs ahead "Good morning, [fp]"
                         fp "Hi, [fsName.informal]"
                         if renpy.random.random() > .90:
@@ -401,13 +400,12 @@ label morning_events():
                         $ shitty_morning = False
                         $ morning_event_done = True
                     else:
-                        if renpy.random.random() > .5:
-                            show jules annoyed flip
-                        else:
-                            show jules annoyed
+                        show jules annoyed at left, ModOffsetX(200)
+                        show marten ahead at right, ModOffsetX(-200)
+                        with dissolve
                         fp "Hi [fsName.informal]"
-                        show jules mad with dissolve
-                        fs mad "Fuck off, [fp]"
+                        show jules angry with dissolve
+                        fs angry "Fuck off, [fp]"
                         fp "... okay..."
                         $ statschangenotify("fs_rel",-1)
                         fp "{i}I should probably try to talk to her later, and apologize for earlier... Seems she's still pissed at me{/i}"
@@ -458,11 +456,9 @@ label morning_events():
                     "weekend"
                 if renpy.random.random() > .95: #changed from 6
                     if not fs_mad:
-                        if renpy.random.random() > .5:
-                            show jules ahead flip
-                        else:
-                            show jules ahead:
-                                yalign 0.0
+                        show jules ahead at left, ModOffsetX(200)
+                        show marten ahead at right, ModOffsetX(-200)
+                        with dissolve
                         fs ahead "Good morning, [fp]"
                         fp "Hi, [fsName.informal]"
                         if renpy.random.random() > .5:
@@ -487,13 +483,15 @@ label morning_events():
                             else:
                                 call kitchen_loc(True) from _call_kitchen_loc_1
                     else:
-                        if renpy.random.random() > .5:
-                            show jules annoyed flip with dissolve
-                        else:
-                            show jules annoyed with dissolve
+                        # if renpy.random.random() > .5:
+                        #     show jules annoyed flip with dissolve
+                        # else:
+                        show jules annoyed at left, ModOffsetX(200)
+                        show marten ahead at right, ModOffsetX(-200)
+                        with dissolve
                         fp "Hi [fsName.informal]"
-                        show jules mad with dissolve
-                        fs mad "Fuck off, [fp]"
+                        show jules angry with dissolve
+                        fs angry "Fuck off, [fp]"
                         fp "... okay..."
                         $ statschangenotify("fs_rel",-1)
                         fp "{i}I should probably try to talk to her later, and apologize for earlier... Seems she's still pissed at me{/i}"

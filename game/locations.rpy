@@ -15,20 +15,20 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
             $ tmpname = tmpname+'_scene'
         if loctrans:
             $ loctrans = False
-            $ print(tmpname+"_loctrans")
+            # $ print(tmpname+"_loctrans")
             if showerstat:
-                $ print(tmpname+'_showerstat')
+                # $ print(tmpname+'_showerstat')
                 call expression tmpname pass (trans=False,wetshower=showerstat) from _call_expression
             else:
-                $ print(tmpname+'_not_showerstat')
+                # $ print(tmpname+'_not_showerstat')
                 call expression tmpname pass (trans=False) from _call_expression_1
         else:
-            $ print(tmpname+"_not_loctrans")
+            # $ print(tmpname+"_not_loctrans")
             if showerstat:
-                $ print(tmpname+'_showerstat')
+                # $ print(tmpname+'_showerstat')
                 call expression tmpname pass (wetshower=showerstat) from _call_expression_3
             else:
-                $ print(tmpname+'_not_showerstat')
+                # $ print(tmpname+'_not_showerstat')
                 call expression tmpname from _call_expression_4
         show screen location(locname)
         if locname in firstday_talk_list:
@@ -463,7 +463,7 @@ label outside_loc(out_called=False,trans=False):
                 if filth_val <= 15:
                     $ second_menu_choice = "Stay home {0}".format("today" if int(current_time[:2]) in day else "tonight")
                     menu:
-                        "Do a [drivingcmp] run":
+                        "Do a [drivngcmp] run":
                             $ randmoney = random.randrange(50,250)
                             $ randmoney = int(round((float(randmoney) / 100.0) * float(70)))
                             $ reply = "You made $"+str(randmoney)+" {0}".format("today" if int(current_time[:2]) in day else "tonight")
@@ -501,16 +501,27 @@ label outside_loc(out_called=False,trans=False):
                 call change_loc('outside',loctrans=True,sec_call='outside_loc') from _call_change_loc_15
         call change_loc('outside') from _call_change_loc_61
 
-label upper_hallway_loc(uhl_called=False,trans=False):
-    $ current_location = 'upper_hallway_loc'
+label upstairs_topofstairs_loc(uts_called=False,trans=False):
+    $ current_location = 'upstairs_topofstairs_loc'
     if not uhl_ach:
         $ uhl_ach = True
         $ update_been_everywhere_achievement()
-    if uhl_called or uhl_cfs:
-        $ uhl_called = uhl_cfs = False
+    if uts_called or uts_cfs:
+        $ uts_called = uts_cfs = False
         # if backpack.has_item(princessplug_item):
-        #     call change_loc('upper hallway',sec_call='talk_fs')
-        call change_loc('upper hallway') from _call_change_loc_16
+        #     call change_loc('upstairs topofstairs',sec_call='talk_fs')
+        call change_loc('upstairs topofstairs')
+
+label upstairs_loc(ups_called=False,trans=False):
+    $ current_location = 'upstairs_loc'
+    if not uhl_ach:
+        $ uhl_ach = True
+        $ update_been_everywhere_achievement()
+    if ups_called or ups_cfs:
+        $ ups_called = ups_cfs = False
+        # if backpack.has_item(princessplug_item):
+        #     call change_loc('upstairs topofstairs',sec_call='talk_fs')
+        call change_loc('upstairs')
 
 label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
     if uhlbc or uhlbcfs:
@@ -547,6 +558,7 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                     if not uhl_bathroom_ach:
                         $ uhl_bathroom_ach = True
                         $ update_been_everywhere_achievement()
+                    play sound "sounds/medium_camera_shutter.mp3"
                     $ images_unlocked.append('DCIM00004_portrait.webp')
                     call change_loc('upper hallway bathroom peek',sec_call='peek_scene_happening') from _call_change_loc_17
                     label peek_scene_happening(True):
@@ -557,7 +569,7 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                                 #call change_loc('upper hallway bathroom peek')
                                 pass
                             "Get the hell outta here":
-                                call change_loc('upper hallway') from _call_change_loc_62
+                                call change_loc('upstairs topofstairs') from _call_change_loc_62
                 "Knock on the door":
                     # pass
                     if bathroom_occupied_fs:
@@ -566,11 +578,12 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                             fp "Hey, [fsName.informal] - I really need to pee, you think I could..."
                             fs "Fuck off, [fp]!"
                             fp "{i}Okay,then...{/i}"
-                            call change_loc('upper hallway') from _call_change_loc_18
+                            $ statschangenotify('fs_rel',-1)
+                            call change_loc('upstairs topofstairs') from _call_change_loc_18
                         else:
                             fs "I'm in here, you'll have to come back later"
                             fp "I really need to pee, [fsName.informal]!"
-                            if fs_rel > 40:
+                            if fs_rel > 30:
                                 fs "{i}Teasing now...{/i}\nSorry, [fp], I'm not at all decent!"
                                 fp "I don't care! I need to pee!"
                                 fs "Fine! Come in, but no oogling!"
@@ -589,6 +602,7 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                                 fs "I'm not decent! Use the downstairs bathroom!"
                                 fp "I'll never make it! Please let me in?"
                                 fs "Fine! Damn it, [fp]!"
+                                "{b}Click!{/b}"
                                 fs "So, get in there and do your thing!"
                                 if not uhl_bathroom_ach:
                                     $ uhl_bathroom_ach = True
@@ -609,14 +623,31 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                             $ update_been_everywhere_achievement()
                         call change_loc('upper hallway bathroom',loctrans=True) from _call_change_loc_23
                 "Leave and come back later":
+                    if bathroom_occupied_fs and fs_rel < 30:
+                        $ statschangenotify('fs_rel',1)
+                    elif bathroom_occupied_fm and fm_rel < 30:
+                        $ statschangenotify('fm_rel',1)
                     $ occupied_bath = False
                     $ hour = renpy.random.randint(0,1)
                     if hour:
                         $ addtime(hour,False)
                     else:
                         $ addtime(False, 30)
-                    call change_loc('upper hallway') from _call_change_loc_24
+                    call change_loc('upstairs topofstairs') from _call_change_loc_24
         else:
+            if not fp_bath_lock and not leave_lock:
+                call change_loc('upper hallway bathroom',sec_call='lockdoorbathroom',loctrans=True)
+                label lockdoorbathroom(trans=False):
+                    menu:
+                        "Lock door":
+                            $ fp_bath_lock = True
+                            $ leave_lock = True
+                            call change_loc('upper hallway bathroom',loctrans=True)
+                        "Leave door open":
+                            $ fp_bath_lock = False
+                            $ leave_lock = True
+                            call change_loc('upper hallway bathroom',loctrans=True)
+
             if not uhl_bathroom_ach:
                 $ uhl_bathroom_ach = True
                 $ update_been_everywhere_achievement()
@@ -757,7 +788,7 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                             $ loct = True
                             $ wetshower = False
                             $ bathroom_occupied_fm = bathroom_occupied_fs = False
-                            call change_loc('upper hallway',loctrans=loct) from _call_change_loc_66
+                            call change_loc('upstairs topofstairs',loctrans=loct) from _call_change_loc_66
                     fp "{i}Ah, that was refreshing{/i}"
 
         call change_loc('upper hallway bathroom',loctrans=loct,showerstat=wetshower) from _call_change_loc_63

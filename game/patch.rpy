@@ -1,6 +1,7 @@
 init 2:
     defineDynamicName fmName:
         name "Anne"
+        shortname "Anne"
         informal "mom"
         formal "mother"
         role "mother"
