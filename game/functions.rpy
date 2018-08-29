@@ -275,7 +275,6 @@ init 10 python:
                                 current_month_text = months_days[current_month][0]
                                 current_month_day = 1
                             else:
-
                                 current_month_day += 1
                                 day_ahead = True
                     else:
@@ -309,13 +308,12 @@ init 10 python:
                 set_message('nc',nc,""+str(hj)+" is here. You got... maybe an hour")
                 nc_event = 'icafe_talk_hj'
                 nc_happens = current_time
-
             if update_scene:
                 if int(current_time[:2]) >= 22 or int(current_time[:2]) < 6:
                     current_imgs = list(renpy.get_showing_tags())
                     indices = [i for i, elem in enumerate(current_imgs) if '_morning' in elem]
                     if indices:
-                        current_bg = current_imgs[indices[0]].replace('_morning','').replace('_glow','').replace('_build','').replace('_finished','').replace('_with_car','').replace('_scene','').replace('_phone','').replace('_backpack','').replace('_',' ')
+                        current_bg = current_imgs[indices[0]].replace('_morning','').replace('_glow','').replace('_build','').replace('_wallet','').replace('_finished','').replace('_with_car','').replace('_scene','').replace('_phone','').replace('_backpack','').replace('_',' ')
                         if current_bg == 'upper_hallway_bathroom_night':
                             setattr(store,"bathroom_light",True)
                         else:

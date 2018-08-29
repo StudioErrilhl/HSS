@@ -366,7 +366,7 @@ default keys_mentioned = False
 default gp_bed = False
 default gp_bath = False
 default br = False
-default backpack_carry = False
+default carry_backpack = False
 default selecteditem = False
 default selecteditemname = False
 default selecteditemamount = False
@@ -406,6 +406,7 @@ default showapppage = False
 default appselect = None
 default playstore_search_saved = '  '
 default playstore_search = '  '
+default contacts_search = '  '
 
 # default appstore_lists = { "playstore_games" : [
 #             ['Making Movies','Droid Productions','makingmovies','Sometimes you find new beginnings from the wreckage of past mistakes. Making Movies is a game about paying rent, finding love and making pornography.','https://droid-productions.itch.io/making-movies'],
@@ -656,6 +657,8 @@ default current_day = week_days[day_week]
 define morning = [6,7,8,9,10,11]
 define day = [11,12,13,14,15,16,17,18,19,20,21,22]
 define night = [22,23,0,1,2,3,4,5]
+define hours = [0,1,22,23] # these are the "glowhours" before night-time, when lights are on
+
 
 default current_time = "06:00"
 default addhour = False

@@ -3,11 +3,13 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
     if timeadd:
         $ addtime(False, 30)
     if locname:
-        if 'loc' not in locname:
-            $ current_location = locname.replace(' ','_')+"_loc"
-        else:
-            $ current_location = locname.replace(' ','_')
-            $ locname = locname.replace('_loc','').replace('bad_weather','').replace('light','').replace('windows','').replace('after_shower','').replace('_',' ').replace('__',' ')
+        # if '_loc' not in locname:
+        #     $ current_location = locname.replace(' ','_')+"_loc"
+        # else:
+        $ locname = locname.replace('_loc','').replace('bad_weather','').replace('light','').replace('windows','').replace('after_shower','').replace('wallet','').replace('empty','').replace('wallart','').replace('sincity','').replace('parkinglot','').replace('peekaboo','').replace('roadtrip','').replace('ferrari','').replace('_',' ').replace('__',' ')
+        $ current_location = locname.replace(' ','_')
+        if current_location.endswith('_'):
+            $ current_location = current_location[:-1]
         $ tmpname = locname.replace(' ','_').replace('_bad_weather','').replace('_build','').replace('_finished','').replace('_windows','').replace('_after_shower','').replace('_light','').replace('_loc','').replace('__','_')
         if 'scene' not in tmpname:
             if tmpname.endswith('_'):
@@ -54,7 +56,7 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
                 call expression sec_call pass (True) from _call_expression_2
         call screen empty()
         hide screen empty
-        hide screen location
+        hide screen locname
         hide character
 
 label entrance_loc(trans=False):
@@ -73,7 +75,7 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
     if fpl_called or uhl_fpb_cfs:
         $ fpl_called = uhl_fpb_cfs = False
         if schoolbooks_added:
-            if backpack_carry:
+            if carry_backpack:
                 if not backpack.has_item(schoolbooks_item):
                     $ schoolbooks_pickup = True
                     $ update_all_the_stuff()
@@ -123,11 +125,11 @@ label fp_bedroom_loc(fpl_called=False,trans=False):
             $ backpack.remove_item(phone_item,sec_reply=True)
             $ carry_phone = False
             $ loct = True
-        if current_time[:2] in morning and not morning_event_done:
-            # call fp_morning_content(True)
-            call morning_events() from _call_morning_events
-        else:
-            call change_loc('fp bedroom',loctrans=loct) from _call_change_loc_3
+        # if current_time[:2] in morning and not morning_event_done:
+        #     # call fp_morning_content(True)
+        #     call morning_events() from _call_morning_events
+        # else:
+        call change_loc('fp bedroom',loctrans=loct) from _call_change_loc_3
 
 label fs_bedroom_loc(fsl_called=False,trans=False):
     $ current_location = 'fs_bedroom_loc'
@@ -152,7 +154,7 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                 call screen fs_tablet()
         if panties_added:
             $ current_p = getattr(store,gp_bed+"_panties_item")
-            if backpack_carry:
+            if carry_backpack:
                 if not backpack.has_item(current_p):
                     $ r = random.randint(0,3)
                     $ text = p_response[r]
@@ -230,7 +232,7 @@ label garage_loc(gar_called=False,trans=False):
         $ update_been_everywhere_achievement()
     if gar_called or gar_cfs:
         $ gar_called = g_called_from_screen = False
-        if backpack_carry:
+        if carry_backpack:
             if not backpack.has_item(toolbox_item):
                 $ toolbox_pickup = True
                 $ update_all_the_stuff()
@@ -264,7 +266,7 @@ label kitchen_loc(kit_called=False,trans=False):
         if wine_added:
             menu:
                 "Take the bottle" if bottles == 1:
-                    if backpack_carry:
+                    if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
                             $ update_all_the_stuff()
@@ -288,7 +290,7 @@ label kitchen_loc(kit_called=False,trans=False):
                     $ wine_added = False
                     $ loct = True
                 "Take one bottle" if bottles == 2:
-                    if backpack_carry:
+                    if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
                             $ update_all_the_stuff()
@@ -308,7 +310,7 @@ label kitchen_loc(kit_called=False,trans=False):
                         $ wine_added = False
                         $ loct = True
                 "Take both bottles" if bottles == 2:
-                    if backpack_carry:
+                    if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
                             $ update_all_the_stuff()
@@ -332,7 +334,7 @@ label kitchen_loc(kit_called=False,trans=False):
                     $ wine_added = False
                     $ loct = True
                 "Take one bottle" if bottles == 3:
-                    if backpack_carry:
+                    if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
                             $ update_all_the_stuff()
@@ -352,7 +354,7 @@ label kitchen_loc(kit_called=False,trans=False):
                         $ wine_added = False
                         $ loct = True
                 "Take two bottles" if bottles == 3:
-                    if backpack_carry:
+                    if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
                             $ update_all_the_stuff()
@@ -372,7 +374,7 @@ label kitchen_loc(kit_called=False,trans=False):
                         $ wine_added = False
                         $ loct = True
                 "Take all three bottles" if bottles == 3:
-                    if backpack_carry:
+                    if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
                             $ update_all_the_stuff()
@@ -463,7 +465,7 @@ label outside_loc(out_called=False,trans=False):
                 if filth_val <= 15:
                     $ second_menu_choice = "Stay home {0}".format("today" if int(current_time[:2]) in day else "tonight")
                     menu:
-                        "Do a [drivngcmp] run":
+                        "Do a [drivingcmp] run":
                             $ randmoney = random.randrange(50,250)
                             $ randmoney = int(round((float(randmoney) / 100.0) * float(70)))
                             $ reply = "You made $"+str(randmoney)+" {0}".format("today" if int(current_time[:2]) in day else "tonight")
@@ -661,7 +663,7 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                         $ smallkeys_added = False
             if bathroom_panties_added:
                 $ current_p = getattr(store,gp_bath+"_panties_item")
-                if backpack_carry:
+                if carry_backpack:
                     if not backpack.has_item(current_p):
                         $ r = random.randint(0,3)
                         $ text = p_response[r]

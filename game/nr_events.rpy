@@ -17,7 +17,7 @@ label nr_talk(event=False,callrand=False):
     if event == 'nr_first_visit':
         if current_location != 'garage':
             call change_loc('garage',sec_call='nr_first_talk') from _call_change_loc_28
-        label nr_first_talk(True):
+        label nr_first_talk():
             nr "Hey, [fp]!"
             fp "Hey!"
             fp "{i}You're trying to figure out how to tell [nr] about the hacker, or whatever it is going on at school, preferably without dragging [fsName.yourformal] into it...{/i}"

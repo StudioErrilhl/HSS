@@ -39,7 +39,7 @@ style prefs_button_text:
     color "#555"
     hover_color "#0cf"
     selected_color "#0cf"
-    xalign 1.0
+    xalign .5
 
 style prefs_button:
     xsize 200
@@ -525,9 +525,9 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 else:
                     alpha .5
 
-    if not backpack_carry:
+    if not carry_backpack:
         add "gui/backpack_outline.webp"
-    if backpack_carry:
+    if carry_backpack:
         vbox xalign .99 yalign .99: #backpack / inventory
             imagebutton auto "gui/backpack_%s.webp":
                 xalign 0.8
@@ -551,27 +551,49 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
         vbox:
             if carry_phone:
                 if not (hints or calls or messages):
-                    imagebutton auto "gui/menu_phone_%s.webp" focus_mask True action ToggleScreen('phone') at ModZoom(.8):
+                    imagebutton auto "gui/menu_phone_%s.webp" focus_mask True:
+                        if renpy.get_screen('phone'):
+                            action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),ToggleScreen('phone')]
+                        else:
+                            action [ToggleScreen('phone')]
+                        at ModZoom(.8)
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more"
                 elif calls:
-                    imagebutton auto "gui/menu_phone_call_%s.webp" focus_mask True action ToggleScren('phone') at ModZoom(.8):
+                    imagebutton auto "gui/menu_phone_call_%s.webp" focus_mask True:
+                        if renpy.get_screen('phone'):
+                            action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),ToggleScreen('phone')]
+                        else:
+                            action [ToggleScreen('phone'),Show('')]
+                        at ModZoom(.8)
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, unanswered calls"
                 elif messages:
-                    imagebutton auto "gui/menu_phone_message_%s.webp" focus_mask True action ToggleScreen('phone') at ModZoom(.8):
+                    imagebutton auto "gui/menu_phone_message_%s.webp" focus_mask True:
+                        if renpy.get_screen('phone'):
+                            action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),ToggleScreen('phone')]
+                        else:
+                            action [ToggleScreen('phone')]
+                        at ModZoom(.8)
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new messages"
                 elif hints:
-                    imagebutton auto "gui/menu_phone_hint_%s.webp" focus_mask True action ToggleScreen('phone') at ModZoom(.8):
+                    imagebutton auto "gui/menu_phone_hint_%s.webp" focus_mask True:
+                        if renpy.get_screen('phone'):
+                            action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),ToggleScreen('phone')]
+                        else:
+                            action [ToggleScreen('phone')]
+                        at ModZoom(.8)
                         tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new hints"
 
-                add "gui/menu_phone_overlay.webp" at ModZoom(.8):
+                add "gui/menu_phone_overlay.webp" at ModZoom(.9):
                     # xpos -340
                     # ypos -122
-                    yoffset -128
-                    xoffset 1
+                    yoffset -134
+                    xoffset -4.5
+                    # yalign 0.0
+                    # xalign .5
                     if int(current_time[:2]) not in night:
                         alpha 0.0
                     else:
-                        alpha 0.5
+                        alpha .5
             else:
                 add "gui/menu_phone_outline.webp" at ModZoom(.8)
 
@@ -1352,7 +1374,6 @@ screen location(room=False):
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
         yval = 1.0 if y > config.screen_height/2 else .0
-
     if room == 'entrance':
             imagebutton auto ("images/backgrounds/interactions_move/front_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/front_door_morning_%s.webp") focus_mask True action [SetVariable('trans',True),SetVariable('out_cfs',True),Jump('outside_loc')]:
                 tooltip "Go outside"
@@ -1366,64 +1387,56 @@ screen location(room=False):
                 tooltip "Downstairs / Garage"
 
     if room == "fp bedroom":
-        if day_week <= 4:
-            if not backpack.has_item(schoolbooks_item):
-                if int(current_time[:2]) in night:
-                    add "images/backgrounds/interactions_item/fp_bedroom_night_dresser_idle.webp"
-                else:
-                    imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_morning_dresser_%s.webp" focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('schoolbooks_added',True),Jump('fp_bedroom_loc')]
-        if not backpack_carry:
-            imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_backpack_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_day_backpack_%s.webp") focus_mask True action [SetVariable('backpack_carry',True),SetVariable('uhl_fpb_cfs',True),Function(delete_hint,"You should perhaps try to get something to carry all these things you seem to be able to pick up..."),Jump('fp_bedroom_loc')]:
-                yalign .7
-                xalign .7
-        if int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or current_time[:2] == 0 or int(current_time[:2]) == 1:
-            if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+        if not backpack.has_item(schoolbooks_item):
+            if int(current_time[:2]) in night:
+                add "images/backgrounds/interactions_item/fp_bedroom_night_dresser_idle.webp"
+            else:
+                if renpy.get_screen('say') is None and renpy.get_screen('choice') is None and renpy.get_screen('phone') is None:
+                    imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_dresser_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_morning_dresser_%s.webp") focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('schoolbooks_added',True),Jump('fp_bedroom_loc')]
+        if renpy.get_screen('say') is None and renpy.get_screen('choice') is None and renpy.get_screen('phone') is None:
+            if not carry_backpack:
+                imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_backpack_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_day_backpack_%s.webp") focus_mask True action [SetVariable('carry_backpack',True),SetVariable('uhl_fpb_cfs',True),Function(delete_hint,"You should perhaps try to get something to carry all these things you seem to be able to pick up..."),Jump('fp_bedroom_loc')]:
+                    yalign .7
+                    xalign .7
+            if int(current_time[:2]) in hours:
                 imagebutton auto "images/backgrounds/interactions_item/fp_bedroom_night_bed_glow_%s.webp" focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
-        else:
-            if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+            else:
                 imagebutton auto ("images/backgrounds/interactions_item/fp_bedroom_night_bed_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fp_bedroom_morning_bed_%s.webp") focus_mask True action [SetVariable('stn_cfs',True),Jump('sleep_the_night')]
 
-        if not carry_wallet:
-            if int(current_time[:2]) in night:
-                $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_night_wallet_%s.webp"
-            elif int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or int(current_time[:2]) == 0 or int(current_time[:2]) == 1:
-                $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_night_wallet_glow_%s.webp"
-            else:
-                $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_morning_wallet_%s.webp"
-            imagebutton auto walletimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('wallet_added',True),Jump('fp_bedroom_loc')]
+            if not carry_wallet:
+                if int(current_time[:2]) in hours:
+                    $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_night_wallet_glow_%s.webp"
+                elif int(current_time[:2]) in night:
+                    $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_night_wallet_%s.webp"
+                else:
+                    $ walletimg = "images/backgrounds/interactions_item/fp_bedroom_morning_wallet_%s.webp"
+                imagebutton auto walletimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('wallet_added',True),Jump('fp_bedroom_loc')]
 
-        if fp_sofa_aquired:
-            imagebutton idle "images/backgrounds/interactions_item/fp_bedroom_morning_sofaitem.webp" focus_mask True action NullAction()
+            if fp_sofa_aquired:
+                imagebutton auto ("images/backgrounds/interactions_item/fpbn_sofa_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/fpbm_sofa_%s.webp") focus_mask True action NullAction()
 
-        if wallart['ferrari']:
-            imagebutton idle "images/backgrounds/interactions_item/wallart_ferrari.webp" focus_mask True action NullAction()
-        if wallart['parkinglot']:
-            imagebutton idle "images/backgrounds/interactions_item/wallart_parkinglot.webp" focus_mask True action NullAction()
-        if wallart['roadtrip']:
-            imagebutton idle "images/backgrounds/interactions_item/wallart_roadtrip.webp" focus_mask True action NullAction()
-        if wallart['sincity']:
-            imagebutton idle "images/backgrounds/interactions_item/wallart_sincity.webp" focus_mask True action NullAction()
-        if wallart['peekaboo']:
-            imagebutton idle "images/backgrounds/interactions_item/wallart_peekaboo.webp" focus_mask True action NullAction()
+            if wallart['ferrari']:
+                imagebutton auto ("images/backgrounds/interactions_item/wallart_ferrari_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wallart_ferrari_morning_%s.webp") focus_mask True action NullAction()
+            if wallart['parkinglot']:
+                imagebutton auto ("images/backgrounds/interactions_item/wallart_parkinglot_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wallart_parkinglot_morning_%s.webp") focus_mask True action NullAction()
+            if wallart['roadtrip']:
+                imagebutton auto ("images/backgrounds/interactions_item/wallart_roadtrip_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wallart_roadtrip_morning_%s.webp") focus_mask True action NullAction()
+            if wallart['sincity']:
+                imagebutton auto ("images/backgrounds/interactions_item/wallart_sincity_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wallart_sincity_morning_%s.webp") focus_mask True action NullAction()
+            if wallart['peekaboo']:
+                imagebutton auto ("images/backgrounds/interactions_item/wallart_peekaboo_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_item/wallart_peekaboo_morning_%s.webp") focus_mask True action NullAction()
 
-        if not carry_phone:
-            if int(current_time[:2]) in night:
-                $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_%s.webp"
-            elif int(current_time[:2]) == 22 or int(current_time[:2]) == 23 or int(current_time[:2]) == 0 or int(current_time[:2]) == 1:
-                $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_glow_%s.webp"
-            else:
-                $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_morning_phone_%s.webp"
-            imagebutton auto phoneimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]
-        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-            # $ exitdown_event_var = "uts_cfs"
-            # $ exitdown_event = "upper_hallway_loc"
-            # $ exitdown = "Upper hallway"
+            if not carry_phone:
+                if int(current_time[:2]) in hours:
+                    $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_glow_%s.webp"
+                elif int(current_time[:2]) in night:
+                    $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_night_phone_%s.webp"
+                else:
+                    $ phoneimg = "images/backgrounds/interactions_item/fp_bedroom_morning_phone_%s.webp"
+                imagebutton auto phoneimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_loc')]
+
             imagebutton auto ("images/backgrounds/interactions_move/fp_bedroom_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/fp_bedroom_door_morning_%s.webp") focus_mask True action [SetVariable('ups_cfs',True),Call('upstairs_loc')]:
                 tooltip "Upper Hallway"
-
-            # imagebutton auto ("images/backgrounds/interactions_move/front_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interactions_move/front_door_morning_%s.webp") focus_mask True action [SetVariable('trans',True),SetVariable('out_cfs',True),Jump('outside_loc')]:
-            #     tooltip "Go outside"
-
 
     if room == "fs bedroom":
         if find_panties:
@@ -1632,22 +1645,30 @@ screen location(room=False):
 
     if room == "upper hallway bathroom" or room == "upper hallway bathroom peek":
         if int(current_time[:2]) >= 6 and int(current_time[:2]) <= 14 and not backpack.has_item(small_keys_item) and keys_mentioned:
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_keys_morning_%s.webp" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("smallkeys_added",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+            if renpy.get_screen('say') is None and renpy.get_screen('choice') is None and renpy.get_screen('phone') is None:
+                imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_keys_morning_%s.webp" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("smallkeys_added",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+            else:
+                add "images/backgrounds/interactions_item/upper_hallway_bathroom_keys_morning_idle.webp"
 
         if int(current_time[:2]) in night:
             # imagebutton auto "images/backgrounds/upper_hallway_bathroom_shower_night_%s.webp" focus_mask True action [SetVariable("fpshower",True),Jump('upper_hallway_bathroom_loc')]
-            imagebutton auto ("images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_light_%s.webp" if bathroom_light else "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_%s.webp") focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpsink",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
-            if bathroom_light:
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_light_on_%s.webp" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
-            else:
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_%s.webp" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+            if renpy.get_screen('say') is None and renpy.get_screen('choice') is None and renpy.get_screen('phone') is None:
+                imagebutton auto ("images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_light_%s.webp" if bathroom_light else "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_night_%s.webp") focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpsink",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+                if bathroom_light:
+                    imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_light_on_%s.webp" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+                else:
+                    imagebutton auto "images/backgrounds/interactions_item/bathroom_lightswitch_night_%s.webp" focus_mask True action [ToggleVariable('bathroom_light'),SetVariable('occupied_bath',False),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
         else:
             if bathroom_find_panties and room != 'upper hallway bathroom peek':
-                imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.webp" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('occupied_bath',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.webp" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpshower",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
-            if room == 'upper hallway bathroom peek':
-                add "images/characters/juliette/scenes/upper_hallway_bathroom_juliette_shower_bubbles.webp"
-            imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.webp" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpsink",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+                if renpy.get_screen('say') is None and renpy.get_screen('choice') is None and renpy.get_screen('phone') is None:
+                    imagebutton auto "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_%s.webp" focus_mask True action [SetVariable('bathroom_find_panties',False),SetVariable('occupied_bath',False),SetVariable('bathroom_panties_added',True),SetVariable('gp_bath',gp_bath),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+                else:
+                    add "images/backgrounds/interactions_item/bathroom_panties_"+gp_bath+"_idle.webp"
+            if renpy.get_screen('say') is None and renpy.get_screen('choice') is None and renpy.get_screen('phone') is None:
+                imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_morning_%s.webp" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpshower",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
+                if room == 'upper hallway bathroom peek':
+                    add "images/characters/juliette/scenes/upper_hallway_bathroom_juliette_shower_bubbles.webp"
+                imagebutton auto "images/backgrounds/interactions_item/upper_hallway_bathroom_sink_morning_%s.webp" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("fpsink",True),Call('upper_hallway_bathroom_loc',uhlbcfs=True)]
             add "images/backgrounds/interactions_item/bathroom_lightswitch_morning_off_idle.webp"
         if wetshower:
             add "images/backgrounds/interactions_item/upper_hallway_bathroom_shower_wet_glass.webp"
@@ -1902,7 +1923,7 @@ screen phone_hint_screen(hintselect='new'):
 
 screen phone_playstore():
     tag phonescreen
-    modal True
+    # modal True
     zorder 800
     default x = 500
     default y = 400
@@ -2016,7 +2037,7 @@ screen phone_playstore():
 screen phone_playstore_main_icons():
     tag phonescreen
     zorder 960
-    modal True
+    # modal True
     default categories = ['Games','Recommended','Apps']
     fixed:
         maximum 380,710
@@ -2080,7 +2101,7 @@ screen phone_playstore_main_icons():
 
 screen phone_playstore_apppage():
     tag phonescreen
-    modal True
+    # modal True
     zorder 800
     default x = 500
     default y = 400
@@ -2187,7 +2208,7 @@ screen phone_playstore_apppage():
 
 screen phone_text_screen():
     tag phonescreen
-    modal True
+    # modal True
     zorder 800
     default x = 500
     default y = 400
@@ -2319,7 +2340,7 @@ screen phone_text_screen():
 
 screen show_text_msg(compchar=False,char=False):
     tag phonescreen
-    modal True
+    # modal True
     zorder 800
     default x = 500
     default y = 400
@@ -3061,7 +3082,7 @@ screen custom_confirm(cc_chosen=False):
 
 screen display_achievements():
     tag phonescreen
-    modal True
+    # modal True
     zorder 800
     default x = 500
     default y = 400
@@ -3128,7 +3149,7 @@ screen display_achievements():
                                             if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
                                                 text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
                         elif not achievement.unlocked:
-                            if show_unlocked_achievements:
+                            if show_locked_achievements:
                                 fixed:
                                     xsize 370
                                     ysize 100
@@ -3155,13 +3176,13 @@ screen display_achievements():
                                             yalign .9
                                             if selected_achievement.unlocked:
                                                 text "Achievement Unlocked!" xalign 0.5 yalign 0.5 size 14
-                                            text "{b}"+selected_achievement.name+"{/b}" size 16 xalign 0.5 text_align 0.5
+                                            text "{b}{color=#fff}"+selected_achievement.name+"{/color}{/b}" size 16 xalign 0.5 text_align 0.5
                                             text selected_achievement.description size 14 xalign 0.5 text_align 0.5
                                             if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
                                                 text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
 
                         elif achievement.unlocked:
-                            if show_locked_achievements:
+                            if show_unlocked_achievements:
                                 fixed:
                                     xsize 370
                                     ysize 100
@@ -3188,7 +3209,7 @@ screen display_achievements():
                                             yalign .9
                                             if selected_achievement.unlocked:
                                                 text "Achievement Unlocked!" xalign 0.5 yalign 0.5 size 14
-                                            text "{b}{color=#fff}"+selected_achievement.name+"{/color}{/b}" size 16 xalign 0.5 text_align 0.5
+                                            text "{b}"+selected_achievement.name+"{/b}" size 16 xalign 0.5 text_align 0.5
                                             text selected_achievement.description size 14 xalign 0.5 text_align 0.5
                                             if selected_achievement is not achievement_hidden and selected_achievement.unlocked is False:
                                                 text "[selected_achievement.progress]/[selected_achievement.progress_max]" size 16 xalign 0.5 text_align 0.5
@@ -3348,7 +3369,7 @@ screen custom_load():
 
 screen custom_preferences():
     tag phonescreen
-    modal True
+    # modal True
     zorder 800
     default x = 500
     default y = 400
@@ -3372,7 +3393,7 @@ screen custom_preferences():
             vbox:
                 if renpy.variant("pc"):
                     fixed:
-                        style_prefix "custom_radio"
+                        style_prefix "category"
                         xsize 370
                         ysize 150
                         hbox:
@@ -3382,17 +3403,17 @@ screen custom_preferences():
                                 text_color "#fff"
                         hbox:
                             ypos 40
-                            textbutton _("Window") action Preference("display", "window"):
-                                foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            textbutton _("Window") action Preference("display", "window")
+                                # foreground "gui/button/check_[prefix_]foreground_white.webp"
                         hbox:
                             ypos 80
-                            textbutton _("Fullscreen") action Preference("display", "fullscreen"):
-                                foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            textbutton _("Fullscreen") action Preference("display", "fullscreen")
+                                # foreground "gui/button/check_[prefix_]foreground_white.webp"
                 if not renpy.variant("pc"):
                     fixed:
                         xsize 370
                         ysize 200
-                        style_prefix "custom_radio"
+                        style_prefix "category"
                         hbox:
                             yalign 0.0
                             xalign .5
@@ -3400,21 +3421,21 @@ screen custom_preferences():
                                 text_color "#fff"
                         hbox:
                             ypos 40
-                            textbutton _("Disable") action Preference("rollback side", "disable"):
-                                foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            textbutton _("Disable") action Preference("rollback side", "disable")
+                                # foreground "gui/button/check_[prefix_]foreground_white.webp"
                         hbox:
                             ypos 80
-                            textbutton _("Left") action Preference("rollback side", "left"):
-                                foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            textbutton _("Left") action Preference("rollback side", "left")
+                                # foreground "gui/button/check_[prefix_]foreground_white.webp"
                         hbox:
                             ypos 120
-                            textbutton _("Right") action Preference("rollback side", "right"):
-                                foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            textbutton _("Right") action Preference("rollback side", "right")
+                                # foreground "gui/button/check_[prefix_]foreground_white.webp"
 
                 fixed:
                     xsize 370
                     ysize 200
-                    style_prefix "custom_radio"
+                    style_prefix "category"
                     hbox:
                         yalign 0.0
                         xalign .5
@@ -3423,15 +3444,18 @@ screen custom_preferences():
                     hbox:
                         ypos 40
                         textbutton _("Unseen Text") action Preference("skip", "toggle"):
-                            foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            selected preferences.skip_unseen == True
+                            # foreground "gui/button/check_[prefix_]foreground_white.webp"
                     hbox:
                         ypos 80
                         textbutton _("After Choices") action Preference("after choices", "toggle"):
-                            foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            # foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            selected preferences.skip_after_choices == True
                     hbox:
                         ypos 120
                         textbutton _("Transitions") action InvertSelected(Preference("transitions", "toggle")):
-                            foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            # foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            selected preferences.transitions == 0
 
                 fixed:
                     xsize 370
@@ -3510,12 +3534,12 @@ screen custom_preferences():
                                 action Preference("all mute", "toggle")
                                 style "mute_all_button"
                                 text_color "#fff"
-                                foreground "gui/button/check_[prefix_]foreground_white.webp"
+                                # foreground "gui/button/check_[prefix_]foreground_white.webp"
 
                 fixed:
                     xsize 370
                     ysize 200
-                    style_prefix "custom_radio"
+                    style_prefix "category"
                     hbox:
                         yalign 0.0
                         xalign .5
@@ -3523,17 +3547,17 @@ screen custom_preferences():
                             text_color "#fff"
                     hbox:
                         ypos 40
-                        textbutton _("Disable") action SetField(persistent,"cheat",False):
-                            foreground "gui/button/check_[prefix_]foreground_white.webp"
+                        textbutton _("Disable") action SetField(persistent,"cheat",False)
+                            # foreground "gui/button/check_[prefix_]foreground_white.webp"
                     hbox:
                         ypos 80
-                        textbutton _("Enable") action SetField(persistent,"cheat",True):
-                            foreground "gui/button/check_[prefix_]foreground_white.webp"
+                        textbutton _("Enable") action SetField(persistent,"cheat",True)
+                            # foreground "gui/button/check_[prefix_]foreground_white.webp"
 
                 fixed:
                     xsize 370
                     ysize 200
-                    style_prefix "custom_radio"
+                    style_prefix "category"
                     hbox:
                         ysize 50
                         xalign .5
@@ -3544,20 +3568,20 @@ screen custom_preferences():
                         ypos 50
                         xsize 370
                         textbutton _("Disable") action SetField(persistent,'side_image_zoom',False):
-                            foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            # foreground "gui/button/check_[prefix_]foreground_white.webp"
                             yalign .5
                     hbox:
                         ysize 50
                         ypos 100
                         xsize 370
                         textbutton _("Enable") action SetField(persistent,'side_image_zoom',True):
-                            foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            # foreground "gui/button/check_[prefix_]foreground_white.webp"
                             yalign .5
 
                 fixed:
                     xsize 370
                     ysize 200
-                    style_prefix "custom_radio"
+                    style_prefix "category"
                     hbox:
                         ysize 50
                         xalign .5
@@ -3568,14 +3592,14 @@ screen custom_preferences():
                         ypos 50
                         xsize 370
                         textbutton _("Disable") action SetField(persistent,'quick_menu', False):
-                            foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            # foreground "gui/button/check_[prefix_]foreground_white.webp"
                             yalign .5
                     hbox:
                         ysize 50
                         ypos 100
                         xsize 370
                         textbutton _("Enable") action SetField(persistent,'quick_menu', True):
-                            foreground "gui/button/check_[prefix_]foreground_white.webp"
+                            # foreground "gui/button/check_[prefix_]foreground_white.webp"
                             yalign .5
 
                 if disabled_hints:
@@ -3589,7 +3613,7 @@ screen custom_preferences():
                                 action Function(restore_hints)
                                 style "mute_all_button"
                                 text_color "#fff"
-                                foreground "gui/button/check_[prefix_]foreground_white.webp"
+                                # foreground "gui/button/check_[prefix_]foreground_white.webp"
     frame:
         background None
         xalign .5
@@ -4373,16 +4397,16 @@ screen preferences():
                         hbox:
                             ypos 25
                             xalign .5
-                            spacing 130
+                            spacing 70
                             style_prefix "slider"
                             vbox:
-                                maximum 300,100
+                                maximum 300,40
                                 label _("Text Speed"):
                                     xalign .5
                                     text_size 20
                                 bar value Preference("text speed")
                             vbox:
-                                maximum 300,100
+                                maximum 300,40
                                 label _("Auto-Forward Time"):
                                     xalign .5
                                     text_size 20
@@ -4406,7 +4430,7 @@ screen preferences():
                                         text_size 20
                                     bar value Preference("music volume"):
                                         ysize 20
-                                    $ musicvolume = int(_preferences.volumes['music']*100) if not persistent.soundmuted and not p.musicmuted else 0
+                                    $ musicvolume = int(_preferences.volumes['music']*100) if not persistent.soundmuted and not persistent.musicmuted else 0
                                     hbox:
                                         xalign .5
                                         spacing 20
@@ -4430,7 +4454,7 @@ screen preferences():
                                         text_size 20
                                     bar value Preference("sound volume"):
                                         ysize 20
-                                    $ soundvolume = int(_preferences.volumes['sfx']*100) if not persistent.soundmuted and not p.sfxmuted else 0
+                                    $ soundvolume = int(_preferences.volumes['sfx']*100) if not persistent.soundmuted and not persistent.sfxmuted else 0
                                     hbox:
                                         xalign .5
                                         spacing 20
@@ -4460,7 +4484,7 @@ screen preferences():
                                         text_size 20
                                     bar value Preference("voice volume"):
                                         ysize 20
-                                    $ voicevolume = int(_preferences.volumes['voice']*100) if not persistent.soundmuted and not p.voicemuted else 0
+                                    $ voicevolume = int(_preferences.volumes['voice']*100) if not persistent.soundmuted and not persistent.voicemuted else 0
                                     hbox:
                                         xalign .5
                                         spacing 20
@@ -4488,7 +4512,7 @@ screen preferences():
                             hbox:
                                 ypos 200
                                 xalign .5
-                                if persistent.soundmuted or (p.musicmuted and p.voicemuted and p.sfxmuted):
+                                if persistent.soundmuted or (persistent.musicmuted and persistent.voicemuted and persistent.sfxmuted):
                                     vbox:
                                         imagebutton idle "gui/speaker_muted.webp" focus_mask True:
                                             xalign .5

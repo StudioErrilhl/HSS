@@ -22,95 +22,10 @@ label fp_bedroom_scene(trans=True): #this is the starting scene, and the one tha
     if not fp_bedroom_ach:
         $ fp_bedroom_ach = True
         $ update_been_everywhere_achievement()
-    $ hours = [0,1,22,23]
-    if not backpack_carry:
-        if int(current_time[:2]) in hours:
-            if not carry_phone and not carry_wallet:
-                scene fp_bedroom_night_glow_phone_backpack_wallet
-            elif not carry_phone:
-                scene fp_bedroom_night_glow_phone_backpack
-            elif not carry_wallet:
-                scene fp_bedroom_night_glow_backpack_wallet
-            else:
-                scene fp_bedroom_night_glow_backpack
-        elif int(current_time[:2]) in night:
-            if not carry_phone and not carry_wallet:
-                scene fp_bedroom_night_phone_backpack_wallet
-            elif not carry_phone:
-                scene fp_bedroom_night_phone_backpack
-            elif not carry_wallet:
-                scene fp_bedroom_night_backpack_wallet
-            else:
-                scene fp_bedroom_night_backpack
-        else:
-            if not carry_phone and not carry_wallet:
-                if not fp_sofa_aquired:
-                    scene fp_bedroom_morning_phone_backpack_wallet
-                else:
-                    scene fp_bedroom_morning_sofa_phone_wallet_backpack
-            elif not carry_phone:
-                scene fp_bedroom_morning_phone_backpack
-            elif not carry_wallet:
-                scene fp_bedroom_morning_backpack_wallet
-            else:
-                scene fp_bedroom_morning_backpack
-    else:
-        if int(current_time[:2]) in hours:
-            if not carry_phone and not carry_wallet:
-                scene fp_bedroom_night_glow_phone_wallet
-            elif not carry_phone:
-                scene fp_bedroom_night_glow_phone
-            elif not carry_wallet:
-                scene fp_bedroom_night_glow_wallet
-            else:
-                scene fp_bedroom_night
-        elif int(current_time[:2]) in night:
-            if not carry_phone and not carry_wallet:
-                scene fp_bedroom_night_phone_wallet
-            elif not carry_phone:
-                scene fp_bedroom_night_phone
-            elif not carry_wallet:
-                scene fp_bedroom_night_wallet
-            else:
-                scene fp_bedroom_night
-        else:
-            if not carry_phone and not carry_wallet:
-                scene fp_bedroom_morning_phone_wallet
-            elif not carry_phone:
-                scene fp_bedroom_morning_phone
-            elif not carry_wallet:
-                scene fp_bedroom_morning_wallet
-            else:
-                if wallart['ferrari']:
-                    if not fp_sofa_aquired:
-                        scene fp_bedroom_morning_empty_wallart_ferrari
-                    else:
-                        scene fp_bedroom_morning_sofa_wallart_ferrari
-                elif wallart['parkinglot']:
-                    if not fp_sofa_aquired:
-                        scene fp_bedroom_morning_empty_wallart_parkinglot
-                    else:
-                        scene fp_bedroom_morning_sofa_wallart_parkinglot
-                elif wallart['roadtrip']:
-                    if not fp_sofa_aquired:
-                        scene fp_bedroom_morning_empty_wallart_roadtrip
-                    else:
-                        scene fp_bedroom_morning_sofa_wallart_roadtrip
-                elif wallart['peekaboo']:
-                    if not fp_sofa_aquired:
-                        scene fp_bedroom_morning_empty_wallart_peekaboo
-                    else:
-                        scene fp_bedroom_morning_sofa_wallart_peekaboo
-                elif wallart['sincity']:
-                    if not fp_sofa_aquired:
-                        scene fp_bedroom_morning_empty_wallart_sincity
-                    else:
-                        scene fp_bedroom_morning_sofa_wallart_sincity
-                else:
-                    if not fp_sofa_aquired:
-                        scene fp_bedroom_morning
-                    else:
-                        scene fp_bedroom_morning_sofa
+    if int(current_time[:2]) in morning:
+        scene fp_bedroom_morning
+    elif int(current_time[:2]) in night:
+        scene fp_bedroom_night
     return
 
 label fs_bedroom_scene(trans=True):

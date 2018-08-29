@@ -825,6 +825,74 @@ image juliette_intro_ani:
     yoffset -250
     0.1
 
+layeredimage fp_bedroom_morning:
+    always:
+        "fpbm_empty"
+
+    if not carry_phone:
+        "fp_bedroom_morning_phone_idle"
+
+    if not carry_backpack:
+        "fp_bedroom_day_backpack_idle"
+
+    if not carry_wallet:
+        "fp_bedroom_morning_wallet_idle"
+
+    if not backpack.has_item(schoolbooks_item):
+        "fp_bedroom_morning_dresser_idle"
+
+    if fp_sofa_aquired:
+        "fpbm_sofa_idle"
+
+    if wallart['ferrari']:
+        "wallart_ferrari_morning_idle"
+
+    if wallart['parkinglot']:
+        "wallart_parkinglot_morning_idle"
+
+    if wallart['peekaboo']:
+        "wallart_peekaboo_morning_idle"
+
+    if wallart['roadtrip']:
+        "wallart_roadtrip_morning_idle"
+
+    if wallart['sincity']:
+        "wallart_sincity_morning_idle"
+
+layeredimage fp_bedroom_night:
+    always:
+        "fpbn_empty"
+
+    if not carry_phone:
+        "fp_bedroom_night_phone_idle"
+
+    if not carry_backpack:
+        "fp_bedroom_day_backpack_idle"
+
+    if not carry_wallet:
+        "fp_bedroom_night_wallet_idle"
+
+    if not backpack.has_item(schoolbooks_item):
+        "fp_bedroom_night_dresser_idle"
+
+    if fp_sofa_aquired:
+        "fpbn_sofa_idle"
+
+    if wallart['ferrari']:
+        "wallart_ferrari_night_idle"
+
+    if wallart['parkinglot']:
+        "wallart_parkinglot_night_idle"
+
+    if wallart['peekaboo']:
+        "wallart_peekaboo_night_idle"
+
+    if wallart['roadtrip']:
+        "wallart_roadtrip_night_idle"
+
+    if wallart['sincity']:
+        "wallart_sincity_night_idle"
+
 
 layeredimage marten:
     pos(.25,1.0)
