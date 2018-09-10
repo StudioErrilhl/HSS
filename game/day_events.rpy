@@ -33,16 +33,18 @@ label day_events():
                     show anne with easeinleft #dissolve
                     fm ahead "Could you help me open this, [fp]? I can't seem to get it open, and I need this for dinner today"
                     menu:
-                        "Yes, [fmName.informal], no problem. *you open the jar*":
+                        "No, [fmName.informal], I don't have time to help you right now (evil)":
+                            show anne angry
+                            $ statschangenotify("fp_demon",1)
+                            $ statschangenotify("fm_dom",.5,True)
+                            $ statschangenotify("fm_rel",-.5)
+                        "Yes, [fmName.informal], no problem. *you open the jar* (good)":
                             if fm_dom <= 5:
                                 $ statschangenotify("fm_dom",.5,True)
                                 $ statschangenotify("fm_rel",1)
                             else:
                                 $ statschangenotify("fm_rel",.5)
-                        "No, [fmName.informal], I don't have time to help you right now":
-                            show anne angry
-                            $ statschangenotify("fm_dom",.5,True)
-                            $ statschangenotify("fm_rel",-.5)
+                            $ statschangenotify("fp_angel",1)
                 $ sun_event = False
                 hide anne
                 call change_loc(current_location) from _call_change_loc_70
@@ -128,7 +130,7 @@ label day_events():
                                 call change_loc('livingroom',sec_call='tv_games_evening') from _call_change_loc_50
                         elif int(current_time[:2]) > 19:
                             "You're feeling a bit tired, after school, and working on your bike, so you decide taking a shower will be a nice relief right now"
-                            call change_loc('upper hallway bathroom',sec_call='taking_shower_evening') from _call_change_loc_51
+                            call change_loc('ufbm',sec_call='taking_shower_evening') from _call_change_loc_51
                         else:
                             call change_loc('livingroom',sec_call='lounge_livingroom') from _call_change_loc_52
                             label lounge_livingroom(True):
@@ -146,42 +148,26 @@ label day_events():
 
                 call change_loc('livingroom') from _call_change_loc_47
 
-            if mc_f and renpy.random.random() > .65 and current_time[:2] < 17:
-                "You decide to take a ride"
-                "You decide to call up [nk] to see if she wants to come with"
-                if (renpy.random.random() > .65 and nk_rel > 15) or (renpy.random.random() > .5 and nk_rel > 20) or (renpy.random.random() > .35 and nk_rel > 30):
-                    nk ahead "Hi, [fp]"
-                    fp "Hi, [nk]. I was wondering if you wanted to come for a ride with me today? Was thinking we could"
-                    $ conditions.addcondition("Go to the cabin","current_month >= 9 and current_month <= 3 and has_cabin")
-                    $ conditions.addcondition("Go to the marina","boat_at_marina")
-                    menu:
-                        "Go to the beach":
-                            call change_loc('beach') from _call_change_loc_75
-                        "Ride to the next town over":
-                            jump next_town_ride
-                        "Go to the cabin":
-                            jump cabin_ride
-                        "Go to the marina":
-                            jump marina_ride
-                else:
-                    "No answer. Oh well, you'll call her again some other time"
-            else:
-                "It's just not the day for outdoor activities, you decide to stay inside and just watch some TV instead"
-                if fp_sts > 0:
-                    $ statschangenotify("fp_sts",-1)
-                else:
-                    $ evening_event = True
-                if not evening_event:
-                    if int(current_time[:2]) > 22:
-                        call end_of_day(True) from _call_end_of_day_2
-                    else:
-                        menu:
-                            "You decide to see if there is anything else you can do today":
-                                call change_loc(current_location) from _call_change_loc_76
-                            "You're feeling kinda exhausted, and decide to just go to bed":
-                                call end_of_day(True) from _call_end_of_day_3
-                else:
-                    call evening_event_label(True) from _call_evening_event_label
+            # if mc_f and renpy.random.random() > .65 and current_time[:2] < 17:
+            "You decide to take a ride"
+            "You decide to call up [nk] to see if she wants to come with"
+            # if (renpy.random.random() > .65 and nk_rel > 15) or (renpy.random.random() > .5 and nk_rel > 20) or (renpy.random.random() > .35 and nk_rel > 30):
+            nk ahead "Hi, [fp]"
+            fp "Hi, [nk]. I was wondering if you wanted to come for a ride with me today? Was thinking we could"
+            $ conditions.addcondition("Go to the cabin","current_month >= 9 and current_month <= 3 and has_cabin")
+            $ conditions.addcondition("Go to the marina","boat_at_marina")
+            menu:
+                "Go to the beach":
+                    call change_loc('beach') from _call_change_loc_75
+                "Ride to the next town over":
+                    jump next_town_ride
+                "Go to the cabin":
+                    jump cabin_ride
+                "Go to the marina":
+                    jump marina_ride
+                # else:
+                #     "No answer. Oh well, you'll call her again some other time"
+            # O
 
     label taking_shower_evening(tse_called=False):
         if tse_called:

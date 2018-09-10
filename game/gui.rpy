@@ -224,7 +224,7 @@ define gui.choice_button_disabled_tile = False
 define gui.choice_button_disabled_borders = Borders(150, 8, 150, 8,15,15,15,15)
 define gui.choice_button_disabled_text_font = gui.text_font
 define gui.choice_button_disabled_text_size = gui.text_size
-define gui.choice_button_disabled_text_xalign = 0.5
+define gui.choice_button_disabled_text_xalign = 0.0
 # define gui.choice_button_disabled_text_hover_color = "#ffffff"
 
 

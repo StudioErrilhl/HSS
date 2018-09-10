@@ -1,5 +1,5 @@
 init python:
-    _game_menu_screen = None
+    _game_menu_screen = None #this disables the right-click functionality of the game menu screen
     import os, math, re, pygame_sdl2
     pygame_sdl2.init()
     pydisp = pygame_sdl2.display.list_modes()
@@ -34,7 +34,6 @@ if config.developer:
 if not config.developer:
     define config.console = True
 
-# define p = persistent
 define config.default_music_volume = .5
 define config.default_sfx_volume = .5
 define config.default_voice_volume = .5
@@ -51,7 +50,7 @@ default persistent.backpack_info = True
 default persistent.cheat = False
 default persistent.side_image_zoom = True
 default persistent.achievement_cheat = False
-# persistent preferences variables
+default persistent.quick_menu = False
 default persistent.selectedmenu = False
 default persistent.displayresolutions = False
 default persistent.soundmuted = False
@@ -61,8 +60,6 @@ default persistent.voicemuted = False
 default persistent.skipunseen = False
 default persistent.skipafterchoices = False
 default persistent.skiptransitions = False
-
-default persistent.quick_menu = False
 
 # character definitions
 define narrator = Character(None, what_italic=True)
@@ -104,6 +101,9 @@ default filth_val = 0
 default tmp_filth_val = False
 default fpe = False
 default fp_sofa_aquired = False
+default fp_demon = 0
+default fp_angel = 0
+default choicestatus = None
 
 #fm
 default fm_dom = 0
@@ -121,6 +121,7 @@ default fm_apologize = False
 default fm_sex_pref = "BJ"
 default fm_lvl = 0
 default fme = False
+default fm_seen = False
 
 #fs
 default fs_dom = 0
@@ -252,9 +253,9 @@ default total_pussy = fm_pussy + fs_pussy + nk_pussy + nb_pussy + sn_pussy
 default total_bj = fm_bj + fs_bj + nk_bj + nb_bj + sn_bj
 
 default fp_sex_pref = "BJ"
-if total_bj >= total_pussy >= total_anal:
+if (total_bj >= total_pussy >= total_anal) or (total_bj >= total_anal >= total_pussy):
     $ fp_sex_pref = "BJ"
-elif total_pussy >= total_bj >= total_anal:
+elif (total_pussy >= total_bj >= total_anal) or (total_pussy >= total_anal >= total_bj):
     $ fp_sex_pref = "Pussy"
 else:
     $ fp_sex_pref = "Anal"
@@ -285,6 +286,7 @@ default school_walk_late_arrival = False
 default morning_event_done = False
 default after_sleep = False
 default has_cabin = False
+default boat_at_marina = False
 default had_breakfast = False # check to see if needed
 default dinner_event = True
 default after_principal_talk = False
@@ -341,10 +343,11 @@ default check_nc_event_status = 0
 default hacker_event_not_happen = False
 
 # items
-default fs_pale_pink_panties = False
-default fs_light_blue_panties = False
-default fs_bright_pink_panties = False
-default fs_yellow_panties = False
+default fsp_black = False
+default fsp_light_blue = False
+default fsp_hot_pink = False
+default fsp_red = False
+default fsp_yellow = False
 default find_panties = True
 default bathroom_find_panties = True
 default find_pb = False
@@ -407,75 +410,7 @@ default appselect = None
 default playstore_search_saved = '  '
 default playstore_search = '  '
 default contacts_search = '  '
-
-# default appstore_lists = { "playstore_games" : [
-#             ['Making Movies','Droid Productions','makingmovies','Sometimes you find new beginnings from the wreckage of past mistakes. Making Movies is a game about paying rent, finding love and making pornography.','https://droid-productions.itch.io/making-movies'],
-#             ['Life','Fasder','life','A story driven sandbox game about Mark and his day to day life.','https://fasder.itch.io/life'],
-#             ['xMassTransitx','xMTx','xmasstransitx','A typical cyberpunk, time-travel, zombie survival, adult game with hot girls.','https://www.patreon.com/xMassTransitx'],
-#             ['Parental Love','Luxee','parentallove','Help mend the relationship of a broken man and his ex-wife. Or don\'t?','https://www.patreon.com/Luxee'],
-#             ['A Broken Family','KinneyX23','abrokenfamily','In the year 2034 the world is in ruins, it is dominated by machines and humans serve as their slaves. One of those machines was reprogrammed and sent to the past to protect John O\'Connor','https://kinneyx23.itch.io/a-broken-family'],
-#             ['Inevitable Relations','KinneyX23','inevitablerelations','Charlie and Eva were pretty close, too close for Beth and Alex, so they sent Charlie to California, to live with Beth‘s brother Leo. After one year he returns, and the story starts there','https://www.patreon.com/KinneyX23'],
-#             ['The DeLuca Family','HopesGaming','thedelucafamily','You live a peaceful life, until you get a letter from a mafioso, telling you that due to your parent\'s past, you\'re in his debt. You will serve a The DeLuca family, the most dangerous and infamous criminal organisation in the country','https://www.patreon.com/HopesGaming'],
-#             ['A Cowboy\'s Story','Noller72','acowboysstory','You take the role of a lonesome Cowboy who travel to this little town, and there the adventures begin','https://www.patreon.com/Noller72']
-#         ],
-#         "playstore_recommended" : [
-#             ['HSS','Studio Errilhl','hss','You\'re on your last stretch of high-school, just trying to graduate, have some fun, get some pussy... all the regular stuff. Although... something is not quite as it seems in your peaceful little town...','https://www.patreon.com/errilhl'],
-#             ['Making Movies','Droid Productions','makingmovies','Sometimes you find new beginnings from the wreckage of past mistakes. Making Movies is a game about paying rent, finding love and making pornography.','https://droid-productions.itch.io/making-movies'],
-#             ['Life','Fasder','life','A story driven sandbox game about Mark and his day to day life.','https://fasder.itch.io/life'],
-#             ['xMassTransitx','xMTx','xmasstransitx','A typical cyberpunk, time-travel, zombie survival, adult game with hot girls.','https://www.patreon.com/xMassTransitx'],
-#             ['Parental Love','Luxee','parentallove','Help mend the relationship of a broken man and his ex-wife. Or don\'t?','https://www.patreon.com/Luxee'],
-#             ['A Broken Family','KinneyX23','abrokenfamily','In the year 2034 the world is in ruins, it is dominated by machines and humans serve as their slaves. One of those machines was reprogrammed and sent to the past to protect John O\'Connor','https://kinneyx23.itch.io/a-broken-family'],
-#             ['Inevitable Relations','KinneyX23','inevitablerelations','Charlie and Eva were pretty close, too close for Beth and Alex, so they sent Charlie to California, to live with Beth‘s brother Leo. After one year he returns, and the story starts there','https://www.patreon.com/KinneyX23'],
-#             ['The DeLuca Family','HopesGaming','thedelucafamily','You live a peaceful life, until you get a letter from a mafioso, telling you that due to your parent\'s past, you\'re in his debt. You will serve a The DeLuca family, the most dangerous and infamous criminal organisation in the country','https://www.patreon.com/HopesGaming'],
-#             ['A Cowboy\'s Story','Noller72','acowboysstory','You take the role of a lonesome Cowboy who travel to this little town, and there the adventures begin','https://www.patreon.com/Noller72']
-#         ],
-#         "playstore_apps" : [
-#             ['Birdie','Birdie Bots','birdie','This is where you\'ll find the latest short blurbs about nothing important at all',False],
-#             ['Video','Video Makers','video','Wanna watch the hottest girl-on-girl videos on your phone? Get "VIDEO", the best porn-player out there',False],
-#             ['ChitChat','Chirpies','chat','Text your friends, chat with strangers. What can possibly go wrong?',False],
-#             ['Friend Finder','Stalker Inc','friendfinder','Wanna know where your friends are? Just have them install this little app, and their life is an open book!',False],
-#             ['Voice Chat','TOG','voice','Wanna talk to anyone who\'s got a dataplan without other costs? Then VOICE is the app for you!',False]
-#         ]
-# }
-
-
-default playstore_games = [
-            ['Making Movies','Droid Productions','makingmovies','Sometimes you find new beginnings from the wreckage of past mistakes. Making Movies is a game about paying rent, finding love and making pornography.','https://droid-productions.itch.io/making-movies'],
-            ['Life','Fasder','life','A story driven sandbox game about Mark and his day to day life.','https://fasder.itch.io/life'],
-            ['xMassTransitx','xMTx','xmasstransitx','A typical cyberpunk, time-travel, zombie survival, adult game with hot girls.','https://www.patreon.com/xMassTransitx'],
-            ['Parental Love','Luxee','parentallove','Help mend the relationship of a broken man and his ex-wife. Or don\'t?','https://www.patreon.com/Luxee'],
-            ['A Broken Family','KinneyX23','abrokenfamily','In the year 2034 the world is in ruins, it is dominated by machines and humans serve as their slaves. One of those machines was reprogrammed and sent to the past to protect John O\'Connor','https://kinneyx23.itch.io/a-broken-family'],
-            ['Inevitable Relations','KinneyX23','inevitablerelations','Charlie and Eva were pretty close, too close for Beth and Alex, so they sent Charlie to California, to live with Beth‘s brother Leo. After one year he returns, and the story starts there','https://www.patreon.com/KinneyX23'],
-            ['The DeLuca Family','HopesGaming','thedelucafamily','You live a peaceful life, until you get a letter from a mafioso, telling you that due to your parent\'s past, you\'re in his debt. You will serve a The DeLuca family, the most dangerous and infamous criminal organisation in the country','https://www.patreon.com/HopesGaming'],
-            ['A Cowboy\'s Story','Noller72','acowboysstory','You take the role of a lonesome Cowboy who travel to this little town, and there the adventures begin','https://www.patreon.com/Noller72']
-]
-
-default playstore_recommended = [
-            ['HSS','Studio Errilhl','hss','You\'re on your last stretch of high-school, just trying to graduate, have some fun, get some pussy... all the regular stuff. Although... something is not quite as it seems in your peaceful little town...','https://www.patreon.com/errilhl'],
-            ['Making Movies','Droid Productions','makingmovies','Sometimes you find new beginnings from the wreckage of past mistakes. Making Movies is a game about paying rent, finding love and making pornography.','https://droid-productions.itch.io/making-movies'],
-            ['Life','Fasder','life','A story driven sandbox game about Mark and his day to day life.','https://fasder.itch.io/life'],
-            ['xMassTransitx','xMTx','xmasstransitx','A typical cyberpunk, time-travel, zombie survival, adult game with hot girls.','https://www.patreon.com/xMassTransitx'],
-            ['Parental Love','Luxee','parentallove','Help mend the relationship of a broken man and his ex-wife. Or don\'t?','https://www.patreon.com/Luxee'],
-            ['A Broken Family','KinneyX23','abrokenfamily','In the year 2034 the world is in ruins, it is dominated by machines and humans serve as their slaves. One of those machines was reprogrammed and sent to the past to protect John O\'Connor','https://kinneyx23.itch.io/a-broken-family'],
-            ['Inevitable Relations','KinneyX23','inevitablerelations','Charlie and Eva were pretty close, too close for Beth and Alex, so they sent Charlie to California, to live with Beth‘s brother Leo. After one year he returns, and the story starts there','https://www.patreon.com/KinneyX23'],
-            ['The DeLuca Family','HopesGaming','thedelucafamily','You live a peaceful life, until you get a letter from a mafioso, telling you that due to your parent\'s past, you\'re in his debt. You will serve a The DeLuca family, the most dangerous and infamous criminal organisation in the country','https://www.patreon.com/HopesGaming'],
-            ['A Cowboy\'s Story','Noller72','acowboysstory','You take the role of a lonesome Cowboy who travel to this little town, and there the adventures begin','https://www.patreon.com/Noller72']
-]
-
-default playstore_apps = [
-            ['Birdie','Birdie Bots','birdie','This is where you\'ll find the latest short blurbs about nothing important at all','not_a_link'],
-            ['Video','Video Makers','video','Wanna watch the hottest girl-on-girl videos on your phone? Get "VIDEO", the best porn-player out there','not_a_link'],
-            ['ChitChat','Chirpies','chat','Text your friends, chat with strangers. What can possibly go wrong?','not_a_link'],
-            ['Friend Finder','Stalker Inc','friendfinder','Wanna know where your friends are? Just have them install this little app, and their life is an open book!','not_a_link'],
-            ['Voice Chat','TOG','voice','Wanna talk to anyone who\'s got a dataplan without other costs? Then VOICE is the app for you!','not_a_link']
-]
-default wallart = {
-            "parkinglot":False,
-            "ferrari":False,
-            "roadtrip":False,
-            "sincity":False,
-            "peekaboo":False
-}
+default installedFF = False
 
 #call locations from other screens
 default br_cfs = False
@@ -493,6 +428,7 @@ default tfs_cfs = False
 default end_cfs = False
 default stn_cfs = False
 default wmc_cfs = False
+default ufbtcfs = False
 default current_file = False
 default keyclose = False
 default ic_cfs = False
@@ -505,10 +441,11 @@ default exitright_event_var = False
 # achievement variables
 default beer_pickup = False
 default carkeys_pickup = False
-default bright_pink_panties_pickup = False
-default light_blue_panties_pickup = False
-default pale_pink_panties_pickup = False
-default yellow_panties_pickup = False
+default fsp_black_pickup = False
+default fsp_hot_pink_pickup = False
+default fsp_light_blue_pickup = False
+default fsp_yellow_pickup = False
+default fsp_red_pickup = False
 default gin_pickup = False
 default phone_pickup = False
 default princessplug_pickup = False
@@ -557,12 +494,53 @@ default disabled_messages = []
 default deleted_messages = []
 default hintselect = 'new'
 default firstday_talk_list = ['livingroom','fp bedroom','fs bedroom','kitchen','entrance','outside']
-default fs_p = ['fs_yellow','fs_light_blue','fs_pale_pink','fs_bright_pink']
+default fs_p = ['fsp_yellow','fsp_light_blue','fsp_hot_pink','fsp_black','fsp_red']
 default p_response = ["Hm... "+fsName.formal+"s panties...\n{b}sniffs them{/b}\nShould I take them with me?",
                         "Oh, "+fsName.myinformal+" left her panties...",
                         "Right-o! I don't think I have this color...",
                         "{b}Sniffs panties{/b} I love her smell"
         ]
+
+default playstore_games = [
+            ['Making Movies','Droid Productions','makingmovies','Sometimes you find new beginnings from the wreckage of past mistakes. Making Movies is a game about paying rent, finding love and making pornography.','https://droid-productions.itch.io/making-movies'],
+            ['Life','Fasder','life','A story driven sandbox game about Mark and his day to day life.','https://fasder.itch.io/life'],
+            ['xMassTransitx','xMTx','xmasstransitx','A typical cyberpunk, time-travel, zombie survival, adult game with hot girls.','https://www.patreon.com/xMassTransitx'],
+            ['Parental Love','Luxee','parentallove','Help mend the relationship of a broken man and his ex-wife. Or don\'t?','https://www.patreon.com/Luxee'],
+            ['A Broken Family','KinneyX23','abrokenfamily','In the year 2034 the world is in ruins, it is dominated by machines and humans serve as their slaves. One of those machines was reprogrammed and sent to the past to protect John O\'Connor','https://kinneyx23.itch.io/a-broken-family'],
+            ['Inevitable Relations','KinneyX23','inevitablerelations','Charlie and Eva were pretty close, too close for Beth and Alex, so they sent Charlie to California, to live with Beth‘s brother Leo. After one year he returns, and the story starts there','https://www.patreon.com/KinneyX23'],
+            ['The DeLuca Family','HopesGaming','thedelucafamily','You live a peaceful life, until you get a letter from a mafioso, telling you that due to your parent\'s past, you\'re in his debt. You will serve a The DeLuca family, the most dangerous and infamous criminal organisation in the country','https://www.patreon.com/HopesGaming'],
+            ['A Cowboy\'s Story','Noller72','acowboysstory','You take the role of a lonesome Cowboy who travel to this little town, and there the adventures begin','https://www.patreon.com/Noller72'],
+            ['Retrieving the Past','MrKnobb','retrievingthepast','Journey with Jensen to find out what he needs to retrieve from his past to make sense of it all. Why is all this happening now?','https://www.patreon.com/mrknobb']
+]
+
+default playstore_recommended = [
+            ['HSS','Studio Errilhl','hss','You\'re on your last stretch of high-school, just trying to graduate, have some fun, get some pussy... all the regular stuff. Although... something is not quite as it seems in your peaceful little town...','https://www.patreon.com/errilhl'],
+            ['Making Movies','Droid Productions','makingmovies','Sometimes you find new beginnings from the wreckage of past mistakes. Making Movies is a game about paying rent, finding love and making pornography.','https://droid-productions.itch.io/making-movies'],
+            ['Life','Fasder','life','A story driven sandbox game about Mark and his day to day life.','https://fasder.itch.io/life'],
+            ['xMassTransitx','xMTx','xmasstransitx','A typical cyberpunk, time-travel, zombie survival, adult game with hot girls.','https://www.patreon.com/xMassTransitx'],
+            ['Parental Love','Luxee','parentallove','Help mend the relationship of a broken man and his ex-wife. Or don\'t?','https://www.patreon.com/Luxee'],
+            ['A Broken Family','KinneyX23','abrokenfamily','In the year 2034 the world is in ruins, it is dominated by machines and humans serve as their slaves. One of those machines was reprogrammed and sent to the past to protect John O\'Connor','https://kinneyx23.itch.io/a-broken-family'],
+            ['Inevitable Relations','KinneyX23','inevitablerelations','Charlie and Eva were pretty close, too close for Beth and Alex, so they sent Charlie to California, to live with Beth‘s brother Leo. After one year he returns, and the story starts there','https://www.patreon.com/KinneyX23'],
+            ['The DeLuca Family','HopesGaming','thedelucafamily','You live a peaceful life, until you get a letter from a mafioso, telling you that due to your parent\'s past, you\'re in his debt. You will serve a The DeLuca family, the most dangerous and infamous criminal organisation in the country','https://www.patreon.com/HopesGaming'],
+            ['A Cowboy\'s Story','Noller72','acowboysstory','You take the role of a lonesome Cowboy who travel to this little town, and there the adventures begin','https://www.patreon.com/Noller72'],
+            ['Retrieving the Past','MrKnobb','retrievingthepast','Journey with Jensen to find out what he needs to retrieve from his past to make sense of it all. Why is all this happening now?','https://www.patreon.com/mrknobb']
+]
+
+default playstore_apps = [
+            ['Birdie','Birdie Bots','birdie','This is where you\'ll find the latest short blurbs about nothing important at all','not_a_link'],
+            ['Video','Video Makers','video','Wanna watch the hottest girl-on-girl videos on your phone? Get "VIDEO", the best porn-player out there','not_a_link'],
+            ['ChitChat','Chirpies','chat','Text your friends, chat with strangers. What can possibly go wrong?','not_a_link'],
+            ['Friend Finder','Stalker Inc','friendfinder','Wanna know where your friends are? Just have them install this little app, and their life is an open book!','not_a_link'],
+            ['Voice Chat','TOG','voice','Wanna talk to anyone who\'s got a dataplan without other costs? Then VOICE is the app for you!','not_a_link']
+]
+default wallart = {
+            "parkinglot":False,
+            "ferrari":False,
+            "roadtrip":False,
+            "sincity":False,
+            "peekaboo":False
+}
+
 # breakfast choices - the bf_weights is updated when you pick something, and will change the weight depending on whether or not you benefit or not
 # default bf_weights = [(0,5),(1,4),(2,2),(3,1),(4,5),(5,2),(6,2),(7,4),(8,1),(9,4),(10,2)]
 # default breakfast = [ #food, reply, modifier, stat, weight-mod
@@ -608,15 +586,16 @@ default home_events = [
 
 default not_in_contacts = ['fp','nc']
 
-default item_weights = {'beer':2,'carkeys':.2,'fs_bright_pink_panties':.1,'fs_pale_pink_panties':.1,'fs_yellow_panties':.1,'fs_light_blue_panties':.1,'gin':1,'phone':.3,'princessplug':.4,'roses':.5,'schoolbooks':5,'small_keys':.2,'toolbox':10,'vodka':1,'wallet':.5,'whiskey':1,'wine':1}
+default item_weights = {'beer':2,'carkeys':.2,'fsp_red':.1,'fsp_hot_pink':.1,'fsp_black':.1,'fsp_yellow':.1,'fsp_light_blue':.1,'gin':1,'phone':.3,'princessplug':.4,'roses':.5,'schoolbooks':5,'small_keys':.2,'toolbox':10,'vodka':1,'wallet':.5,'whiskey':1,'wine':1}
 
 default item_desc = {
             'beer':'What a tasty, delicious beverage! Exactly what you need to kick off a party, slacking on the couch, or just getting slightly wasted. One beer won\'t do much damage, but as soon as you drink a few...',
             'carkeys':'Keys to the car out front.',
-            'fs_bright_pink_panties':'Bright pink panties. Smelling of '+fsName.yourformal+'! Definitely worth hanging on to!',
-            'fs_pale_pink_panties':'Pale pink panties. These are cute and wonderful, and you\'re definitely gonna hang on to these.',
-            'fs_yellow_panties':'Yellow panties. Bright colored, fun and cute.',
-            'fs_light_blue_panties':'Light blue panties. Innocent and cute. Not very representative of the owner...',
+            'fsp_red':'Red lace panties. Seductive and hot, pretty much fitting the owner to a t!',
+            'fsp_hot_pink':'Hot pink panties. Smelling of '+fsName.yourformal+'! Definitely worth hanging on to!',
+            'fsp_black':'Black lace panties. These are sexy and hot, and you\'re definitely gonna hang on to these.',
+            'fsp_yellow':'Yellow panties. Bright colored, fun and cute.',
+            'fsp_light_blue':'Light blue panties. Innocent and cute. Not very representative of the owner...',
             'gin':'Time to hit it off with a bit of G&T.',
             'phone':'Your dayplanner, your internet-connection, your contact-list, your camera, your pretty much everything. Oh, and a phone, too!',
             'princessplug':'This thing has actually been up '+fsName.yourformal+'\'s butt...',
@@ -650,6 +629,7 @@ default first_day = True
 default day_week = 5
 define week_days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 define months_days = [['January',31],['February',28],['March',31],['April',30],['May',31],['June',30],['July',31],['August',31],['September',30],['October',31],['November',30],['December',31]]
+default daycount = 0
 default current_month_day = 1
 default current_month = 3
 default current_month_text = months_days[current_month][0]
@@ -658,7 +638,6 @@ define morning = [6,7,8,9,10,11]
 define day = [11,12,13,14,15,16,17,18,19,20,21,22]
 define night = [22,23,0,1,2,3,4,5]
 define hours = [0,1,22,23] # these are the "glowhours" before night-time, when lights are on
-
 
 default current_time = "06:00"
 default addhour = False

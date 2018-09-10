@@ -1,37 +1,34 @@
 # location changer
 label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=False,sec_call=False,event=False,showerstat=False):
+    # $ print('locname: '+locname)
     if timeadd:
         $ addtime(False, 30)
     if locname:
-        # if '_loc' not in locname:
-        #     $ current_location = locname.replace(' ','_')+"_loc"
-        # else:
         $ locname = locname.replace('_loc','').replace('bad_weather','').replace('light','').replace('windows','').replace('after_shower','').replace('wallet','').replace('empty','').replace('wallart','').replace('sincity','').replace('parkinglot','').replace('peekaboo','').replace('roadtrip','').replace('ferrari','').replace('_',' ').replace('__',' ')
         $ current_location = locname.replace(' ','_')
         if current_location.endswith('_'):
             $ current_location = current_location[:-1]
+        $ current_location = current_location+'_loc'
+        # $ print('current_location: '+current_location)
         $ tmpname = locname.replace(' ','_').replace('_bad_weather','').replace('_build','').replace('_finished','').replace('_windows','').replace('_after_shower','').replace('_light','').replace('_loc','').replace('__','_')
+        # $ print('tmpname: '+tmpname)
         if 'scene' not in tmpname:
             if tmpname.endswith('_'):
                 $ tmpname = tmpname[:-1]
             $ tmpname = tmpname+'_scene'
+            # $ print('tmpnamewithscene: '+tmpname)
         if loctrans:
             $ loctrans = False
-            # $ print(tmpname+"_loctrans")
             if showerstat:
-                # $ print(tmpname+'_showerstat')
                 call expression tmpname pass (trans=False,wetshower=showerstat) from _call_expression
             else:
-                # $ print(tmpname+'_not_showerstat')
                 call expression tmpname pass (trans=False) from _call_expression_1
         else:
-            # $ print(tmpname+"_not_loctrans")
             if showerstat:
-                # $ print(tmpname+'_showerstat')
                 call expression tmpname pass (wetshower=showerstat) from _call_expression_3
             else:
-                # $ print(tmpname+'_not_showerstat')
                 call expression tmpname from _call_expression_4
+        # $ print('locname before show screen: '+locname)
         show screen location(locname)
         if locname in firstday_talk_list:
             if firstday_talk:
@@ -143,11 +140,13 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
             if not tablet_always_look:
                 "Oh, she left her tablet..."
                 menu:
-                    "Look at tablet":
+                    "Look at tablet (evil)":
+                        $ statschangenotify("fp_demon",1)
                         $ ic_num = []
                         $ tablet_always_look = True
                         call screen fs_tablet()
-                    "Leave tablet":
+                    "Leave tablet (good)":
+                        $ statschangenotify("fp_angel",1)
                         $ tablet_added = False
                         $ find_tablet = True
             else:
@@ -171,31 +170,38 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                         $ update_panties_achievements()
                 "[text]"
                 menu:
-                    "Take panties":
-                        if gp_bed == 'fs_bright_pink':
-                            if not backpack.has_item(fs_bright_pink_panties_item):
-                                $ bright_pink_panties_pickup = True
+                    "Take panties (evil)":
+                        $ statschangenotify("fp_demon",1)
+                        if gp_bed == 'fsp_hot_pink':
+                            if not backpack.has_item(fsp_hot_pink_item):
+                                $ fsp_hot_pink_pickup = True
                                 $ update_all_the_stuff()
-                            $ backpack.add_item(fs_bright_pink_panties_item)
-                        elif gp_bed == 'fs_pale_pink':
-                            if not backpack.has_item(fs_pale_pink_panties_item):
-                                $ pale_pink_panties_pickup = True
+                            $ backpack.add_item(fsp_hot_pink_item)
+                        elif gp_bed == 'fsp_black':
+                            if not backpack.has_item(fsp_black_item):
+                                $ fsp_black_pickup = True
                                 $ update_all_the_stuff()
-                            $ backpack.add_item(fs_pale_pink_panties_item)
-                        elif gp_bed == 'fs_light_blue':
-                            if not backpack.has_item(fs_light_blue_panties_item):
-                                $ light_blue_panties_pickup = True
+                            $ backpack.add_item(fsp_black_item)
+                        elif gp_bed == 'fsp_light_blue':
+                            if not backpack.has_item(fsp_light_blue_item):
+                                $fsp_light_blue_pickup = True
                                 $ update_all_the_stuff()
-                            $ backpack.add_item(fs_light_blue_panties_item)
-                        elif gp_bed == 'fs_yellow':
-                            if not backpack.has_item(fs_yellow_panties_item):
-                                $ yellow_panties_pickup = True
+                            $ backpack.add_item(fsp_light_blue_item)
+                        elif gp_bed == 'fsp_yellow':
+                            if not backpack.has_item(fsp_yellow_item):
+                                $ fsp_yellow_pickup = True
                                 $ update_all_the_stuff()
-                            $ backpack.add_item(fs_yellow_panties_item)
+                            $ backpack.add_item(fsp_yellow_item)
+                        elif gp_bed == 'fsp_red':
+                            if not backpack.has_item(fsp_red_item):
+                                $ fsp_red_pickup = True
+                                $ update_all_the_stuff()
+                            $ backpack.add_item(fsp_red_item)
                         $ panties_added = False
                         $ fp_creep += 1
                         $ update_panties_achievements()
-                    "Leave panties":
+                    "Leave panties (good)":
+                        $ statschangenotify("fp_angel",1)
                         $ panties_added = False
                         $ find_panties = True
                         $ loct = True
@@ -265,7 +271,8 @@ label kitchen_loc(kit_called=False,trans=False):
         $ kit_called = kit_cfs = False
         if wine_added:
             menu:
-                "Take the bottle" if bottles == 1:
+                "Take the bottle (evil)" if bottles == 1:
+                    $ statschangenotify("fp_demon",1)
                     if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
@@ -286,10 +293,12 @@ label kitchen_loc(kit_called=False,trans=False):
                             $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
                         $ loct = True
-                "Leave the bottle" if bottles == 1:
+                "Leave the bottle (good)" if bottles == 1:
+                    $ statschangenotify("fp_angel",1)
                     $ wine_added = False
                     $ loct = True
-                "Take one bottle" if bottles == 2:
+                "Take one bottle (evil)" if bottles == 2:
+                    $ statschangenotify("fp_demon",1)
                     if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
@@ -309,7 +318,8 @@ label kitchen_loc(kit_called=False,trans=False):
                             $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
                         $ loct = True
-                "Take both bottles" if bottles == 2:
+                "Take both bottles (evil)" if bottles == 2:
+                    $ statschangenotify("fp_demon",2)
                     if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
@@ -330,10 +340,12 @@ label kitchen_loc(kit_called=False,trans=False):
                             $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
                         $ loct = True
-                "Leave the bottles" if bottles == 2:
+                "Leave the bottles (good)" if bottles == 2:
+                    $ statschangenotify("fp_angel",2)
                     $ wine_added = False
                     $ loct = True
-                "Take one bottle" if bottles == 3:
+                "Take one bottle (evil)" if bottles == 3:
+                    $ statschangenotify("fp_demon",1)
                     if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
@@ -353,7 +365,8 @@ label kitchen_loc(kit_called=False,trans=False):
                             $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
                         $ loct = True
-                "Take two bottles" if bottles == 3:
+                "Take two bottles (evil)" if bottles == 3:
+                    $ statschangenotify("fp_demon",2)
                     if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
@@ -373,7 +386,8 @@ label kitchen_loc(kit_called=False,trans=False):
                             $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
                         $ loct = True
-                "Take all three bottles" if bottles == 3:
+                "Take all three bottles (evil)" if bottles == 3:
+                    $ statschangenotify("fp_demon",3)
                     if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
@@ -394,7 +408,8 @@ label kitchen_loc(kit_called=False,trans=False):
                             $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
                         $ wine_added = False
                         $ loct = True
-                "Leave the bottles" if bottles == 3:
+                "Leave the bottles (good)" if bottles == 3:
+                    $ statschangenotify("fp_angel",3)
                     $ wine_added = False
                     $ loct = True
 
@@ -436,7 +451,10 @@ label outside_loc(out_called=False,trans=False):
     if not carry_phone:
         menu:
             "Ah, shit, I forgot my phone! I should go get it":
-                jump expression current_location
+                if current_location == 'outside_loc' or current_location == 'beach_loc':
+                    jump entrance_loc
+                else:
+                    jump expression current_location
 
     $ current_location = 'outside_loc'
     if not bc_clicked:
@@ -454,11 +472,13 @@ label outside_loc(out_called=False,trans=False):
                 if rainstorm:
                     show rain
             menu:
-                "Go to school":
-                    call travel_events('travel_school') from _call_travel_events
-                "Stay home":
+                "Stay home (evil)":
+                    $ statschangenotify("fp_demon",1)
                     $ home_from_school = True
                     pass
+                "Go to school (good)":
+                    $ statschangenotify("fp_angel",1)
+                    call travel_events('travel_school') from _call_travel_events
         if bc_clicked:
             $ bc_clicked = False
             if int(current_time[:2]) in day+night:
@@ -525,10 +545,27 @@ label upstairs_loc(ups_called=False,trans=False):
         #     call change_loc('upstairs topofstairs',sec_call='talk_fs')
         call change_loc('upstairs')
 
-label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
+label ufbm_toilet_loc(ufbt=False,trans=False):
+    $ current_location = 'ufbm_toilet_loc'
+    if ufbt or ufbtcfs:
+        $ ufbt = ufbtcfs = False
+        $ loct = False
+        if fpsink:
+            $ addtime(False,15)
+            if filth_val != 0:
+                $ filth_val -= 5
+                if filth_val <0:
+                    $ filth_val = 0
+            fp "{i}Good to get the filth off my hands{/i}"
+            $ fpsink = False
+            $ loct = True
+            $ wetshower = True
+        call change_loc('ufbm toilet',loctrans=loct)
+
+label ufbm_loc(uhlbc=False,uhlbcfs=False,trans=False):
+    $ current_location = 'ufbm_loc'
     if uhlbc or uhlbcfs:
         $ uhlbc = uhlbcfs = False
-        $ current_location = 'upper_hallway_bathroom_loc'
         $ loct = False
         if occupied_bath:
             if not bathroom_occupied_fs and not bathroom_occupied_fm:
@@ -556,7 +593,8 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
             "The bathroom is occupied"
             $ conditions.addcondition("Sneak a peek","bathroom_occupied_fs")
             menu:
-                "Sneak a peek":
+                "Sneak a peek (evil)":
+                    $ statschangenotify("fp_demon",1)
                     if not uhl_bathroom_ach:
                         $ uhl_bathroom_ach = True
                         $ update_been_everywhere_achievement()
@@ -567,10 +605,12 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                         fp "{i}Oh {b}SHIT{/b}! That is definitely something worth getting thwapped for! But... maybe I should get the hell outta here before I get caught!{/i}"
                         $ conditions.addcondition("Stay and watch","fs_rel >= 30 and fs_aro >= 10")
                         menu:
-                            "Stay and watch":
+                            "Stay and watch (evil)":
                                 #call change_loc('upper hallway bathroom peek')
+                                $ statschangenotify("fp_demon",1)
                                 pass
-                            "Get the hell outta here":
+                            "Get the hell outta here (good)":
+                                $ statschangenotify("fp_angel",1)
                                 call change_loc('upstairs topofstairs') from _call_change_loc_62
                 "Knock on the door":
                     # pass
@@ -593,13 +633,13 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                                 if not uhl_bathroom_ach:
                                     $ uhl_bathroom_ach = True
                                     $ update_been_everywhere_achievement()
-                                call change_loc('upper hallway bathroom',loctrans=True,sec_call="first_bathroom_occupied_label") from _call_change_loc_19
+                                call change_loc('ufbm',loctrans=True,sec_call="first_bathroom_occupied_label") from _call_change_loc_19
                                 label first_bathroom_occupied_label(True):
                                     fs "Lemme get back into the tub, okay?"
                                     fs "Okay, you can come in!"
                                     fp "{i}Running to the toilet{/i}\nOh....\nThanks, sis!"
                                     $ not_entered = False
-                                    call change_loc('upper hallway bathroom',loctrans=True) from _call_change_loc_20
+                                    call change_loc('ufbm',loctrans=True) from _call_change_loc_20
                             else:
                                 fs "I'm not decent! Use the downstairs bathroom!"
                                 fp "I'll never make it! Please let me in?"
@@ -609,11 +649,11 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                                 if not uhl_bathroom_ach:
                                     $ uhl_bathroom_ach = True
                                     $ update_been_everywhere_achievement()
-                                call change_loc('upper hallway bathroom',loctrans=True,sec_call="second_bathroom_occupied_label") from _call_change_loc_21
+                                call change_loc('ufbm',loctrans=True,sec_call="second_bathroom_occupied_label") from _call_change_loc_21
                                 label second_bathroom_occupied_label(True):
                                     fp "{i}Running to the toilet{/i}\nOh...\n{i}Damn... she looks {b}hot{/b} with nothing but that towel on...{/i}"
                                     $ not_entered = False
-                                    call change_loc('upper hallway bathroom',loctrans=True) from _call_change_loc_22
+                                    call change_loc('ufbm',loctrans=True) from _call_change_loc_22
                     if bathroom_occupied_fm:
                         fm "I'm in here, [fp]"
                         fp "I'm sorry, [fmName.informal], but I really, really need to pee!"
@@ -623,8 +663,9 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                         if not uhl_bathroom_ach:
                             $ uhl_bathroom_ach = True
                             $ update_been_everywhere_achievement()
-                        call change_loc('upper hallway bathroom',loctrans=True) from _call_change_loc_23
-                "Leave and come back later":
+                        call change_loc('ufbm',loctrans=True) from _call_change_loc_23
+                "Leave and come back later (good)":
+                    $ statschangenotify("fp_angel",1)
                     if bathroom_occupied_fs and fs_rel < 30:
                         $ statschangenotify('fs_rel',1)
                     elif bathroom_occupied_fm and fm_rel < 30:
@@ -638,17 +679,20 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                     call change_loc('upstairs topofstairs') from _call_change_loc_24
         else:
             if not fp_bath_lock and not leave_lock:
-                call change_loc('upper hallway bathroom',sec_call='lockdoorbathroom',loctrans=True)
+                call change_loc('ufbm',sec_call='lockdoorbathroom',loctrans=True)
                 label lockdoorbathroom(trans=False):
+                    $ conditions.clear()
                     menu:
-                        "Lock door":
-                            $ fp_bath_lock = True
-                            $ leave_lock = True
-                            call change_loc('upper hallway bathroom',loctrans=True)
-                        "Leave door open":
+                        "Leave door open (evil)":
+                            $ statschangenotify("fp_demon",1)
                             $ fp_bath_lock = False
                             $ leave_lock = True
-                            call change_loc('upper hallway bathroom',loctrans=True)
+                            call change_loc('ufbm',loctrans=True)
+                        "Lock door (good)":
+                            $ statschangenotify("fp_angel",1)
+                            $ fp_bath_lock = True
+                            $ leave_lock = True
+                            call change_loc('ufbm',loctrans=True)
 
             if not uhl_bathroom_ach:
                 $ uhl_bathroom_ach = True
@@ -662,7 +706,7 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                     "Leave keys":
                         $ smallkeys_added = False
             if bathroom_panties_added:
-                $ current_p = getattr(store,gp_bath+"_panties_item")
+                $ current_p = getattr(store,gp_bath+"_item")
                 if carry_backpack:
                     if not backpack.has_item(current_p):
                         $ r = random.randint(0,3)
@@ -680,33 +724,45 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                             $ update_panties_achievements()
                     "[text]"
                     menu:
-                        "Take panties":
-                            if gp_bath == 'fs_bright_pink':
-                                if not backpack.has_item(fs_bright_pink_panties_item):
-                                    $ bright_pink_panties_pickup = True
+                        "Take panties (evil)":
+                            $ statschangenotify("fp_demon",1)
+                            if gp_bath == 'fsp_hot_pink':
+                                if not backpack.has_item(fsp_hot_pink_item):
+                                    $ fsp_hot_pink_pickup = True
                                     $ update_all_the_stuff()
-                                $ backpack.add_item(fs_bright_pink_panties_item)
-                            elif gp_bath == 'fs_pale_pink':
-                                if not backpack.has_item(fs_pale_pink_panties_item):
-                                    $ pale_pink_panties_pickup = True
+                                    $ print(str(fsp_hot_pink_item))
+                                $ backpack.add_item(fsp_hot_pink_item)
+                            elif gp_bath == 'fsp_black':
+                                if not backpack.has_item(fsp_black_item):
+                                    $ fsp_black_pickup = True
                                     $ update_all_the_stuff()
-                                $ backpack.add_item(fs_pale_pink_panties_item)
-                            elif gp_bath == 'fs_light_blue':
-                                if not backpack.has_item(fs_light_blue_panties_item):
-                                    $ light_blue_panties_pickup = True
+                                    $ print(str(fsp_black_item))
+                                $ backpack.add_item(fsp_black_item)
+                            elif gp_bath == 'fsp_light_blue':
+                                if not backpack.has_item(fsp_light_blue_item):
+                                    $fsp_light_blue_pickup = True
                                     $ update_all_the_stuff()
-                                $ backpack.add_item(fs_light_blue_panties_item)
-                            elif gp_bath == 'fs_yellow':
-                                if not backpack.has_item(fs_yellow_panties_item):
-                                    $ yellow_panties_pickup = True
+                                    $ print(str(fsp_light_blue_item))
+                                $ backpack.add_item(fsp_light_blue_item)
+                            elif gp_bath == 'fsp_yellow':
+                                if not backpack.has_item(fsp_yellow_item):
+                                    $ fsp_yellow_pickup = True
                                     $ update_all_the_stuff()
-                                $ backpack.add_item(fs_yellow_panties_item)
+                                    $ print(str(fsp_yellow_item))
+                                $ backpack.add_item(fsp_yellow_item)
+                            elif gp_bath == 'fsp_red':
+                                if not backpack.has_item(fsp_red_item):
+                                    $ fsp_red_pickup = True
+                                    $ update_all_the_stuff()
+                                    $ print(str(fsp_red_item))
+                                $ backpack.add_item(fsp_red_item)
                             $ bathroom_panties_added = False
                             $ bathroom_find_panties = False
                             $ fp_creep += 1
                             $ update_panties_achievements()
                             # call change_loc(current_location)
-                        "Leave panties":
+                        "Leave panties (good)":
+                            $ statschangenotify("fp_angel",1)
                             $ bathroom_panties_added = False
                             $ bathroom_find_panties = True
                             $ loct = True
@@ -793,7 +849,7 @@ label upper_hallway_bathroom_loc(uhlbc=False,uhlbcfs=False,trans=False):
                             call change_loc('upstairs topofstairs',loctrans=loct) from _call_change_loc_66
                     fp "{i}Ah, that was refreshing{/i}"
 
-        call change_loc('upper hallway bathroom',loctrans=loct,showerstat=wetshower) from _call_change_loc_63
+        call change_loc('ufbm',loctrans=loct,showerstat=wetshower) from _call_change_loc_63
 
 label tv_games_evening(tvg_called=False,trans=False):
     if tvg_called:
@@ -818,7 +874,7 @@ label beach_loc(br_called=False,br_cfs=False):
     if br_called or br_cfs:
         $ br_called = br_cfs = False
         $ addtime(1,30)
-    call change_loc('beach') from _call_change_loc_26
+        call change_loc('beach') from _call_change_loc_26
     # call end_of_day()
 
 label next_town_ride(ntr_called=False,trans=False):

@@ -41,10 +41,10 @@ init 10:
     default achievement_been_everywhere = NewAchievement("Seasoned traveller","You visited every location in the game",13,'gui/star.webp','exploration')
 
     # Lewdness Achievements
-    default achievement_diverse_panties = NewAchievement("Diverse Collector","One of every type!",1,'inventory/fs_bright_pink_panties_idle.webp','lewdness',True)
-    default achievement_fs_panties_5 = NewAchievement("Collector","You're building a collection",5,'inventory/fs_bright_pink_panties_idle.webp','lewdness',True)
-    default achievement_fs_panties_1 = NewAchievement("The start of a budding\ncollection...", "You're a perv! And you have panties!",1,'inventory/fs_bright_pink_panties_idle.webp','lewdness',True,next_tier=[achievement_fs_panties_5])
-    default achievement_fs_panties_sniffer = NewAchievement("Panty sniffer", "You're a perv! And you have panties!",1,'inventory/fs_bright_pink_panties_idle.webp','lewdness',True)
+    default achievement_diverse_panties = NewAchievement("Diverse Collector","One of every type!",1,'inventory/fsp_hot_pink_idle.webp','lewdness',True)
+    default achievement_fs_panties_5 = NewAchievement("Collector","You're building a collection",5,'inventory/fsp_hot_pink_idle.webp','lewdness',True)
+    default achievement_fs_panties_1 = NewAchievement("The start of a budding\ncollection...", "You're a perv! And you have panties!",1,'inventory/fsp_hot_pink_idle.webp','lewdness',True,next_tier=[achievement_fs_panties_5])
+    default achievement_fs_panties_sniffer = NewAchievement("Panty sniffer", "You're a perv! And you have panties!",1,'inventory/fsp_hot_pink_idle.webp','lewdness',True)
 
 
 init python:
@@ -103,10 +103,10 @@ init python:
     def update_panties_achievements():
         if panties_sniffer:
             achievement_fs_panties_sniffer.update()
-        if backpack.has_item(fs_bright_pink_panties_item) or backpack.has_item(fs_pale_pink_panties_item) or backpack.has_item(fs_light_blue_panties_item) or backpack.has_item(fs_yellow_panties_item):
+        if backpack.has_item(fsp_hot_pink_item) or backpack.has_item(fsp_black_item) or backpack.has_item(fsp_light_blue_item) or backpack.has_item(fsp_yellow_item) or backpack.has_item(fsp_red_item):
             achievement_fs_panties_1.update()
             achievement_fs_panties_5.update()
-        if backpack.has_item(fs_bright_pink_panties_item) and backpack.has_item(fs_pale_pink_panties_item) and backpack.has_item(fs_light_blue_panties_item) and backpack.has_item(fs_yellow_panties_item):
+        if backpack.has_item(fsp_hot_pink_item) and backpack.has_item(fsp_black_item) and backpack.has_item(fsp_light_blue_item) and backpack.has_item(fsp_yellow_item) and backpack.has_item(fsp_red_item):
             achievement_diverse_panties.update()
 
     def update_been_everywhere_achievement():
@@ -114,25 +114,28 @@ init python:
         achievement_been_everywhere.update()
 
     def update_all_the_stuff():
-        global beer_pickup, carkeys_pickup, bright_pink_panties_pickup, light_blue_panties_pickup, pale_pink_panties_pickup, yellow_panties_pickup, gin_pickup, phone_pickup, princessplug_pickup, roses_pickup, schoolbooks_pickup, smallkeys_pickup, toolbox_pickup, vodka_pickup, wallet_pickup, whiskey_pickup, wine_pickup
+        global beer_pickup, carkeys_pickup, fsp_hot_pink_pickup, fsp_light_blue_pickup, fsp_black_pickup, fsp_yellow_pickup, fsp_red_pickup, gin_pickup, phone_pickup, princessplug_pickup, roses_pickup, schoolbooks_pickup, smallkeys_pickup, toolbox_pickup, vodka_pickup, wallet_pickup, whiskey_pickup, wine_pickup
         if beer_pickup:
             achievement_all_the_stuff.update()
             beer_pickup = False
         if carkeys_pickup:
             achievement_all_the_stuff.update()
             carkeys_pickup = False
-        if bright_pink_panties_pickup:
+        if fsp_hot_pink_pickup:
             achievement_all_the_stuff.update()
-            bright_pink_panties_pickup = False
-        if light_blue_panties_pickup:
+            fsp_hot_pink_pickup = False
+        if fsp_light_blue_pickup:
             achievement_all_the_stuff.update()
-            light_blue_panties_pickup = False
-        if pale_pink_panties_pickup:
+            fsp_light_blue_pickup = False
+        if fsp_black_pickup:
             achievement_all_the_stuff.update()
-            pale_pink_panties_pickup = False
-        if yellow_panties_pickup:
+            fsp_black_pickup = False
+        if fsp_yellow_pickup:
             achievement_all_the_stuff.update()
-            yellow_panties_pickup = False
+            fsp_yellow_pickup = False
+        if fsp_red_pickup:
+            achievement_all_the_stuff.update()
+            fsp_red_pickup = False
         if gin_pickup:
             achievement_all_the_stuff.update()
             gin_pickup = False

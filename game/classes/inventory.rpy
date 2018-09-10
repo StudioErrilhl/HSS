@@ -83,12 +83,14 @@ init -1 python:
                     if not hasattr( store, ""+name+"_item" ):
                         weight = item_weights[name]
                         desc = item_desc[name]
-                        if 'panties' in name:
-                            ptmp = name.replace('fs_','').replace('_',' ').split(' ')
+                        if 'fsp_' in name:
+                            ptmp = name.replace('fsp_','panties_').replace('_',' ').split(' ')
                             if len(ptmp) == 2:
-                                pname = ptmp[1]+' - '+ptmp[0]
+                                pname = ptmp[0]+' - '+ptmp[1]
                             elif len(ptmp) == 3:
-                                pname = str(ptmp[2]+' - '+ptmp[0]+' '+ptmp[1])
+                                pname = str(ptmp[0]+' - '+ptmp[1]+' '+ptmp[2])
+                            else:
+                                pname = str(ptmp[0])
                             displayname = pname.capitalize()
                         else:
                             displayname = name.capitalize()

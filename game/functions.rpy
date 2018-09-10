@@ -74,7 +74,7 @@ init python:
                     return "{0}'s acceptance of giving blowjobs did not change".format(who)
                 else:
                     return "{0}'s acceptance of giving blowjobs has {1} by {2}".format( who, action, abs( f ) ).capitalize()
-            return "Oop's something really weird happen !"
+            return "Ooop's something really weird happened1!"
 
         # A single line for all the possible variables, as well as both positive and negative values.
         if a == "mc_b":
@@ -111,7 +111,7 @@ init python:
         elif a == "punishment_late":
             text = "You've gotten a mark for being late. Current amount is {0}. If you get more than 5 marks, you will get in trouble".format( store.punishment_late )
         else:
-            text = "Oop's something really weird happen !"
+            text = "Ooop's something really weird happened2!"
 
         if not "deteriorated" in text:
             renpy.notify((text))
@@ -400,15 +400,18 @@ init 10 python:
         for file in renpy.list_files():
             if file.startswith('images/inventory/') and file.endswith('.webp'):
                 if 'hover' in file:
-                    if 'panties' in file:
-                        tempvar = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.webp','').replace('fs_','').replace('_insensitive','').split('_')
-                        if len(tempvar) == 3:
-                            temp = tempvar[2]+' - '+tempvar[0]+' '+tempvar[1]
-                        elif len(tempvar) == 2:
-                            temp = tempvar[1]+' - '+tempvar[0]
-                        inv_list.append(temp)
-                    else:
-                        inv_list.append(file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.webp','').replace('fs_','').replace('_',' '))
+                    inv_list.append(file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('_insensitive','').replace('.webp',''))
+                    # if 'fsp_' in file:
+                    #     tempvar = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.webp','').replace('fsp_','panties_').replace('_insensitive','').split('_')
+                    #     if len(tempvar) == 3:
+                    #         temp = tempvar[0]+' - '+tempvar[1]+' '+tempvar[2]
+                    #     elif len(tempvar) == 2:
+                    #         temp = tempvar[0]+' - '+tempvar[1]
+                    #     else:
+                    #         temp = tempvar[0]
+                    #     inv_list.append(temp)
+                    # else:
+                    #     inv_list.append(file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.webp','').replace('fs_','').replace('_',' '))
         return inv_list
 
 
@@ -538,6 +541,7 @@ init 10 python:
                 disabled_messages.remove(message)
 
     def set_message(char=False,charobj=False,message=False,image=False):
+        renpy.notify('You\'ve received a text message')
         global messages,read_messages,default_messages
         if message:
             # if message not in messages+read_messages+disabled_messages:

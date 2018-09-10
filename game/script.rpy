@@ -136,7 +136,7 @@ label start:
         hide juliette_intro_ani
         with dissolve
         fp "{i}Thankfully, [fsName.informal] realised what she was doing (partly because I had a raging boner in my boxer's, I guess) - turned on her heel, and went into her room again - this time locking the door.{/i}"
-        call upper_hallway_bathroom_scene from _call_upper_hallway_bathroom_scene
+        call ufbm_scene
         fp "{i}Me... I went to the bathroom and jerked off. Yes, I know she's [fsName.myformal], and all that, but DAMN. She's HOT!{/i}"
         fp "{i}Okay... that might have been a bit TMI. I'm sorry. I just wanted you to understand what happened. And how that sort of led to... other things that happened as well. During that summer. You know... spring. Summer. End of high-school. The time I had all planned out. The plans that really didn't happen. Like... at all.{/i}"
         "So... the coming days, weeks and months, you'll be trying to pass your exams, finish your bike, getting some action, and generally being a high school senior going on freedom!"
@@ -163,6 +163,7 @@ label start:
         call skip_breakfast(True) from _call_skip_breakfast
 
     label day_start():
+        $ daycount += 1
         $ fpe = fme = fse = hje = nbe = nre = nke = nce = sne = see = spe = sje = scne = scme = False
         $ find_panties = True if renpy.random.random() > .75 else False
         $ find_pb_mod = .65 if fs_aro > 10 else .90
@@ -388,7 +389,7 @@ label start:
                         "[text]"
                         if 'shower' in text:
                             $ required_shower = True
-                            call change_loc('upper hallway bathroom') from _call_change_loc_30
+                            call change_loc('ufbm') from _call_change_loc_30
                         else:
                             call change_loc('kitchen') from _call_change_loc_67
                     else:

@@ -22,7 +22,7 @@ label fp_bedroom_scene(trans=True): #this is the starting scene, and the one tha
     if not fp_bedroom_ach:
         $ fp_bedroom_ach = True
         $ update_been_everywhere_achievement()
-    if int(current_time[:2]) in morning:
+    if int(current_time[:2]) in morning+day:
         scene fp_bedroom_morning
     elif int(current_time[:2]) in night:
         scene fp_bedroom_night
@@ -265,7 +265,47 @@ label upper_hallway_bathroom_peek_scene(trans=True,wetshower=False):
             show juliette_shower
     return
 
-label upper_hallway_bathroom_scene(trans=True,wetshower=False):
+label ufbm_toilet_scene(trans=True):
+    if int(current_time[:2]) in night and bathroom_light:
+        if trans:
+            if wetshower:
+                scene ufbn_toilet #scene upper_hallway_bathroom_night_after_shower_light with Dissolve(.25)
+            else:
+                scene ufbn_toilet #scene upper_hallway_bathroom_night_light with Dissolve(.25)
+            with Dissolve(.25)
+        else:
+            if wetshower:
+                scene ufbn_toilet #upper_hallway_bathroom_night_after_shower_light
+            else:
+                scene ufbn#scene upper_hallway_bathroom_night_light
+    elif int(current_time[:2]) in night:
+        if trans:
+            if wetshower:
+                scene ufbn_toilet #upper_hallway_bathroom_night_after_shower with Dissolve(.25)
+            else:
+                scene ufbn_toilet #upper_hallway_bathroom_night with Dissolve(.25)
+            with Dissolve(.25)
+        else:
+            if wetshower:
+                scene ufbn_toilet #upper_hallway_bathroom_night_after_shower
+            else:
+                scene ufbn_toilet #upper_hallway_bathroom_night
+    else:
+        if trans:
+            if wetshower:
+                scene ufbm_toilet #upper_hallway_bathroom_morning_after_shower with Dissolve(.25)
+            else:
+                scene ufbm_toilet #with Dissolve(.25)
+            with Dissolve(.25)
+        else:
+            if wetshower:
+                scene ufbm_toilet #upper_hallway_bathroom_morning_after_shower
+            else:
+                scene ufbm_toilet
+    return
+
+
+label ufbm_scene(trans=True,wetshower=False):
     if not uhl_bathroom_ach:
         $ uhl_bathroom_ach = True
         $ update_been_everywhere_achievement()
@@ -294,12 +334,12 @@ label upper_hallway_bathroom_scene(trans=True,wetshower=False):
     else:
         if trans:
             if wetshower:
-                scene upper_hallway_bathroom_morning_after_shower with Dissolve(.25)
+                scene ufbm #upper_hallway_bathroom_morning_after_shower with Dissolve(.25)
             else:
-                scene upper_hallway_bathroom_morning with Dissolve(.25)
+                scene ufbm with Dissolve(.25)
         else:
             if wetshower:
-                scene upper_hallway_bathroom_morning_after_shower
+                scene ufbm #upper_hallway_bathroom_morning_after_shower
             else:
-                scene upper_hallway_bathroom_morning
+                scene ufbm
     return

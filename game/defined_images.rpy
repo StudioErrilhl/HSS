@@ -490,6 +490,40 @@
 #     pause .25
 #     repeat
 
+transform fpi_ani:
+    "images/characters/marten/introanimation/fpi_1.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_2.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_3.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_4.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_5.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_6.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_7.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_8.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_9.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_8.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_7.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_6.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_5.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_4.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_3.webp"
+    pause .1
+    "images/characters/marten/introanimation/fpi_2.webp"
+    pause .1
+    repeat
 # transform nk_standing_devious_ani:
 #     "images/characters/karen/body/standing/devious.webp"
 #     choice:
@@ -569,6 +603,9 @@
 #     ypos 1.0
 #     xanchor .5
 #     yanchor .75
+
+image fpintro:
+    contains fpi_ani
 
 # image nk_standing annoyed:
 #     "images/characters/karen/body/standing/annoyed.webp"
@@ -762,7 +799,7 @@
 #     "images/backgrounds/upper_hallway_juliette_reflection.webp"
 
 image books_on_dresser:
-    "images/backgrounds/interactions_item/fp_bedroom_morning_dresser_idle.webp"
+    "images/backgrounds/interaction_items/fp_bedroom_morning_dresser_idle.webp"
 
 image livingroom_morning_bad_weather_windows:
     "images/backgrounds/livingroom_morning_bad_weather_windows.webp"
@@ -824,6 +861,14 @@ image juliette_intro_ani:
     xoffset -550
     yoffset -250
     0.1
+
+layeredimage upper_floor_bathroom_morning:
+    always:
+        "upfm"
+
+layeredimage upper_floor_bathroom_morning_sink:
+    always:
+        "upfm_st"
 
 layeredimage fp_bedroom_morning:
     always:
