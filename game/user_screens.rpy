@@ -696,7 +696,7 @@ screen stat_screen():
                         text "Late: [punishment_late]" style "red_color"
                     text "Motorcyle done: [mc_b]/[mc_b_max] ([mc_p]%)"
                     text "Attitude: [fp_att]"
-                    text "Bad: [fp_demon] | Good: [fp_angel]"
+                    text "Bad: [lil_bad] | Good: [aru_good]"
                 elif stats[1] in ["nr","se","sp","sj","scn","scm"]:
                     text "Rel: ["+stats[1]+"_rel]"
                 else:
@@ -1212,7 +1212,7 @@ screen location(room=False):
         x, y = renpy.get_mouse_pos()
         xval = 1.0 if x > config.screen_width/2 else .0
         yval = 1.0 if y > config.screen_height/2 else .0
-    if room == 'entrance':
+    if room == 'entrance_loc':
             imagebutton auto ("images/backgrounds/interaction_moves/front_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/front_door_morning_%s.webp") focus_mask True action [SetVariable('trans',True),SetVariable('out_cfs',True),Jump('outside_loc')]:
                 tooltip "Go outside"
             imagebutton auto ("images/backgrounds/interaction_moves/kitchen_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/kitchen_door_morning_%s.webp") focus_mask True action [SetVariable('kit_cfs',True),Jump('kitchen_loc')]:
@@ -1224,7 +1224,7 @@ screen location(room=False):
             imagebutton auto ("images/backgrounds/interaction_moves/stairs_basement_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/stairs_basement_morning_%s.webp") focus_mask True action [SetVariable('gar_cfs',True),Jump('garage_loc')]:
                 tooltip "Downstairs / Garage"
 
-    if room == "fp bedroom":
+    if room == "fp_bedroom_loc":
         if not backpack.has_item(schoolbooks_item):
             if int(current_time[:2]) in night:
                 add "images/backgrounds/interaction_items/fp_bedroom_night_dresser_idle.webp"
@@ -1276,7 +1276,7 @@ screen location(room=False):
             imagebutton auto ("images/backgrounds/interaction_moves/fp_bedroom_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/fp_bedroom_door_morning_%s.webp") focus_mask True action [SetVariable('ups_cfs',True),Call('upstairs_loc')]:
                 tooltip "Upper Hallway"
 
-    if room == "fs bedroom":
+    if room == "fs_bedroom_loc":
         if find_panties:
                 imagebutton auto ("images/backgrounds/interaction_items/bedroom_panties_"+gp_bed+"_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/bedroom_panties_"+gp_bed+"_morning_%s.webp") focus_mask True action [SetVariable('find_panties',False),SetVariable('panties_added',True),SetVariable('gp_bed',gp_bed),SetVariable('uhl_fsb_cfs',True),Jump('fs_bedroom_loc')]
         if find_tablet:
@@ -1289,7 +1289,7 @@ screen location(room=False):
             $ exitdown_event = "upstairs_topofstairs_loc"
             $ exitdown = "Upper hallway"
 
-    if room == "garage":
+    if room == "garage_loc":
         if not backpack.has_item(toolbox_item):
             if int(current_time[:2]) in night and not mc_f:
                 add "images/backgrounds/interaction_items/honda_cx_500_build_toolbox_night_idle.webp"
@@ -1318,7 +1318,7 @@ screen location(room=False):
             $ exitdown_event = "outside_loc"
             $ exitdown = "Go outside"
 
-    if room == "livingroom":
+    if room == "livingroom_loc":
         if not backpack.has_item(carkeys_item) and int(current_time[:2]) > 15:
             imagebutton auto "images/inventory/carkeys_%s.webp" focus_mask True action [SetVariable('carkeys_added',True),SetVariable('lvr_cfs',True),Jump('livingroom_loc')] at ModZoom(.6):
                 if bad_weather:
@@ -1333,71 +1333,82 @@ screen location(room=False):
             $ exitdown_event = "entrance_loc"
             $ exitdown = "Entrance"
 
-    if room == "kitchen":
-        if wcount == 5:
-            if bottles == 1 or br == 1 and int(current_time[:2]) in (day or night):
-                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                    imagebutton auto ("images/backgrounds/interaction_items/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',1),SetVariable('wine_added',True),Jump('kitchen_loc')]:
-                        ypos .485
-                        xpos .31
-                else:
-                    add ("images/backgrounds/interaction_items/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_idle.webp"):
-                        at ModZoom(.65)
-                        ypos .485
-                        xpos .31
-            elif bottles == 2 or br == 2:
-                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                    imagebutton auto ("images/backgrounds/interaction_items/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
-                        ypos .485
-                        xpos .31
-                    imagebutton auto ("images/backgrounds/interaction_items/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+    if room == 'kitchen_spill_loc':
+        if not fm_seen:
+
+            if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+                $ exitleft_event_var = "lvr_cfs"
+                $ exitleft_event = "livingroom_loc"
+                $ exitleft = "Livingroom"
+                $ exitdown_event = "entrance_loc"
+                $ exitdown = "Entrance"
+
+    if room == "kitchen_loc":
+        if fm_seen:
+            if wcount == 5:
+                if bottles == 1 or br == 1 and int(current_time[:2]) in (day or night):
+                    if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+                        imagebutton auto ("images/backgrounds/interaction_items/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',1),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                            ypos .485
+                            xpos .31
+                    else:
+                        add ("images/backgrounds/interaction_items/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_idle.webp"):
+                            at ModZoom(.65)
+                            ypos .485
+                            xpos .31
+                elif bottles == 2 or br == 2:
+                    if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+                        imagebutton auto ("images/backgrounds/interaction_items/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                            ypos .485
+                            xpos .31
+                        imagebutton auto ("images/backgrounds/interaction_items/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',2),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                                ypos .485
+                                xpos .325
+                    else:
+                        add ("images/backgrounds/interaction_items/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_idle.webp"):
+                            at ModZoom(.65)
+                            ypos .485
+                            xpos .31
+                        add ("images/backgrounds/interaction_items/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_idle.webp"):
+                            at ModZoom(.65)
                             ypos .485
                             xpos .325
-                else:
-                    add ("images/backgrounds/interaction_items/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_idle.webp"):
-                        at ModZoom(.65)
-                        ypos .485
-                        xpos .31
-                    add ("images/backgrounds/interaction_items/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_idle.webp"):
-                        at ModZoom(.65)
-                        ypos .485
-                        xpos .325
-            elif bottles == 3 or br == 3:
-                if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                    imagebutton auto ("images/backgrounds/interaction_items/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
-                        ypos .480
-                        xpos .315
-                    imagebutton auto ("images/backgrounds/interaction_items/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
-                        ypos .485
-                        xpos .31
-                    imagebutton auto ("images/backgrounds/interaction_items/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
-                        ypos .485
-                        xpos .325
-                else:
-                    add ("images/backgrounds/interaction_items/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_idle.webp"):
-                        at ModZoom(.65)
-                        ypos .480
-                        xpos .315
-                    add ("images/backgrounds/interaction_items/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_idle.webp"):
-                        at ModZoom(.65)
-                        ypos .485
-                        xpos .31
-                    add ("images/backgrounds/interaction_items/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_idle.webp"):
-                        at ModZoom(.65)
-                        ypos .485
-                        xpos .325
-        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-            if config.developer:
-                imagebutton auto ("images/backgrounds/interaction_items/kitchen_fridge_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/kitchen_fridge_door_morning_%s.webp") focus_mask True action [SetVariable('show_fridge',True),Show('fridge_open')]
+                elif bottles == 3 or br == 3:
+                    if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+                        imagebutton auto ("images/backgrounds/interaction_items/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                            ypos .480
+                            xpos .315
+                        imagebutton auto ("images/backgrounds/interaction_items/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                            ypos .485
+                            xpos .31
+                        imagebutton auto ("images/backgrounds/interaction_items/wine_bottle_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_%s.webp") at ModZoom(.65) focus_mask True action [SetVariable('kit_cfs',True),SetVariable('bottles',3),SetVariable('wine_added',True),Jump('kitchen_loc')]:
+                            ypos .485
+                            xpos .325
+                    else:
+                        add ("images/backgrounds/interaction_items/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_idle.webp"):
+                            at ModZoom(.65)
+                            ypos .480
+                            xpos .315
+                        add ("images/backgrounds/interaction_items/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_idle.webp"):
+                            at ModZoom(.65)
+                            ypos .485
+                            xpos .31
+                        add ("images/backgrounds/interaction_items/wine_bottle_night_idle.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/wine_bottle_morning_idle.webp"):
+                            at ModZoom(.65)
+                            ypos .485
+                            xpos .325
+            if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+                if config.developer:
+                    imagebutton auto ("images/backgrounds/interaction_items/kitchen_fridge_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/kitchen_fridge_door_morning_%s.webp") focus_mask True action [SetVariable('show_fridge',True),Show('fridge_open')]
 
-        $ exitleft_event_var = "lvr_cfs"
-        $ exitleft_event = "livingroom_loc"
-        $ exitleft = "Livingroom"
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+            $ exitleft_event_var = "lvr_cfs"
+            $ exitleft_event = "livingroom_loc"
+            $ exitleft = "Livingroom"
             $ exitdown_event = "entrance_loc"
             $ exitdown = "Entrance"
 
-    if room == "outside":
+    if room == "outside_loc":
         if int(current_time[:2]) in day+night:
             if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
                 if int(current_time[:2]) in day and (int(current_time[:2]) > 15 and int(current_time[:2]) < 22):
@@ -1428,19 +1439,19 @@ screen location(room=False):
             $ exitright_event = "beach_loc"
             $ exitright = "Go to the beach"
 
-    if room == 'beach':
+    if room == 'beach_loc':
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event_var = 'out_cfs'
             $ exitdown_event = 'outside_loc'
             $ exitdown = "Go back home"
 
-    if room == 'icafe':
+    if room == 'icafe_loc':
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event_var = 'out_cfs'
             $ exitdown_event = 'outside_loc'
             $ exitdown = "Outside"
 
-    if room == "upstairs":
+    if room == "upstairs_loc":
         #imagebutton auto ("images/backgrounds/interaction_moves/upper_hallway_fp_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/upper_hallway_fp_door_morning_%s.webp") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_loc')]:
          #   tooltip "Enter your room"
         if fs_rel >= 30 or fs_invitation:
@@ -1461,7 +1472,7 @@ screen location(room=False):
             $ exitright_event = "fp_bedroom_loc"
             $ exitright = "Enter your room"
 
-    if room == "upstairs topofstairs":
+    if room == "upstairs_topofstairs_loc":
         imagebutton auto ("images/backgrounds/interaction_moves/upstairs_topofstairs_bathroom_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/upstairs_topofstairs_bathroom_door_morning_%s.webp") focus_mask True action [Call('ufbm_loc',uhlbcfs=True)]:
             tooltip 'Enter bathroom'
         imagebutton auto ("images/backgrounds/interaction_moves/upstairs_topofstairs_fp_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/upstairs_topofstairs_fp_door_morning_%s.webp") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Call('fp_bedroom_loc')]:
@@ -1481,7 +1492,7 @@ screen location(room=False):
             $ exitdown_event = "entrance_loc"
             $ exitdown = "Downstairs"
 
-    if room == 'ufbm toilet':
+    if room == 'ufbm_toilet_loc':
         if renpy.get_screen('say') is None and renpy.get_screen('choice') is None and renpy.get_screen('phone') is None:
             if int(current_time[:2]) in night:
                 imagebutton auto ("images/backgrounds/interaction_items/ufbn_toilet_sink_%s.webp" if bathroom_light else "images/backgrounds/interaction_items/ufbn_toilet_sink_%s.webp") focus_mask True action [SetVariable('occupied_bath',False),SetVariable('fpsink',True),Call('ufbm_toilet_loc',ufbtcfs=True)]
@@ -1497,7 +1508,7 @@ screen location(room=False):
             $ exitdown_event = "upstairs_topofstairs_loc"
             $ exitdown = "Upper hallway"
 
-    if room == "ufbm" or room == "upper hallway bathroom peek":
+    if room == "ufbm_loc" or room == "upper_hallway_bathroom_peek_loc":
         if int(current_time[:2]) >= 6 and int(current_time[:2]) <= 14 and not backpack.has_item(small_keys_item) and keys_mentioned:
             if renpy.get_screen('say') is None and renpy.get_screen('choice') is None and renpy.get_screen('phone') is None:
                 imagebutton auto "images/backgrounds/interaction_items/upper_hallway_bathroom_keys_morning_%s.webp" focus_mask True action [SetVariable('occupied_bath',False),SetVariable("smallkeys_added",True),Call('ufbm_loc',uhlbcfs=True)]
@@ -2084,8 +2095,8 @@ screen maininfo():
             vbox:
                 text "{b}{size=40}How to play{/size}{/b}\n":
                     xalign .5
-                text "This game is not a VN. It's more of a sandbox, where you can roam semi-freely around the environment, and do what you please, more or less, with choices depending on what you know and what you've experienced. Of course, there are events that are fully scripted, of which you have no real control (apart from deciding what to do, when).\n"
-                text "You will need to apply some adventure-game playstyles - first of all, there are outlines on everything you can pick up, look at and otherwise interact with - it will light up blue when hovered if you can interact with it. If you're stuck in a screen, or can't find anything worth doing, revisit and make sure you check every item.\n"
+                text "This game is {b}not{/b} a VN. It's more of a sandbox, where you can roam semi-freely around the environment, and do what you please, more or less, with choices depending on what you know and what you've experienced. Of course, there are events that are fully scripted, of which you have no real control (apart from deciding what to do, when).\n"
+                text "You will need to apply some adventure-game playstyles - first of all, there are outlines on everything you can pick up, look at and otherwise interact with - it will light up blue when hovered if you can interact with it. If you're stuck on a screen, or can't find anything worth doing, revisit each location and make sure you check every item.\n"
                 text "{b}The regular quick menu and even the regular right-click menu / ESC-menu has been disabled. They have been replaced by an in-game menu (which you will have to find the appropriate item to be able to use). The same goes for the inventory (also an item you need to pick up to be able to use).{/b}\n"
                 text "There will be short info-screens for the different objects you can pick up and use in particular ways as well, as the game progresses.\n"
                 text "Up left you have a button for\n ":
@@ -2121,10 +2132,10 @@ screen maininfo():
                     text "{color=#f00}{size=28}Once closed, this infoscreen will not show again like this, but the info will be available via the help-screen in-game.{/size}{/color}":
                         xalign .5
                         ypos -180
-        if persistent.maininfo:
-            imagebutton auto "gui/closebutton_%s.webp" xalign 1.0 yalign 1.0 focus_mask True action [SetField(persistent,'maininfo',False),Hide("maininfo"),Return()]
-            if keyclose:
-                key 'K_ESCAPE' action [SetVariable('keyclose',False),Hide('phone_info_screen'),SetField(persistent,'maininfo',False),Hide("maininfo"),Return()]
+                if persistent.maininfo:
+                    imagebutton auto "gui/closebutton_%s.webp" xalign .5 yalign 1.0 focus_mask True action [SetField(persistent,'maininfo',False),Hide("maininfo"),Return()]
+                if keyclose:
+                    key 'K_ESCAPE' action [SetVariable('keyclose',False),Hide('phone_info_screen'),SetField(persistent,'maininfo',False),Hide("maininfo"),Return()]
 
 init python:
     def dd_cursor_position(st, at):

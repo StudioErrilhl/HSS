@@ -76,7 +76,7 @@ init python:
     define_images('test')
 
 label start:
-    $ updateInventory()
+    # $ updateInventory()
     $ conditions = Conditions() ## enables the conditions-parameter used for assigning conditions to disable / enable choice-items
     $ backpack = Container()
     $ updateInventory()
@@ -141,10 +141,10 @@ label start:
         fp "{i}Okay... that might have been a bit TMI. I'm sorry. I just wanted you to understand what happened. And how that sort of led to... other things that happened as well. During that summer. You know... spring. Summer. End of high-school. The time I had all planned out. The plans that really didn't happen. Like... at all.{/i}"
         "So... the coming days, weeks and months, you'll be trying to pass your exams, finish your bike, getting some action, and generally being a high school senior going on freedom!"
         $ persistent.skipintro = True
-        $ fs_mad = True
+        $ fs_mad = 1
 
     label skippedintro():
-        $ fs_mad = True
+        $ fs_mad = 1
         show screen ingame_menu_display()
         if 'DCIM00001_portrait.webp' not in images_unlocked:
             if "You chose to skip the intro - which means that a couple of the images in the photo-gallery is not gonna be available to you" not in hints+read_hints+disabled_hints:
@@ -214,7 +214,7 @@ label start:
         $ bad_weather = True if renpy.random.random() > .75 else False
         $ rainstorm = True if bad_weather else False
 
-        if fs_mad:
+        if fs_mad == 1:
             $ statschangenotify("fs_rel",-1)
         $ mc_f = True if mc_b >= mc_b_max else False
 

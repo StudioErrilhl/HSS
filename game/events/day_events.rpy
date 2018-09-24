@@ -35,7 +35,7 @@ label day_events():
                     menu:
                         "No, [fmName.informal], I don't have time to help you right now (evil)":
                             show anne angry
-                            $ statschangenotify("fp_demon",1)
+                            $ statschangenotify("lil_bad",1)
                             $ statschangenotify("fm_dom",.5,True)
                             $ statschangenotify("fm_rel",-.5)
                         "Yes, [fmName.informal], no problem. *you open the jar* (good)":
@@ -44,7 +44,7 @@ label day_events():
                                 $ statschangenotify("fm_rel",1)
                             else:
                                 $ statschangenotify("fm_rel",.5)
-                            $ statschangenotify("fp_angel",1)
+                            $ statschangenotify("aru_good",1)
                 $ sun_event = False
                 hide anne
                 call change_loc(current_location) from _call_change_loc_70
@@ -53,7 +53,7 @@ label day_events():
         if de_called:
             $ de_called = False
             if dinner_event:
-                if fs_mad:
+                if fs_mad == 1:
                     show anne smile with dissolve
                     fm smile "Hey [fp]. It's dinnertime soon, do you wanna go see if you can find [fsName.name], and tell her to get ready?"
                     fp "Well... [fsName.name] isn't really speaking to me at the moment..."
@@ -143,7 +143,7 @@ label day_events():
                     elif hacker_5:
                         call nc_talk('nc_text')
 
-                if home_events[n][1] and fs_mad:
+                if home_events[n][1] and fs_mad == 1:
                     call fs_talk(True) from _call_fs_talk_4
 
                 call change_loc('livingroom') from _call_change_loc_47
@@ -239,6 +239,48 @@ label day_events():
         $ calling = duringcall = False
         fp "No answer - I guess I'll try again later"
         call change_loc(current_location) from _call_change_loc_57
+
+    label kitchen_spill_event(kse_called=False):
+        if kse_called:
+            $kse_called = False
+            "Entering the kitchen, you spot [fmName.yourinformal] kneeling in front of the counter - obviously she spilled something"
+            scene kitchenspill_1
+            "Holy shit! That's a nice ass!"
+            scene kitchenspill_2
+            "Staring at her ass, you keep looking, as it gyrates in front of you. You've never really noticed how... sexy it looks before!"
+            "Suddenly... this gotta be in your head?!?"
+            scene kitchen_closeup_transparent with Dissolve(.25)
+            "Your dick is waking up, potentially causing a lot of trouble very soon..."
+            menu:
+                "If you think this is all in your head, [fp]... This is gonna be funnier than I thought! (evil)":
+                    $ statschangenotify('lil_bad',2)
+                "Sure, sure, this is all in your head, [fp]! (good)":
+                    $ statschangenotify('aru_good',2)
+            scene kitchen_spill
+            "You make a concentrated effort to focus on something else!"
+            "... *cough* ..."
+
+            if renpy.random.random() < .75:
+                "And you fail, miserably"
+                fm "Hey, [fp]! How are you..."
+                "She looks down, to where your prominent member is definitely showing himself to the world"
+                fm "..."
+                fm "..."
+                fm "uhm... *clears throat* You want some breakfast, [fp]?"
+                $ statschangenotify('fm_aro',2)
+                "She turns away and starts reaching for some cereal"
+                "You're beet red, but sit down, waiting for her to pour you some"
+                fp "Yeah, thanks [fmName.informal]"
+                fm "No problem, [fp]"
+            else:
+                "You manage to focus on something completely unarousing for a minute or so"
+                "Crisis averted!"
+                fp "Hey, [fmName.informal]"
+                fm "Oh, hey [fp]"
+                fm "I just need to clean up this mess, then I'll make us some breakfast"
+                fp "Oh, I can make something myself, I don't mind"
+                fm "Thanks, [fp]"
+                $ statschangenotify('fm_rel',2)
 
     label evening_event_label(ee_called=False):
         if ee_called:

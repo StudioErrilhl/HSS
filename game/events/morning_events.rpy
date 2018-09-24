@@ -13,13 +13,13 @@ label morning_events():
             $ conditions.addcondition("Yeez, [fmName.informal]! Stop nagging me, will you? I'm gonna get up in a second","fm_rel >= 5")
             menu:
                 "[fmName.Informal]! Shut up! I'm awake, and getting up! (evil)":
-                    $ statschangenotify("fp_demon",1)
+                    $ statschangenotify("lil_bad",1)
                     call fm_morningchoice_dom(True) from _call_fm_morningchoice_dom
                 "Yeez, [fmName.informal]! Stop nagging me, will you? I'm gonna get up in a second (evil)":
-                    $ statschangenotify("fp_demon",1)
+                    $ statschangenotify("lil_bad",1)
                     call fm_morningchoice_reldom(True) from _call_fm_morningchoice_reldom
                 "Okay, [fmName.informal]... I'm up, I'm up. Please don't yell (good)":
-                    $ statschangenotify("fp_angel",1)
+                    $ statschangenotify("aru_good",1)
                     call fm_morningchoice_rel(True) from _call_fm_morningchoice_rel
             $ conditions.clear()
 
@@ -65,10 +65,10 @@ label morning_events():
                                     fm blushing "Do you really wanna fuck my ass?"
                                     menu:
                                         "Yes (evil)":
-                                            $ statschangenotify("fp_demon",1)
+                                            $ statschangenotify("lil_bad",1)
                                             call morning_assfuck() from _call_morning_assfuck_1
                                         "No (good)":
-                                            $ statschangenotify("fp_angel",1)
+                                            $ statschangenotify("aru_good",1)
                                             call morning_pussyfuck() from _call_morning_pussyfuck
                                 else:
                                     fm ahead "What are you going to do?\n{i}Her voice shakes a little bit{/i}"
@@ -97,7 +97,7 @@ label morning_events():
                                         "Blowjob":
                                             call morning_bj() from _call_morning_bj
                                         "How about both? (evil)":
-                                            $ statschangenotify("fp_demon",1)
+                                            $ statschangenotify("lil_bad",1)
                                             call morning_pussy_bj() from _call_morning_pussy_bj
                                 else:
                                     "You watch as [fmName.yourshort] hitches her thumbs under her panties and swiftly pulls them down over her thighs. She's got shapely legs, not at all bad for a woman in her forties. She pulls up her skirt, and sits back on the bed, spreading her legs as she does so."
@@ -128,7 +128,7 @@ label morning_events():
                                         "Pussy":
                                             call morning_pussyfuck() from _call_morning_pussyfuck_3
                                         "How about both? (evil)":
-                                            $ statschangenotify("fp_demon",1)
+                                            $ statschangenotify("lil_bad",1)
                                             call morning_pussy_bj() from _call_morning_pussy_bj_1
                                 else:
                                     "This is a placeholder for the morning event for fm_dom above 45"
@@ -335,7 +335,7 @@ label morning_events():
                                 if daycount == 0:
                                     $ daycount += 1
                                 if not firstday_after_talk:
-                                    $ fs_mad = True
+                                    $ fs_mad = 1
                                 $ count = 0
                                 $ talk_later = True
                                 call entrance_loc() from _call_entrance_loc_4
@@ -349,36 +349,17 @@ label morning_events():
                         "Nah, slack of in the garden instead":
                             call entrance_loc() from _call_entrance_loc_5
 
+    label spill_in_kitchen(sik_called=False):
+        if sik_called:
+            $ sik_called = False
+            if not fm_seen:
+                $ fm_seen = False
+                # this will be a call to the new scene
+                # $ breakfast_food = False
+
     label breakfast_interaction(bin_called=False):
         if bin_called and not had_breakfast:
             $ bin_called = False
-            if not fm_seen:
-                scene kitchen_loc_with_fms_butt
-                "Entering the kitchen, you spot [fmName.yourinformal] bent over in front of the counter - obviously she spilled something"
-                scene kitchen_loc_with_fms_butt_zoomed
-                """Staring at her ass, you keep looking, as it gyrates in front of you
-
-                You've never really noticed how... sexy it looks before!
-
-                Your dick is waking up, potentially causing a lot of trouble very soon...
-
-                You make a concentrated effort to focus on something else!"""
-
-                if renpy.random.random() < .95:
-                    "And you fail, miserably"
-                    fm "Hey, [fp]! How are you..."
-                    "She looks down, to where your prominent member is definitely showing himself to the world"
-                    fm "..."
-                    fm "..."
-                    fm "uhm... *clears throat* You want some breakfast, [fp]?"
-                    "She turns away and starts reaching for some cereal"
-                    "You're beet red, but sit down, waiting for her to pour you some"
-                    fp "Yeah, thanks [fmName.informal]"
-                    fm "No problem, [fp]"
-                else:
-                    "You manage to focus on something completely unarousing for a minute or so"
-                    "Crisis averted!"
-
             if breakfast_food:
                 show anne at left, ModOffsetX(200)
                 show marten ahead at right, ModOffsetX(-200)
@@ -417,7 +398,7 @@ label morning_events():
                 if renpy.random.random() > .5:
                     if debug:
                         "renpy random more than 5"
-                    if not fs_mad:
+                    if fs_mad != 1:
                         show jules ahead at left, ModOffsetX(200)
                         show marten ahead at right, ModOffsetX(-200)
                         with dissolve
@@ -495,7 +476,7 @@ label morning_events():
                 if debug:
                     "weekend"
                 if renpy.random.random() > .95: #changed from 6
-                    if not fs_mad:
+                    if fs_mad != 1:
                         show jules ahead at left, ModOffsetX(200)
                         show marten ahead at right, ModOffsetX(-200)
                         with dissolve

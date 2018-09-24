@@ -1,7 +1,7 @@
 label fs_talk(fst_called=False):
     if fst_called:
         $ fst_called = False
-        if not fs_mad:
+        if fs_mad != 1:
             if fs_si and day_week <= 4 and not fse:
                 show jules ahead
                 fp "How you doing today?"
@@ -183,8 +183,8 @@ label fs_talk(fst_called=False):
                 label after_talk_events(ate_called=False):
                     if ate_called:
                         $ ate_called = False
-                        if fs_mad:
-                            $ fs_mad = False
+                        if fs_mad == 1:
+                            $ fs_mad = 0
                             $ morning_event_done = True
                             $ fdtfs_after = False
                             if int(current_time[:2]) in night:

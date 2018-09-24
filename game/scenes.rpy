@@ -95,6 +95,17 @@ label icafe_scene(trans=True):
         scene icafe
     return
 
+label kitchen_spill_scene(trans=True):
+    if not kitchen_ach:
+        $ kitchen_ach = True
+        $ update_been_everywhere_achievement()
+    if not fm_seen:
+        if trans:
+            scene kitchen_spill with Dissolve(.25)
+        else:
+            scene kitchen_spill
+    return
+
 label kitchen_scene(trans=True):
     if not kitchen_ach:
         $ kitchen_ach = True

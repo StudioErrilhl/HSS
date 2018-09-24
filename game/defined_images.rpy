@@ -490,6 +490,8 @@
 #     pause .25
 #     repeat
 
+
+
 transform fpi_ani:
     "images/characters/marten/introanimation/fpi_1.webp"
     pause .1
@@ -524,6 +526,41 @@ transform fpi_ani:
     "images/characters/marten/introanimation/fpi_2.webp"
     pause .1
     repeat
+
+transform ks_ani_1:
+    "images/characters/anne/animations/kitchen_zoom_01.webp" with Dissolve(.1)
+    pause .08
+    "images/characters/anne/animations/kitchen_zoom_02.webp" with Dissolve(.1)
+    pause .08
+    "images/characters/anne/animations/kitchen_zoom_03.webp" with Dissolve(.1)
+    pause .08
+    "images/characters/anne/animations/kitchen_zoom_04.webp" with Dissolve(.1)
+    pause .08
+    "images/characters/anne/animations/kitchen_zoom_05.webp" with Dissolve(.1)
+    pause .08
+    "images/characters/anne/animations/kitchen_zoom_06.webp" with Dissolve(.1)
+    pause .08
+
+transform ks_ani_2:
+    "images/characters/anne/animations/kitchen_zoom_07.webp" with Dissolve(.2)
+    pause .15
+    "images/characters/anne/animations/kitchen_zoom_08.webp" with Dissolve(.2)
+    pause .15
+    "images/characters/anne/animations/kitchen_zoom_09.webp" with Dissolve(.2)
+    pause .15
+    "images/characters/anne/animations/kitchen_zoom_10.webp" with Dissolve(.2)
+    pause .15
+    "images/characters/anne/animations/kitchen_zoom_11.webp" with Dissolve(.2)
+    pause .15
+    "images/characters/anne/animations/kitchen_zoom_12.webp" with Dissolve(.2)
+    pause .15
+    "images/characters/anne/animations/kitchen_zoom_13.webp" with Dissolve(.2)
+    pause .15
+    "images/characters/anne/animations/kitchen_zoom_14.webp" with Dissolve(.2)
+    pause .15
+    "images/characters/anne/animations/kitchen_zoom_15.webp" with Dissolve(.2)
+    pause .15
+
 # transform nk_standing_devious_ani:
 #     "images/characters/karen/body/standing/devious.webp"
 #     choice:
@@ -606,6 +643,12 @@ transform fpi_ani:
 
 image fpintro:
     contains fpi_ani
+
+image kitchenspill_1:
+    contains ks_ani_1
+
+image kitchenspill_2:
+    contains ks_ani_2
 
 # image nk_standing annoyed:
 #     "images/characters/karen/body/standing/annoyed.webp"

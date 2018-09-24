@@ -46,34 +46,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-
-Skip to content
-This repository
-
-    Pull requests
-    Issues
-    Marketplace
-    Explore
-
-    @StudioErrilhl
-
-132
-1,064
-
-    181
-
-renpy/renpy
-Code
-Issues 59
-Pull requests 9
-Projects 1
-Insights
-renpy/.gitignore
-1f575ba 25 days ago
-@renpytom renpytom Distribute Atom with Ren'Py.
-@renpytom
-@Neurone
-86 lines (76 sloc) 931 Bytes
 *.rpyc
 *.rpyb
 *.rpymc
@@ -87,6 +59,8 @@ saves
 tmp
 cache
 env
+sounds
+gui
 
 log.txt
 errors.txt
@@ -100,6 +74,8 @@ styles.txt
 
 /android
 /build
+/sounds
+/gui
 /dist
 /dists
 /renpy.app

@@ -80,6 +80,9 @@ define sp = Character("Principal Hudson",who_outlines=[(absolute(1),"#999",absol
 define sj = Character("Jack",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define scn = Character("Natalie",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define scm = Character("Mattie",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define lil = Character("Lilim",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define aru = Character("Aruru",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+
 #remember to add default color="#000000" if the character do not have a namebox_charname.webp in the gui/-directory
 
 default chars = [[fm,"fm"],[nb,"nb"],[nc,"nc"],[sj,"sj"],[fs,"fs"],[nk,"nk"],[fp,"fp"],[scm,"scm"],[scn,"scn"],[se,"se"],[sn,"sn"],[sp,"sp"],[nr,"nr"]]
@@ -101,8 +104,8 @@ default filth_val = 0
 default tmp_filth_val = False
 default fpe = False
 default fp_sofa_aquired = False
-default fp_demon = 0
-default fp_angel = 0
+default lil_bad = 0
+default aru_good = 0
 default choicestatus = None
 
 #fm
@@ -137,7 +140,7 @@ default fs_pussy = 0
 default fs_bj = 0
 default fs_sex_pref = "BJ"
 default fs_lvl = 0
-default fs_mad = False
+default fs_mad = 0
 default fse = False
 
 #nk

@@ -27,11 +27,11 @@ init python:
         # This function have no reason to be used by anything else, so keep it internal to "statschangenotify".
         def _generateText( what, who, f ):
             if f < 0:
-                action = "deteriorated"
+                action = "decreased" if what in [ "dom", "aro", "cor", "att", "bad", "good" ] else "deteriorated"
             elif f == 0:
                 action = False
             else:
-                action = "increased" if what in [ "dom", "aro", "cor", "att" ] else "improved"
+                action = "increased" if what in [ "dom", "aro", "cor", "att", "bad", "good" ] else "improved"
 
             # Each variables in "format" by their order. So {0} = who, {1} = action, {2} = absolute value of "f".
             if what == "rel":
@@ -74,6 +74,17 @@ init python:
                     return "{0}'s acceptance of giving blowjobs did not change".format(who)
                 else:
                     return "{0}'s acceptance of giving blowjobs has {1} by {2}".format( who, action, abs( f ) ).capitalize()
+            elif what == "bad":
+                if not action:
+                    return "{0}'s bad influence over you did not change".format(who)
+                else:
+                    return "{0}'s bad influence over you has {1} by {2}".format(who, action, abs(f)).capitalize()
+            elif what == "good":
+                if not action:
+                    return "{0}'s good influence over you did not change".format(who)
+                else:
+                    return "{0}'s good influence over you has {1} by {2}".format(who, action, abs(f)).capitalize()
+
             return "Ooop's something really weird happened1!"
 
         # A single line for all the possible variables, as well as both positive and negative values.
@@ -103,6 +114,10 @@ init python:
                 text = _generateText( a[3:], str( getattr(store,name) ), f )
             else:
                 text = _generateText( a[3:], str(name), f)
+        elif a[:3] in ["lil","aru"]:
+            name = a[:3]
+            if name == a[:3]:
+                text = _generateText(a[4:],str(getattr(store,name)),f)
         elif a == "mc_b":
             if f < 0:
                 text = "Your motorcycle build decreased by {0}".format( abs( f ) )
