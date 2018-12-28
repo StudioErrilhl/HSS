@@ -35,7 +35,8 @@ label day_events():
                     menu:
                         "No, [fmName.informal], I don't have time to help you right now (evil)":
                             show anne angry
-                            $ statschangenotify("lil_bad",1)
+                            $ statschangenotify("lil_bad",1,True)
+                            $ statschangenotify('fp_alignment',-1,True)
                             $ statschangenotify("fm_dom",.5,True)
                             $ statschangenotify("fm_rel",-.5)
                         "Yes, [fmName.informal], no problem. *you open the jar* (good)":
@@ -44,7 +45,8 @@ label day_events():
                                 $ statschangenotify("fm_rel",1)
                             else:
                                 $ statschangenotify("fm_rel",.5)
-                            $ statschangenotify("aru_good",1)
+                            $ statschangenotify("aru_good",1,True)
+                            $ statschangenotify('fp_alignment',1)
                 $ sun_event = False
                 hide anne
                 call change_loc(current_location) from _call_change_loc_70
@@ -242,7 +244,8 @@ label day_events():
 
     label kitchen_spill_event(kse_called=False):
         if kse_called:
-            $kse_called = False
+            $ kse_called = False
+            $ fm_seen = True
             "Entering the kitchen, you spot [fmName.yourinformal] kneeling in front of the counter - obviously she spilled something"
             scene kitchenspill_1
             "Holy shit! That's a nice ass!"
@@ -253,9 +256,11 @@ label day_events():
             "Your dick is waking up, potentially causing a lot of trouble very soon..."
             menu:
                 "If you think this is all in your head, [fp]... This is gonna be funnier than I thought! (evil)":
-                    $ statschangenotify('lil_bad',2)
+                    $ statschangenotify('lil_bad',2,True)
+                    $ statschangenotify('fp_alignment',-2)
                 "Sure, sure, this is all in your head, [fp]! (good)":
-                    $ statschangenotify('aru_good',2)
+                    $ statschangenotify('aru_good',2,True)
+                    $ statschangenotify('fp_alignment',2)
             scene kitchen_spill
             "You make a concentrated effort to focus on something else!"
             "... *cough* ..."
@@ -281,6 +286,7 @@ label day_events():
                 fp "Oh, I can make something myself, I don't mind"
                 fm "Thanks, [fp]"
                 $ statschangenotify('fm_rel',2)
+            call change_loc(current_location)
 
     label evening_event_label(ee_called=False):
         if ee_called:

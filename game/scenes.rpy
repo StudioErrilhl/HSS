@@ -127,27 +127,26 @@ label livingroom_scene(trans=True):
         $ livingroom_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
-        if bad_weather:
+        if weather == 1:
             scene livingroom_night_bad_weather with Dissolve(.25)
         else:
             scene livingroom_night with Dissolve(.25)
-        if bad_weather:
-            if rainstorm:
-                show rain behind livingroom_night_bad_weather
-                show livingroom_night_bad_weather_windows behind rain
-            else:
-                show livingroom_night_bad_weather_windows
+        if weather == 1:
+            show livingroom_night_bad_weather_windows
+        elif weather == 2:
+            show rain behind livingroom_night_bad_weather
+            show livingroom_night_bad_weather_windows behind rain
+
     else:
-        if bad_weather:
+        if weather == 1:
             scene livingroom_morning_bad_weather with Dissolve(.25)
         else:
             scene livingroom_morning with Dissolve(.25)
-        if bad_weather:
-            if rainstorm:
-                show rain behind livingroom_morning_bad_weather
-                show livingroom_morning_bad_weather_windows behind rain
-            else:
-                show livingroom_morning_bad_weather_windows
+        if weather == 1:
+            show livingroom_morning_bad_weather_windows
+        elif weather == 2:
+            show rain behind livingroom_morning_bad_weather
+            show livingroom_morning_bad_weather_windows behind rain
     return
 
 label outside_scene(trans=True):
@@ -157,46 +156,46 @@ label outside_scene(trans=True):
     # if int(current_time[:2]) in day+night:
     if int(current_time[:2]) in day and (int(current_time[:2]) > 15 and int(current_time[:2]) < 22):
         if trans:
-            if bad_weather:
+            if weather == 1:
                 scene outside_morning_bad_weather_with_car with Dissolve(.25)
             else:
                 scene outside_morning_with_car with Dissolve(.25)
         else:
-            if bad_weather:
+            if weather == 1:
                 scene outside_morning_bad_weather_with_car
             else:
                 scene outside_morning_with_car
     elif int(current_time[:2]) in night:
         if int(current_time[:2]) < 4 or int(current_time[:2]) >= 22:
             if trans:
-                if bad_weather:
+                if weather == 1:
                     scene outside_night_bad_weather_with_car with Dissolve(.25)
                 else:
                     scene outside_night_with_car with Dissolve(.25)
             else:
-                if bad_weather:
+                if weather == 1:
                     scene outside_night_bad_weather_with_car
                 else:
                     scene outside_night_with_car
         else:
             if trans:
-                if bad_weather:
+                if weather == 1:
                     scene outside_night_bad_weather with Dissolve(.25)
                 else:
                     scene outside_night with Dissolve(.25)
             else:
-                if bad_weather:
+                if weather == 1:
                     scene outside_night_bad_weather
                 else:
                     scene outside_night
     else:
         if trans:
-            if bad_weather:
+            if weather == 1:
                 scene outside_morning_bad_weather with Dissolve(.25)
             else:
                 scene outside_morning with Dissolve(.25)
         else:
-            if bad_weather:
+            if weather == 1:
                 scene outside_morning_bad_weather
             else:
                 scene outside_morning
@@ -207,14 +206,14 @@ label schoolbuilding_scene(trans=True):
         $ school_outside_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
-        if bad_weather and rainstorm:
+        if weather == 2:
             scene school_outside_night
             show rain
             with Dissolve(.25)
         else:
             scene school_outside_night with Dissolve(.25)
     else:
-        if bad_weather and rainstorm:
+        if weather == 2:
             scene school_outside_morning
             show rain
             with Dissolve(.25)
@@ -252,6 +251,13 @@ label upstairs_scene(trans=True):
         scene upstairs_morning with Dissolve(.25)
     return
 
+label upstairs_closerdoor_scene(trans=True):
+    if not uhl_ach:
+        $ uhl_ach = True
+        $ update_been_everywhere_achievement()
+    scene upstairs_closerdoor with Dissolve(.25)
+    return
+
 label upper_hallway_bathroom_peek_scene(trans=True,wetshower=False):
     if not uhl_bathroom_ach:
         $ uhl_bathroom_ach = True
@@ -261,17 +267,17 @@ label upper_hallway_bathroom_peek_scene(trans=True,wetshower=False):
             scene upper_hallway_bathroom_night_after_shower_light with Dissolve(.25)
             show juliette_shower_night
         else:
-            $ print('showerscene during morning with trans')
+            # $ print('showerscene during morning with trans')
             scene upper_hallway_bathroom_morning with Dissolve(.25)
             show juliette_shower
             # with Dissolve(.25)
     else:
         if int(current_time[:2]) in night:
-            $ print('showerscene during night')
+            # $ print('showerscene during night')
             scene upper_hallway_bathroom_night_after_shower_light
             show juliette_shower_night
         else:
-            $ print('showerscene during morning')
+            # $ print('showerscene during morning')
             scene upper_hallway_bathroom_morning
             show juliette_shower
     return

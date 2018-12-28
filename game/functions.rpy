@@ -74,6 +74,8 @@ init python:
                     return "{0}'s acceptance of giving blowjobs did not change".format(who)
                 else:
                     return "{0}'s acceptance of giving blowjobs has {1} by {2}".format( who, action, abs( f ) ).capitalize()
+            elif what == 'alignment':
+                return "Your alignment changed by {0} to {1}".format(abs(f),getattr(store,a))
             elif what == "bad":
                 if not action:
                     return "{0}'s bad influence over you did not change".format(who)
@@ -87,7 +89,6 @@ init python:
 
             return "Ooop's something really weird happened1!"
 
-        # A single line for all the possible variables, as well as both positive and negative values.
         if a == "mc_b":
             setattr( store, a, min(getattr( store, a) + f,store.mc_b_max))
         else:
@@ -134,7 +135,7 @@ init python:
             renpy.notify((text,"decrease"))
 
         if p:
-            renpy.pause(.6)
+            renpy.pause(.75)
         else:
             renpy.pause(.1)
 
@@ -173,110 +174,44 @@ init 10 python:
         not_entered = True
         sethour = hours
         starthour = current_time[:2]
+        # wetshower = False
         if hours or minutes:
             local_time = current_time
             if hours:
-                wetshower = False
-                if int(local_time[:2])+int(hours) <= 23:
-                    if int(local_time[:2])+int(hours) == 24:
-                        current_time = str(int(0))+local_time[2:]
-                        if len(current_time) == 4:
-                            current_time = '0'+current_time
-                        setattr(store, 'current_time', current_time)
-                        day_week = 0 if day_week == 6 else day_week+1
-                        if local_dw != day_week:
-                            if current_month_day == months_days[current_month][1]:
-                                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
-                                current_month_text = months_days[current_month][0]
-                                current_month_day = 1
-                            else:
-                                current_month_day += 1
-                                day_ahead = True
-                    elif int(local_time[:2])+int(hours) > 24:
-                        current_time = str(int(0))+(int(local_time[:2])+int(hours)-24)+local_time[2:]
-                        if len(current_time) == 4:
-                            current_time = '0'+current_time
-                        if filth_val and not tmp_filth_val:
-                            tmp_filth_val = True
-                            filth_val += 10
-                        setattr(store, 'current_time', current_time)
-                        day_week = 0 if day_week == 6 else day_week+1
-                        if local_dw != day_week:
-                            if current_month_day == months_days[current_month][1]:
-                                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
-                                current_month_text = months_days[current_month][0]
-                                current_month_day = 1
-                            else:
-                                current_month_day += 1
-                                day_ahead = True
-                    else:
-                        current_time = str(int(local_time[:2])+int(hours))+local_time[2:]
-                        if len(current_time) == 4:
-                            current_time = '0'+current_time
-                        setattr(store, 'current_time', current_time)
+                if int(current_time[:2])+int(hours) >= 24:
+                    update_hour = (int(current_time[:2])+int(hours))-24
+                    current_time = str(int(update_hour))+local_time[2:]
+                    day_week = 0 if day_week == 6 else day_week+1
+                    if local_dw != day_week:
+                        if current_month_day == months_days[current_month][1]:
+                            current_month = 0 if int(current_month) == 11 else (int(current_month)+1)
+                            current_month_text = months_days[current_month][0]
+                            current_month_day = 1
+                        else:
+                            current_month_day += 1
+                            day_ahead = True
                 else:
-                    if int(local_time[:2])+int(hours) == 24:
-                        current_time = str(int(0))+local_time[2:]
-                        if len(current_time) == 4:
-                            current_time = '0'+current_time
-                        if filth_val and not tmp_filth_val:
-                            tmp_filth_val = True
-                            filth_val += 10
-                        setattr(store, 'current_time', current_time)
-                        day_week = 0 if day_week == 6 else day_week+1
-                        if local_dw != day_week:
-                            if current_month_day == months_days[current_month][1]:
-                                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
-                                current_month_text = months_days[current_month][0]
-                                current_month_day = 1
-                            else:
-                                current_month_day += 1
-                                day_ahead = True
-                    elif int(local_time[:2])+int(hours) > 24:
-                        current_time = str(int(0))+str((int(local_time[:2])+int(hours)-24))+str(local_time[2:])
-                        update_scene = True
-                        if len(current_time) == 4:
-                            current_time = '0'+current_time
-                        if filth_val and not tmp_filth_val:
-                            tmp_filth_val = True
-                            filth_val += 10
-                        setattr(store, 'current_time', current_time)
-                        day_week = 0 if day_week == 6 else day_week+1
-                        if local_dw != day_week:
-                            if current_month_day == months_days[current_month][1]:
-                                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
-                                current_month_text = months_days[current_month][0]
-                                current_month_day = 1
-                            else:
-                                current_month_day += 1
-                                day_ahead = True
-                    else:
-                        current_time = str(int(local_time[:2])+int(hours))+local_time[2:]
-                        if len(current_time) == 4:
-                            current_time = '0'+current_time
-                        setattr(store, 'current_time', current_time)
-            if minutes:
-                if int(local_time[-2:])+int(minutes) >= 60:
-                    update_minutes = (int(local_time[-2:])+int(minutes))-60
-                    if len(str(update_minutes)) == 1:
-                        update_minutes = '0'+str(update_minutes)
-                    if local_time >= '23:30':
-                        setattr(store,'current_time','00:00')
-                        day_week = 0 if day_week == 6 else day_week+1
-                        if local_dw != day_week:
-                            if current_month_day == months_days[current_month][1]:
-                                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
-                                current_month_text = months_days[current_month][0]
-                                current_month_day = 1
-                            else:
+                    current_time = str(int(local_time[:2])+int(hours))+local_time[2:]
+                if len(current_time) == 4:
+                    current_time = '0'+current_time
+                setattr(store,'current_time',current_time)
 
+            if minutes:
+                if int(current_time[-2:])+int(minutes) >= 60:
+                    update_minutes = str("%02d"%((int(local_time[-2:])+int(minutes))-60))
+                    if local_time >= '23:30':
+                        setattr(store,'current_time','00:00')
+                        day_week = 0 if day_week == 6 else day_week+1
+                        if local_dw != day_week:
+                            if current_month_day == months_days[current_month][1]:
+                                current_month = 0 if int(current_month) == 11 else (int(current_month)+1)
+                                current_month_text = months_days[current_month][0]
+                                current_month_day = 1
+                            else:
                                 current_month_day += 1
                                 day_ahead = True
                     else:
-                        current_time = str(int(local_time[:2])+1)+':'+str(update_minutes)
-                    if len(current_time) == 4:
-                        current_time = '0'+current_time
-                    setattr(store,'current_time',current_time)
+                        current_time = str(int(local_time[:2])+1)+':'+update_minutes
                 else:
                     if local_time >= '23:30':
                         setattr(store,'current_time','00:00')
@@ -286,17 +221,17 @@ init 10 python:
                             filth_val += 10
                         if local_dw != day_week:
                             if current_month_day == months_days[current_month][1]:
-                                current_month = 0 if int(current_month) == 11 else (int(current_month) + 1)
+                                current_month = 0 if int(current_month) == 11 else (int(current_month)+1)
                                 current_month_text = months_days[current_month][0]
                                 current_month_day = 1
                             else:
                                 current_month_day += 1
                                 day_ahead = True
                     else:
-                        current_time = str(local_time[:2])+':'+str(int(local_time[3:])+minutes)
-                    if len(current_time) == 4:
-                        current_time = '0'+current_time
-                    setattr(store, 'current_time', current_time)
+                        current_time = str(int(local_time[:2]))+':'+str(int(local_time[3:])+minutes)
+                if len(current_time) == 4:
+                    current_time = '0'+current_time
+                setattr(store, 'current_time', current_time)
 
             if charge_phone:
                 total = (int(sethour)+int(starthour))-int(starthour)
@@ -416,24 +351,15 @@ init 10 python:
             if file.startswith('images/inventory/') and file.endswith('.webp'):
                 if 'hover' in file:
                     inv_list.append(file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('_insensitive','').replace('.webp',''))
-                    # if 'fsp_' in file:
-                    #     tempvar = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.webp','').replace('fsp_','panties_').replace('_insensitive','').split('_')
-                    #     if len(tempvar) == 3:
-                    #         temp = tempvar[0]+' - '+tempvar[1]+' '+tempvar[2]
-                    #     elif len(tempvar) == 2:
-                    #         temp = tempvar[0]+' - '+tempvar[1]
-                    #     else:
-                    #         temp = tempvar[0]
-                    #     inv_list.append(temp)
-                    # else:
-                    #     inv_list.append(file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.webp','').replace('fs_','').replace('_',' '))
         return inv_list
 
-
-    # def closeimage():
-    #     imagebutton auto "gui/imggal_close_%s.webp" focus_mask None action[Hide('phone_gallery_show'),Show('phone_gallery_screen')] at ModZoom(.65):
-    #         xalign 1.0
-
+    def chardesc_fetch(char=False):
+        global chars, char_desc, chardesc
+        for i in chars:
+            if char == i[1]:
+                chardesc = char_desc[i]
+            else:
+                chardesc = False
 
     def alarm_setting(hour=False,minute=False):
         if hour:
@@ -452,12 +378,11 @@ init 10 python:
         random.shuffle(playstore_games)
         random.shuffle(playstore_apps)
 
-# def searchmemory(usersearchlist, usersearchitem):
-#     if (usersearchlist in lists and usersearchitem in lists[usersearchlist]):
-#         return lists[usersearchlist].index(usersearchitem)
-#     else:
-#         return -1
-
+    def image_unlock(imagetounlock=None):
+        global images_unlocked
+        if imagetounlock is not None:
+            images_unlocked.append(imagetounlock)
+            renpy.notify('Image unlocked')
 
     def realtime_search(searchterm=False,listname=False):
         if searchterm and listname:
@@ -474,8 +399,6 @@ init 10 python:
                 return returnlist
             else:
                 return False
-
-
 
     def hide_phone_screens():
         renpy.hide_screen('phonescreen')
@@ -562,18 +485,26 @@ init 10 python:
             # if message not in messages+read_messages+disabled_messages:
             messages.append((char,charobj,message))
 
-
-    # if day_week <= 4:
-    #     $ morning = True if int(current_time[:2]) >= 6 and int(current_time[:2]) < 9 else False
-    #     $ day = True if int(current_time[:2]) >= 9 and int(current_time[:2]) <= 17 else False
-    #     $ evening = True if int(current_time[:2]) > 17 and int(current_time[:2]) < 22 else False
-    #     $ night = True if int(current_time[:2]) >= 22 or int(current_time[:2]) >= 0 and int(current_time[:2]) < 6 else False
-    # elif day_week >= 5:
-    #     $ morning = True if int(current_time[:2]) >= 7 and int(current_time[:2]) <= 12 else False
-    #     $ day = True if int(current_time[:2]) > 12 and int(current_time[:2]) <= 19 else False
-    #     $ evening = True if int(current_time[:2]) > 19 and int(current_time[:2]) <= 23 else False
-    #     $ night = True if int(current_time[:2]) >= 0 and int(current_time[:2]) < 7 else False
-    # return
+    def showWeather(cw=False):
+        global weather, current_time, night
+        if cw:
+            if cw > 3:
+                cw = weather = 1
+            if int(current_time[:2]) in night:
+                if cw == 1:
+                    img = "gui/night_rain_icon.webp"
+                elif cw == 2:
+                    img = "gui/night_rain_icon.webp"
+                else:
+                    img = "gui/night_icon.webp"
+            else:
+                if cw == 1:
+                    img = "gui/morning_rain_icon.webp"
+                elif cw == 2:
+                    img = "gui/morning_rain_icon.webp"
+                else:
+                    img = "gui/sun_icon.webp"
+            return img
 
 # Copyright 2017  Anne O'Nymous - AON/SC4X
 #

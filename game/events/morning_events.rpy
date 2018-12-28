@@ -13,13 +13,16 @@ label morning_events():
             $ conditions.addcondition("Yeez, [fmName.informal]! Stop nagging me, will you? I'm gonna get up in a second","fm_rel >= 5")
             menu:
                 "[fmName.Informal]! Shut up! I'm awake, and getting up! (evil)":
-                    $ statschangenotify("lil_bad",1)
+                    $ statschangenotify("lil_bad",1,True)
+                    $ statschangenotify('fp_alignment',-1)
                     call fm_morningchoice_dom(True) from _call_fm_morningchoice_dom
                 "Yeez, [fmName.informal]! Stop nagging me, will you? I'm gonna get up in a second (evil)":
-                    $ statschangenotify("lil_bad",1)
+                    $ statschangenotify("lil_bad",1,True)
+                    $ statschangenotify('fp_alignment',-1)
                     call fm_morningchoice_reldom(True) from _call_fm_morningchoice_reldom
                 "Okay, [fmName.informal]... I'm up, I'm up. Please don't yell (good)":
-                    $ statschangenotify("aru_good",1)
+                    $ statschangenotify("aru_good",1,True)
+                    $ statschangenotify('fp_alignment',1)
                     call fm_morningchoice_rel(True) from _call_fm_morningchoice_rel
             $ conditions.clear()
 
@@ -65,10 +68,12 @@ label morning_events():
                                     fm blushing "Do you really wanna fuck my ass?"
                                     menu:
                                         "Yes (evil)":
-                                            $ statschangenotify("lil_bad",1)
+                                            $ statschangenotify("lil_bad",1,True)
+                                            $ statschangenotify('fp_alignment',-1)
                                             call morning_assfuck() from _call_morning_assfuck_1
                                         "No (good)":
-                                            $ statschangenotify("aru_good",1)
+                                            $ statschangenotify("aru_good",1,True)
+                                            $ statschangenotify('fp_alignment',1)
                                             call morning_pussyfuck() from _call_morning_pussyfuck
                                 else:
                                     fm ahead "What are you going to do?\n{i}Her voice shakes a little bit{/i}"
@@ -97,7 +102,8 @@ label morning_events():
                                         "Blowjob":
                                             call morning_bj() from _call_morning_bj
                                         "How about both? (evil)":
-                                            $ statschangenotify("lil_bad",1)
+                                            $ statschangenotify("lil_bad",1,True)
+                                            $ statschangenotify('fp_alignment',-1)
                                             call morning_pussy_bj() from _call_morning_pussy_bj
                                 else:
                                     "You watch as [fmName.yourshort] hitches her thumbs under her panties and swiftly pulls them down over her thighs. She's got shapely legs, not at all bad for a woman in her forties. She pulls up her skirt, and sits back on the bed, spreading her legs as she does so."
@@ -128,7 +134,8 @@ label morning_events():
                                         "Pussy":
                                             call morning_pussyfuck() from _call_morning_pussyfuck_3
                                         "How about both? (evil)":
-                                            $ statschangenotify("lil_bad",1)
+                                            $ statschangenotify("lil_bad",1,True)
+                                            $ statschangenotify('fp_alignment',-1)
                                             call morning_pussy_bj() from _call_morning_pussy_bj_1
                                 else:
                                     "This is a placeholder for the morning event for fm_dom above 45"

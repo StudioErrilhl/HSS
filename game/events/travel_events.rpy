@@ -2,7 +2,7 @@ label travel_events(event=False):
     if event:
         if event == 'travel_school':
             if 6 <= int(current_time[:2]) <= 8 and day_week <= 4:
-                if (shitty_morning and int(current_time[:2]) <= 7) or (int(current_time[:2]) <= 7 and (bad_weather and rainstorm)):
+                if (shitty_morning and int(current_time[:2]) <= 7) or (int(current_time[:2]) <= 7 and (weather == 2)):
                     nk ahead "Hi [fp]! You wanna ride to school?"
                     if not nk_driving:
                         fp "Hi [nk]... Didn't know you drove?"
@@ -10,7 +10,7 @@ label travel_events(event=False):
                         $ nk_driving = True
                     else:
                         fp "Hi [nk]"
-                    if bad_weather and rainstorm:
+                    if weather == 2:
                         $ text1 = "Sure! That way I won't be late, not to mention drowning by the time I get there!\n{i}Damn, she saved my scrawny ass. Don't understand why she gets so much flak at school, she's nice...{/i}"
                         $ text2 = False
                     else:
@@ -24,7 +24,7 @@ label travel_events(event=False):
                                 $ nk_sa_status = ['happy','drive']
                                 call travel_events('arrive_school') from _call_travel_events_5
                             "[text2]" if text2:
-                                if bad_weather and rainstorm:
+                                if weather == 2:
                                     $ statschangenotify('nk_rel',-3)
                                     $ renpy.pause(.25)
                                     $ nk_sa_status = ['mad','drive']
@@ -105,11 +105,11 @@ label travel_events(event=False):
         elif event == "arrive_school":
             $ current_location = 'schoolbuilding_loc'
             call schoolbuilding_scene from _call_schoolbuilding_scene
-            if bad_weather:
+            if weather == 1:
                 if walk_to_school:
                     $ filth_val += 10
-                    if rainstorm:
-                        $ filth_val += 10
+            elif weather == 2:
+                    $ filth_val += 15
             if late_oh_shit:
                 $ current_time = "08:00"
                 "Barely, but on time. Close call indeed!"

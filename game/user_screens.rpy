@@ -55,12 +55,13 @@ screen choice(items):
                         if choicestatus == "evil":
                             if e <= 0:
                                 ypos 300
-                            xpos -50
+                                xpos -50
                             text caption style "choice_button_evil":
                                 xpos 40
                             $ caption = caption+" (evil)"
                         elif choicestatus == "good":
-                            xpos 50
+                            if g <= 0:
+                                xpos 50
                             text caption style "choice_button_good"
                             $ caption = caption+" (good)"
                         else:
@@ -71,6 +72,7 @@ screen choice(items):
                             ypos 20
                             xoffset -50
                             xalign 0.0
+                        # xpos -50
                         $ e += 1
                     elif choicestatus == 'good' and g <= 0:
                         add "gui/angel.webp" at ModZoom(.4):
@@ -78,6 +80,7 @@ screen choice(items):
                             xoffset 50
                             xalign 1.0
                         $ g += 1
+                        # xpos 50
                     $ choicestatus = None
             else:
                 frame:
@@ -154,6 +157,18 @@ screen about():
 
             text _("{size=24}Made with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]{/size}")
 
+screen credits():
+    tag menu
+    use game_menu(_("Credits"), scroll="viewport"):
+        style_prefix "about"
+        vbox:
+            if gui.credits:
+                text "[gui.credits!t]\n"
+            if gui.credits_2_head:
+                text "[gui.credits_2_head!t]" at center
+            if gui.credits_2_text:
+                text "[gui.credits_2_text!t]"
+
 screen load():
     tag menu
     use file_slots(_("Continue"))
@@ -171,6 +186,7 @@ screen navigation():
         textbutton _("Preferences") action ShowMenu("preferences")
         textbutton _("About") action ShowMenu("about")
         textbutton _("Changelog") action ShowMenu("changelog")
+        textbutton _("Credits") action ShowMenu("credits")
         textbutton _("Help") action ShowMenu("help")
 
         if _in_replay:
@@ -193,7 +209,7 @@ screen main_menu():
             hotspot (44, 320, 392, 110) action ShowMenu("preferences")
             hotspot (44, 430, 400, 110) action ShowMenu("about")
             hotspot (44, 540, 396, 110) action ShowMenu("changelog")
-            hotspot (44, 650, 381, 110)
+            hotspot (44, 650, 381, 110) action ShowMenu("credits")
             hotspot (44, 760, 356, 110) action ShowMenu("help")
             hotspot (44, 870, 324, 110) action Quit(confirm=not main_menu)
 
@@ -472,24 +488,13 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 padding 0,0
                 text_size 55
                 action [Function(addday,1),Jump('day_start')] focus_mask None
-            if bad_weather and rainstorm and int(current_time[:2]) in night:
-                add "gui/night_rain_icon.webp":
-                    xalign .5
-                    ypos -15
-            elif bad_weather and rainstorm:
-                add "gui/morning_rain_icon.webp":
-                    xalign .5
-                    ypos -15
-            elif int(current_time[:2]) in night:
-                add "gui/night_icon.webp":
-                    xalign .5
-                    ypos -15
-            else:
-                add "gui/sun_icon.webp":
-                    xalign .5
-                    ypos -15
+            button:
+                xalign .5
+                ypos -25
+                add showWeather(weather)
+                action [SetVariable("weather",weather+1),Function(showWeather,weather)]
             text "[current_day]":
-                ypos -20
+                ypos -37
                 xalign .5
                 size 16
                 if current_day == "Saturday" or current_day == "Sunday":
@@ -604,146 +609,329 @@ screen statscreen_infotext():
             key 'K_ESCAPE' action [SetVariable('keyclose',False),SetField(persistent,'statscreen_infotext',False),Hide("statscreen_infotext")]
 
 screen stat_screen():
+    zorder 970
     modal True
-    if persistent.statscreen_infotext:
-        on "show" action Show('statscreen_infotext')
-    zorder 800
+    $ keyclose = True
+    default x = 500
+    default y = 400
     default stats = None
     default clicked = None
-    $ keyclose = True
+    default cb_hs = False    
+    default imagename = None
+    default selectedcharname = False
+    default chardesc = None
+    ## Get mouse coords:
+    if persistent.statscreen_infotext:
+        on "show" action Show('statscreen_infotext')
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
     frame:
-        style_prefix "statscreen"
-        xalign .5 ypos .1
-        xsize 800
-        ysize 800
-        padding 40,40
-        viewport:
-            mousewheel True
-            pagekeys True
-            ysize 650
-            # scrollbars "vertical"
+        style_prefix "infoscreen"
+        background "gui/inventory_background.webp"
+        xalign .5 yalign .5
+        xsize 1920
+        ysize 1080
+        xpadding 20
+        ypadding 20
+        $ current_items = set()
+        $ i = int(0)
+        hbox:
             vpgrid:
-                cols 6
+                style_prefix "inventory"
+                cols 1
+                edgescroll 100,500
                 mousewheel True
-                spacing 20
-                scrollbars "vertical"
-                for i in chars:
-                    if i[1] == "fp":
-                        imagebutton auto "images/characters/marten/marten_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable('setstate',i[1]),SetScreenVariable('stats',i)]:
-                            hovered SetScreenVariable('stats',i)
-                            if clicked:
-                                selected clicked[1] == 'fp'
-                            if not setstate == i[1]:
-                                unhovered SetScreenVariable('stats',clicked)
-                        text "[i[0]]" ypos 35
-                    elif i[1] == "fs":
-                        imagebutton auto "images/characters/juliette/juliette_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
-                            hovered SetScreenVariable("stats",i)
-                            if clicked:
-                                selected clicked[1] == 'fs'
-                            if not setstate == i[1]:
-                                unhovered SetScreenVariable("stats",clicked)
-                        text "[i[0]]" ypos 35
-                    elif i[1] == "fm":
-                        imagebutton auto "images/characters/anne/anne_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
-                            hovered SetScreenVariable("stats",i)
-                            if clicked:
-                                selected clicked[1] == 'fm'
-                            if not setstate == i[1]:
-                                unhovered SetScreenVariable("stats",clicked)
-                        text "[i[0]]" ypos 35
-                    elif i[1] == "nk":
-                        imagebutton auto "images/characters/karen/karen_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
-                            hovered SetScreenVariable("stats",i)
-                            if clicked:
-                                selected clicked[1] == 'nk'
-                            if not setstate == i[1]:
-                                unhovered SetScreenVariable("stats",clicked)
-                        text "[i[0]]" ypos 35
-                    elif i[1] == "nr":
-                        imagebutton auto "images/characters/ron/ron_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable('setstate',i[1]),SetScreenVariable('stats',i)]:
-                            hovered SetScreenVariable('stats',i)
-                            if clicked:
-                                selected clicked[1] == 'nr'
-                            if not setstate == i[1]:
-                                unhovered SetScreenVariable('stats',clicked)
-                        text "[i[0]]" ypos 35
+                pagekeys True
+                spacing 5
+                for name in chars:
+                    if i % 2:
+                        $ bg_c = "#565656"
                     else:
-                        imagebutton auto "gui/question_mark_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
-                            hovered SetScreenVariable("stats",i)
-                            if not setstate == i[1]:
-                                unhovered SetScreenVariable("stats",clicked)
-                        if i[1] == "sn" or i[1] == "sp":
-                            text "[i[0]]" ypos 35
-                        else:
-                            text "[i[0]]" ypos 35
-        imagebutton auto "gui/closebutton_%s.webp" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),SetScreenVariable('stats',False),Hide("stat_screen")]
-        if keyclose:
-            key 'K_ESCAPE' action [SetVariable('keyclose',False),SetScreenVariable('stats',False),Hide("stat_screen")]
+                        $ bg_c = "#414141"
+                    fixed:
+                        xsize 500
+                        ysize 160
+                        button:
+                            padding 0,0
+                            background bg_c
+                            hover_background "#ddd"
+                            selected_background "#ddd"
+                            if name[1] == "fp":
+                                $ foldername = 'marten'
+                                $ imagename = 'marten_hover'
+                            elif name[1] == 'fs':
+                                $ foldername = 'juliette'
+                                $ imagename = 'juliette_hover'
+                            elif name[1] == 'fm':
+                                $ foldername = 'anne'
+                                $ imagename = 'anne_hover'
+                            elif name[1] == 'nk':
+                                $ foldername = 'karen'
+                                $ imagename = 'karen_hover'
+                            elif name[1] == 'nr':
+                                $ foldername = 'ron'
+                                $ imagename = 'ron_hover'
+                            else:
+                                $ imagename = 'question_mark_hover'                             
+                            hbox:
+                                xsize 160
+                                ysize 160
+                                add "images/inventory/outer_ring.webp"
+                                if imagename is not None and not imagename in ['question_mark_hover','question_mark_idle']:
+                                    add "images/characters/"+foldername+"/"+imagename+".webp":
+                                        yalign .5
+                                        xalign .5
+                                        xoffset -130
+                                else:
+                                    add "gui/"+imagename+".webp":
+                                        xalign .5
+                                        yalign .5
+                                        xoffset -130                                
+                            hbox:
+                                xsize 375
+                                xpos 160
+                                ysize 160
+                                text "[name[0]]":
+                                    hover_color "#222"
+                                    xalign 0.0
+                                    xoffset 10
+                                    yalign .5  
+                            action [SetScreenVariable('chardesc',int(i)),SetScreenVariable('clicked',name),SetScreenVariable('setstate',name[1]),SetScreenVariable('stats',name),SetScreenVariable('selectedcharname',name[0])]
+                            if clicked:
+                                selected clicked[1] == name[1]
+                    $ i += 1
+        hbox:
+            xpos 600
+            ycenter .47
+            frame:
+                padding 0,0
+                xsize 1200
+                ysize 950
+                background Frame("images/inventory/outer_ring_large.webp")
+                vbox:
+                    xsize 1200
+                    ysize 80
+                    ypos 0.0
+                    xcenter .5
+                    if selectedcharname:
+                        text "{b}{size=30}[selectedcharname]{/size}{/b}" at center
+                    else:
+                        text "{b}{size=30}Here be dragons!{/size}{/b}" at center                
+                vbox:
+                    xsize 1100
+                    ypos 100
+                    xalign .5
+                    hbox:
+                        spacing 30
+                        vbox:
+                            xsize 400
+                            ysize 800
+                            xalign 0.0
+                            add Solid("#F00")
+                        vbox:
+                            xsize 650
+                            ysize 800
+                            if chardesc or chardesc == int(0):
+                                text "%s" % char_desc[chardesc][0]:
+                                    justify True
+                                    text_align .5
+                            else:
+                                text "Or, rather, you haven't selected anything yet. Yup. That was what I meant to say!":
+                                    justify True
+                                    text_align .5                                    
+                            if stats:
+                                vbox:
+                                    xsize 650
+                                    xalign .5
+                                    yalign 1.0
+                                    text "{b}[stats[0]]'s stats{/b}":
+                                        xalign .5
+                                    $ mc_p = (float(mc_b)/float(mc_b_max))*100
+                                    $ mc_p = "{0:.2f}".format(mc_p)
+                                    if stats[1] == "fp":
+                                        vbox:
+                                            hbox:
+                                                text "Main sexual preference:"
+                                                text "[fp_sex_pref]":
+                                                    xpos 10
+                                            if punishment_late < 3:
+                                                hbox:
+                                                    text "Late:"
+                                                    text "[punishment_late]":
+                                                        xpos 10
+                                            else:
+                                                hbox:
+                                                    text "Late:"
+                                                    text "[punishment_late]" style "red_color":
+                                                        xpos 10
+                                            hbox:
+                                                text "Motorcyle done:"
+                                                text "[mc_b]/[mc_b_max] ([mc_p]%)":
+                                                    xpos 10
+                                            hbox:
+                                                text "Attitude:"
+                                                text "[fp_att]":
+                                                    xpos 10
+                                            hbox:
+                                                text "Alignment:"
+                                                text "[fp_alignment]":
+                                                    xpos 10
+                                    elif stats[1] in ["nr","se","sp","sj","scn","scm"]:
+                                        vbox:
+                                            hbox:
+                                                xsize 200
+                                                text "Rel:"
+                                                text "["+stats[1]+"_rel]":
+                                                    xpos 10
+                                    else:
+                                        vbox:
+                                            hbox:
+                                                xsize 200
+                                                text "Dom:"
+                                                text "["+stats[1]+"_dom]":
+                                                    xpos 10
+                                            if persistent.cheat:
+                                                imagebutton auto "gui/minusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_dom",math.floor(getattr(store,stats[1]+"_dom")-1)):
+                                                    ypos 5
+                                                    xpos 40
+                                                imagebutton auto "gui/plusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_dom",math.floor(getattr(store,stats[1]+"_dom")+1)):
+                                                    ypos 5
+                                                    xpos 50
+                                            hbox:
+                                                xsize 200
+                                                text "Rel:"
+                                                text "["+stats[1]+"_rel]":
+                                                    xpos 20
+                                            if persistent.cheat:
+                                                imagebutton auto "gui/minusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")-1)):
+                                                    ypos 5
+                                                    xpos 40
+                                                imagebutton auto "gui/plusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")+1)):
+                                                    ypos 5
+                                                    xpos 50
+                                            hbox:
+                                                xsize 200
+                                                text "Aro:"
+                                                text "["+stats[1]+"_aro]":
+                                                    xpos 20
+                                            if persistent.cheat:
+                                                imagebutton auto "gui/minusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")-1)):
+                                                    ypos 5
+                                                    xpos 40
+                                                imagebutton auto "gui/plusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")+1)):
+                                                    ypos 5
+                                                    xpos 50
+                                        if getattr(store, ""+stats[1]+"_cor") > 10:
+                                            text "BJ: ["+stats[1]+"_bj] / 20"
+                                            text "Sex: ["+stats[1]+"_pussy] / 30"
+                                            text "Anal: ["+stats[1]+"_anal] / 40"
 
-        if stats:
-            vbox:
+   
+        button:
+            xsize 330
+            ysize 75
+            yalign 1.0
+            xalign 1.0
+            padding 0,0
+            hover_background "#ffffff"
+            hbox:
+                xsize 350
+                ysize 75
+                yalign .5
                 xalign .5
-                yalign 1.0
-                text "{b}[stats[0]]'s stats{/b}"
-                $ mc_p = (float(mc_b)/float(mc_b_max))*100
-                $ mc_p = "{0:.2f}".format(mc_p)
-                if stats[1] == "fp":
-                    text "Main sexual preference: [fp_sex_pref]"
-                    if punishment_late < 3:
-                        text "Late: [punishment_late]"
-                    else:
-                        text "Late: [punishment_late]" style "red_color"
-                    text "Motorcyle done: [mc_b]/[mc_b_max] ([mc_p]%)"
-                    text "Attitude: [fp_att]"
-                    text "Bad: [lil_bad] | Good: [aru_good]"
-                elif stats[1] in ["nr","se","sp","sj","scn","scm"]:
-                    text "Rel: ["+stats[1]+"_rel]"
+                spacing 0
+                text "Close statscreen":
+                    xsize 300
+                    size 26
+                    yalign .5
+                    xalign .5
+                    text_align .5
+                    xoffset 10
+                    # xpos -20
+                    hover_color "#0cf"
+                if cb_hs:
+                    add "gui/closebutton_hover.webp" yalign .5 xpos 20
                 else:
-                    hbox:
-                        hbox:
-                            xsize 200
-                            text "Dom:"
-                            text "["+stats[1]+"_dom]":
-                                xpos 10
-                        if persistent.cheat:
-                            imagebutton auto "gui/minusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_dom",math.floor(getattr(store,stats[1]+"_dom")-1)):
-                                ypos 5
-                                xpos 40
-                            imagebutton auto "gui/plusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_dom",math.floor(getattr(store,stats[1]+"_dom")+1)):
-                                ypos 5
-                                xpos 50
-                    hbox:
-                        hbox:
-                            xsize 200
-                            text "Rel:"
-                            text "["+stats[1]+"_rel]":
-                                xpos 20
-                        if persistent.cheat:
-                            imagebutton auto "gui/minusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")-1)):
-                                ypos 5
-                                xpos 40
-                            imagebutton auto "gui/plusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_rel",math.floor(getattr(store,stats[1]+"_rel")+1)):
-                                ypos 5
-                                xpos 50
-                    hbox:
-                        hbox:
-                            xsize 200
-                            text "Aro:"
-                            text "["+stats[1]+"_aro]":
-                                xpos 20
-                        if persistent.cheat:
-                            imagebutton auto "gui/minusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")-1)):
-                                ypos 5
-                                xpos 40
-                            imagebutton auto "gui/plusbutton_small_%s.webp" focus_mask True action SetVariable(stats[1]+"_aro",math.floor(getattr(store,stats[1]+"_aro")+1)):
-                                ypos 5
-                                xpos 50
-                    if getattr(store, ""+stats[1]+"_cor") > 10:
-                        text "BJ: ["+stats[1]+"_bj] / 20"
-                        text "Sex: ["+stats[1]+"_pussy] / 30"
-                        text "Anal: ["+stats[1]+"_anal] / 40"
+                    add "gui/closebutton_idle.webp" yalign .5 xpos 20
+            action [SetScreenVariable('chardesc',False),SetScreenVariable('clicked',False),SetScreenVariable('setstate',False),SetScreenVariable('stats',False),SetScreenVariable('selectedcharname',False),SetVariable('keyclose',False),Hide("stat_screen")]
+            hovered [SetScreenVariable("cb_hs",True)]
+            unhovered [SetScreenVariable("cb_hs",False)]
 
+        if keyclose:
+            key 'K_ESCAPE' action [SetVariable('keyclose',False),Hide("stat_screen")]
+
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"        
+        # viewport:
+        #     mousewheel True
+        #     pagekeys True
+        #     ysize 650
+        #     # scrollbars "vertical"
+        #     vpgrid:
+        #         cols 6
+        #         mousewheel True
+        #         spacing 20
+        #         scrollbars "vertical"
+        #         for i in chars:
+        #             if i[1] == "fp":
+        #                 imagebutton auto "images/characters/marten/marten_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable('setstate',i[1]),SetScreenVariable('stats',i)]:
+        #                     hovered SetScreenVariable('stats',i)
+        #                     if clicked:
+        #                         selected clicked[1] == 'fp'
+        #                     if not setstate == i[1]:
+        #                         unhovered SetScreenVariable('stats',clicked)
+        #                 text "[i[0]]" ypos 35
+        #             elif i[1] == "fs":
+        #                 imagebutton auto "images/characters/juliette/juliette_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
+        #                     hovered SetScreenVariable("stats",i)
+        #                     if clicked:
+        #                         selected clicked[1] == 'fs'
+        #                     if not setstate == i[1]:
+        #                         unhovered SetScreenVariable("stats",clicked)
+        #                 text "[i[0]]" ypos 35
+        #             elif i[1] == "fm":
+        #                 imagebutton auto "images/characters/anne/anne_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
+        #                     hovered SetScreenVariable("stats",i)
+        #                     if clicked:
+        #                         selected clicked[1] == 'fm'
+        #                     if not setstate == i[1]:
+        #                         unhovered SetScreenVariable("stats",clicked)
+        #                 text "[i[0]]" ypos 35
+        #             elif i[1] == "nk":
+        #                 imagebutton auto "images/characters/karen/karen_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
+        #                     hovered SetScreenVariable("stats",i)
+        #                     if clicked:
+        #                         selected clicked[1] == 'nk'
+        #                     if not setstate == i[1]:
+        #                         unhovered SetScreenVariable("stats",clicked)
+        #                 text "[i[0]]" ypos 35
+        #             elif i[1] == "nr":
+        #                 imagebutton auto "images/characters/ron/ron_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable('setstate',i[1]),SetScreenVariable('stats',i)]:
+        #                     hovered SetScreenVariable('stats',i)
+        #                     if clicked:
+        #                         selected clicked[1] == 'nr'
+        #                     if not setstate == i[1]:
+        #                         unhovered SetScreenVariable('stats',clicked)
+        #                 text "[i[0]]" ypos 35
+        #             else:
+        #                 imagebutton auto "gui/question_mark_%s.webp" focus_mask True action [SetScreenVariable('clicked',i),SetScreenVariable("setstate",i[1]),SetScreenVariable("stats",i)]:
+        #                     hovered SetScreenVariable("stats",i)
+        #                     if not setstate == i[1]:
+        #                         unhovered SetScreenVariable("stats",clicked)
+        #                 if i[1] == "sn" or i[1] == "sp":
+        #                     text "[i[0]]" ypos 35
+        #                 else:
+        #                     text "[i[0]]" ypos 35
+        # imagebutton auto "gui/closebutton_%s.webp" xalign 1.0 yalign 1.0 focus_mask True action [SetVariable('keyclose',False),SetScreenVariable('stats',False),Hide("stat_screen")]
+        # if keyclose:
+        #     key 'K_ESCAPE' action [SetVariable('keyclose',False),SetScreenVariable('stats',False),Hide("stat_screen")]
+
+    
 screen fullscreen_image(fullscreenimage=False):
     zorder 970
     modal True
@@ -1202,7 +1390,7 @@ init python:
 #     ypos gui.dialogue_ypos
 
 screen location(room=False):
-    $ print('room: '+room)
+    # $ print('room: '+room)
     layer "master"
     $ exitdown = exitleft = exitup = exitright = False
     default x = 500
@@ -1321,7 +1509,7 @@ screen location(room=False):
     if room == "livingroom_loc":
         if not backpack.has_item(carkeys_item) and int(current_time[:2]) > 15:
             imagebutton auto "images/inventory/carkeys_%s.webp" focus_mask True action [SetVariable('carkeys_added',True),SetVariable('lvr_cfs',True),Jump('livingroom_loc')] at ModZoom(.6):
-                if bad_weather:
+                if weather == 1:
                     yalign .78
                 else:
                     yalign .9
@@ -1334,14 +1522,13 @@ screen location(room=False):
             $ exitdown = "Entrance"
 
     if room == 'kitchen_spill_loc':
-        if not fm_seen:
-
-            if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                $ exitleft_event_var = "lvr_cfs"
-                $ exitleft_event = "livingroom_loc"
-                $ exitleft = "Livingroom"
-                $ exitdown_event = "entrance_loc"
-                $ exitdown = "Entrance"
+        # if not fm_seen:
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+            $ exitleft_event_var = "lvr_cfs"
+            $ exitleft_event = "livingroom_loc"
+            $ exitleft = "Livingroom"
+            $ exitdown_event = "entrance_loc"
+            $ exitdown = "Entrance"
 
     if room == "kitchen_loc":
         if fm_seen:
@@ -1425,9 +1612,8 @@ screen location(room=False):
                             else:
                                 action [Function(renpy.notify,"You need to find the car-keys"),Function(set_hint,"You need to find the carkeys to drive the car")]
 
-        if bad_weather:
-            if rainstorm:
-                add "rain"
+        if weather == 2:
+            add "rain"
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
             $ exitdown_event = "entrance_loc"
             $ exitdown = "Back into the house"
@@ -1495,10 +1681,10 @@ screen location(room=False):
     if room == 'ufbm_toilet_loc':
         if renpy.get_screen('say') is None and renpy.get_screen('choice') is None and renpy.get_screen('phone') is None:
             if int(current_time[:2]) in night:
-                imagebutton auto ("images/backgrounds/interaction_items/ufbn_toilet_sink_%s.webp" if bathroom_light else "images/backgrounds/interaction_items/ufbn_toilet_sink_%s.webp") focus_mask True action [SetVariable('occupied_bath',False),SetVariable('fpsink',True),Call('ufbm_toilet_loc',ufbtcfs=True)]
+                imagebutton auto ("images/backgrounds/interaction_items/ufbn_toilet_sink_%s.webp" if bathroom_light else "images/backgrounds/interaction_items/ufbn_toilet_sink_%s.webp") focus_mask True action [SetVariable('occupied_bath',False),SetVariable('fpsink',True),Call('ufbm_toilet_loc',ufbt=True)]
                 imagebutton auto ("images/backgrounds/interaction_items/ufbn_toilet_%s.webp" if bathroom_light else "images/backgrounds/interaction_items/ufbn_toilet_%s.webp") focus_mask True action [NullAction()]
             else:
-                imagebutton auto ("images/backgrounds/interaction_items/ufbm_toilet_sink_%s.webp" if bathroom_light else "images/backgrounds/interaction_items/ufbm_toilet_sink_%s.webp") focus_mask True action [SetVariable('occupied_bath',False),SetVariable('fpsink',True),Call('ufbm_toilet_loc',ufbtcfs=True)]
+                imagebutton auto ("images/backgrounds/interaction_items/ufbm_toilet_sink_%s.webp" if bathroom_light else "images/backgrounds/interaction_items/ufbm_toilet_sink_%s.webp") focus_mask True action [SetVariable('occupied_bath',False),SetVariable('fpsink',True),Call('ufbm_toilet_loc',ufbt=True)]
                 imagebutton auto ("images/backgrounds/interaction_items/ufbm_toilet_%s.webp" if bathroom_light else "images/backgrounds/interaction_items/ufbm_toilet_%s.webp") focus_mask True action [NullAction()]
 
             $ exitright_event_var = "uhlbcfs"
@@ -1613,7 +1799,7 @@ screen location(room=False):
                     yalign .5
                     tooltip exitleft
             else:
-                $ print('exitleft happened: '+exitleft_event_var)
+                # $ print('exitleft happened: '+exitleft_event_var)
                 imagebutton auto "gui/exit_left_%s.webp" focus_mask True action [SetVariable(exitleft_event_var,True),Jump(exitleft_event)]:
                     xalign 0.0
                     yalign .5
@@ -2126,7 +2312,7 @@ screen maininfo():
                 text " which changes color based on how dirty you are. If you get too dirty, you will not be able to interact with some of the people in game, and you will have to clean up to progress the story and events.\n":
                     ypos -164
                     first_indent 130
-                text "Up to the right there is a calendar, showing month, date, weather, day and time. {b}The day and time/clock is clickable, to advance time - clicking on the day puts you at wake-up time the next day, hour advances time by 1 hour, the minutes advances time by 30 minutes{/b}\n":
+                text "Up to the right there is a calendar, showing month, date, weather, day and time.\n\n {b}The day and time/clock is clickable, to advance time - clicking on the day puts you at wake-up time the next day, hour advances time by 1 hour, the minutes advances time by 30 minutes\n\n The weather icon is also clickable, to cycle through the different types of weather.{/b}\n":
                     ypos -170
                 if persistent.maininfo:
                     text "{color=#f00}{size=28}Once closed, this infoscreen will not show again like this, but the info will be available via the help-screen in-game.{/size}{/color}":
@@ -2382,7 +2568,6 @@ screen preferences():
                                             at ModZoom(.20)
                                             ypos 15
                                             xalign .5
-
 
                         if config.has_music or config.has_sound or config.has_voice:
                             hbox:

@@ -16,6 +16,15 @@ label nc_talk(event=False,callrand=False):
                 $ calling = duringcall = False
                 "{b}beeeeeep...{/b}"
                 fp "{i}She hung up on me! The bitch... hung up on me!{/i}"
+                menu:
+                    "What a bitch, huh? (evil)":
+                        # $ fp_alignment -= 1
+                        $ statschangenotify('lil_bad',1,True)
+                        $ statschangenotify('fp_alignment',-1)
+                    "What a... oh, well, I guess she had her reasons (good)":
+                        # $ fp_alignment += 1
+                        $ statschangenotify('aro_good',1,True)
+                        $ statschangenotify('fp_alignment',1)
                 fp "{i}Okay... not the best start. Maybe I can figure out a way to get her to talk to me, at least...{/i}"
                 $ nc_after_ft = True
                 if "You need to figure out a way to get "+nc.name+" to talk to you. Perhaps talk to "+nr.name+" again, see if he knows anything else that might help" not in hints+read_hints+disabled_hints:
@@ -56,7 +65,7 @@ label nc_talk(event=False,callrand=False):
             unk_m "Well, I can ask my brother to help fix it, he's..."
             nc "{i}Ice cold voice now{/i} Your brother, huh? I know who your brother is! And no way in hell am I letting him near my laptop. You can tell him that he'll need to figure out some better if he wants to get a hold of my drives. Not that they would do him any good anyway, they're encrypted. But of course, the moron didn't think that far. Now scram!"
             "She takes a step towards the boy, who couldn't be more than 14, and he steps back, turns and hurries away"
-            "In the meantime, [nc] seems like she wants to kill someone, and you decide that you really don't wanna be that guy. You decide to come back and talk to her when she's in a slighlty less confrontational mood"
+            "In the meantime, [nc] looks like she wants to kill someone, and you decide that you really don't wanna be that guy. You decide to come back and talk to her when she's in a slighlty less confrontational mood"
             $ visit_icafe_1 = False
             $ visit_icafe_2 = True
             $ addtime(False,20)
@@ -106,6 +115,8 @@ label nc_talk(event=False,callrand=False):
             nc "Then get back to me when you can"
             "She gets up, and leave you sitting there, a little taken aback by her straight forwardness and boldness"
             fp "{i}2 grand. Holy shit... Where the fuck am I gonna get 2 grand?{/i}"
+            $ parsedjobs = ", ".join(fp_jobs)
+            $ set_hint("You can earn money via different methods - currently you can do "+parsedjobs+"")
             $ nc_owed = 2000
             $ visit_icafe_2 = False
             $ visit_icafe_3 = True
@@ -216,7 +227,7 @@ label nc_talk(event=False,callrand=False):
         nc "NO! He's just... "
         "She looks flustered... not embarrassed, just... unsure of what she should tell you, maybe?"
         nc "He's a guy I used to hook up with, okay? Then... shit happened, and we had to stop doing that. It's... sorta weird, and not something I wanna share. Okay?"
-        fp "Okay, no problem. I don't really care who you boink, what I do care about is whether or not I can get a hold of him"
+        fp "Okay, no problem. I don't really care who you fuck, what I do care about is whether or not I can get a hold of him"
         nc "I can probably get him here..."
         fp "Okay. Have him show up, then text me. I can be here in 30 minutes max!"
         nc "I'll text you when I get a hold of him. No promises though"
@@ -240,7 +251,13 @@ label nc_talk(event=False,callrand=False):
         $ addtime(False, 15)
         fp "{i}This isn't like her... telling me to meet her at 23:00 and not showing up... and no message, nothing{/i}"
         fp "{i}Let's send her a message and see if she replies...{/i}"
-        $ nc_message_after_hacker = True
+        $ nc_call_after_hacker = True
+
+    if event == 'nc_call_after_hacker' and nc_call_after_hacker:
+         show screen phone_call_show('nc','nc_talk', False, 'nc_call_after_hacker_2')
+
+    if event == 'nc_call_after_hacker_2' and nc_call_after_hacker:
+        "this is a test"     
 
     if event == 'icafe_talk_hj' and not nce:
         "This is as far as this story goes for now"

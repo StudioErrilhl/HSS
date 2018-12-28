@@ -46,6 +46,68 @@ label night_events():
     label sleeping(sle_called=False):
         if sle_called:
             $ sle_called = False
+            if dream_event:
+                if dreameventsChars:
+                    $ randomDreamEvent = renpy.random.choice(dreameventsChars)
+                    show dreamintro
+                    if randomDreamEvent == 'fs':
+                        show fs_dream with flash                        
+                        if fs_dream_event == 1:
+                            show fp_fs_dream_1_1
+                            fs "Hey, [fp]! Come to look, or join in?"
+                            "You stare a bit at the inviting view before you"
+                            menu:
+                                "Uhm... join in!?":
+                                    $ fs_dream_event = 0
+                            fs "Thought so! Get over here!"
+                            "[fsName.yourFormal] drags you closer, and tears off your boxers"
+                            show fp_fs_dream_1_2
+                            fs "Mmmmhm... you look hot, [fp]"
+                            fp "Thanks, I guess?"
+                            "You're not entirely sure what's going on, but you decide to just go with the flow"
+                            show fp_fs_dream_1_3
+                            fs "Uh..uh..."
+                            fp "Oh, that feels good [fsName.informal]"
+                            "..."
+                            "..."
+                            fp "If you keep doing that, I'm... I'm... CUMMING!"
+                            show fp_fs_dream_1_4 with cumflash
+                        elif fs_dream_event == 2:
+                            show fp_fs_dream_2_1
+                            fs "Hey, I missed you! ... and you hard dick!"
+                            fs "Now, you just lay back, and let me do all the work, mkay?"
+                            fp "Mkay..."
+                            show fp_fs_dream_2_2
+                            "You stretch out on the bed, spreading your legs to accomodate [fsName.yourformal]"
+                            show fp_fs_dream_2_3
+                            "[fsName.yourformal] crawls closer to you, and starts licking your rock hard member"
+                            show fp_fs_dream_2_4
+                            if fp_sex_pref in ["BJ", "Pussy"]:
+                                show fp_fs_dream_2_5_1
+                                "Working her way up onto the bed, she keeps licking and kissing your cock as long as she can manage, before settling on top of you"
+                                show fp_fs_dream_2_5_2
+                            elif fp_sex_pref == "Anal":
+                                show fp_fs_dream_2_5_1
+                                "Slowly crawling closer, she starts licking and kissing your cock. While this is pleasant enough, you decide to push her a bit further, and lift your legs, and cock an eyebrow towards her"
+                                show fp_fs_dream_2_5_3
+                                "She settles in, and starts rimming you"
+                                show fp_fs_dream_2_5_4
+                    elif randomDreamEvent == 'fm':
+                        show dreamintro
+                        show fm_dream with flash
+                    elif randomDreamEvent == 'nc':
+                        show dreamintro
+                        show nc_dream with flash
+                    elif randomDreamEvent == 'nk':
+                        show dreamintro
+                        show nk_dream with flash
+                    elif randomDreamEvent == 'nb':
+                        show dreamintro
+                        show nb_dream with flash
+                    elif randomDreamEvent == 'sn':
+                        show dreamintro
+                        show sn_dream with flash
+                    show dreamoutro                        
             if not day_ahead:
                 $ current_day_of_the_week_3 = day_week
                 $ day_week = 0 if day_week == 6 else day_week+1

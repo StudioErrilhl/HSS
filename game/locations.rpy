@@ -9,14 +9,14 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
         if current_location.endswith('_'):
             $ current_location = current_location[:-1]
         $ current_location = current_location+'_loc'
-        $ print('current_location: '+current_location)
+        # $ print('current_location: '+current_location)
         $ tmpname = locname.replace(' ','_').replace('_bad_weather','').replace('_build','').replace('_finished','').replace('_windows','').replace('_after_shower','').replace('_light','').replace('_loc','').replace('__','_')
-        $ print('tmpname: '+tmpname)
+        # $ print('tmpname: '+tmpname)
         if 'scene' not in tmpname:
             if tmpname.endswith('_'):
                 $ tmpname = tmpname[:-1]
             $ tmpname = tmpname+'_scene'
-            $ print('tmpnamewithscene: '+tmpname)
+            # $ print('tmpnamewithscene: '+tmpname)
         if loctrans:
             $ loctrans = False
             if showerstat:
@@ -28,7 +28,7 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
                 call expression tmpname pass (wetshower=showerstat) from _call_expression_3
             else:
                 call expression tmpname from _call_expression_4
-        $ print('locname before show screen: '+locname)
+        # $ print('locname before show screen: '+locname)
         show screen location(current_location)
         if locname in firstday_talk_list:
             if firstday_talk:
@@ -47,11 +47,11 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
                 xanchor .5
                 yanchor .75
         if sec_call:
-            $ print('seccall: '+sec_call)
+            # $ print('seccall: '+sec_call)
             if event:
                 call expression sec_call pass (event=event) from _call_expression_5
             else:
-                $ print('this should happen')
+                # $ print('this should happen')
                 call expression sec_call pass (True) from _call_expression_2
         call screen empty()
         hide screen empty
@@ -143,12 +143,14 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                 "Oh, she left her tablet..."
                 menu:
                     "Look at tablet (evil)":
-                        $ statschangenotify("lil_bad",1)
+                        $ statschangenotify("lil_bad",1,True)
+                        $ statschangenotify('fp_alignment',-1)
                         $ ic_num = []
                         $ tablet_always_look = True
                         call screen fs_tablet()
                     "Leave tablet (good)":
-                        $ statschangenotify("aru_good",1)
+                        $ statschangenotify("aru_good",1,True)
+                        $ statschangenotify('fp_alignment',1)
                         $ tablet_added = False
                         $ find_tablet = True
             else:
@@ -173,7 +175,8 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                 "[text]"
                 menu:
                     "Take panties (evil)":
-                        $ statschangenotify("lil_bad",1)
+                        $ statschangenotify("lil_bad",1,True)
+                        $ statschangenotify('fp_alignment',-1)
                         if gp_bed == 'fsp_hot_pink':
                             if not backpack.has_item(fsp_hot_pink_item):
                                 $ fsp_hot_pink_pickup = True
@@ -203,7 +206,8 @@ label fs_bedroom_loc(fsl_called=False,trans=False):
                         $ fp_creep += 1
                         $ update_panties_achievements()
                     "Leave panties (good)":
-                        $ statschangenotify("aru_good",1)
+                        $ statschangenotify("aru_good",1,True)
+                        $ statschangenotify('fp_alignment',1)
                         $ panties_added = False
                         $ find_panties = True
                         $ loct = True
@@ -266,16 +270,16 @@ label icafe_loc(ic_called=False,trans=False):
 label kitchen_spill_loc(ks_called=False,trans=False):
     $ current_location = 'kitchen_loc'
     $ loct = False
-    $ print('ks_called')
+    # $ print('ks_called')
     if not kitchen_ach:
         $ kitchen_ach = True
         $ update_been_everywhere_achievement()
     if ks_called or ks_cfs:
-        $ print('this part was entered')
+        # $ print('this part was entered')
         $ ks_called = ks_cfs = False
         if not fm_seen:
-            $ fm_seen = False
-            #$ fm_seen = True
+            # $ fm_seen = False
+            $ fm_seen = True
         else:
             call change_loc('kitchen',loctrans=loct)
     call change_loc('kitchen_spill_loc',loctrans=loct)
@@ -291,7 +295,8 @@ label kitchen_loc(kit_called=False,trans=False):
         if wine_added:
             menu:
                 "Take the bottle (evil)" if bottles == 1:
-                    $ statschangenotify("lil_bad",1)
+                    $ statschangenotify("lil_bad",1,True)
+                    $ statschangenotify('fp_alignment',-1)
                     if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
@@ -313,11 +318,13 @@ label kitchen_loc(kit_called=False,trans=False):
                         $ wine_added = False
                         $ loct = True
                 "Leave the bottle (good)" if bottles == 1:
-                    $ statschangenotify("aru_good",1)
+                    $ statschangenotify("aru_good",1,True)
+                    $ statschangenotify('fp_alignment',1)
                     $ wine_added = False
                     $ loct = True
                 "Take one bottle (evil)" if bottles == 2:
-                    $ statschangenotify("lil_bad",1)
+                    $ statschangenotify("lil_bad",1,True)
+                    $ statschangenotify('fp_alignment',-1)
                     if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
@@ -338,7 +345,8 @@ label kitchen_loc(kit_called=False,trans=False):
                         $ wine_added = False
                         $ loct = True
                 "Take both bottles (evil)" if bottles == 2:
-                    $ statschangenotify("lil_bad",2)
+                    $ statschangenotify("lil_bad",2,True)
+                    $ statschangenotify('fp_alignment',-2)
                     if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
@@ -360,11 +368,13 @@ label kitchen_loc(kit_called=False,trans=False):
                         $ wine_added = False
                         $ loct = True
                 "Leave the bottles (good)" if bottles == 2:
-                    $ statschangenotify("aru_good",2)
+                    $ statschangenotify("aru_good",2,True)
+                    $ statschangenotify('fp_alignment',2)
                     $ wine_added = False
                     $ loct = True
                 "Take one bottle (evil)" if bottles == 3:
-                    $ statschangenotify("lil_bad",1)
+                    $ statschangenotify("lil_bad",1,True)
+                    $ statschangenotify('fp_alignment',-1)
                     if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
@@ -385,7 +395,8 @@ label kitchen_loc(kit_called=False,trans=False):
                         $ wine_added = False
                         $ loct = True
                 "Take two bottles (evil)" if bottles == 3:
-                    $ statschangenotify("lil_bad",2)
+                    $ statschangenotify("lil_bad",2,True)
+                    $ statschangenotify('fp_alignment',-2)
                     if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
@@ -406,7 +417,8 @@ label kitchen_loc(kit_called=False,trans=False):
                         $ wine_added = False
                         $ loct = True
                 "Take all three bottles (evil)" if bottles == 3:
-                    $ statschangenotify("lil_bad",3)
+                    $ statschangenotify("lil_bad",3,True)
+                    $ statschangenotify('fp_alignment',-3)
                     if carry_backpack:
                         if not backpack.has_item(wine_item):
                             $ wine_pickup = True
@@ -428,7 +440,8 @@ label kitchen_loc(kit_called=False,trans=False):
                         $ wine_added = False
                         $ loct = True
                 "Leave the bottles (good)" if bottles == 3:
-                    $ statschangenotify("aru_good",3)
+                    $ statschangenotify("aru_good",3,True)
+                    $ statschangenotify('fp_alignment',3)
                     $ wine_added = False
                     $ loct = True
 
@@ -489,16 +502,17 @@ label outside_loc(out_called=False,trans=False):
             call outside_scene from _call_outside_scene_1
         if day_week <= 4 and int(current_time[:2]) in morning:
             call outside_scene from _call_outside_scene_3
-            if bad_weather:
-                if rainstorm:
-                    show rain
+            if weather == 2:
+                show rain
             menu:
                 "Stay home (evil)":
-                    $ statschangenotify("lil_bad",1)
+                    $ statschangenotify("lil_bad",1,True)
+                    $ statschangenotify('fp_alignment',-1)
                     $ home_from_school = True
                     pass
                 "Go to school (good)":
-                    $ statschangenotify("aru_good",1)
+                    $ statschangenotify("aru_good",1,True)
+                    $ statschangenotify('fp_alignment',1)
                     call travel_events('travel_school') from _call_travel_events
         if bc_clicked:
             $ bc_clicked = False
@@ -566,6 +580,15 @@ label upstairs_loc(ups_called=False,trans=False):
         #     call change_loc('upstairs topofstairs',sec_call='talk_fs')
         call change_loc('upstairs')
 
+label upstairs_closerdoor_loc(upscd_called=False,trans=False):
+    $ current_location = 'upstairs_loc'
+    if not uhl_ach:
+        $ uhl_ach = True
+        $ update_been_everywhere_achievement()
+    if upscd_called or upscd_cfs:
+        $ upscd_called = upscd_cfs = False
+        call change_loc('upstairs closerdoor')
+
 label ufbm_toilet_loc(ufbt=False,trans=False):
     $ current_location = 'ufbm_toilet_loc'
     if ufbt or ufbtcfs:
@@ -615,12 +638,13 @@ label ufbm_loc(uhlbc=False,uhlbcfs=False,trans=False):
             $ conditions.addcondition("Sneak a peek","bathroom_occupied_fs")
             menu:
                 "Sneak a peek (evil)":
-                    $ statschangenotify("lil_bad",1)
+                    $ statschangenotify("lil_bad",1,True)
+                    $ statschangenotify('fp_alignment',-1)
                     if not uhl_bathroom_ach:
                         $ uhl_bathroom_ach = True
                         $ update_been_everywhere_achievement()
                     play sound "sounds/medium_camera_shutter.mp3"
-                    $ images_unlocked.append('DCIM00004_portrait.webp')
+                    $ image_unlock('DCIM00004_portrait.webp')
                     call change_loc('upper hallway bathroom peek',sec_call='peek_scene_happening') from _call_change_loc_17
                     label peek_scene_happening(True):
                         fp "{i}Oh {b}SHIT{/b}! That is definitely something worth getting thwapped for! But... maybe I should get the hell outta here before I get caught!{/i}"
@@ -628,12 +652,14 @@ label ufbm_loc(uhlbc=False,uhlbcfs=False,trans=False):
                         menu:
                             "Stay and watch (evil)":
                                 #call change_loc('upper hallway bathroom peek')
-                                $ statschangenotify("lil_bad",1)
+                                $ statschangenotify("lil_bad",1,True)
+                                $ statschangenotify('fp_alignment',-1)
                                 pass
                             "Get the hell outta here (good)":
-                                $ statschangenotify("aru_good",1)
+                                $ statschangenotify("aru_good",1,True)
+                                $ statschangenotify('fp_alignment',1)
                                 call change_loc('upstairs topofstairs') from _call_change_loc_62
-                "Knock on the door":
+                "Knock on the door (evil)":
                     # pass
                     if bathroom_occupied_fs:
                         if fs_mad == 1:
@@ -686,7 +712,8 @@ label ufbm_loc(uhlbc=False,uhlbcfs=False,trans=False):
                             $ update_been_everywhere_achievement()
                         call change_loc('ufbm',loctrans=True) from _call_change_loc_23
                 "Leave and come back later (good)":
-                    $ statschangenotify("aru_good",1)
+                    $ statschangenotify("aru_good",1,True)
+                    $ statschangenotify('fp_alignment',1)
                     if bathroom_occupied_fs and fs_rel < 30:
                         $ statschangenotify('fs_rel',1)
                     elif bathroom_occupied_fm and fm_rel < 30:
@@ -705,12 +732,14 @@ label ufbm_loc(uhlbc=False,uhlbcfs=False,trans=False):
                     $ conditions.clear()
                     menu:
                         "Leave door open (evil)":
-                            $ statschangenotify("lil_bad",1)
+                            $ statschangenotify("lil_bad",1,True)
+                            $ statschangenotify('fp_alignment',-1)
                             $ fp_bath_lock = False
                             $ leave_lock = True
                             call change_loc('ufbm',loctrans=True)
                         "Lock door (good)":
-                            $ statschangenotify("aru_good",1)
+                            $ statschangenotify("aru_good",1,True)
+                            $ statschangenotify('fp_alignment',1)
                             $ fp_bath_lock = True
                             $ leave_lock = True
                             call change_loc('ufbm',loctrans=True)
@@ -751,31 +780,31 @@ label ufbm_loc(uhlbc=False,uhlbcfs=False,trans=False):
                                 if not backpack.has_item(fsp_hot_pink_item):
                                     $ fsp_hot_pink_pickup = True
                                     $ update_all_the_stuff()
-                                    $ print(str(fsp_hot_pink_item))
+                                    # $ print(str(fsp_hot_pink_item))
                                 $ backpack.add_item(fsp_hot_pink_item)
                             elif gp_bath == 'fsp_black':
                                 if not backpack.has_item(fsp_black_item):
                                     $ fsp_black_pickup = True
                                     $ update_all_the_stuff()
-                                    $ print(str(fsp_black_item))
+                                    # $ print(str(fsp_black_item))
                                 $ backpack.add_item(fsp_black_item)
                             elif gp_bath == 'fsp_light_blue':
                                 if not backpack.has_item(fsp_light_blue_item):
                                     $fsp_light_blue_pickup = True
                                     $ update_all_the_stuff()
-                                    $ print(str(fsp_light_blue_item))
+                                    # $ print(str(fsp_light_blue_item))
                                 $ backpack.add_item(fsp_light_blue_item)
                             elif gp_bath == 'fsp_yellow':
                                 if not backpack.has_item(fsp_yellow_item):
                                     $ fsp_yellow_pickup = True
                                     $ update_all_the_stuff()
-                                    $ print(str(fsp_yellow_item))
+                                    # $ print(str(fsp_yellow_item))
                                 $ backpack.add_item(fsp_yellow_item)
                             elif gp_bath == 'fsp_red':
                                 if not backpack.has_item(fsp_red_item):
                                     $ fsp_red_pickup = True
                                     $ update_all_the_stuff()
-                                    $ print(str(fsp_red_item))
+                                    # $ print(str(fsp_red_item))
                                 $ backpack.add_item(fsp_red_item)
                             $ bathroom_panties_added = False
                             $ bathroom_find_panties = False
@@ -783,7 +812,8 @@ label ufbm_loc(uhlbc=False,uhlbcfs=False,trans=False):
                             $ update_panties_achievements()
                             # call change_loc(current_location)
                         "Leave panties (good)":
-                            $ statschangenotify("aru_good",1)
+                            $ statschangenotify("aru_good",1,True)
+                            $ statschangenotify('fp_alignment',1)
                             $ bathroom_panties_added = False
                             $ bathroom_find_panties = True
                             $ loct = True

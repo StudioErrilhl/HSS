@@ -11,7 +11,7 @@ label nk_talk(event=False,callrand=False):
                     $ nk_driving = True
                 else:
                     fp "Hi [nk]"
-                if bad_weather and rainstorm:
+                if weather == 2:
                     $ text1 = "Sure! That way I won't be late, not to mention drowning by the time I get there!\n{i}Damn, she saved my scrawny ass. Don't understand why she gets so much flak at school, she's nice...{/i}"
                 else:
                     $ text1 = "Sure! Then I won't be late!\n{i}Who cares if [nk] is not one of the popular kids - her offer is nice{/i}"
@@ -23,7 +23,7 @@ label nk_talk(event=False,callrand=False):
                             $ renpy.pause(.25)
                             call travel_events('arrive_school') from _call_travel_events_1
                         "[text2]" if text2:
-                            if bad_weather and rainstorm:
+                            if weather == 2:
                                 $ statschangenotify('nk_rel',-3)
                                 $ renpy.pause(.25)
                                 call school_events('sn_punishment_late') from _call_school_events

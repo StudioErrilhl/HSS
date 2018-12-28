@@ -20,7 +20,10 @@ style red_color:
 
 style inventory_text:
     color "#fff"
+    selected_color "#222"
 
+style inventory_button_text:
+    selected_color "#222"
 # style clock_outline:
 #     outlines [(absolute(1), "#17d41e", absolute(0), absolute(0))]
 

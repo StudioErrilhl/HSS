@@ -666,9 +666,9 @@ screen show_text_msg(compchar=False,char=False):
                                 else:
                                     action [Function(read_message,k,b,v),Hide('show_text_msg'),Show('phone_text_screen')]
 
-                        if nc_message_after_hacker:
-                            if k == 'nc':
-                                $ print('test')
+                        # if nc_call_after_hacker:
+                        #     if k == 'nc':
+                        #         $ print('test')
 
     use phone_overlay
     if GetTooltip() is not None:
@@ -820,7 +820,10 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
         yval = 1.0 if y > config.screen_height/2 else .0
     $ keyclose = True
     frame:
-        background None
+        # background None
+        add "gui/phone_background_black.webp" at ModZoom(.85):
+            yalign .5
+            xalign .5        
         xpadding 0
         top_padding 40
         bottom_padding 10
@@ -848,70 +851,86 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
                 xalign .5
                 text_align .5
                 ypos 20
-
-            vbox:
-                style_prefix "skip"
-                xsize 370
-                ysize 100
-                yoffset 50
-                xalign .5
-                if calling:
-                    hbox:
-                        spacing 9
-                        xalign .5
-                        text _("Calling") style "skip_triangle_call"
-                        text "▸" at delayed_blink(0.0, 1.0) style "skip_triangle_call"
-                        text "▸" at delayed_blink(0.2, 1.0) style "skip_triangle_call"
-                        text "▸" at delayed_blink(0.4, 1.0) style "skip_triangle_call"
-                    $ callrand = renpy.random.random()
-                    timer 3.0:
-                        if callrand > .35 and char in ['nr','nc','nk']:
-                            if label:
-                                action [SetVariable('duringcall',True),SetVariable('calling',False),Call(label,event=event,callrand=callrand)]
-                            else:
-                                # action [SetVariable('duringcall',True),SetVariable('calling',False)]
-                                action [SetVariable('duringcall',False),SetVariable('calling',False),Call('no_answer')]
-                        # elif char in ['nr','nc','nk']:
-                        #     if label:
-                        #         action [SetVariable('duringcall',False),SetVariable('calling',True),Call(label,event=event,callrand=callrand)]
-                        #     else:
-                        #         # action [SetVariable('duringcall',False),SetVariable('calling',True)]
-                        #         action [SetVariable('duringcall',False),SetVariable('calling',False),Call('no_answer')]
-                        else:
-                           action [SetVariable('duringcall',False),SetVariable('calling',False),Call('no_answer')]
-
-                elif duringcall:
+            if not calling_out:
+                vbox:
+                    style_prefix "skip"
+                    xsize 370
+                    ysize 100
+                    yoffset 50
+                    xalign .5
+                if duringcall:
                     hbox:
                         spacing 9
                         xalign .5
                         text _("Call connected") style "skip_triangle_call"
-                else:
-                    hbox:
-                        spacing 9
-                        xalign .5
-                        text _("Calling"):
-                            color "#161616"
-            hbox:
-                xsize 370
-                xalign .5
                 if not calling and not duringcall:
                     imagebutton auto "gui/phone_call_%s.webp" focus_mask True:
-                        action [SetVariable('calling',True)]
-                        if not calling_out:
-                            xalign .2
-                        else:
+                        action [SetVariable('duringcall',True),Call(label,event=event)]
+                        xalign .5                                           
+            else:
+                vbox:
+                    style_prefix "skip"
+                    xsize 370
+                    ysize 100
+                    yoffset 50
+                    xalign .5
+                    if calling:
+                        hbox:
+                            spacing 9
                             xalign .5
-                else:
-                    imagebutton auto "gui/phone_hang_up_%s.webp" focus_mask True:
-                        if renpy.get_screen('say'):
-                            action [Hide('say'),SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
-                        else:
+                            text _("Calling") style "skip_triangle_call"
+                            text "▸" at delayed_blink(0.0, 1.0) style "skip_triangle_call"
+                            text "▸" at delayed_blink(0.2, 1.0) style "skip_triangle_call"
+                            text "▸" at delayed_blink(0.4, 1.0) style "skip_triangle_call"
+                        $ callrand = renpy.random.random()
+                        timer 3.0:
+                            if callrand > .35 and char in ['nr','nc','nk']:
+                                if label:
+                                    action [SetVariable('duringcall',True),SetVariable('calling',False),Call(label,event=event,callrand=callrand)]
+                                else:
+                                    # action [SetVariable('duringcall',True),SetVariable('calling',False)]
+                                    action [SetVariable('duringcall',False),SetVariable('calling',False),Call('no_answer')]
+                            # elif char in ['nr','nc','nk']:
+                            #     if label:
+                            #         action [SetVariable('duringcall',False),SetVariable('calling',True),Call(label,event=event,callrand=callrand)]
+                            #     else:
+                            #         # action [SetVariable('duringcall',False),SetVariable('calling',True)]
+                            #         action [SetVariable('duringcall',False),SetVariable('calling',False),Call('no_answer')]
+                            else:
+                               action [SetVariable('duringcall',False),SetVariable('calling',False),Call('no_answer')]
+
+                    elif duringcall:
+                        hbox:
+                            spacing 9
+                            xalign .5
+                            text _("Call connected") style "skip_triangle_call"
+                    else:
+                        hbox:
+                            spacing 9
+                            xalign .5
+                            text _("Calling"):
+                                color "#161616"
+                hbox:
+                    xsize 370
+                    xalign .5
+                    if not calling and not duringcall:
+                        imagebutton auto "gui/phone_call_%s.webp" focus_mask True:
+                            action [SetVariable('calling',True)]
+                            if not calling_out:
+                                xalign .2
+                            else:
+                                xalign .5
+                    else:
+                        imagebutton auto "gui/phone_hang_up_%s.webp" focus_mask True:
+                            if renpy.get_screen('say'):
+                                action [Hide('say'),SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
+                            else:
+                                action [SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
+                            xalign .5
+                    if not calling_out:
+                        imagebutton auto "gui/phone_hang_up_%s.webp" focus_mask True:
                             action [SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
-                        xalign .5
-                if not calling_out:
-                    imagebutton auto "gui/phone_hang_up_%s.webp" focus_mask True:
-                        action [SetVariable('duringcall',False),SetVariable('calling',False),Hide('phone_call_show'),Show('phone_call_screen')]
-                        xalign .8
+                            xalign .8
     hbox:
         imagebutton auto "gui/phone_white_power_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
             tooltip "Shut off the phone"
@@ -955,43 +974,34 @@ screen phone_gallery_screen():
         viewport:
             mousewheel True
             pagekeys True
-            vbox:
+            xalign .5
+            vpgrid:
+                cols 3
+                spacing 4
+                xalign .5
                 for file in renpy.list_files():
                     if file.startswith('images/phone_gallery/') and file.endswith('.webp'):
                         $ name = file.replace('images/phone_gallery/','')
-                        if name in images_unlocked:
-                            imagebutton idle Transform(file,maxsize=(215,215)):
-                                xpos pgsxp
-                                if not 'portrait' in name:
-                                    ypos pgsyp +50
-                                else:
-                                    ypos pgsyp
-                                action [SetVariable('current_file',file),SetVariable('show_icons',False),Hide('phone_gallery_screen'),Show('phone_gallery_show')]
-                        else:
-                            imagebutton idle Transform(file,maxsize=(215,215),alpha=.2):
-                                xpos pgsxp
-                                if not 'portrait' in name:
-                                    ypos pgsyp +50
-                                else:
-                                    ypos pgsyp
-                                # action [SetVariable('current_file',file),SetVariable('show_icons',False),Hide('phone_gallery_screen'),Show('phone_gallery_show')]
-                                action NullAction()
-                        if 'portrait' in name:
-                            $ pgsxp += 125
-                        else:
-                            $ pgsxp += 215
-                        if not 'portrait' in name:
-                            $ pgsyp -= 115
-                        else:
-                            $ pgsyp -= 215
+                        frame:
+                            background None
+                            xsize 120
+                            ysize 120
+                            if name in images_unlocked:
+                                imagebutton idle Transform(file,maxsize=(110,110)):
+                                    xalign .5
+                                    yalign .5
+                                    action [SetVariable('current_file',file),SetVariable('show_icons',False),Hide('phone_gallery_screen'),Show('phone_gallery_show')]
+                            else:
+                                imagebutton idle Transform(file,maxsize=(110,110),alpha=.2):
+                                    xalign .5
+                                    yalign .5
+                                    action NullAction()
                         if 'portrait' in name:
                             $ pgs += 1
                         else:
                             $ pgs += 2
                         if pgs >= 3:
                             $ pgs = 0
-                            $ pgsxp = 0
-                            $ pgsyp += 220
                 if keyclose:
                     key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
 

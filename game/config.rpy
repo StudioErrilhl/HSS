@@ -26,6 +26,7 @@ init -10 python:
     elif not persistent.patch_installed:
         persistent.patch_first_time = False
         persistent.patch_enabled = False
+        persistent.patch_enabled = False
 # defined config-variables
 define config.quit_action = [Show('phone'),SetVariable('show_icons',False),Show('custom_confirm',None,'quit')]
 if config.developer:
@@ -73,7 +74,7 @@ define hj = Character("Jizzer",who_outlines=[(absolute(1),"#999",absolute(0),abs
 define nb = Character("Bridget",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define nr = Character("Ron",image="nr_talkside",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define nk = Character("Karen",image="nk_talkside",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
-define nc = Character("Catherina",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))]) # needs a character namebox - also needs a character image
+define nc = Character("Catherina",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define sn = Character("Miss Novak",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define se = Character("Miss Elliot",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define sp = Character("Principal Hudson",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
@@ -85,7 +86,27 @@ define aru = Character("Aruru",who_outlines=[(absolute(1),"#999",absolute(0),abs
 
 #remember to add default color="#000000" if the character do not have a namebox_charname.webp in the gui/-directory
 
-default chars = [[fm,"fm"],[nb,"nb"],[nc,"nc"],[sj,"sj"],[fs,"fs"],[nk,"nk"],[fp,"fp"],[scm,"scm"],[scn,"scn"],[se,"se"],[sn,"sn"],[sp,"sp"],[nr,"nr"]]
+default chars = [[fp,'fp'],[fs,'fs'],[fm,'fm'],[nk,'nk'],[nc,'nc'],[nb,'nb'],[nr,'nr'],[sn,'sn'],[se,'se'],[sp,'sp'],[scm,'scm'],[scn,'scn'],[sj,'sj'],[lil,"lil"],[aru,"aru"]]
+
+default chardesc = False
+default char_desc = [
+    ["[fp] was born and raised in :::::"],
+    ["[fsName.name] is [fp]s [fsName.formal]"],
+    ["[fmName.name] is [fp]s [fmName.formal]"],
+    ["[nk] is a childhood friend, and neighbour"],
+    ["[nc] was born in Prague, but moved to here when she was only a baby. She goes to highschool... in theory. Basically, what she does is hack the system to make sure her grades are okay, her attendance record is decent, and that she isn't kicked out due to someone checking her records.\n\nMostly, she hangs around at Obuko, where she has her own spot - I suggest you don't try to take that away from her... She knows a lot of shady people, being slightly shady herself, and if you need something fixed (or someone, for that matter), she can probably make that happen. For a fee.\n\nShe's got a goth look to her, although she's not that into the whole depressed, \"the world is horrible\" view. She mostly just likes the look, and that it usually makes people cross the street when she comes walking. Easy way to avoid most humans can't be that bad!"],
+    ["[nb] is..."],
+    ["[nr] is a [fp]s best friend since childhood"],
+    ["[sn] is..."],
+    ["[se] is..."],
+    ["[sp] is..."],
+    ["[scm] is..."],
+    ["[scn] is..."],
+    ["[sj] is..."],
+    ["[lil] is..."],
+    ["[aru] is..."]   
+    ]
+
 default atts = ['rel','dom','aro','cor','att']
 
 #fp
@@ -106,7 +127,21 @@ default fpe = False
 default fp_sofa_aquired = False
 default lil_bad = 0
 default aru_good = 0
+default fp_alignment = 0
 default choicestatus = None
+default dream_event = False
+
+#aru
+default aru_dom = 0
+default aru_rel = 0
+default aru_aro = 0
+default aru_cor = 0
+
+#lil
+default lil_dom = 0
+default lil_rel = 0
+default lil_aro = 0
+default lil_cor = 0
 
 #fm
 default fm_dom = 0
@@ -185,7 +220,7 @@ default nc_lvl = 0
 default nc_number = '111-555-3369'
 default nc_event = False
 default nc_happens = False
-default nc_message_after_hacker = False
+default nc_call_after_hacker = False
 default nce = False
 
 #nb
@@ -250,6 +285,15 @@ default scm_rel = 0
 default scm_lvl = 0
 default scme = False
 
+#dreamevents
+default dreameventsChars = []
+default fs_dream_event = 1
+default fm_dream_event = 1
+default nc_dream_event = 1
+default nk_dream_event = 1
+default nb_dream_event = 1
+default sn_dream_event = 1
+
 #sex-stats
 default total_anal = fm_anal + fs_anal + nk_anal + nb_anal + sn_anal
 default total_pussy = fm_pussy + fs_pussy + nk_pussy + nb_pussy + sn_pussy
@@ -283,8 +327,6 @@ default shopping_with_fm = False
 default bathroom_light = False
 default goto_beach = False
 default debug = False
-default bad_weather = False
-default rainstorm = False
 default school_walk_late_arrival = False
 default morning_event_done = False
 default after_sleep = False
@@ -425,6 +467,7 @@ default uhlbcfs = False
 default uhlbc = False
 default uts_cfs = False
 default ups_cfs = False
+default upscd_cfs = False
 default out_cfs = False
 default lvr_cfs = False
 default tfs_cfs = False
@@ -496,6 +539,7 @@ default read_messages = []
 default disabled_messages = []
 default deleted_messages = []
 default hintselect = 'new'
+default fp_jobs = [drivingcmp]
 default firstday_talk_list = ['livingroom','fp bedroom','fs bedroom','kitchen','entrance','outside']
 default fs_p = ['fsp_yellow','fsp_light_blue','fsp_hot_pink','fsp_black','fsp_red']
 default p_response = ["Hm... "+fsName.formal+"s panties...\n{b}sniffs them{/b}\nShould I take them with me?",
