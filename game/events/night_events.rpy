@@ -1,5 +1,4 @@
 label night_events():
-
     label end_of_day(end_called=False):
         if end_called or end_cfs:
             $ end_called = end_cfs = False
@@ -23,7 +22,7 @@ label night_events():
                 else:
                     $ current_month_day += 1
                     $ day_ahead = True
-            call fp_bedroom_scene from _call_fp_bedroom_scene
+            call change_loc('fp_bedroom_fp')
             "This ends the day"
             call sleep_the_night(True) from _call_sleep_the_night
 
@@ -35,13 +34,13 @@ label night_events():
                     "Sleep the day away":
                         call sleeping_day_away(True) from _call_sleeping_day_away
                     "Stay up":
-                        call fp_bedroom_loc(True) from _call_fp_bedroom_loc
+                        call change_loc('fp_bedroom_fp')
             else:
                 menu:
                     "Go to sleep":
                         call sleeping(True) from _call_sleeping
                     "Stay up a bit longer":
-                        call fp_bedroom_loc(True) from _call_fp_bedroom_loc_1
+                        call change_loc('fp_bedroom_fp')
 
     label sleeping(sle_called=False):
         if sle_called:
@@ -51,8 +50,10 @@ label night_events():
                     $ randomDreamEvent = renpy.random.choice(dreameventsChars)
                     show dreamintro
                     if randomDreamEvent == 'fs':
-                        show fs_dream with flash                        
+                        # show fs_dream with flash
                         if fs_dream_event == 1:
+                            show fs_dream_intro
+                            $ renpy.pause(3)
                             show fp_fs_dream_1_1
                             fs "Hey, [fp]! Come to look, or join in?"
                             "You stare a bit at the inviting view before you"
@@ -60,7 +61,7 @@ label night_events():
                                 "Uhm... join in!?":
                                     $ fs_dream_event = 0
                             fs "Thought so! Get over here!"
-                            "[fsName.yourFormal] drags you closer, and tears off your boxers"
+                            "[fsName.Yourformal] drags you closer, and tears off your boxers"
                             show fp_fs_dream_1_2
                             fs "Mmmmhm... you look hot, [fp]"
                             fp "Thanks, I guess?"
@@ -107,7 +108,8 @@ label night_events():
                     elif randomDreamEvent == 'sn':
                         show dreamintro
                         show sn_dream with flash
-                    show dreamoutro                        
+                    show dreamoutro
+                    "Zzz Zzzzzzzz *snore*"
             if not day_ahead:
                 $ current_day_of_the_week_3 = day_week
                 $ day_week = 0 if day_week == 6 else day_week+1
@@ -131,5 +133,6 @@ label night_events():
         if sld_called:
             $ sld_called = False
             $ settime(22,False)
-            call fp_bedroom_loc(True) from _call_fp_bedroom_loc_2
+            # call fp_bedroom_fp(True) from _call_fp_bedroom_fp_2
+            call change_loc('fp_bedroom_fp')
 

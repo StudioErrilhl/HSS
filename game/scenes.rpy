@@ -8,40 +8,60 @@ label beach_scene(trans=True):
         scene beach_morning with Dissolve(.25)
     return
 
-label entrance_scene(trans=True):
-    if not entrance_ach:
-        $ entrance_ach = True
+label fp_entrance_scene(trans=True):
+    if not fp_entrance_ach:
+        $ fp_entrance_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
-        scene entrance_night with Dissolve(.25)
+        scene fp_en with Dissolve(.25)
     else:
-        scene entrance_morning with Dissolve(.25)
+        scene fp_em with Dissolve(.25)
     return
 
-label fp_bedroom_scene(trans=True): #this is the starting scene, and the one that repeats every morning (unless there are circumstances altering the morning events)
-    if not fp_bedroom_ach:
-        $ fp_bedroom_ach = True
+label fp_bedroom_fp_scene(trans=True): #this is the starting scene, and the one that repeats every morning (unless there are circumstances altering the morning events)
+    if not fp_bedroom_fp_ach:
+        $ fp_bedroom_fp_ach = True
         $ update_been_everywhere_achievement()
-    if int(current_time[:2]) in morning+day:
-        scene fp_bedroom_morning
-    elif int(current_time[:2]) in night:
-        scene fp_bedroom_night
+    if int(current_time[:2]) in night:
+        scene fpbn
+    elif int(current_time[:2]) in [7,8,9,10,11] and day_week <= 4 and not morning_out_of_bed and fpmc_r < .75 and not morning_event_done:
+        scene fpbm_wakeup_anne
+    elif not morning_out_of_bed and not morning_event_done:
+        scene fpbm_wakeup
+    else:
+        scene fpbm_empty
     return
 
-label fs_bedroom_scene(trans=True):
-    if not fs_bedroom_ach:
-        $ fs_bedroom_ach = True
+label fp_bedroom_fm_scene(trans=True):
+    if not fp_bedroom_fm_ach:
+        $ fp_bedroom_fm_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         if trans:
-            scene fs_bedroom_night with Dissolve(.25)
+            scene fpbn_fm with Dissolve(.25)
         else:
-            scene fs_bedroom_night
+            scene fpbn_fm
     else:
         if trans:
-            scene fs_bedroom_morning with Dissolve(.25)
+            scene fpbm_fm with Dissolve(.25)
         else:
-            scene fs_bedroom_morning
+            scene fpbm_fm
+    return
+
+label fp_bedroom_fs_scene(trans=True):
+    if not fp_bedroom_fs_ach:
+        $ fp_bedroom_fs_ach = True
+        $ update_been_everywhere_achievement()
+    if int(current_time[:2]) in night:
+        if trans:
+            scene fsbn with Dissolve(.25)
+        else:
+            scene fsbn
+    else:
+        if trans:
+            scene fsbm with Dissolve(.25)
+        else:
+            scene fsbm
     return
 
 label fs_intro_scene():
@@ -57,32 +77,33 @@ label fs_intro_scene():
     #     scene fs_intro_scene with Dissolve(.25)
     return
 
-label garage_scene(trans=True):
-    if not garage_ach:
-        $ garage_ach = True
+label fp_garage_scene(trans=True):
+    if not fp_garage_ach:
+        $ fp_garage_ach = True
         $ update_been_everywhere_achievement()
-    if mc_f:
-        if int(current_time[:2]) in night:
-            if trans:
-                scene garage_finished_night with Dissolve(.25)
-            else:
-                scene garage_finished_night
+    if int(current_time[:2]) in night:
+        if trans:
+            scene fp_gn with Dissolve(.25)
         else:
-            if trans:
-                scene garage_finished_morning with Dissolve(.25)
-            else:
-                scene garage_finished_morning
+            scene fp_gn
     else:
-        if int(current_time[:2]) in night:
-            if trans:
-                scene garage_build_night with Dissolve(.25)
-            else:
-                scene garage_build_night
+        if trans:
+            scene fp_gm with Dissolve(.25)
         else:
-            if trans:
-                scene garage_build_morning with Dissolve(.25)
-            else:
-                scene garage_build_morning
+            scene fp_gm
+    return
+
+label fp_garage_fb_scene(trans=True):
+    if int(current_time[:2]) in night:
+        if trans:
+            scene bike_repair_night with Dissolve(.25)
+        else:
+            scene bike_repair_night
+    else:
+        if trans:
+            scene bike_repair_morning with Dissolve(.25)
+        else:
+            scene bike_repair_morning
     return
 
 label icafe_scene(trans=True):
@@ -95,63 +116,62 @@ label icafe_scene(trans=True):
         scene icafe
     return
 
-label kitchen_spill_scene(trans=True):
-    if not kitchen_ach:
-        $ kitchen_ach = True
+label fp_kitchen_spill_scene(trans=True):
+    if not fp_kitchen_ach:
+        $ fp_kitchen_ach = True
         $ update_been_everywhere_achievement()
     if not fm_seen:
         if trans:
-            scene kitchen_spill with Dissolve(.25)
+            scene fp_kitchen_spill with Dissolve(.25)
         else:
-            scene kitchen_spill
+            scene fp_kitchen_spill
     return
 
-label kitchen_scene(trans=True):
-    if not kitchen_ach:
-        $ kitchen_ach = True
+label fp_kitchen_scene(trans=True):
+    if not fp_kitchen_ach:
+        $ fp_kitchen_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         if trans:
-            scene kitchen_night with Dissolve(.25)
+            scene fpkn with Dissolve(.25)
         else:
-            scene kitchen_night
+            scene fpkn
     else:
         if trans:
-            scene kitchen_morning with Dissolve(.25)
+            scene fpkm with Dissolve(.25)
         else:
-            scene kitchen_morning
+            scene fpkm
     return
 
-label livingroom_scene(trans=True):
-    if not livingroom_ach:
-        $ livingroom_ach = True
+label fp_livingroom_scene(trans=True):
+    if not fp_livingroom_ach:
+        $ fp_livingroom_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
-        if weather == 1:
-            scene livingroom_night_bad_weather with Dissolve(.25)
+        if weather == 1 or weather == 2:
+            scene fp_ln_bad_weather with Dissolve(.25)
         else:
-            scene livingroom_night with Dissolve(.25)
-        if weather == 1:
-            show livingroom_night_bad_weather_windows
-        elif weather == 2:
-            show rain behind livingroom_night_bad_weather
-            show livingroom_night_bad_weather_windows behind rain
-
+            scene fp_ln with Dissolve(.25)
+        # if weather == 1:
+        #     show fp_ln_bad_weather_windows
+        # elif weather == 2:
+        #     show rain behind livingroom_night_bad_weather
+        #     show livingroom_night_bad_weather_windows behind rain
     else:
-        if weather == 1:
-            scene livingroom_morning_bad_weather with Dissolve(.25)
+        if weather == 1 or weather == 2:
+            scene fp_lm_bad_weather with Dissolve(.25)
         else:
-            scene livingroom_morning with Dissolve(.25)
-        if weather == 1:
-            show livingroom_morning_bad_weather_windows
-        elif weather == 2:
-            show rain behind livingroom_morning_bad_weather
-            show livingroom_morning_bad_weather_windows behind rain
+            scene fp_lm with Dissolve(.25)
+        # if weather == 1:
+        #     show livingroom_morning_bad_weather_windows
+        # elif weather == 2:
+        #     show rain behind livingroom_morning_bad_weather
+        #     show livingroom_morning_bad_weather_windows behind rain
     return
 
-label outside_scene(trans=True):
-    if not outside_ach:
-        $ outside_ach = True
+label fp_outside_scene(trans=True):
+    if not fp_outside_ach:
+        $ fp_outside_ach = True
         $ update_been_everywhere_achievement()
     # if int(current_time[:2]) in day+night:
     if int(current_time[:2]) in day and (int(current_time[:2]) > 15 and int(current_time[:2]) < 22):
@@ -193,17 +213,17 @@ label outside_scene(trans=True):
             if weather == 1:
                 scene outside_morning_bad_weather with Dissolve(.25)
             else:
-                scene outside_morning with Dissolve(.25)
+                scene fp_outside with Dissolve(.25)
         else:
             if weather == 1:
                 scene outside_morning_bad_weather
             else:
-                scene outside_morning
+                scene fp_outside
     return
 
 label schoolbuilding_scene(trans=True):
-    if not school_outside_ach:
-        $ school_outside_ach = True
+    if not fp_school_outside_ach:
+        $ fp_school_outside_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         if weather == 2:
@@ -231,19 +251,19 @@ label school_po_scene(trans=True):
         scene school_principal_office_morning with Dissolve(.25)
     return
 
-label upstairs_topofstairs_scene(trans=True):
-    if not uhl_ach:
-        $ uhl_ach = True
+label fp_topofstairs_scene(trans=True):
+    if not fp_topofstairs_ach:
+        $ fp_topofstairs_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
-        scene upstairs_topofstairs_night with Dissolve(.25)
+        scene fptsn with Dissolve(.25)
     else:
-        scene upstairs_topofstairs_morning with Dissolve(.25)
+        scene fptsm with Dissolve(.25)
     return
 
-label upstairs_scene(trans=True):
-    if not uhl_ach:
-        $ uhl_ach = True
+label fp_upstairs_scene(trans=True):
+    if not fp_topofstairs_ach:
+        $ fp_topofstairs_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         scene upstairs_night with Dissolve(.25)
@@ -252,19 +272,19 @@ label upstairs_scene(trans=True):
     return
 
 label upstairs_closerdoor_scene(trans=True):
-    if not uhl_ach:
-        $ uhl_ach = True
+    if not fp_topofstairs_ach:
+        $ fp_topofstairs_ach = True
         $ update_been_everywhere_achievement()
     scene upstairs_closerdoor with Dissolve(.25)
     return
 
 label upper_hallway_bathroom_peek_scene(trans=True,wetshower=False):
-    if not uhl_bathroom_ach:
-        $ uhl_bathroom_ach = True
+    if not fp_ufb_ach:
+        $ fp_ufb_ach = True
         $ update_been_everywhere_achievement()
     if trans:
         if int(current_time[:2]) in night:
-            scene upper_hallway_bathroom_night_after_shower_light with Dissolve(.25)
+            scene ufbn_after_shower_light with Dissolve(.25)
             show juliette_shower_night
         else:
             # $ print('showerscene during morning with trans')
@@ -274,7 +294,7 @@ label upper_hallway_bathroom_peek_scene(trans=True,wetshower=False):
     else:
         if int(current_time[:2]) in night:
             # $ print('showerscene during night')
-            scene upper_hallway_bathroom_night_after_shower_light
+            scene ufbn_after_shower_light
             show juliette_shower_night
         else:
             # $ print('showerscene during morning')
@@ -286,27 +306,27 @@ label ufbm_toilet_scene(trans=True):
     if int(current_time[:2]) in night and bathroom_light:
         if trans:
             if wetshower:
-                scene ufbn_toilet #scene upper_hallway_bathroom_night_after_shower_light with Dissolve(.25)
+                scene ufbn_toilet #scene ufbn_after_shower_light with Dissolve(.25)
             else:
-                scene ufbn_toilet #scene upper_hallway_bathroom_night_light with Dissolve(.25)
+                scene ufbn_toilet #scene ufbn_light with Dissolve(.25)
             with Dissolve(.25)
         else:
             if wetshower:
-                scene ufbn_toilet #upper_hallway_bathroom_night_after_shower_light
+                scene ufbn_toilet #ufbn_after_shower_light
             else:
-                scene ufbn#scene upper_hallway_bathroom_night_light
+                scene ufbn#scene ufbn_light
     elif int(current_time[:2]) in night:
         if trans:
             if wetshower:
-                scene ufbn_toilet #upper_hallway_bathroom_night_after_shower with Dissolve(.25)
+                scene ufbn_toilet #ufbn_after_shower with Dissolve(.25)
             else:
-                scene ufbn_toilet #upper_hallway_bathroom_night with Dissolve(.25)
+                scene ufbn_toilet #ufbn with Dissolve(.25)
             with Dissolve(.25)
         else:
             if wetshower:
-                scene ufbn_toilet #upper_hallway_bathroom_night_after_shower
+                scene ufbn_toilet #ufbn_after_shower
             else:
-                scene ufbn_toilet #upper_hallway_bathroom_night
+                scene ufbn_toilet #ufbn
     else:
         if trans:
             if wetshower:
@@ -322,41 +342,76 @@ label ufbm_toilet_scene(trans=True):
     return
 
 
-label ufbm_scene(trans=True,wetshower=False):
-    if not uhl_bathroom_ach:
-        $ uhl_bathroom_ach = True
+label fp_ufb_scene(trans=True,wetshower=False):
+    if not fp_ufb_ach:
+        $ fp_ufb_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night and bathroom_light:
         if trans:
             if wetshower:
-                scene upper_hallway_bathroom_night_after_shower_light with Dissolve(.25)
+                scene ufbn_after_shower_light with Dissolve(.25)
             else:
-                scene upper_hallway_bathroom_night_light with Dissolve(.25)
+                scene ufbn_light with Dissolve(.25)
         else:
             if wetshower:
-                scene upper_hallway_bathroom_night_after_shower_light
+                scene ufbn_after_shower_light
             else:
-                scene upper_hallway_bathroom_night_light
+                scene ufbn_light
     elif int(current_time[:2]) in night:
         if trans:
             if wetshower:
-                scene upper_hallway_bathroom_night_after_shower with Dissolve(.25)
+                scene ufbn_after_shower with Dissolve(.25)
             else:
-                scene upper_hallway_bathroom_night with Dissolve(.25)
+                scene ufbn with Dissolve(.25)
         else:
             if wetshower:
-                scene upper_hallway_bathroom_night_after_shower
+                scene ufbn_after_shower
             else:
-                scene upper_hallway_bathroom_night
+                scene ufbn
     else:
         if trans:
             if wetshower:
-                scene ufbm #upper_hallway_bathroom_morning_after_shower with Dissolve(.25)
+                scene ufbm_transparent_background
+                show ufbm_outside behind ufbm_transparent_background #upper_hallway_bathroom_morning_after_shower with Dissolve(.25)
+                with Dissolve(.25)
             else:
-                scene ufbm with Dissolve(.25)
+                if weather == 1 or weather == 2:
+                    scene ufbm_transparent_background_rain
+                    if weather == 1:
+                        show ufbm_outside_rain behind ufbm_transparent_background_rain
+                    elif weather == 2:
+                        show rain behind ufbm_transparent_background_rain
+                        show ufbm_outside_rain behind rain
+                    with Dissolve(.25)
+                else:
+                    if not fp_bath_lock and not leave_lock:
+                        # scene ufbm_marten_doorway_door_closed
+                        scene ufbm_transparent_background
+                        show ufbm_outside behind ufbm_transparent_background
+                        with Dissolve(.25)
+                    else:
+                        scene ufbm_transparent_background
+                        show ufbm_outside behind ufbm_transparent_background
+                        with Dissolve(.25)
+
         else:
             if wetshower:
-                scene ufbm #upper_hallway_bathroom_morning_after_shower
+                scene ufbm_transparent_background
+                show ufbm_outside behind ufbm_transparent_background #upper_hallway_bathroom_morning_after_shower
             else:
-                scene ufbm
+                if weather == 1 or weather == 2:
+                    scene ufbm_transparent_background_rain
+                    if weather == 1:
+                        show ufbm_outside_rain behind ufbm_transparent_background_rain
+                    elif weather == 2:
+                        show rain behind ufbm_transparent_background_rain
+                        show ufbm_outside_rain behind rain
+                else:
+                    if not fp_bath_lock and not leave_lock:
+                        # scene ufbm_marten_doorway_door_closed
+                        scene ufbm_transparent_background
+                        show ufbm_outside behind ufbm_transparent_background
+                    else:
+                        scene ufbm_transparent_background
+                        show ufbm_outside behind ufbm_transparent_background
     return

@@ -2,19 +2,19 @@ label day_events():
     #day events goes here
     label weekend_sat():
         if sat_event:
-            call livingroom_scene from _call_livingroom_scene_1
+            call fp_livingroom_scene
             label sat_what_to_do():
                 if not mc_f:
-                    call garage_scene from _call_garage_scene_2
-                    call change_loc('garage') from _call_change_loc_42
+                    call fp_garage_scene from _call_fp_garage_scene_2
+                    call change_loc('fp_garage') from _call_change_loc_42
                     call w_mc(True) from _call_w_mc_1
                 else:
                     fp "Ah, it's a beautiful day. Maybe I should go to the beach...?"
                     menu:
-                        "Go to the beach":
-                            call sat_beach() from _call_sat_beach
                         "Nah, slack of in the garden instead":
                             call sat_end() from _call_sat_end
+                        "Go to the beach":
+                            call sat_beach() from _call_sat_beach
             label sat_beach():
                 "this is a beach scene on saturday"
                 call beach_scene from _call_beach_scene
@@ -22,7 +22,7 @@ label day_events():
                 $ renpy.pause()
             label sat_end():
                 $ sat_event = False
-                call change_loc('livingroom') from _call_change_loc_44
+                call change_loc('fp_livingroom') from _call_change_loc_44
             $ sat_event = False
 
     label weekend_sun(wsun_called=False):
@@ -98,7 +98,7 @@ label day_events():
                         $ statschangenotify('fm_rel',1)
                         # need to add a dinner image for both events here
                     $ addtime(1)
-                call change_loc('kitchen',loctrans=True) from _call_change_loc_45
+                call change_loc('fp_kitchen',loctrans=True) from _call_change_loc_45
 
     label evening_home(evh_called=False):
         if evh_called:
@@ -110,31 +110,31 @@ label day_events():
                 else:
                     $ current_time = "15:30"
                 if n == 1:
-                    call change_loc('outside',sec_call="harsh_homecoming") from _call_change_loc_46
+                    call change_loc('fp_outside',sec_call="harsh_homecoming") from _call_change_loc_46
                     label harsh_homecoming(True):
                         $ text = home_events[n][0]
                         "[text]"
                         $ addtime(2)
                         "After waiting for ages, [fmName.yourformal] finally comes home and let you into the house"
-                        call change_loc('entrance') from _call_change_loc_71
+                        call change_loc('fp_entrance') from _call_change_loc_71
                 else:
-                    call livingroom_scene from _call_livingroom_scene_2
+                    call fp_livingroom_scene
                     if renpy.random.random() > .5 and not hacker_3:
                         if  current_month >= 5 and current_month <= 8 and not detention_served:
-                            call change_loc('outside',sec_call='lounge_pool') from _call_change_loc_48
+                            call change_loc('fp_outside',sec_call='lounge_pool') from _call_change_loc_48
                             label lounge_pool(True):
                                 "You decide to just lounge by the pool for a while, trying to stand the heat"
                         elif int(current_time[:2]) <= 19:
                             "You decide that you can spend a few more hours on your bike today"
-                            call change_loc('garage',sec_call='after_evening_bike_repair') from _call_change_loc_49
+                            call change_loc('fp_garage',sec_call='after_evening_bike_repair') from _call_change_loc_49
                             label after_evening_bike_repair(True):
                                 "After putting in a few more hours on the bike, you decide that the rest of the evening should be spent doing less arduous tasks, and head inside to watch some TV, maybe play some games"
-                                call change_loc('livingroom',sec_call='tv_games_evening') from _call_change_loc_50
+                                call change_loc('fp_livingroom',sec_call='tv_games_evening') from _call_change_loc_50
                         elif int(current_time[:2]) > 19:
                             "You're feeling a bit tired, after school, and working on your bike, so you decide taking a shower will be a nice relief right now"
-                            call change_loc('ufbm',sec_call='taking_shower_evening') from _call_change_loc_51
+                            call change_loc('fp_ufb',sec_call='taking_shower_evening') from _call_change_loc_51
                         else:
-                            call change_loc('livingroom',sec_call='lounge_livingroom') from _call_change_loc_52
+                            call change_loc('fp_livingroom',sec_call='lounge_livingroom') from _call_change_loc_52
                             label lounge_livingroom(True):
                                 "You decide to just slouch on the couch for a bit, chilling in front of the TV"
                     elif not detention_served and hacker_3 and call_nr:
@@ -143,12 +143,12 @@ label day_events():
                         $ hacker_4 = True
                         call nr_talk('nr_intro') from _call_nr_talk
                     elif hacker_5:
-                        call nc_talk('nc_text')
+                        call nc_talk('nc_text') from _call_nc_talk_1
 
                 if home_events[n][1] and fs_mad == 1:
                     call fs_talk(True) from _call_fs_talk_4
 
-                call change_loc('livingroom') from _call_change_loc_47
+                call change_loc('fp_livingroom') from _call_change_loc_47
 
             # if mc_f and renpy.random.random() > .65 and current_time[:2] < 17:
             "You decide to take a ride"
@@ -242,17 +242,16 @@ label day_events():
         fp "No answer - I guess I'll try again later"
         call change_loc(current_location) from _call_change_loc_57
 
-    label kitchen_spill_event(kse_called=False):
+    label fp_kitchen_spill_event(kse_called=False):
         if kse_called:
             $ kse_called = False
-            $ fm_seen = True
             "Entering the kitchen, you spot [fmName.yourinformal] kneeling in front of the counter - obviously she spilled something"
             scene kitchenspill_1
             "Holy shit! That's a nice ass!"
             scene kitchenspill_2
             "Staring at her ass, you keep looking, as it gyrates in front of you. You've never really noticed how... sexy it looks before!"
             "Suddenly... this gotta be in your head?!?"
-            scene kitchen_closeup_transparent with Dissolve(.25)
+            scene kitchen_spill_semi_transparent with Dissolve(.25)
             "Your dick is waking up, potentially causing a lot of trouble very soon..."
             menu:
                 "If you think this is all in your head, [fp]... This is gonna be funnier than I thought! (evil)":
@@ -261,32 +260,22 @@ label day_events():
                 "Sure, sure, this is all in your head, [fp]! (good)":
                     $ statschangenotify('aru_good',2,True)
                     $ statschangenotify('fp_alignment',2)
-            scene kitchen_spill
+            scene fp_kitchen_spill
             "You make a concentrated effort to focus on something else!"
             "... *cough* ..."
-
-            if renpy.random.random() < .75:
-                "And you fail, miserably"
-                fm "Hey, [fp]! How are you..."
-                "She looks down, to where your prominent member is definitely showing himself to the world"
-                fm "..."
-                fm "..."
-                fm "uhm... *clears throat* You want some breakfast, [fp]?"
-                $ statschangenotify('fm_aro',2)
-                "She turns away and starts reaching for some cereal"
-                "You're beet red, but sit down, waiting for her to pour you some"
-                fp "Yeah, thanks [fmName.informal]"
-                fm "No problem, [fp]"
-            else:
-                "You manage to focus on something completely unarousing for a minute or so"
-                "Crisis averted!"
-                fp "Hey, [fmName.informal]"
-                fm "Oh, hey [fp]"
-                fm "I just need to clean up this mess, then I'll make us some breakfast"
-                fp "Oh, I can make something myself, I don't mind"
-                fm "Thanks, [fp]"
-                $ statschangenotify('fm_rel',2)
-            call change_loc(current_location)
+            "And you fail, miserably"
+            $ fm_seen = True
+            fm "Hey, [fp]! How are you..."
+            "She looks down, to where your prominent member is definitely showing himself to the world"
+            fm "..."
+            fm "..."
+            fm "uhm... *clears throat* You want some breakfast, [fp]?"
+            $ statschangenotify('fm_aro',2)
+            "She turns away and starts reaching for some cereal"
+            "You're beet red, but sit down, waiting for her to pour you some"
+            fp "Yeah, thanks [fmName.informal]"
+            fm "No problem, [fp]"
+            call change_loc(current_location) from _call_change_loc_16
 
     label evening_event_label(ee_called=False):
         if ee_called:
@@ -295,14 +284,14 @@ label day_events():
                 $ nk_school_assignment_evening = False
                 "{b}*ding dong*{/b}"
                 fm ahead "{b}[fp], can you get that?{/b}"
-                call entrance_scene from _call_entrance_scene
+                call fp_entrance_scene from _call_entrance_scene
                 "You go to get the door, expecting it to be [nk]"
                 nk smile "Hi [fp]."
                 "[nk] is outside, all smiles and with a stack of books in her arms."
                 fp "Hi... you do know we have Internet on the premises, right? And on our phones, and pretty much in every Starshots in town...?"
                 nk smile "I know, silly. But I've always felt that books provide some... well, they make it easier to focus on the task at hand!\n{i}she lets out a cute little laugh{/i}"
                 fp "Well, I was thinking we could set up in my room. I have set up a double set of chairs, I have my computer there, and we should have room enough to go through the books you brought. {i}You grab the books from her, and motion for her to come along{/i}"
-                call fp_bedroom_scene from _call_fp_bedroom_scene_3
+                call fp_bedroom_fp_scene from _call_fp_bedroom_fp_scene_3
                 fp "Long time since you've been here, I've changed a few things"
                 nk ahead "{i}She looks around your room{/i}\nI can see that. No more supercar wallpaper :D"
                 fp "Yeah, yeah. Stop mocking me. I was eight!"
@@ -328,7 +317,7 @@ label day_events():
                     call end_of_day(True) from _call_end_of_day_8
                 else:
                     menu:
-                        "You decide to see if there is anything else you can do today":
-                            call change_loc(current_location) from _call_change_loc_77
                         "You're feeling kinda exhausted, and decide to just go to bed":
                             call end_of_day(True) from _call_end_of_day_9
+                        "You decide to see if there is anything else you can do today":
+                            call change_loc(current_location) from _call_change_loc_77

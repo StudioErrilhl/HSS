@@ -70,6 +70,8 @@ label fs_talk(fst_called=False):
                         $ hacker_first_thought = False
                         fp "I should go talk to [scn]. She adores me, and I'm sure I'd be able to get some information out of her!"
                         menu:
+                            "Nah, not today, I'll do it tomorrow instead":
+                                call evening_home(True) from _call_evening_home
                             "Go talk to [scn], try to find out more about what happened to [fsName.yourformal]":
                                 fp "Hi, [scn]!"
                                 scn "Hi, [fp] - did you have an appointment today? I don't have anything in the book, it seems? Or did you do something again...? {i}She sounds a bit exasperated{/i}"
@@ -94,13 +96,11 @@ label fs_talk(fst_called=False):
                                 fp "Sorry, [scn]. I didn't think. Still grateful, though!"
                                 # scn smiles
                                 # scene change to outside school?
-                                call schoolbuilding_scene
+                                call schoolbuilding_scene from _call_schoolbuilding_scene_2
                                 fp "{i}So, there {b}is{/b} a chance someone did this on purpose - or, maybe even just by accident, messing with the internal systems. Damn, I wish I was a computer geek... No idea how this could be done. I need to talk to [nr]. If he doesn't know, I'm sure he'll know someone who does.{/i}"
                                 $ hacker_1 = False
                                 $ hacker_2 = True
                                 return
-                            "Nah, not today, I'll do it tomorrow instead":
-                                call evening_home(True) from _call_evening_home
             if hacker_2 and not fse:
                 show jules ahead with dissolve
                 fp "How you doing today?"
@@ -129,10 +129,10 @@ label fs_talk(fst_called=False):
 
         else:
             if (firstday_talk or talk_later) and not fse:
-                if current_location == 'livingroom_loc':
+                if current_location == 'fp_livingroom':
                     show jules_sitting_test at ModZoom(.65),ModOffsetX(850),ModOffsetY(380)
                     with dissolve
-                    show livingroom_morning_table
+                    # show livingroom_morning_table
                 else:
                     show jules with dissolve
                 if talk_later:
@@ -201,7 +201,7 @@ label fs_talk(fst_called=False):
                         if fsw_called:
                             fp "{i}Hmm... where did my damn [fsName.role] go?{/i}"
                             fp "{i}Oh, well. I'll find her tomorrow. Time for bed{/i}"
-                    call change_loc('fp bedroom') from _call_change_loc
+                    call change_loc('fp_bedroom_fp') from _call_change_loc
                 else:
                     call change_loc(current_location) from _call_change_loc_1
             else:

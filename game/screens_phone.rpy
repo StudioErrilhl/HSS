@@ -1,7 +1,8 @@
 screen phone():
     # modal True
+    add Solid("#000000DF")
     tag menu
-    zorder 800
+    zorder 999
     default x = 500
     default y = 400
     python:
@@ -19,6 +20,7 @@ screen phone():
         add "gui/phone_background_black.webp" at ModZoom(.85):
             yalign .5
             xalign .5
+            yoffset -8
 
         hbox:
             if battery_text != 0:
@@ -57,12 +59,15 @@ screen phone():
                 if show_icons:
                     imagebutton auto "gui/phone_button_text_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_text_screen')] at ModZoom(.9):
                         tooltip "Read your messages"
+                        xoffset 4
                     imagebutton auto "gui/phone_button_alarm_clock_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_alarm')] at ModZoom(.9):
                         tooltip "Set the alarm"
                         # xoffset -48
+                        xoffset 4
                     imagebutton auto "gui/phone_button_playstore_%s.webp" focus_mask True action [SetVariable('show_icons',False),Function(randomize_appstorelists),Show('phone_playstore')] at ModZoom(.9):
                         tooltip "Go to the PlayStore"
                         # xoffset -96
+                        xoffset 4
                     if installedFF:
                         imagebutton auto "gui/phone_button_friendfinder_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_friendfinder')] at ModZoom(.9):
                             tooltip "Open FriendFinder"
@@ -823,7 +828,7 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
         # background None
         add "gui/phone_background_black.webp" at ModZoom(.85):
             yalign .5
-            xalign .5        
+            xalign .5
         xpadding 0
         top_padding 40
         bottom_padding 10
@@ -866,7 +871,7 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
                 if not calling and not duringcall:
                     imagebutton auto "gui/phone_call_%s.webp" focus_mask True:
                         action [SetVariable('duringcall',True),Call(label,event=event)]
-                        xalign .5                                           
+                        xalign .5
             else:
                 vbox:
                     style_prefix "skip"
@@ -933,7 +938,7 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
                             xalign .8
     hbox:
         imagebutton auto "gui/phone_white_power_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
-            tooltip "Shut off the phone"
+            tooltip "Put the phone down"
         xalign .5
         yalign .5
         if keyclose:
@@ -1045,7 +1050,7 @@ screen phone_gallery_show():
                 key "K_h" action SetVariable('imggal_showbuttons',True)
     hbox:
         imagebutton auto "gui/phone_white_power_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
-            tooltip "Shut off the phone"
+            tooltip "Put the phone down"
         xalign .5
         yalign .5
         if keyclose:
@@ -1080,7 +1085,7 @@ screen phone_info_screen():
                 hover "gui/phone_white_power_hover.webp"
                 focus_mask True
                 action [SetField(persistent,'phone_firstshow',False),SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85)
-                tooltip "Shut off the phone"
+                tooltip "Put the phone down"
             xalign .5
             yalign .5
         hbox:
@@ -1292,7 +1297,7 @@ screen phone_alarm(pa_chosen=False):
 
 screen custom_confirm(cc_chosen=False):
     tag phonescreen
-    zorder 900
+    zorder 999
     $ keyclose = True
     frame:
         background None
@@ -1408,7 +1413,7 @@ screen display_achievements():
                                     text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
                                         xpos 100
                                         ypos 38
-                                    add "gui/phone_lock_idle.webp":
+                                    add "gui/phone_lock_red_idle.webp":
                                         xpos 300
                                         ypos 35
                                     if selected_achievement == achievement:
@@ -1441,7 +1446,7 @@ screen display_achievements():
                                     text "{b}{color=#fff}"+achievement.name+"{/color}{/b}" size 14:
                                         xpos 100
                                         ypos 38
-                                    add "gui/phone_unlock_idle.webp":
+                                    add "gui/phone_unlock_green_idle.webp":
                                         xpos 300
                                         ypos 35
                                     if selected_achievement == achievement:
@@ -1528,6 +1533,7 @@ screen display_achievements_category_panel():
 
 # This is the achievement notification
 screen display_achievement_unlocked():
+    zorder 999
     python:
         show_length = len(achievement_notification_queue[0].name + achievement_notification_queue[0].description) * 0.1
         if show_length < 3.0:
@@ -1819,7 +1825,7 @@ screen custom_preferences():
         yalign .5
         hbox:
             imagebutton auto "gui/phone_white_power_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
-                tooltip "Shut off the phone"
+                tooltip "Put the phone down"
             xalign .5
             yalign .5
         hbox:
@@ -1915,7 +1921,7 @@ screen phone_overlay():
             xalign .5
             yalign .5
             imagebutton auto "gui/phone_white_power_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')] at ModZoom(.85):
-                tooltip "Shut off the phone"
+                tooltip "Put the phone down"
         vbox:
             xalign .5
             yalign .5
@@ -1931,7 +1937,7 @@ screen phone_overlay():
                         tooltip "Go back to the home-screen"
                     else:
                         action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]
-                        tooltip "Turn off the phone"
+                        tooltip "Put the phone down"
         if renpy.get_screen('display_achievements'):
             hbox:
                 xalign .5
@@ -1943,12 +1949,15 @@ screen phone_overlay():
                 imagebutton auto "gui/phone_unlock_%s.webp":
                     action ToggleVariable('show_unlocked_achievements')
                     xpos -100
+                    tooltip "Show unlocked achievements"
                 imagebutton auto "gui/phone_lock_%s.webp":
                     action ToggleVariable('show_locked_achievements')
                     xalign .5
+                    tooltip "Show locked achievements"
                 imagebutton auto "gui/phone_hidden_%s.webp":
                     action ToggleVariable('show_hidden_achievements')
                     xpos 100
+                    tooltip "Show hidden achievements"
 
     if keyclose and renpy.get_screen('phonescreen'):
         if renpy.get_screen('show_text_msg'):

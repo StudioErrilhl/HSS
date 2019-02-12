@@ -9,6 +9,7 @@ init 2:
         yourformal "your mother"
         myinformal "my mom"
         yourinformal "your mom"
+        relation "family"
     defineDynamicName fsName:
         name "Juliette"
         shortname "Jules"
@@ -19,3 +20,4 @@ init 2:
         yourformal "your sister"
         myinformal "my sis"
         yourinformal "your sis"
+        relation "family"

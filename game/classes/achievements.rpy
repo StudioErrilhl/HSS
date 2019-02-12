@@ -38,7 +38,9 @@ init 10:
     default achievement_wine_collector = NewAchievement("Wine collector","You've aquired wine!",1,'inventory/wine_idle.webp',hidden=True,next_tier=[achievement_all_the_wine])
 
     # Exploration Achievements
-    default achievement_been_everywhere = NewAchievement("Seasoned traveller","You visited every location in the game",13,'gui/star.webp','exploration')
+    default achievement_been_everywhere = NewAchievement("Seasoned traveller","You visited every location in the game",19,'gui/star.webp','exploration')
+    default achievement_all_wallart = NewAchievement("Art Collector","You've purchased every wallart item",1,"gui/star.webp","exploration")
+    default achievement_first_art = NewAchievement("First Art","You've purchased your first piece of art",1,"gui/star.webp","exploration",True,next_tier=[achievement_all_wallart])
 
     # Lewdness Achievements
     default achievement_diverse_panties = NewAchievement("Diverse Collector","One of every type!",1,'inventory/fsp_hot_pink_idle.webp','lewdness',True)
@@ -112,6 +114,13 @@ init python:
     def update_been_everywhere_achievement():
         # if fp_bedroom_ach and fs_bedroom_ach and uhl_bathroom_ach and uhl_ach and entrance_ach and livingroom_ach and kitchen_ach and outside_ach and garage_ach and school_outside_ach and school_principal_office_ach and beach_ach:
         achievement_been_everywhere.update()
+
+    def update_all_wallart_achievement():
+        if (all(wallart.values())):
+            achievement_all_wallart.update()
+        elif not achievement_wallart_set:
+            achievement_first_art.update()
+            setattr(store,'achievement_wallart_set',True)
 
     def update_all_the_stuff():
         global beer_pickup, carkeys_pickup, fsp_hot_pink_pickup, fsp_light_blue_pickup, fsp_black_pickup, fsp_yellow_pickup, fsp_red_pickup, gin_pickup, phone_pickup, princessplug_pickup, roses_pickup, schoolbooks_pickup, smallkeys_pickup, toolbox_pickup, vodka_pickup, wallet_pickup, whiskey_pickup, wine_pickup

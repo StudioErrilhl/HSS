@@ -41,7 +41,10 @@ init -1 python:
                     self.finditem(item).amount += amount
                 else:
                     self.inventory.append(InvItem(item, amount))
-                name = item.name.lower().replace('fs','').replace('fm','').replace('_',' ').title()
+                if 'fsp' in item.name.lower():
+                    name = item.name.lower().replace('fsp','panties - ').replace('fm','').replace('_','').title()
+                else:
+                    name = item.name.lower().replace('fs','').replace('fm','').replace('_',' ').title()
                 name = re.sub('([a-zA-Z])', lambda x: x.groups()[0].upper(), name, 1)
                 renpy.notify(name+' added successfully')
 
@@ -79,7 +82,7 @@ init -1 python:
         for file in renpy.list_files():
             if file.startswith('images/inventory/') and file.endswith('.webp'):
                 if 'hover' in file:
-                    name = file.replace('images/inventory/','').replace('_idle','').replace('_hover','').replace('.webp','')
+                    name = file.replace('images/inventory/','').replace('_hover','').replace('.webp','')
                     if not hasattr( store, ""+name+"_item" ):
                         weight = item_weights[name]
                         desc = item_desc[name]

@@ -235,7 +235,7 @@ label nc_talk(event=False,callrand=False):
         $ nc_action_started = 1
         $ hacker_5 = True
         $ nce = True
-        call change_loc('outside') from _call_change_loc_69
+        call change_loc('fp_outside') from _call_change_loc_69
 
     if event == 'nc_text' and hacker_5 and not nce:
         $ hacker_5 = False
@@ -257,7 +257,7 @@ label nc_talk(event=False,callrand=False):
          show screen phone_call_show('nc','nc_talk', False, 'nc_call_after_hacker_2')
 
     if event == 'nc_call_after_hacker_2' and nc_call_after_hacker:
-        "this is a test"     
+        "this is a test"
 
     if event == 'icafe_talk_hj' and not nce:
         "This is as far as this story goes for now"

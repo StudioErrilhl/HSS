@@ -1,5 +1,5 @@
-init -100 python:
-    import random
+# init -100 python:
+#     import random
 
 init python:
 
@@ -27,11 +27,11 @@ init python:
         # This function have no reason to be used by anything else, so keep it internal to "statschangenotify".
         def _generateText( what, who, f ):
             if f < 0:
-                action = "decreased" if what in [ "dom", "aro", "cor", "att", "bad", "good" ] else "deteriorated"
+                action = "decreased" if what in [ "dom", "aro", "cor", "att", "bad", "good","money" ] else "deteriorated"
             elif f == 0:
                 action = False
             else:
-                action = "increased" if what in [ "dom", "aro", "cor", "att", "bad", "good" ] else "improved"
+                action = "increased" if what in [ "dom", "aro", "cor", "att", "bad", "good","money" ] else "improved"
 
             # Each variables in "format" by their order. So {0} = who, {1} = action, {2} = absolute value of "f".
             if what == "rel":
@@ -86,8 +86,13 @@ init python:
                     return "{0}'s good influence over you did not change".format(who)
                 else:
                     return "{0}'s good influence over you has {1} by {2}".format(who, action, abs(f)).capitalize()
+            elif what == "money":
+                if not action:
+                    return "Your total cash amount did not change"
+                else:
+                    return "Your total cash amount decreased by {0} to {1}".format(abs(f),getattr(store,"fp_money"))
 
-            return "Ooop's something really weird happened1!"
+            return "Ooop's something really weird happened!"
 
         if a == "mc_b":
             setattr( store, a, min(getattr( store, a) + f,store.mc_b_max))
@@ -127,7 +132,7 @@ init python:
         elif a == "punishment_late":
             text = "You've gotten a mark for being late. Current amount is {0}. If you get more than 5 marks, you will get in trouble".format( store.punishment_late )
         else:
-            text = "Ooop's something really weird happened2!"
+            text = "Ooop's something really weird happened!"
 
         if not "deteriorated" in text:
             renpy.notify((text))
@@ -135,7 +140,7 @@ init python:
             renpy.notify((text,"decrease"))
 
         if p:
-            renpy.pause(.75)
+            renpy.pause(1.1)
         else:
             renpy.pause(.1)
 
@@ -167,6 +172,10 @@ init 10 python:
         setattr(store,'current_time','06:00')
         setattr(store,'day_week',day_week)
         setattr(store,'current_month',current_month)
+        if not charge_phone and battery_text < 50:
+            setattr(store,'battery_text',0)
+        elif charge_phone:
+            setattr(store,'battery_text',100)
     def addtime(hours=False,minutes=False,update_scene=False,sec_call=False):
         global current_time,day_week,current_month_text,current_month,current_month_day,months_days,day_ahead,current_location,night,day,morning,battery_text,wetshower,not_entered,nc_action_started,nc_action_completed,nc_event,visit_icafe_4,nc_happens,filth_val,tmp_filth_val
         local_dw = day_week
@@ -195,6 +204,7 @@ init 10 python:
                 if len(current_time) == 4:
                     current_time = '0'+current_time
                 setattr(store,'current_time',current_time)
+                setattr(store,'battery_text',battery_text -5)
 
             if minutes:
                 if int(current_time[-2:])+int(minutes) >= 60:
@@ -212,6 +222,7 @@ init 10 python:
                                 day_ahead = True
                     else:
                         current_time = str(int(local_time[:2])+1)+':'+update_minutes
+                    setattr(store,'battery_text',battery_text -5)
                 else:
                     if local_time >= '23:30':
                         setattr(store,'current_time','00:00')
@@ -264,7 +275,7 @@ init 10 python:
                     indices = [i for i, elem in enumerate(current_imgs) if '_morning' in elem]
                     if indices:
                         current_bg = current_imgs[indices[0]].replace('_morning','').replace('_glow','').replace('_build','').replace('_wallet','').replace('_finished','').replace('_with_car','').replace('_scene','').replace('_phone','').replace('_backpack','').replace('_',' ')
-                        if current_bg == 'upper_hallway_bathroom_night':
+                        if current_bg == 'ufbn':
                             setattr(store,"bathroom_light",True)
                         else:
                             if sec_call:
@@ -321,7 +332,7 @@ init 10 python:
                 indices = [i for i, elem in enumerate(current_imgs) if '_morning' in elem]
                 if indices:
                     current_bg = current_imgs[indices[0]].replace('_morning','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
-                    if current_bg == 'upper_hallway_bathroom_night':
+                    if current_bg == 'ufbn':
                         setattr(store,"bathroom_light",True)
                     else:
                         if sec_call:
@@ -440,10 +451,11 @@ init 10 python:
                 disabled_hints.remove(hint)
 
     def set_hint(hint=False):
-        global hints,read_hints,default_hints
+        global hints,read_hints,default_hints,jiggle_phone
         if hint:
             if hint not in hints+read_hints+disabled_hints:
                 hints.append(hint)
+                jiggle_phone = True
 
     def read_message(char=False,charobj=False,message=False):
         global messages,read_messages
@@ -505,6 +517,18 @@ init 10 python:
                 else:
                     img = "gui/sun_icon.webp"
             return img
+
+    def fetchMapFiles(prefix=False):
+        currentLocationList = []
+        if prefix:
+            for file in renpy.list_files():
+                if file.startswith('gui/map/') and file.endswith('.webp'):
+                    if prefix in file:
+                        if 'hover' in file:
+                            name = file.replace('gui/map/','').replace('_hover','').replace('.webp','').replace('map_','')
+                            currentLocationList.append(name)
+            return currentLocationList
+
 
 # Copyright 2017  Anne O'Nymous - AON/SC4X
 #

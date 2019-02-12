@@ -1,6 +1,36 @@
 init python:
     _game_menu_screen = None #this disables the right-click functionality of the game menu screen
-    import os, math, re, pygame_sdl2
+
+init -1500 python:
+    @renpy.pure
+    class HideInterface_new(Action, DictEquality):
+        """
+         Causes the interface to be hidden until the user clicks.
+         This is an override for the original HideInterface() in renpy/common/00action_other.rpy
+         """
+        def __call__(self):
+            renpy.call_in_new_context("_hide_windows_new")
+
+label _hide_windows_new:
+    # This is an override of the label _hide_windows in the renpy/common/00keymap.rpy
+
+    if renpy.context()._menu:
+        return
+    if _windows_hidden:
+        return
+
+    python:
+        _windows_hidden = True
+        hide_exit_buttons = True
+        voice_sustain()
+        ui.saybehavior(dismiss=['dismiss', 'hide_windows'])
+        ui.interact(suppress_overlay=True, suppress_window=True)
+        _windows_hidden = False
+        hide_exit_buttons = False
+    return
+
+init -10 python:
+    import os, math, re, pygame_sdl2, random
     pygame_sdl2.init()
     pydisp = pygame_sdl2.display.list_modes()
 
@@ -61,6 +91,7 @@ default persistent.voicemuted = False
 default persistent.skipunseen = False
 default persistent.skipafterchoices = False
 default persistent.skiptransitions = False
+default persistent.seenintro = False
 
 # character definitions
 define narrator = Character(None, what_italic=True)
@@ -75,6 +106,7 @@ define nb = Character("Bridget",who_outlines=[(absolute(1),"#999",absolute(0),ab
 define nr = Character("Ron",image="nr_talkside",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define nk = Character("Karen",image="nk_talkside",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define nc = Character("Catherina",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
+define nk2 = Character("Kate",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define sn = Character("Miss Novak",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define se = Character("Miss Elliot",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
 define sp = Character("Principal Hudson",who_outlines=[(absolute(1),"#999",absolute(0),absolute(0))])
@@ -104,7 +136,7 @@ default char_desc = [
     ["[scn] is..."],
     ["[sj] is..."],
     ["[lil] is..."],
-    ["[aru] is..."]   
+    ["[aru] is..."]
     ]
 
 default atts = ['rel','dom','aro','cor','att']
@@ -124,7 +156,7 @@ default punishment_late = 0 #this is the variable for punishment value for laten
 default filth_val = 0
 default tmp_filth_val = False
 default fpe = False
-default fp_sofa_aquired = False
+default fp_couch_aquired = False
 default lil_bad = 0
 default aru_good = 0
 default fp_alignment = 0
@@ -308,6 +340,8 @@ else:
     $ fp_sex_pref = "Anal"
 
 # environment
+default fpmc_r = False
+default hide_exit_buttons = False
 default early_morning_we = False #check this to see if needed
 default overslept = False
 default overslept_time = False
@@ -328,6 +362,7 @@ default bathroom_light = False
 default goto_beach = False
 default debug = False
 default school_walk_late_arrival = False
+default morning_out_of_bed = False
 default morning_event_done = False
 default after_sleep = False
 default has_cabin = False
@@ -355,6 +390,7 @@ default alarmclock_time = "07:00"
 default alarmhour = 0
 default alarmminute = 0
 default walk_to_school = False
+default jiggle_phone = False
 
 # fs events
 default fs_si = True
@@ -459,9 +495,11 @@ default installedFF = False
 
 #call locations from other screens
 default br_cfs = False
+default fmb_cfs = False
 default uhl_fpb_cfs = False
 default uhl_fsb_cfs = False
 default gar_cfs = False
+default gar_fb_cfs = False
 default kit_cfs = False
 default uhlbcfs = False
 default uhlbc = False
@@ -508,19 +546,25 @@ default trans = False
 default fdtfs_after = True
 default occupied_bath = True
 
-default fp_bedroom_ach = False
-default fs_bedroom_ach = False
-default uhl_bathroom_ach = False
-default uhl_ach = False
-default entrance_ach = False
-default livingroom_ach = False
-default kitchen_ach = False
-default outside_ach = False
-default garage_ach = False
-default school_outside_ach = False
-default school_principal_office_ach = False
-default beach_ach = False
-default icafe_ach = False
+default fp_bedroom_fp_ach = False
+default fp_bedroom_fs_ach = False
+default fp_bedroom_fm_ach = False
+default fp_topofstairs_ach = False
+default fp_ufb_ach = False
+default fp_entrance_ach = False
+default fp_livingroom_ach = False
+default fp_kitchen_ach = False
+default fp_outside_ach = False
+default fp_pool_ach = False
+default fp_garage_ach = False
+default fp_garage_gym = False
+default fp_garage_bathroom = False
+default fp_garage_sauna = False
+default fp_school_outside_ach = False
+default fp_school_po_ach = False
+default fp_beach_ach = False
+default fp_icafe_ach = False
+default fp_cabin_ach = False
 
 default selected_number = 0
 default panties_sniffer = False
@@ -540,10 +584,10 @@ default disabled_messages = []
 default deleted_messages = []
 default hintselect = 'new'
 default fp_jobs = [drivingcmp]
-default firstday_talk_list = ['livingroom','fp bedroom','fs bedroom','kitchen','entrance','outside']
+default firstday_talk_list = ['fp_livingroom','fp_bedroom_fp','fp_bedroom_fs','fp_kitchen','fp_entrance','fp_outside']
 default fs_p = ['fsp_yellow','fsp_light_blue','fsp_hot_pink','fsp_black','fsp_red']
-default p_response = ["Hm... "+fsName.formal+"s panties...\n{b}sniffs them{/b}\nShould I take them with me?",
-                        "Oh, "+fsName.myinformal+" left her panties...",
+default p_response = ["Hm... "+fsName.myformal+"s panties...\n{b}sniffs them{/b}\nShould I take them with me?",
+                        "Oh, "+fsName.myformal+" left her panties...",
                         "Right-o! I don't think I have this color...",
                         "{b}Sniffs panties{/b} I love her smell"
         ]
@@ -587,6 +631,8 @@ default wallart = {
             "sincity":False,
             "peekaboo":False
 }
+default active_wallart = False
+default achievement_wallart_set = False
 
 # breakfast choices - the bf_weights is updated when you pick something, and will change the weight depending on whether or not you benefit or not
 # default bf_weights = [(0,5),(1,4),(2,2),(3,1),(4,5),(5,2),(6,2),(7,4),(8,1),(9,4),(10,2)]
@@ -656,6 +702,34 @@ default item_desc = {
             'wine':'The preferred drinks of any posh girl out there. You should keep some on hand!'
 }
 
+default location_list = {
+        'fp_house':['fp_outside','fp_entrance','fp_livingroom','fp_kitchen','fp_bedroom_fm','fp_topofstairs','fp_upstairs','fp_bedroom_fp','fp_bedroom_fs','fp_ufb','fp_pool','fp_garage','fp_garage_gym','fp_garage_bathroom','fp_garage_sauna'],
+        'school':['school_outside','school_gym','school_track','school_classroom','school_office_principal','school_office_staff'],
+        'icafe':['icafe_outside','icafe_inside'],
+        'beach':['beach_outside'],
+        'marina':['marina_outside'],
+        'cabin':['cabin_outside'],
+        'grocerystore':['store_outside']
+}
+
+default location_names = {
+    'fp_outside':'Outside',
+    'fp_entrance':'Entrance',
+    'fp_livingroom':'Livingroom',
+    'fp_kitchen':'Kitchen',
+    'fp_bedroom_fm':'[fmName.name]\'s bedroom',
+    'fp_topofstairs':'Top of stairs',
+    'fp_upstairs':'Top of stairs',
+    'fp_bedroom_fp':'[fp]\'s bedroom',
+    'fp_bedroom_fs':'[fsName.name]\'s bedroom',
+    'fp_ufb':'Upper floor bathroom',
+    'fp_pool':'Pool',
+    'fp_garage':'Garage',
+    'fp_garage_gym':'Gym',
+    'fp_garage_bathroom':'Garage bathroom',
+    'fp_garage_sauna':'Sauna'
+}
+
 default fs_present = [0,1,2,3,4,5,6,7,8,15,16,17,18,19,20,21,22,23]
 default fs_present_we = [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19] if fs_party else [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
 
@@ -670,6 +744,8 @@ default count = 0
 default maxcount = 2
 default end_bike_repair = False
 default sc = 0
+default fb_steplist_selected = 0
+default fb_steplist = [0,15,30,45,60,75,85,95,105,115,125,135,140,149,150]
 
 # date and time
 default first_day = True
@@ -698,4 +774,4 @@ default sun_event = False
 default showStats = False
 default setstate = False
 default end_game = False
-default current_location = 'fp_bedroom_loc'
+default current_location = 'fp_bedroom_fp'

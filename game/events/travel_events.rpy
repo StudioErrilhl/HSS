@@ -146,7 +146,7 @@ label travel_events(event=False):
                                             $ statschangenotify('nk_rel',0)
                                     call school_events('finished') from _call_school_events_4
                                 else:
-                                    if rainstorm:
+                                    if weather == 2:
                                         fp "Thanks, [nk]! I would've drowned out there on my own"
                                         nk smile "Oh, no, you wouldn't, you doofus. You're just lazy, and happy someone drove you!"
                                         menu:
