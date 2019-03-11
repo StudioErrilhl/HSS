@@ -128,55 +128,454 @@ label fs_talk(fst_called=False):
                 $ statschangenotify('fs_rel',1)
 
         else:
-            if (firstday_talk or talk_later) and not fse:
-                if current_location == 'fp_livingroom':
-                    show jules_sitting_test at ModZoom(.65),ModOffsetX(850),ModOffsetY(380)
-                    with dissolve
-                    # show livingroom_morning_table
-                else:
-                    show jules with dissolve
-                if talk_later:
-                    if int(current_time[:2]) < 15:
-                        $ addtime(5)
-                    elif int(current_time[:2]) < 20:
-                        $ settime(20)
-                else:
-                    $ addtime(False,30)
+            if firstday_talk and not fse:
+                show fp_pm_fs_after_intro_talk_closeup with Dissolve(.25)
                 fp "Hi, [fsName.informal]. Can we talk?"
-                hide jules_sitting_test
-                show jules angry with dissolve
+                hide fp_pm_fs_after_intro_talk_closeup
+                show fp_pm_fs_after_intro_talk_fs_angry
+                with Dissolve(.25)
                 fs angry "{b}Fuck you!{/b}"
-                show jules with dissolve
-                $ text = "Look, I'm really sorry about {0}! I didn't mean to perv on you, {1}.".format("this morning" if first_day else "the other day", fsName.informal )
-                fp "[text]"
-                show jules with dissolve
+                fp "Look, I'm really sorry about this morning! I didn't mean to perv on you, [fsName.informal]."
                 fs angry "So, you just happened to be leaning against my door because...?"
                 fp "Well, that bit is true, but I was just trying to figure out what the sounds coming from your bedroom was. Honestly!"
-                show jules annoyed with dissolve
+                hide fp_pm_fs_after_intro_talk_fs_angry
+                show fp_pm_fs_after_intro_talk_fs_annoyed
+                with Dissolve(.25)
                 fs annoyed "So... you heard noises coming from my bedroom, and your first instinct is \"Let's check out the sounds from [fsName.myformal]s bedroom\"?"
                 fp "Yeah...\n{b}you muster a foolish grin{/b}\nWhen you put it like that, it sounds sort of stupid..."
-                show jules with dissolve
-                $ addtime(False, 30)
+                hide fp_pm_fs_after_intro_talk_fs_annoyed
+                show fp_pm_fs_after_intro_talk_fs_less_annoyed
+                with Dissolve(.25)
                 fs ahead "Can we just agree that unless I'm screaming bloody murder... and even if I am, {i}check first!{/i}, that you do not go creeping about my door?"
                 fp "Sure, [fsName.informal]. I am really sorry!"
                 fs ahead closed "Yeah, yeah... not as sorry as me..."
                 fp "Huh?"
-                show jules ahead with dissolve
+                hide fp_pm_fs_after_intro_talk_fs_less_annoyed
+                show fp_pm_fs_after_intro_talk_fs_relaxed
+                with Dissolve(.25)
                 fs ahead "Your timing was beyond belief bad!"
                 fp "Uhh... yeah, I get that... I stumbled in on you almost bare naked..."
-                show jules blushing with dissolve
+                hide fp_pm_fs_after_intro_talk_fs_relaxed
+                show fp_pm_fs_after_intro_talk_fs_blushing
+                with Dissolve(.25)
                 fs blushing "No, you idiot. I was about 5 seconds away from an awesome orgasm. Let's just say you ruined the mood."
-                show jules ahead with dissolve
                 fp "{i}Oh, shit...\nDid she actually just say that?{/i}\nI'm really sorry? Look, I owe you one, okay. If you need anything, a ride, drinks, anything, just ask, okay?"
-                show jules smile with dissolve
+                hide fp_pm_fs_after_intro_talk_fs_blushing
+                show fp_pm_fs_after_intro_talk_fs_relaxed
+                with Dissolve(.25)
                 fs smile "{b}Smiling now...{/b}\nOh, don't you worry. I will ask. You bet on it!"
-                if renpy.get_screen('livingroom'):
-                    "With that, she picks herself off the couch, and wanders off"
+                hide fp_pm_fs_after_intro_talk_fs_relaxed
+                show fp_pm_fs_after_intro_talk_fs_half_turn
+                with Dissolve(.25)
+                fs smile "So, while you're there, how about you make yourself useful?"
+                fp "Useful?"
+                hide fp_pm_fs_after_intro_talk_fs_half_turn
+                show fp_pm_fs_after_intro_talk_fs_full_turn_pan at diagonal_pan_up
+                with Dissolve(.25)
+                $ renpy.pause(6)
+                hide fp_pm_fs_after_intro_talk_fs_full_turn_pan
+                show fp_pm_fs_after_intro_talk_fs_full_turn
+                with Dissolve(.25)
+                fs smile "Yeah, how about you pick up that bottle of sunscreen, and put some on my back?"
+                fp "Uhm... sure?"
+                fs "Cool!"
+                menu put_on_sunscreen_back:
+                    "So, you should put on some sunscreen - where to start?"
+                    "Turn over":
+                        fs "You wanna do the other side too?"
+                        jump turned_over_intro
+                    "Shoulders" if 'shoulders' not in i_s['pos_back']: # first / second
+                        hide fp_pm_fs_after_intro_talk_fs_full_turn
+                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_back_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_legs_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_feet_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_shoulders_closeup
+                        show fp_pm_fs_after_intro_talk_fs_shoulders_closeup
+                        with Dissolve(.25)
+                        if 'shoulders' not in i_s['pos_back']:
+                            $ total_fs_sunscreen_points += 1
+                            if not i_s['pos_back']:
+                                "[fs] seems to like the shoulder-rub - maybe you can go a little further south?"
+                            else:
+                                "Time to do something else"
+                            $ i_s['pos_back'].append('shoulders')
+                        else:
+                            "Time to do something else"
+                        if -10 > total_fs_sunscreen_points < 0:
+                            jump end_of_sunscreen_intro
+                        elif total_fs_sunscreen_points > 0:
+                            jump put_on_sunscreen_back
+                        else:
+                            jump turned_over_intro
+                    "Legs" if 'legs' not in i_s['pos_back']: # third
+                        hide fp_pm_fs_after_intro_talk_fs_full_turn
+                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_back_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_legs_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_feet_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_shoulders_closeup
+                        show fp_pm_fs_after_intro_talk_fs_legs_closeup
+                        with Dissolve(.25)
+                        if 'legs' not in i_s['pos_back']:
+                            if all(elem in i_s['pos_back'] for elem in ['shoulders']):
+                                $ total_fs_sunscreen_points += 1
+                                "[fsName.Yourformal] definitely likes you rubbing her legs. There are small cooing noises coming every few seconds"
+                            else:
+                                $ total_fs_sunscreen_points -= 1
+                                "You have a feeling [fsName.yourformal] didn't really like that"
+                            $ i_s['pos_back'].append('legs')
+                        if -10 > total_fs_sunscreen_points < 0:
+                            jump end_of_sunscreen_intro
+                        elif total_fs_sunscreen_points > 0:
+                            jump put_on_sunscreen_back
+                        else:
+                            jump turned_over_intro
+                    "Feet" if 'feet' not in i_s['pos_back']: # fourth
+                        hide fp_pm_fs_after_intro_talk_fs_full_turn
+                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_back_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_legs_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_feet_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_shoulders_closeup
+                        show fp_pm_fs_after_intro_talk_fs_feet_closeup
+                        with Dissolve(.25)
+                        if 'feet' not in i_s['pos_back']:
+                            if all(elem in i_s['pos_back'] for elem in ['legs','shoulders']):
+                                $ total_fs_sunscreen_points += 1
+                                "Rubbing her feet, you hear sighs of pleasure coming from [fs]"
+                            else:
+                                $ total_fs_sunscreen_points -= 1
+                                "You end up tickling her feet more than massaging them - not very popular"
+                            $ i_s['pos_back'].append('feet')
+                        if -10 > total_fs_sunscreen_points < 0:
+                            jump end_of_sunscreen_intro
+                        elif total_fs_sunscreen_points > 0:
+                            jump put_on_sunscreen_back
+                        else:
+                            jump turned_over_intro
+                    "Butt" if 'butt' not in i_s['pos_back'] or 'butt_2' not in i_s['pos_back']: # fifth and seventh
+                        hide fp_pm_fs_after_intro_talk_fs_full_turn
+                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_back_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_legs_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_feet_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_shoulders_closeup
+                        show fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        with Dissolve(.25)
+                        if 'butt' not in i_s['pos_back']:
+                            if all(elem in i_s['pos_back'] for elem in ['shoulders','legs','feet']):
+                                $ total_fs_sunscreen_points += 1
+                                "[fsName.Yourformal] moans slightly, obviously liking what you're doing..."
+                                "Wait... is that... no, you must be seeing things"
+                            else:
+                                $ total_fs_sunscreen_points = -5
+                                fs "Hey! What the hell are you doing? Don't touch me there!"
+                            $ i_s['pos_back'].append('butt')
+                        elif 'butt' in i_s['pos_back']:
+                            if all(elem in i_s['pos_back'] for elem in ['shoulders','legs','feet','butt','back']):
+                                if total_fs_sunscreen_points < 3:
+                                    "Stop doing that, please"
+                                    $ total_fs_sunscreen_points -= 1
+                                elif total_fs_sunscreen_points < 5:
+                                    "You're not getting much of a response, but at least she's not yelling at you"
+                                else:
+                                    "The moaning gets louder, as you rub the sunscreen into her butt"
+                                    $ total_fs_sunscreen_points += 1
+                            else:
+                                "[fp]! I told you to stay the fuck away from my ass!"
+                                "Fuck off!"
+                                $ total_fs_sunscreen_points = -10
+                            $ i_s['pos_back'].append('butt_2')
+                        if -10 > total_fs_sunscreen_points < 0:
+                            jump end_of_sunscreen_intro
+                        elif total_fs_sunscreen_points > 0:
+                            jump put_on_sunscreen_back
+                        else:
+                            jump turned_over_intro
+                    "Back" if 'back' not in i_s['pos_back']:
+                        hide fp_pm_fs_after_intro_talk_fs_full_turn
+                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_back_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_legs_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_feet_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_shoulders_closeup
+                        show fp_pm_fs_after_intro_talk_fs_back_closeup
+                        with Dissolve(.25)
+                        if 'back' not in i_s['pos_back']:
+                            $ i_s['pos_back'].append('back')
+                            if all(elem in i_s['pos_back'] for elem in ['shoulders','legs','feet','butt']):
+                                fp "..."
+                                menu:
+                                    "Mention buttplug":
+                                        fp "Uhm, [fsName.informal]..."
+                                        fs "Yeah?"
+                                        fp "Are you using a... buttplug?"
+                                        fs "You noticed, huh?"
+                                        fp "Yeah..."
+                                        "You feel yourself getting rock hard. Nothing you can do about that, really..."
+                                        $ statschangenotify('fs_aro',1,True)
+                                        $ statschangenotify('fs_anal',1)
+                                        $ total_fs_sunscreen_points += 1
+                                    "Dont mention it":
+                                        fp "So, this okay?"
+                                        fs "Yup, it's great!"
+                                        $ i_s['pos_back'].append('butt_2')
+                            elif total_fs_sunscreen_points >= 4:
+                                "[fsName.Yourformal] sighs, content, while you work the sunscreen into her back"
+                                $ total_fs_sunscreen_points += 1
+                            elif any(elem in ['shoulders','arms','legs','feet'] for elem in i_s['pos_back']):
+                                "[fsName.Yourformal] isn't protesting, but you get the message that you could have done better"
+                                $ total_fs_sunscreen_points -= 1
+                            else:
+                                "[fsName.Yourformal] looks at you, clearly not entirely happy with your ministrations"
+                                $ total_fs_sunscreen_points -= 1
+                        if -10 > total_fs_sunscreen_points < 0:
+                            jump end_of_sunscreen_intro
+                        elif total_fs_sunscreen_points > 0:
+                            jump put_on_sunscreen_back
+                        else:
+                            jump turned_over_intro
+                $ addtime(False, 30)
+                label turned_over_intro:
+                if total_fs_sunscreen_points <= 0:
+                    fs annoyed "You {b}ARE{/b} a perv! Go away!"
+                    fp "Okay..."
+                    fs "NOW!"
+                    jump end_of_sunscreen_intro
+                elif total_fs_sunscreen_points < 5:
+                    fs ahead "Nah, we're good. Now go away, you're blocking my sun!"
+                    fp "Okay, see you later"
+                    jump end_of_sunscreen_intro
+                elif total_fs_sunscreen_points <= 6:
+                    show fp_pm_fs_after_intro_talk_fs_half_turn
+                    $ renpy.pause(.35)
+                    hide fp_pm_fs_after_intro_talk_fs_half_turn
+                    show fp_pm_fs_after_intro_talk_fs_front_full_pan at diagonal_pan_down
+                    with Dissolve(.25)
+                    $ renpy.pause(6)
+                    show fp_pm_fs_after_intro_talk_fs_front_full
+                    with Dissolve(.25)
+                    fs smile "Sure, do the front as well"
+                    jump put_on_sunscreen_front
                 else:
-                    "With that, she wanders off"
+                    menu put_on_sunscreen_front:
+                        "So... applying sunscreen up front..."
+                        "Stomach" if 'stomach' not in i_s['pos_front']:
+                            hide fp_pm_fs_after_intro_talk_fs_front_shoulders_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_legs_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                            show fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
+                            with Dissolve(.25)
+                            if 'stomach' not in i_s['pos_front']:
+                                $ total_fs_sunscreen_points += 1
+                            if all(elem in i_s['pos_front'] for elem in ['shoulders','legs','feet']):
+                                fs "Oh, that feels nice..."
+                            else:
+                                "Time to lotion up something else"
+                            $ i_s['pos_front'].append('stomach')
+                            if all(elem in i_s['pos_front'] for elem in ['shoulders','stomach','legs','feet','breast']):
+                                jump end_of_sunscreen_intro
+                            elif -10 > total_fs_sunscreen_points <= 0:
+                                jump end_of_sunscreen_intro
+                            else:
+                                jump put_on_sunscreen_front
+                        "Shoulders" if 'shoulders' not in i_s['pos_front']: # first / second:
+                            hide fp_pm_fs_after_intro_talk_fs_front_shoulders_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_legs_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                            show fp_pm_fs_after_intro_talk_fs_front_shoulders_closeup
+                            with Dissolve(.25)
+                            if 'shoulders' not in i_s['pos_front']:
+                                $ total_fs_sunscreen_points += 1
+                            if not i_s['pos_front']:
+                                "[fs] seems to like the shoulder-rub - maybe you can go a little further south"
+                            else:
+                                "Time to do something else"
+                            $ i_s['pos_front'].append('shoulders')
+                            if all(elem in i_s['pos_front'] for elem in ['shoulders','stomach','legs','feet','breast']):
+                                jump end_of_sunscreen_intro
+                            elif -10 > total_fs_sunscreen_points <= 0:
+                                jump end_of_sunscreen_intro
+                            else:
+                                jump put_on_sunscreen_front
+                        "Legs" if 'legs' not in i_s['pos_front']:
+                            hide fp_pm_fs_after_intro_talk_fs_front_shoulders_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_legs_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                            show fp_pm_fs_after_intro_talk_fs_front_legs_closeup
+                            with Dissolve(.25)
+                            if 'legs' not in i_s['pos_front']:
+                                $ total_fs_sunscreen_points += 1
+                            if all(elem in i_s['pos_front'] for elem in ['shoulders']):
+                                "[fs] purrs content when you do her legs"
+                            else:
+                                "[fs] isn't quite happy with your work"
+                            $ i_s['pos_front'].append('legs')
+                            if all(elem in i_s['pos_front'] for elem in ['shoulders','stomach','legs','feet','breast']):
+                                jump end_of_sunscreen_intro
+                            elif -10 > total_fs_sunscreen_points <= 0:
+                                jump end_of_sunscreen_intro
+                            else:
+                                jump put_on_sunscreen_front
+                        "Feet" if 'feet' not in i_s['pos_front']:
+                            hide fp_pm_fs_after_intro_talk_fs_front_shoulders_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_legs_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
+                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                            show fp_pm_fs_after_intro_talk_fs_front_feet_closeup
+                            with Dissolve(.25)
+                            if 'feet' not in i_s['pos_front']:
+                                $ total_fs_sunscreen_points += 1
+                            if all(elem in i_s['pos_front'] for elem in ['shoulders','legs']):
+                                "You carefully massage the lotion into the top of her feet"
+                            else:
+                                fs "Hey, that tickles!"
+                            $ i_s['pos_front'].append('feet')
+                            if all(elem in i_s['pos_front'] for elem in ['shoulders','stomach','legs','feet','breast']):
+                                jump end_of_sunscreen_intro
+                            elif -10 > total_fs_sunscreen_points <= 0:
+                                jump end_of_sunscreen_intro
+                            else:
+                                jump put_on_sunscreen_front
+                        "Breasts" if 'breast' not in i_s['pos_front']:
+                            if all(elem in i_s['pos_front'] for elem in ['shoulders','stomach','legs','feet']):
+                                hide fp_pm_fs_after_intro_talk_fs_front_shoulders_closeup
+                                hide fp_pm_fs_after_intro_talk_fs_front_legs_closeup
+                                hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
+                                hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
+                                hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
+                                hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                                hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
+                                hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
+                                hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
+                                hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                                show fp_pm_fs_after_intro_talk_fs_front_breast_closeup
+                                with Dissolve(.25)
+                            if not i_s['pos_front']:
+                                $ total_fs_sunscreen_points = -10
+                                fs "HEY! Don't go grabbing my boobs!"
+                            elif all(elem in i_s['pos_front'] for elem in ['shoulders','stomach','legs','feet']):
+                                menu:
+                                    "Ask her to take off her top":
+                                        if total_fs_sunscreen_points >= 10:
+                                            $ total_fs_sunscreen_points += 1
+                                            fs "... okay... {i}She's blushing... that's kinda cute{/i}"
+                                            hide fp_pm_fs_after_intro_talk_fs_front_shoulders_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_legs_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                                            show fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan at vertical_pan_from_bottom
+                                            with Dissolve(.25)
+                                            $ renpy.pause(4)
+                                            hide fp_pm_fs_after_intro_talk_fs_front_shoulders_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_legs_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                                            show fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
+                                            with Dissolve(.25)
+                                            fp "Wow! You got beautiful boobs, [fsName.informal]!"
+                                            hide fp_pm_fs_after_intro_talk_fs_front_shoulders_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_legs_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                                            show fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
+                                            with Dissolve(.25)
+                                            fs "Thanks... now... sunscreen?"
+                                            fp "Oh, yeah, sorry!"
+                                            show fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_boobs
+                                            with Dissolve(.25)
+                                            "You start rubbing the sunscreen on her breasts"
+                                            fs "That... feels... nice {i}She moans under her breath, trying to keep it inaudible... and failing{/i}"
+                                            "You finish rubbing her boobs, and just sit there for a little while..."
+                                            fs "If you're done, you can move, you know..."
+                                            fp blushing "Yeah... uhm... trying to not embarrass myself here!"
+                                            "[fs] looks down, turning a shade of red again"
+                                            fs "Oh!"
+                                            fp "Yeah... but, fine, I'm gonna get off you now. And... go someplace else!"
+                                        else:
+                                            fs "No! You're not getting to see my boobs, you perv!"
+                                            $ total_fs_sunscreen_points -5
+                                        jump end_of_sunscreen_intro
+                                    "Don't ask about her top":
+                                        if total_fs_sunscreen_points >= 10:
+                                            hide fp_pm_fs_after_intro_talk_fs_front_shoulders_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_legs_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
+                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                                            show fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                                            with Dissolve(.25)
+                                            "She seems a bit... disappointed. Wonder what that was all about?"
+                                        else:
+                                            "You finish applying the sunscreen"
+                                        jump end_of_sunscreen_intro
+                            else:
+                                "Well, that was that, then"
+                            $ i_s['pos_front'].append('breast')
+                            if all(elem in i_s['pos_front'] for elem in ['shoulders','stomach','legs','feet','breast']):
+                                jump end_of_sunscreen_intro
+                            elif -10 > total_fs_sunscreen_points <= 0:
+                                jump end_of_sunscreen_intro
+                            else:
+                                jump put_on_sunscreen_front
+
+                label end_of_sunscreen_intro:
                 $ fse = True
-                hide jules with dissolve
-                $ statschangenotify("fs_rel",3,True)
+                if total_fs_sunscreen_points > 0:
+                    $ statschangenotify("fs_rel",total_fs_sunscreen_points,True)
+                else:
+                    $ statschangenotify("fs_rel",3,True)
                 $ firstday_talk = False
                 $ firstday_after_talk = True
                 $ addtime(1,False,True,sec_call='after_talk_events')
@@ -194,16 +593,16 @@ label fs_talk(fst_called=False):
                             $ fdtfs_after = False
                             if int(current_time[:2]) in night:
                                 call end_of_day(True) from _call_end_of_day_1
-            elif day_week <= 4:
-                if int(current_time[:2]) > 17:
-                    $ settime(22,False,True,'fs_where')
-                    label fs_where(fsw_called=False):
-                        if fsw_called:
-                            fp "{i}Hmm... where did my damn [fsName.role] go?{/i}"
-                            fp "{i}Oh, well. I'll find her tomorrow. Time for bed{/i}"
-                    call change_loc('fp_bedroom_fp') from _call_change_loc
-                else:
-                    call change_loc(current_location) from _call_change_loc_1
-            else:
-                $ settime(22,False,True,'fs_where')
+            # elif day_week <= 4:
+            #     if int(current_time[:2]) > 17:
+            #         $ settime(22,False,True,'fs_where')
+            #         label fs_where(fsw_called=False):
+            #             if fsw_called:
+            #                 fp "{i}Hmm... where did my damn [fsName.role] go?{/i}"
+            #                 fp "{i}Oh, well. I'll find her tomorrow. Time for bed{/i}"
+            #         call change_loc('fp_bedroom_fp') from _call_change_loc
+            #     else:
+            #         call change_loc(current_location) from _call_change_loc_1
+            # else:
+            #     $ settime(22,False,True,'fs_where')
 

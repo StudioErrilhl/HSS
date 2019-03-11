@@ -12,17 +12,17 @@ label nr_talk(event=False,callrand=False):
         nr "[text]"
         $ hacker_4 = True
         $ nre = True
-        call change_loc(current_location) from _call_change_loc_27
+        call change_loc(current_location,prev_loc=current_location) from _call_change_loc_27
 
     if event == 'nr_first_visit':
         if current_location != 'garage':
-            call change_loc('fp_garage',sec_call='nr_first_talk') from _call_change_loc_28
+            call change_loc('fp_garage',sec_call='nr_first_talk',prev_loc=current_location) from _call_change_loc_28
         label nr_first_talk(callcheck=False):
             nr "Hey, [fp]!"
             fp "Hey!"
             fp "{i}You're trying to figure out how to tell [nr] about the hacker, or whatever it is going on at school, preferably without dragging [fsName.yourformal] into it...{/i}"
             nr "Hey, how's [fsName.Name] doing?"
-            fp "{i}Oh, right... [nr] did have... or maybe the right phrasing is \"have\" a thing for [fsName.Name]{/i}"
+            fp "{i}Oh, right... [nr] had... or maybe the right phrasing is \"has\" a thing for [fsName.Name]{/i}"
             fp "What's it to you?{i}You have a slight mocking tone that you don't really mean to use, but still...{/i}"
             nr blushing "Oh, well... uhm... I was just wondering! Nevermind..."
             "[nr] is looking like he wouldn't mind sinking through the floor right now"
@@ -48,25 +48,22 @@ label nr_talk(event=False,callrand=False):
             fp "Yes yes, I know that. Just... didn't expect you to know a girl who could hack. Didn't expect you to know {b}any{/b} girls, really"
             nr "Haha"
             fp "Kidding, but... why won't she help?"
-            nr "Well, I said I know her, but... we're not really talking"
-            fp "What did you do?"
-            nr "Why is your first goto \"What did you do?\""
-            fp "Because I know you. I've known you for nearly 10 years now. Chances are, you're the one that fucked up"
-            nr "... yeah, I did"
-            fp "{b}What{/b} exactly did you do?"
-            nr "I... took her best friend on a date... and sort of... hooked up with her"
-            fp "... okay... that explains that..."
-            fp "Damn, you're an asshole sometimes"
-            nr "No shit, Sherlock!"
-            fp "Wait... are you talking about [nc]?"
+            nr "Well..."
+            fp "Oh... no! You can't be serioius?"
+            nr "I know you..."
+            fp "HELL NO!"
+            nr "She knows her shit, man!"
+            fp "Yes. I know that. I also know she's a raging psycho!"
+            nr "Not... really. My mom had her tested, you know!"
+            fp "Okay... so... you're suggesting your sister?"
             nr "Got it in one!"
-            fp "Oh, you dumb fuck"
-            nr "I know that!"
-            fp "Do you still have her number, email... address? Anything?"
+            fp "Crap... I really didn't want to deal with [nc]... And I'm guessing you're not volunteering, huh?"
+            nr "Oh, no, this is on you"
+            fp "Do you at least have her number, email... address? Anything?"
             nr "Yeah... I think so. At least something she used last year or so"
-            fp "Text it to me, okay? Even though she doesn't wanna talk to you, she might still talk to me"
-            nr "Sure. Wouldn't count on it, though... you know me, hence you're by extension the enemy"
-            fp "Great..."
+            fp "Text it to me, okay? She might be what I need... even though I would prefer it if she wasn't"
+            nr "Sure. Wouldn't count on her being happy, though... she's not very happy about her family, at the moment"
+            fp "Well, I'm not family, so I should be safe, then!"
             $ text = "You turn your conversation to the bike standing in the middle of the garage, in pieces. After spending a few hours working on the bike, you decide to {0}".format('have a few beers to end the night' if backpack.has_item(beer_item) else 'call it a night')
             "[text]"
             if "You need to wait for "+nr.name+" to send you "+nc.name+"'s info" not in hints+read_hints+disabled_hints:
@@ -74,7 +71,7 @@ label nr_talk(event=False,callrand=False):
             $ hacker_4 = False
             $ set_message('nr',nr,"The number for "+nc.name+" is "+nc_number+"")
             $ nre = True
-            call change_loc(current_location,loctrans=True) from _call_change_loc_29
+            call change_loc(current_location,loctrans=True,prev_loc=current_location) from _call_change_loc_29
 
     if event == 'nr_after_nc':
         if nc_after_ft:
@@ -90,8 +87,8 @@ label nr_talk(event=False,callrand=False):
             fp "So, any ideas how I can make her actually talk to me?"
             nr "..."
             fp "Nothing?"
-            nr "Well... I do know where she lives... but that is a little bit beyond creepy, just showing up..."
-            nr "Oh, wait. She hangs out at [icafe]! Or, at least she used to"
+            nr "Well... I was gonna suggest you could try to talk to her at home, but... max creepy"
+            nr "But she does hang out at [icafe]! Or, at least she used to"
             fp "[icafe]?"
             nr "Yeah, you know, that Internet café, slash dork-haven downtown?"
             fp "Oh, right, yeah I know where it is"
@@ -105,4 +102,4 @@ label nr_talk(event=False,callrand=False):
             $ calling = duringcall = False
             fp "No answer. I'll try him again later"
         $ nre = True
-        call change_loc(current_location) from _call_change_loc_56
+        call change_loc(current_location,prev_loc=current_location) from _call_change_loc_56

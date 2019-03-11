@@ -22,7 +22,7 @@ label night_events():
                 else:
                     $ current_month_day += 1
                     $ day_ahead = True
-            call change_loc('fp_bedroom_fp')
+            call change_loc('fp_bedroom_fp',prev_loc=current_location)
             "This ends the day"
             call sleep_the_night(True) from _call_sleep_the_night
 
@@ -34,13 +34,13 @@ label night_events():
                     "Sleep the day away":
                         call sleeping_day_away(True) from _call_sleeping_day_away
                     "Stay up":
-                        call change_loc('fp_bedroom_fp')
+                        call change_loc('fp_bedroom_fp',prev_loc=current_location)
             else:
                 menu:
                     "Go to sleep":
                         call sleeping(True) from _call_sleeping
                     "Stay up a bit longer":
-                        call change_loc('fp_bedroom_fp')
+                        call change_loc('fp_bedroom_fp',prev_loc=current_location)
 
     label sleeping(sle_called=False):
         if sle_called:
@@ -134,5 +134,5 @@ label night_events():
             $ sld_called = False
             $ settime(22,False)
             # call fp_bedroom_fp(True) from _call_fp_bedroom_fp_2
-            call change_loc('fp_bedroom_fp')
+            call change_loc('fp_bedroom_fp',prev_loc=current_location)
 

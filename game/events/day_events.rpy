@@ -6,7 +6,7 @@ label day_events():
             label sat_what_to_do():
                 if not mc_f:
                     call fp_garage_scene from _call_fp_garage_scene_2
-                    call change_loc('fp_garage') from _call_change_loc_42
+                    call change_loc('fp_garage',prev_loc=current_location) from _call_change_loc_42
                     call w_mc(True) from _call_w_mc_1
                 else:
                     fp "Ah, it's a beautiful day. Maybe I should go to the beach...?"
@@ -18,11 +18,11 @@ label day_events():
             label sat_beach():
                 "this is a beach scene on saturday"
                 call beach_scene from _call_beach_scene
-                call change_loc('beach') from _call_change_loc_43
+                call change_loc('beach',prev_loc=current_location) from _call_change_loc_43
                 $ renpy.pause()
             label sat_end():
                 $ sat_event = False
-                call change_loc('fp_livingroom') from _call_change_loc_44
+                call change_loc('fp_livingroom',prev_loc=current_location) from _call_change_loc_44
             $ sat_event = False
 
     label weekend_sun(wsun_called=False):
@@ -49,7 +49,7 @@ label day_events():
                             $ statschangenotify('fp_alignment',1)
                 $ sun_event = False
                 hide anne
-                call change_loc(current_location) from _call_change_loc_70
+                call change_loc(current_location,prev_loc=current_location) from _call_change_loc_70
 
     label dinner_events(de_called=False):
         if de_called:
@@ -98,7 +98,7 @@ label day_events():
                         $ statschangenotify('fm_rel',1)
                         # need to add a dinner image for both events here
                     $ addtime(1)
-                call change_loc('fp_kitchen',loctrans=True) from _call_change_loc_45
+                call change_loc('fp_kitchen',loctrans=True,prev_loc=current_location) from _call_change_loc_45
 
     label evening_home(evh_called=False):
         if evh_called:
@@ -110,31 +110,31 @@ label day_events():
                 else:
                     $ current_time = "15:30"
                 if n == 1:
-                    call change_loc('fp_outside',sec_call="harsh_homecoming") from _call_change_loc_46
+                    call change_loc('fp_outside',sec_call="harsh_homecoming",prev_loc=current_location) from _call_change_loc_46
                     label harsh_homecoming(True):
                         $ text = home_events[n][0]
                         "[text]"
                         $ addtime(2)
                         "After waiting for ages, [fmName.yourformal] finally comes home and let you into the house"
-                        call change_loc('fp_entrance') from _call_change_loc_71
+                        call change_loc('fp_entrance',prev_loc=current_location) from _call_change_loc_71
                 else:
                     call fp_livingroom_scene
                     if renpy.random.random() > .5 and not hacker_3:
                         if  current_month >= 5 and current_month <= 8 and not detention_served:
-                            call change_loc('fp_outside',sec_call='lounge_pool') from _call_change_loc_48
+                            call change_loc('fp_outside',sec_call='lounge_pool',prev_loc=current_location) from _call_change_loc_48
                             label lounge_pool(True):
                                 "You decide to just lounge by the pool for a while, trying to stand the heat"
                         elif int(current_time[:2]) <= 19:
                             "You decide that you can spend a few more hours on your bike today"
-                            call change_loc('fp_garage',sec_call='after_evening_bike_repair') from _call_change_loc_49
-                            label after_evening_bike_repair(True):
+                            call change_loc('fp_garage',sec_call='fp_garage_fb_after_evening',prev_loc=current_location) from _call_change_loc_49
+                            label fp_garage_fb_after_evening(True):
                                 "After putting in a few more hours on the bike, you decide that the rest of the evening should be spent doing less arduous tasks, and head inside to watch some TV, maybe play some games"
-                                call change_loc('fp_livingroom',sec_call='tv_games_evening') from _call_change_loc_50
+                                call change_loc('fp_livingroom',sec_call='tv_games_evening',prev_loc=current_location) from _call_change_loc_50
                         elif int(current_time[:2]) > 19:
                             "You're feeling a bit tired, after school, and working on your bike, so you decide taking a shower will be a nice relief right now"
-                            call change_loc('fp_ufb',sec_call='taking_shower_evening') from _call_change_loc_51
+                            call change_loc('fp_ufb',sec_call='taking_shower_evening',prev_loc=current_location) from _call_change_loc_51
                         else:
-                            call change_loc('fp_livingroom',sec_call='lounge_livingroom') from _call_change_loc_52
+                            call change_loc('fp_livingroom',sec_call='lounge_livingroom',prev_loc=current_location) from _call_change_loc_52
                             label lounge_livingroom(True):
                                 "You decide to just slouch on the couch for a bit, chilling in front of the TV"
                     elif not detention_served and hacker_3 and call_nr:
@@ -148,7 +148,7 @@ label day_events():
                 if home_events[n][1] and fs_mad == 1:
                     call fs_talk(True) from _call_fs_talk_4
 
-                call change_loc('fp_livingroom') from _call_change_loc_47
+                call change_loc('fp_livingroom',prev_loc=current_location) from _call_change_loc_47
 
             # if mc_f and renpy.random.random() > .65 and current_time[:2] < 17:
             "You decide to take a ride"
@@ -160,7 +160,7 @@ label day_events():
             $ conditions.addcondition("Go to the marina","boat_at_marina")
             menu:
                 "Go to the beach":
-                    call change_loc('beach') from _call_change_loc_75
+                    call change_loc('beach',prev_loc=current_location) from _call_change_loc_75
                 "Ride to the next town over":
                     jump next_town_ride
                 "Go to the cabin":
@@ -176,7 +176,7 @@ label day_events():
             $ tse_called = False
             "You decide to take a shower after a long day"
             $ fpshower = True
-            call change_loc('bathroom_loc') from _call_change_loc_53
+            call change_loc('bathroom_loc',prev_loc=current_location) from _call_change_loc_53
 
     # label talk_fs(tfs_called=False):
     #     if tfs_called or tfs_cfs:
@@ -240,7 +240,7 @@ label day_events():
     label no_answer():
         $ calling = duringcall = False
         fp "No answer - I guess I'll try again later"
-        call change_loc(current_location) from _call_change_loc_57
+        call change_loc(current_location,prev_loc=current_location) from _call_change_loc_57
 
     label fp_kitchen_spill_event(kse_called=False):
         if kse_called:
@@ -275,7 +275,7 @@ label day_events():
             "You're beet red, but sit down, waiting for her to pour you some"
             fp "Yeah, thanks [fmName.informal]"
             fm "No problem, [fp]"
-            call change_loc(current_location) from _call_change_loc_16
+            call change_loc(current_location,prev_loc=current_location) from _call_change_loc_16
 
     label evening_event_label(ee_called=False):
         if ee_called:
@@ -320,4 +320,4 @@ label day_events():
                         "You're feeling kinda exhausted, and decide to just go to bed":
                             call end_of_day(True) from _call_end_of_day_9
                         "You decide to see if there is anything else you can do today":
-                            call change_loc(current_location) from _call_change_loc_77
+                            call change_loc(current_location,prev_loc=current_location) from _call_change_loc_77

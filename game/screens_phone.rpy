@@ -2,7 +2,7 @@ screen phone():
     # modal True
     add Solid("#000000DF")
     tag menu
-    zorder 999
+    zorder 800
     default x = 500
     default y = 400
     python:
@@ -59,22 +59,24 @@ screen phone():
                 if show_icons:
                     imagebutton auto "gui/phone_button_text_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_text_screen')] at ModZoom(.9):
                         tooltip "Read your messages"
-                        xoffset 4
+                        # xoffset 4
                     imagebutton auto "gui/phone_button_alarm_clock_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_alarm')] at ModZoom(.9):
                         tooltip "Set the alarm"
                         # xoffset -48
-                        xoffset 4
+                        # xoffset 4
                     imagebutton auto "gui/phone_button_playstore_%s.webp" focus_mask True action [SetVariable('show_icons',False),Function(randomize_appstorelists),Show('phone_playstore')] at ModZoom(.9):
                         tooltip "Go to the PlayStore"
                         # xoffset -96
-                        xoffset 4
+                        # xoffset 4
+                    imagebutton auto "gui/phone_button_droneflight_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('drone_flight')] at ModZoom(.9):
+                        tooltip "Fly your drone"
+                        # xoffset 4
                     if installedFF:
                         imagebutton auto "gui/phone_button_friendfinder_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_friendfinder')] at ModZoom(.9):
                             tooltip "Open FriendFinder"
-                            xsize 70
+                            # xsize 70
                     else:
                         imagebutton idle "gui/phone_button_empty_idle.webp" focus_mask True action NullAction()
-                    imagebutton idle "gui/phone_button_empty_idle.webp" focus_mask True action NullAction()
 
         hbox:
             if battery_text != 0:
@@ -516,19 +518,19 @@ screen phone_text_screen():
                                 $ bg_color_text = '#ccc'
                             if not k == 'fp':
                                 if k == 'fm':
-                                    $ charimg = "images/characters/anne/anne_idle.webp"
-                                    $ charimg_hover = "images/characters/anne/anne_hover.webp"
+                                    $ charimg = "images/characters/fm/anne_idle.webp"
+                                    $ charimg_hover = "images/characters/fm/anne_hover.webp"
                                 elif k == 'fs':
-                                    $ charimg = "images/characters/juliette/juliette_idle.webp"
-                                    $ charimg_hover = "images/characters/juliette/juliette_hover.webp"
+                                    $ charimg = "images/characters/fs/juliette_idle.webp"
+                                    $ charimg_hover = "images/characters/fs/juliette_hover.webp"
                                 elif k == 'nk':
-                                    $ charimg = "images/characters/karen/karen_idle.webp"
-                                    $ charimg_hover = "images/characters/karen/karen_hover.webp"
+                                    $ charimg = "images/characters/nk/karen_idle.webp"
+                                    $ charimg_hover = "images/characters/nk/karen_hover.webp"
                                 elif k == 'nr':
-                                    $ charimg = "images/characters/ron/ron_idle.webp"
-                                    $ charimg_hover = "images/characters/ron/ron_hover.webp"
+                                    $ charimg = "images/characters/nr/ron_idle.webp"
+                                    $ charimg_hover = "images/characters/nr/ron_hover.webp"
                                 elif k == 'nc':
-                                    $ charimg = "images/characters/catherina/catherina_idle.webp"
+                                    $ charimg = "images/characters/nc/catherina_idle.webp"
                                     $ charimg_hover = "images/characters/chatherina/catherina_hover.webp"
                                 else:
                                     $ charimg = "gui/question_mark_idle.webp"
@@ -641,19 +643,19 @@ screen show_text_msg(compchar=False,char=False):
                     for k,b,v in messages+read_messages:
                         if k == compchar:
                             if k == 'fm':
-                                $ charimg = "images/characters/anne/anne_idle.webp"
-                                $ charimg_hover = "images/characters/anne/anne_hover.webp"
+                                $ charimg = "images/characters/fm/anne_idle.webp"
+                                $ charimg_hover = "images/characters/fm/anne_hover.webp"
                             elif k == 'fs':
-                                $ charimg = "images/characters/juliette/juliette_idle.webp"
-                                $ charimg_hover = "images/characters/juliette/juliette_hover.webp"
+                                $ charimg = "images/characters/fs/juliette_idle.webp"
+                                $ charimg_hover = "images/characters/fs/juliette_hover.webp"
                             elif k == 'nk':
-                                $ charimg = "images/characters/karen/karen_idle.webp"
-                                $ charimg_hover = "images/characters/karen/karen_hover.webp"
+                                $ charimg = "images/characters/nk/karen_idle.webp"
+                                $ charimg_hover = "images/characters/nk/karen_hover.webp"
                             elif k == 'nr':
-                                $ charimg = "images/characters/ron/ron_idle.webp"
-                                $ charimg_hover = "images/characters/ron/ron_hover.webp"
+                                $ charimg = "images/characters/nr/ron_idle.webp"
+                                $ charimg_hover = "images/characters/nr/ron_hover.webp"
                             elif k == 'nc':
-                                $ charimg = "images/characters/catherina/catherina_idle.webp"
+                                $ charimg = "images/characters/nc/catherina_idle.webp"
                                 $ charimg_hover = "images/characters/chatherina/catherina_hover.webp"
                             else:
                                 $ charimg = "gui/question_mark_idle.webp"
@@ -735,20 +737,20 @@ screen phone_call_screen():
                             $ bg_color_contacts = '#ccc'
                         if not i[1] in not_in_contacts:
                             if i[1] == 'fm':
-                                $ charimg = "images/characters/anne/anne_idle.webp"
-                                $ charimg_hover = "images/characters/anne/anne_hover.webp"
+                                $ charimg = "images/characters/fm/anne_idle.webp"
+                                $ charimg_hover = "images/characters/fm/anne_hover.webp"
                             elif i[1] == 'fs':
-                                $ charimg = "images/characters/juliette/juliette_idle.webp"
-                                $ charimg_hover = "images/characters/juliette/juliette_hover.webp"
+                                $ charimg = "images/characters/fs/juliette_idle.webp"
+                                $ charimg_hover = "images/characters/fs/juliette_hover.webp"
                             elif i[1] == 'nk':
-                                $ charimg = "images/characters/karen/karen_idle.webp"
-                                $ charimg_hover = "images/characters/karen/karen_hover.webp"
+                                $ charimg = "images/characters/nk/karen_idle.webp"
+                                $ charimg_hover = "images/characters/nk/karen_hover.webp"
                             elif i[1] == 'nr':
-                                $ charimg = "images/characters/ron/ron_idle.webp"
-                                $ charimg_hover = "images/characters/ron/ron_hover.webp"
+                                $ charimg = "images/characters/nr/ron_idle.webp"
+                                $ charimg_hover = "images/characters/nr/ron_hover.webp"
                             elif i[1] == 'nc':
-                                $ charimg = "images/characters/catherina/catherina_idle.webp"
-                                $ charimg_hover = "images/characters/catherina/catherina_hover.webp"
+                                $ charimg = "images/characters/nc/catherina_idle.webp"
+                                $ charimg_hover = "images/characters/nc/catherina_hover.webp"
                             else:
                                 $ charimg = "gui/question_mark_idle.webp"
                                 $ charimg_hover = "gui/question_mark_hover.webp"
@@ -838,12 +840,12 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
         $ get_char = getattr(store,char)
         if char == 'fm':
             # $ char_name_lowered = fmName.name.lower()
-            $ phone_img = "images/characters/"+fmName.name.lower()+"/"+fmName.name.lower()+"_phone_image.webp"
+            $ phone_img = "images/characters/fm/"+fmName.name.lower()+"_phone_image.webp"
         elif char == 'fs':
-            $ phone_img = "images/characters/"+fsName.name.lower()+"/"+fsName.name.lower()+"_phone_image.webp"
+            $ phone_img = "images/characters/fs/"+fsName.name.lower()+"_phone_image.webp"
         else:
             # $ char_name_lowered = get_char_name.name.lower().replace(' ','_')
-            $ phone_img = "images/characters/"+get_char.name.lower()+"/"+get_char.name.lower()+"_phone_image.webp"
+            $ phone_img = "images/characters/"+str(char)+"/"+get_char.name.lower().replace(' ','_')+"_phone_image.webp"
         vbox:
             ysize 500
             yalign 0.0
@@ -1294,6 +1296,45 @@ screen phone_alarm(pa_chosen=False):
                 text_size 18
                 xalign .5
                 action [Function(renpy.notify,"Alarm is turned off"),SetVariable('alarmclock_time',"00:00"),SetVariable('alarmhour',0),SetVariable('alarmminute',0),SetVariable('alarmclock_icon',False),SetVariable('alarmclock',False)]
+
+screen drone_flight():
+    tag phonescreen
+    zorder 800
+    default x = 500
+    default y = 400
+    python:
+        x, y = renpy.get_mouse_pos()
+        xval = 1.0 if x > config.screen_width/2 else .0
+        yval = 1.0 if y > config.screen_height/2 else .0
+    $ keyclose = True
+    frame:
+        background None
+        xpadding 0
+        top_padding 40
+        bottom_padding 10
+        xalign .5
+        yalign .44
+        maximum 370,686
+        vbox:
+            xalign 1.0
+            yalign 1.0
+            imagebutton auto "gui/df_u_%s.webp" focus_mask True action NullAction()
+            hbox:
+                imagebutton auto "gui/df_l_%s.webp" focus_mask True action NullAction()
+                imagebutton auto "gui/df_r_%s.webp" focus_mask True action NullAction()
+            imagebutton auto "gui/df_d_%s.webp" focus_mask True action NullAction()
+        imagebutton auto "gui/closebutton_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
+
+    use phone_overlay
+    if GetTooltip() is not None:
+        frame:
+            pos(x, y)
+            anchor (xval, yval)
+            text GetTooltip() style "tooltip_hover"
+
+    if keyclose:
+        key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
+
 
 screen custom_confirm(cc_chosen=False):
     tag phonescreen

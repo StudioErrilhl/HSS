@@ -6,13 +6,14 @@ label nk_talk(event=False,callrand=False):
             if int(current_time[:2]) <= 7:
                 nk ahead "Hi [fp]! You wanna ride to school?"
                 if not nk_driving:
-                    fp "Hi [nk]... Didn't know you drove?"
-                    nk ahead "My mom got me this for my birthday. Haven't really driven it much, but it's awesome."
+                    fp "Hi [nk]... What happened to the Beetle?"
+                    nk ahead "My mom got me new wheels for my birthday. It was delivered today!"
                     $ nk_driving = True
                 else:
                     fp "Hi [nk]"
                 if weather == 2:
-                    $ text1 = "Sure! That way I won't be late, not to mention drowning by the time I get there!\n{i}Damn, she saved my scrawny ass. Don't understand why she gets so much flak at school, she's nice...{/i}"
+                    $ text1 = "Sure! That way I won't be late, not to mention drowning by the time I get there!\nAnd I can spend some time with my favorite girl!"
+                    show fp_nk_kiss_inside_car with Dissolve(.25)
                 else:
                     $ text1 = "Sure! Then I won't be late!\n{i}Who cares if [nk] is not one of the popular kids - her offer is nice{/i}"
                     $ text2 = "No thanks! I'll just walk. Don't really wanna trust my life to your driving!\n{i}Don't wanna be caught dead in the same car as [nk]...{/i}"
@@ -62,7 +63,7 @@ label nk_talk(event=False,callrand=False):
                     $ nk_day_date += 6
                 $ renpy.hide_screen('phone')
                 $ call_nk_event = False
-                call change_loc(current_location) from _call_change_loc_78
+                call change_loc(current_location,prev_loc=current_location) from _call_change_loc_78
         elif nktr < .5 and day_week <= 4 and not shitty_morning:
             show karen with dissolve
             nk ahead "Hi [fp]! Wanna walk to school with me?"

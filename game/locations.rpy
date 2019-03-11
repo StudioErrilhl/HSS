@@ -1,14 +1,15 @@
 # location changer
-label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=False,sec_call=False,event=False,showerstat=False):
+label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=False,sec_call=False,prev_loc=False,event=False,showerstat=False):
     if timeadd:
         $ addtime(False, 30)
     if locname:
-        $ locname = locname.replace('_loc','').replace('bad_weather','').replace('light','').replace('windows','').replace('after_shower','').replace('wallet','').replace('empty','').replace('wallart','').replace('sincity','').replace('parkinglot','').replace('peekaboo','').replace('roadtrip','').replace('ferrari','').replace('_',' ').replace('__',' ')
+        $ locname = locname.replace('_loc','').replace('bad_weather','').replace('bw','').replace('light','').replace('windows','').replace('after_shower','').replace('wallet','').replace('empty','').replace('wallart','').replace('sincity','').replace('parkinglot','').replace('peekaboo','').replace('roadtrip','').replace('ferrari','').replace('_',' ').replace('__',' ')
         $ current_location = locname.replace(' ','_')
         if current_location.endswith('_'):
             $ current_location = current_location[:-1]
-        # $ current_location = current_location
-        $ tmpname = locname.replace(' ','_').replace('_bad_weather','').replace('_build','').replace('_finished','').replace('_windows','').replace('_after_shower','').replace('_light','').replace('_loc','').replace('__','_')
+        if prev_loc:
+            $ previous_location = prev_loc
+        $ tmpname = locname.replace(' ','_').replace('_bad_weather','').replace('bw','').replace('_build','').replace('_finished','').replace('_windows','').replace('_after_shower','').replace('_light','').replace('_loc','').replace('__','_')
         if 'scene' not in tmpname:
             if tmpname.endswith('_'):
                 $ tmpname = tmpname[:-1]
@@ -254,20 +255,20 @@ label fp_garage_fb(gar_fb_called=False,trans=False):
     if not fp_garage_ach:
         $ fp_garage_ach = True
         $ update_been_everywhere_achievement()
-    if gar_fb_called or gar_fb_cfs:
-        if carry_backpack:
-            if not backpack.has_item(toolbox_item):
-                $ toolbox_pickup = True
-                $ update_all_the_stuff()
-                if toolbox_added:
-                    $ backpack.add_item(toolbox_item)
-                    $ toolbox_added = False
-        else:
-            $ renpy.notify("You don't have anywhere to carry the toolbox")
-            if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
-                $ renpy.notify("You should try to find something to carry items in")
-                $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
-        call change_loc('fp_garage_fb')
+    # if gar_fb_called or gar_fb_cfs:
+    #     if carry_backpack:
+    #         if not backpack.has_item(toolbox_item):
+    #             $ toolbox_pickup = True
+    #             $ update_all_the_stuff()
+    #             if toolbox_added:
+    #                 $ backpack.add_item(toolbox_item)
+    #                 $ toolbox_added = False
+    #     else:
+    #         $ renpy.notify("You don't have anywhere to carry the toolbox")
+    #         if "You should perhaps try to get something to carry all these things you seem to be able to pick up..." not in hints+read_hints+disabled_hints:
+    #             $ renpy.notify("You should try to find something to carry items in")
+    #             $ set_hint("You should perhaps try to get something to carry all these things you seem to be able to pick up...")
+    call change_loc('fp_garage_fb')
 
 label icafe_loc(ic_called=False,trans=False):
     $ current_location = 'icafe_loc'
@@ -718,7 +719,7 @@ label fp_ufb(uhlbc=False,uhlbcfs=False,trans=False,no_lock=False):
                         if not fp_ufb_ach:
                             $ fp_ufb_ach = True
                             $ update_been_everywhere_achievement()
-                        call change_loc('change_loc('fp_ufb'',loctrans=True) from _call_change_loc_23
+                        call change_loc('fp_ufb',loctrans=True) from _call_change_loc_23
                 "Leave and come back later (good)":
                     $ statschangenotify("aru_good",1,True)
                     $ statschangenotify('fp_alignment',1)

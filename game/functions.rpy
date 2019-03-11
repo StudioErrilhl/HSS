@@ -279,17 +279,17 @@ init 10 python:
                             setattr(store,"bathroom_light",True)
                         else:
                             if sec_call:
-                                renpy.call('change_loc',current_bg,loctrans=True,sec_call=sec_call)
+                                renpy.call('change_loc',current_bg,loctrans=True,sec_call=sec_call,prev_loc=current_location)
                             elif current_bg:
-                                renpy.call("change_loc",current_bg,loctrans=True)
+                                renpy.call("change_loc",current_bg,loctrans=True,prev_loc=current_location)
                             else:
-                                renpy.call('change_loc',current_location,loctrans=True)
+                                renpy.call('change_loc',current_location,loctrans=True,prev_loc=current_location)
                         indices = [i for i, elem in enumerate(current_imgs) if not '_morning' in elem]
                     else:
                         if sec_call:
-                            renpy.call('change_loc',current_location,loctrans=True,sec_call=sec_call)
+                            renpy.call('change_loc',current_location,loctrans=True,sec_call=sec_call,prev_loc=current_location)
                         else:
-                            renpy.call("change_loc",current_location,loctrans=True)
+                            renpy.call("change_loc",current_location,loctrans=True,prev_loc=current_location)
                 elif int(current_time[:2]) >= 6 or int(current_time[:2]) < 22:
                     current_imgs = list(renpy.get_showing_tags())
                     indices = [i for i, elem in enumerate(current_imgs) if '_night' in elem]
@@ -300,15 +300,15 @@ init 10 python:
                         else:
                             current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_build','').replace('_finished','').replace('_with_car','').replace('_scene','').replace('_phone','').replace('_backpack','').replace('_',' ')
                         if sec_call:
-                            renpy.call('change_loc',current_bg,loctrans=True,sec_call=sec_call)
+                            renpy.call('change_loc',current_bg,loctrans=True,sec_call=sec_call,prev_loc=current_location)
                         else:
-                            renpy.call("change_loc",current_bg,loctrans=True)
+                            renpy.call("change_loc",current_bg,loctrans=True,prev_loc=current_location)
                         indices = [i for i, elem in enumerate(current_imgs) if not '_night' in elem]
                     else:
                         if sec_call:
-                            renpy.call('change_loc',current_location,loctrans=True,sec_call=sec_call)
+                            renpy.call('change_loc',current_location,loctrans=True,sec_call=sec_call,prev_loc=current_location)
                         else:
-                            renpy.call("change_loc",current_location,loctrans=True)
+                            renpy.call("change_loc",current_location,loctrans=True,prev_loc=current_location)
 
     def settime(hours=False,minutes=False,update_scene=False,sec_call=False):
         global current_time,wetshower,not_entered
@@ -336,9 +336,9 @@ init 10 python:
                         setattr(store,"bathroom_light",True)
                     else:
                         if sec_call:
-                            renpy.call('change_loc',current_bg,sec_call=sec_call)
+                            renpy.call('change_loc',current_bg,sec_call=sec_call,prev_loc=current_location)
                         else:
-                            renpy.call("change_loc",current_bg)
+                            renpy.call("change_loc",current_bg,prev_loc=current_location)
                     indices = [i for i, elem in enumerate(current_imgs) if not '_morning' in elem]
             elif int(current_time[:2]) >= 6 or int(current_time[:2]) < 22:
                 current_imgs = list(renpy.get_showing_tags())
@@ -350,9 +350,9 @@ init 10 python:
                     else:
                         current_bg = current_imgs[indices[0]].replace('_night','').replace('_glow','').replace('_scene','').replace('_phone','').replace('_',' ')
                     if sec_call:
-                        renpy.call('change_loc',current_bg,sec_call=sec_call)
+                        renpy.call('change_loc',current_bg,sec_call=sec_call,prev_loc=current_location)
                     else:
-                        renpy.call("change_loc",current_bg)
+                        renpy.call("change_loc",current_bg,prev_loc=current_location)
                     indices = [i for i, elem in enumerate(current_imgs) if not '_night' in elem]
 
     def inv_list_fetch():

@@ -209,7 +209,11 @@ style frame:
 
 #     vbox:
 #         for i in items:
-#             textbutton i.caption action i.action
+#             $ badge = i.kwargs.get('badge',None)
+#             textbutton i.caption:
+#                 action i.action
+#                 if badge:
+#                     foreground Transform(badge,xpos=30,yalign=1.0)
 
 
 # ## When this is true, menu captions will be spoken by the narrator. When false,

@@ -36,15 +36,15 @@ init -10 python:
 
     get_max_res = pydisp[0]
 
-    def define_images(characterImageFolder, excludeFirstXFolders=0, flip=True):
-        for path in renpy.list_files():
-            if path.startswith(characterImageFolder + "/"):
-                path_list = path.split("/")
-                path_list[-1] = os.path.splitext(path_list[-1])[0]
-                path_list = tuple(path_list[excludeFirstXFolders:])
-                renpy.image(path_list, path)
-                if flip:
-                    renpy.image(path_list + ("flip", ), im.Flip(path, horizontal=True))
+    # def define_images(characterImageFolder, excludeFirstXFolders=0, flip=True):
+    #     for path in renpy.list_files():
+    #         if path.startswith(characterImageFolder + "/"):
+    #             path_list = path.split("/")
+    #             path_list[-1] = os.path.splitext(path_list[-1])[0]
+    #             path_list = tuple(path_list[excludeFirstXFolders:])
+    #             renpy.image(path_list, path)
+    #             if flip:
+    #                 renpy.image(path_list + ("flip", ), im.Flip(path, horizontal=True))
 
 init -30 python:
     from datetime import time
@@ -65,10 +65,13 @@ if config.developer:
 if not config.developer:
     define config.console = True
 
+# define config.missing_scene = "images/psa_renders.webp"
+
 define config.default_music_volume = .5
 define config.default_sfx_volume = .5
 define config.default_voice_volume = .5
 
+define dynamic_animation_list = {}
 # persistent variables
 default persistent.change_menu = False
 default persistent.first_playthrough = True
@@ -92,6 +95,19 @@ default persistent.skipunseen = False
 default persistent.skipafterchoices = False
 default persistent.skiptransitions = False
 default persistent.seenintro = False
+# persistent kink-variables
+default persistent.prefwetting = False
+default persistent.prefanal = False
+default persistent.preffeet = False
+default persistent.prefmilf = False
+default persistent.prefbdsm = False
+
+#preferences
+default preferences.prefwetting = False
+default preferences.prefanal = False
+default preferences.preffeet = False
+default preferences.prefmilf = False
+default preferences.prefbdsm = False
 
 # character definitions
 define narrator = Character(None, what_italic=True)
@@ -122,13 +138,13 @@ default chars = [[fp,'fp'],[fs,'fs'],[fm,'fm'],[nk,'nk'],[nc,'nc'],[nb,'nb'],[nr
 
 default chardesc = False
 default char_desc = [
-    ["[fp] was born and raised in :::::"],
-    ["[fsName.name] is [fp]s [fsName.formal]"],
-    ["[fmName.name] is [fp]s [fmName.formal]"],
-    ["[nk] is a childhood friend, and neighbour"],
-    ["[nc] was born in Prague, but moved to here when she was only a baby. She goes to highschool... in theory. Basically, what she does is hack the system to make sure her grades are okay, her attendance record is decent, and that she isn't kicked out due to someone checking her records.\n\nMostly, she hangs around at Obuko, where she has her own spot - I suggest you don't try to take that away from her... She knows a lot of shady people, being slightly shady herself, and if you need something fixed (or someone, for that matter), she can probably make that happen. For a fee.\n\nShe's got a goth look to her, although she's not that into the whole depressed, \"the world is horrible\" view. She mostly just likes the look, and that it usually makes people cross the street when she comes walking. Easy way to avoid most humans can't be that bad!"],
+    ["This is you. You're a ruggedly handsome young man, and that's about what you know, for now"],
+    ["[fsName.name] is [fp]s [fsName.formal], and is living at the other end of the mezzanine. She's hot, definitely so, and (from what you've become familiar with, due to recent events), a rather horny creature"],
+    ["[fmName.name] is [fp]s [fmName.formal], and has a bedroom on the ground floor. She's what you'd definitely call a MILF, and does seem relatively relaxed about skimpy clothing and the occassional slip-up when it comes to modesty..."],
+    ["[nk] is your age, and you've been dating / hooking up / been a couple for a year or so, from a few months after you moved here.\n\nShe's cute, whimsy, and kinda naive about the world and what goes on in it. She's also quite petite, and more often than not dresses down, instead of flaunting her goods. Not exactly your type, but you got to know her, and she {i}is{/i} very nice."],
+    ["[nc] was born in Prague, but moved here with her mom and brother when she was only a baby. She is supposed to go to highschool... Basically, what she does is hack the system to make sure her grades are okay, her attendance record is decent, and that she isn't kicked out due to someone checking her records.\n\nMostly, she hangs around at [icafe], where she has her own spot - I suggest you don't try to take that away from her... She knows a lot of shady people, and if you need something fixed (or someone, for that matter), she can probably make that happen. For a fee.\n\nShe's got a goth look to her, although she's not that into the whole depressed, \"the world is horrible\" view. She mostly just likes the look, and that it usually makes people cross the street when she comes walking. Easy way to avoid most humans can't be that bad!\n\nAnd her brother... is [nr]"],
     ["[nb] is..."],
-    ["[nr] is a [fp]s best friend since childhood"],
+    ["[nr] is [fp]'s best friend. You've been friends since about 1 day after you moved here, due to... let's say some \"questionable choices\" you made... He's also [nc]'s brother"],
     ["[sn] is..."],
     ["[se] is..."],
     ["[sp] is..."],
@@ -177,7 +193,7 @@ default lil_cor = 0
 
 #fm
 default fm_dom = 0
-default fm_rel = 10
+default fm_rel = 20
 default fm_aro = 0
 default fm_cor = 0
 default fm_dom_max = 15
@@ -195,7 +211,7 @@ default fm_seen = False
 
 #fs
 default fs_dom = 0
-default fs_rel = 7.5
+default fs_rel = 15
 default fs_aro = 0
 default fs_cor = 0
 default fs_dom_max = 15
@@ -212,9 +228,9 @@ default fse = False
 
 #nk
 default nk_mad = False
-default nk_dom = 0
-default nk_rel = 4
-default nk_aro = 0
+default nk_dom = 3
+default nk_rel = 20
+default nk_aro = 4
 default nk_cor = 0
 default nk_dom_max = 15
 default nk_rel_max = 50
@@ -272,7 +288,7 @@ default nb_lvl = 0
 default nbe = False
 
 #nr
-default nr_rel = 0
+default nr_rel = 10
 default nr_lvl = 0
 default nre = False
 
@@ -339,13 +355,43 @@ elif (total_pussy >= total_bj >= total_anal) or (total_pussy >= total_anal >= to
 else:
     $ fp_sex_pref = "Anal"
 
+# sunscreen
+default i_s = {
+    'pos_back':[],
+    'pos_front':[]
+}
+# default pos_back = {
+#     'arms':False,
+#     'back':False,
+#     'butt':False,
+#     'butt_2':False,
+#     'feet':False,
+#     'legs':False,
+#     'shoulders':False
+#     }
+# default pos_back_arms = False
+# default pos_back_back = False
+# default pos_back_butt = False
+# default pos_back_butt_2 = False
+# default pos_back_feet = False
+# default pos_back_legs = False
+# default pos_back_shoulders = False
+# default pos_front_arms = False
+# default pos_front_breasts = False
+# default pos_front_feet = False
+# default pos_front_legs = False
+# default pos_front_shoulders = False
+# default pos_front_stomach = False
+
+default total_fs_sunscreen_points = 0
+
 # environment
 default fpmc_r = False
 default hide_exit_buttons = False
 default early_morning_we = False #check this to see if needed
 default overslept = False
 default overslept_time = False
-default talk_later = False #this should probably be renamed to fs_talk_later
+# default talk_later = False #this should probably be renamed to fs_talk_later
 default skip_breakfast = False
 default late_oh_shit = False
 default detention_served = False
@@ -677,7 +723,7 @@ default home_events = [
 
 # default text_msg_received = []
 
-default not_in_contacts = ['fp','nc']
+default not_in_contacts = ['fp','nc','lil','aru']
 
 default item_weights = {'beer':2,'carkeys':.2,'fsp_red':.1,'fsp_hot_pink':.1,'fsp_black':.1,'fsp_yellow':.1,'fsp_light_blue':.1,'gin':1,'phone':.3,'princessplug':.4,'roses':.5,'schoolbooks':5,'small_keys':.2,'toolbox':10,'vodka':1,'wallet':.5,'whiskey':1,'wine':1}
 
@@ -742,10 +788,10 @@ default mc_p = 0
 default mc_f = False # true / false status on whether the bike is finished or not
 default count = 0
 default maxcount = 2
-default end_bike_repair = False
+default end_fp_fb = False
 default sc = 0
 default fb_steplist_selected = 0
-default fb_steplist = [0,15,30,45,60,75,85,95,105,115,125,135,140,149,150]
+default fb_steplist = [0,15,30,45,60,75,85,95,105,115,125,135,140,150]
 
 # date and time
 default first_day = True
@@ -775,3 +821,4 @@ default showStats = False
 default setstate = False
 default end_game = False
 default current_location = 'fp_bedroom_fp'
+default previous_location = 'fp_bedroom_fp'

@@ -27,9 +27,9 @@ label nc_talk(event=False,callrand=False):
                         $ statschangenotify('fp_alignment',1)
                 fp "{i}Okay... not the best start. Maybe I can figure out a way to get her to talk to me, at least...{/i}"
                 $ nc_after_ft = True
-                if "You need to figure out a way to get "+nc.name+" to talk to you. Perhaps talk to "+nr.name+" again, see if he knows anything else that might help" not in hints+read_hints+disabled_hints:
+                if "You need to figure out a way to get "+nc.name+" to talk to you. Perhaps talk to "+nr.name+" again, see if he can give you a few pointers" not in hints+read_hints+disabled_hints:
                     $ renpy.notify("You need to find a way to get "+nc.name+" to talk to you")
-                    $ set_hint("You need to figure out a way to get "+nc.name+" to talk to you. Perhaps talk to "+nr.name+" again, see if he knows anything else that might help")
+                    $ set_hint("You need to figure out a way to get "+nc.name+" to talk to you. Perhaps talk to "+nr.name+" again, see if he can give you a few pointers")
             else:
                 $ calling = duringcall = False
                 if nc_after_ft:
@@ -37,7 +37,7 @@ label nc_talk(event=False,callrand=False):
                 else:
                     fp "No answer. I guess I'll have to try again later"
             $ nce = True
-        call change_loc(current_location) from _call_change_loc_25
+        call change_loc(current_location,prev_loc=current_location) from _call_change_loc_25
 
     if event == 'icafe_visit':
         $ settime(20,00)
@@ -72,7 +72,7 @@ label nc_talk(event=False,callrand=False):
         else:
             fp "I should call [nr] and see if he knows where I might find [nc]..."
         $ nce = True
-        call change_loc(current_location) from _call_change_loc_55
+        call change_loc(current_location,prev_loc=current_location) from _call_change_loc_55
 
     if event == 'icafe_talk' and not nce:
         $ addtime(False, 30)
@@ -92,9 +92,9 @@ label nc_talk(event=False,callrand=False):
         nc "Slightly. What do you want?"
         fp "Would you believe me if I said I just wanted to see how you were doing?"
         nc "No, I would not"
-        fp "Fine. I'm looking for some help with what I suspect is a hacker-attack on HSS' systems"
-        nc "You... suspect a \"hacker attack\"?!? {i}The mirth in her voice is not really endearing...{/i}"
-        fp "Yeah, I do. I'm willing to pay, of course. Seems like you could use a new computer?"
+        fp "Fine. I need someone with a little bit of knowledge about computer systems and hacking"
+        nc "Do you now. And exactly for what purpose do you need this knowledge? {i}The mirth in her voice is not really endearing...{/i}"
+        fp "That is a matter of some complexity, so it would take a bit of explaining. I'm willing to pay, of course. Seems like you could use a new computer?"
         nc "Hm. How much?"
         fp "How much do you need?"
         nc "For a new laptop?"
@@ -114,7 +114,7 @@ label nc_talk(event=False,callrand=False):
             fp "I can't afford that right now"
             nc "Then get back to me when you can"
             "She gets up, and leave you sitting there, a little taken aback by her straight forwardness and boldness"
-            fp "{i}2 grand. Holy shit... Where the fuck am I gonna get 2 grand?{/i}"
+            fp "{i}2 grand. Holy fuck... Where the fuck am I gonna get 2 grand?{/i}"
             $ parsedjobs = ", ".join(fp_jobs)
             $ set_hint("You can earn money via different methods - currently you can do "+parsedjobs+"")
             $ nc_owed = 2000
@@ -161,20 +161,21 @@ label nc_talk(event=False,callrand=False):
             label after_money_exchange():
                 if not nc_owed:
                     nc "Nice... I should've asked for more"
-                    fp "No, you really shouldn't - I don't mind paying, but I refuse to be taken advantage of!"
-                    nc "{i}She looks at you with a mischevious glint in her eyes{/i}\nDo you now..."
-                    fp "{i}You feel your cheeks turning red...{/i}\nSo... about what I asked you"
-                    nc "Yeah... you think someone hacked the school. So, in your expert opinion, how did this happen?"
+                    fp "No, you really shouldn't - I don't mind paying, but I won't be taken advantage of!"
+                    "She looks at you for a short while, trying to discern your motives, perhaps?"
+                    fp "So... about what I asked you"
+                    nc "Yeah... you think someone hacked the school. So, why do you think that?"
                     fp "{i}This was a bad idea...{/i}"
-                    fp "I'm not an expert. But word from employees at the school is that there are things happening with the school systems that would mean that there is either a hacker somewhere, modifying records, or the system is just so fucked that it messes with records without leaving traces"
-                    nc "Hmm... did it mess with you?"
-                    fp "What? No!"
-                    nc "Then why do you care?"
-                    fp "Because... they messed with [fsName.shortname], okay?"
+                    fp "I don't know computers, or the systems, but word from employees at the school is that there are things happening with the school systems that would mean that there is either a hacker somewhere, modifying records and abusing the system, or the system is just so fucked that it messes with records without leaving traces"
+                    nc "Hmm... did he mess with you?"
+                    fp "What? No! And we're assuming it's a he, are we?"
+                    nc "Yeah, we are. No reason, but most hackers are guys. And if not you, why do you care?"
+                    fp "Because... he messed with [fsName.shortname], okay?"
                     nc "Jules... oh, [fsName.yourformal]"
                     fp "Yeah..."
-                    nc "Hm, okay - noone messes with [fsName.relation]. I can see how that would be a trigger"
-                    nc "What do you need?"
+                    nc "Hm, okay. So you're suddenly her knight in shining armor?"
+                    fp "Uh? Noone messes with [fsName.myformal]"
+                    nc "Fine. What do you want me to do about it?"
                     fp "Well... I would like for you to check out the system. Maybe you can find something, or at least figure out if it's just the system being crappy, or if someone is actually messing with it"
                     nc "I can probably do that... I'm guessing this isn't sanctioned by the school, hm?"
                     fp "Haha. You're funny. The school just wanna sweep this under the rug"
@@ -186,17 +187,17 @@ label nc_talk(event=False,callrand=False):
                     nc "You still owe me $[nc_owed]"
                     fp "I know. I was hoping you could perhaps start, and I will get the rest of the..."
                     nc "No!"
-                    nc "You need my help, not the other way around. You pay me, up front, and I help. Until you pay, no help"
+                    nc "You need my help, not the other way around. You pay me, up front, and I help. Until that happens, no help"
                     fp "Fine..."
                     $ addtime(False,30)
         $ nce = True
 
-        call change_loc(current_location) from _call_change_loc_68
+        call change_loc(current_location,prev_loc=current_location) from _call_change_loc_68
 
     if event == 'icafe_talk_7_days' and not nce:
         fp "{i}Now, where is she...{/i}"
         nc "Hey, [fp]!"
-        "Jumping a bit, you quickly gather your wits about you again..."
+        "She caught you off guard, and you catch yourself jumping a little bit. Maybe she didn't notice"
         fp "Uhm... eh... heyu..."
         "Or not..."
         nc "You scare easily"
@@ -207,7 +208,7 @@ label nc_talk(event=False,callrand=False):
         fp "What you got?"
         nc "I did run a few checks on the systems. They're secured with gaffa and safety pins, it'll take the average script kiddie about 2 minutes to get access"
         fp "So what you're saying anyone could've done this?"
-        nc "Nah, you didn't let me finish. Access is easy. Getting to do what this guy has done, however, isn't quite as straight forward. Mostly, the system is fairly automated, especially the logs of who does what. Without proper access, you would trigger between 3 and 5 fail-safes"
+        nc "Nah, you didn't let me finish. Access is easy. Getting away with what this guy did, however, isn't quite as straight forward. Mostly, the system is fairly automated, especially the logs of who does what. Without proper access, you would trigger between 3 and 5 fail-safes"
         fp "But... nothing like that showed up?"
         nc "Exactly! That means that this guy knows what he's doing. Which also means that he didn't really leave much of a trace"
         fp "So... I basically wasted $2000 on you, huh?"
@@ -216,7 +217,7 @@ label nc_talk(event=False,callrand=False):
         fp "Easy... did you find anything at all, anything that can be of help?"
         nc "Well... there was one thing. I dunno if it's of any use, but the way I think he got a hold of the info he needed to manipulate the system is sort of a signature for [hj]"
         fp "[hj]? You're kidding now, right?"
-        nc "No, I'm not. I know the name is dorky as fuck, but the guy is legit one of the best coders and hackers in the wild. Which sort of makes me wonder why the hell he would bother with this. It's way beneath his usual bravado, and with no obvious gain"
+        nc "No, I'm not. I know the name is dorky as fuck, but the guy is legit one of the best hackers in the wild. Which sort of makes me wonder why the hell he would bother with this. It's way beneath him and his usual bravado, and with no obvious gain"
         fp "Yeah, that was sort of one of the things I was wondering about as well. It didn't seem to serve any purpose at all, apart from messing with students"
         fp "Do you know anything about this guy? Where I might find him, or anything useful to track him down?"
         "She looks away for a bit..."
@@ -235,7 +236,7 @@ label nc_talk(event=False,callrand=False):
         $ nc_action_started = 1
         $ hacker_5 = True
         $ nce = True
-        call change_loc('fp_outside') from _call_change_loc_69
+        call change_loc('fp_outside',prev_loc=current_location) from _call_change_loc_69
 
     if event == 'nc_text' and hacker_5 and not nce:
         $ hacker_5 = False

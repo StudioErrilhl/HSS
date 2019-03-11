@@ -10,7 +10,7 @@ label morning_events():
                 "Go check on [fsName.yourformal]":
                     pass
                 "Go about your day":
-                    call change_loc(current_location)
+                    call change_loc(current_location,prev_loc=current_location)
         else:
             if (fpmc_r < .35 and day_week <= 4 and overslept and int(current_time[:2]) > 7) or (int(current_time[:2]) > 7 and day_week <= 4):
                 $ overslept = False
@@ -208,7 +208,7 @@ label morning_events():
                         fp "Yes, yes, I know. Just... let me get dressed, and take a shower, okay?"
                         fm ahead "Fine! I'm going to work. Make sure you lock the door when you leave!"
                         $ morning_event_done = True
-                        call change_loc('fp_bedroom_fp') from _call_change_loc_33
+                        call change_loc('fp_bedroom_fp',prev_loc=current_location) from _call_change_loc_33
 
                 label fm_morningchoice_rel(called=False):
                     if called:
@@ -266,7 +266,7 @@ label morning_events():
                 if int(current_time[:2]) == 6 and day_week <= 4:
                     if not mc_f:
                         fp "{i}Oh, it's really early... oh well, lets get up, maybe I can do some work on the bike before school{/i}"
-                        call change_loc('fp_garage') from _call_change_loc_34
+                        call change_loc('fp_garage',prev_loc=current_location) from _call_change_loc_34
                         fp "{i}Oh, I better get going, if I'm gonna be on time{/i}"
                         call fp_entrance() from _call_fp_entrance_2
                     else:
@@ -276,7 +276,7 @@ label morning_events():
                     if not mc_f:
                         fp "Oh, it's really early... oh well, maybe I can get an early start and work on the bike today"
                         call fp_garage_scene from _call_fp_garage_scene
-                        call change_loc('fp_garage') from _call_change_loc_35
+                        call change_loc('fp_garage',prev_loc=current_location) from _call_change_loc_35
                         call w_mc(True) from _call_w_mc
                         $ early_morning_we = True
                         $ addtime(False,15)
@@ -331,11 +331,11 @@ label morning_events():
                     label firstday_mc_work:
                         menu:
                             "Hm. Working on the bike usually calms me a bit, I might be able to get some work done today":
-                                if daycount == 0:
-                                    $ daycount += 1
+                                # if daycount == 0:
+                                #     $ daycount += 1
                                 label firstday_mc_work_internal():
                                 if count < 3:
-                                    fp "{i}Damn... I just can't get that image out of my head...{/i}\nI've got to get this sorted, or else I won't be able to do anything all day."
+                                    fp "{i}Damn... I just can't get that image out of my head...{/i}\nI've got to talk to her, or I won't be able to get anything done all day."
                                     $ addtime(1,False)
                                     $ count += 1
                                     menu:
@@ -343,31 +343,35 @@ label morning_events():
                                             $ firstday_talk = True
                                             $ count = 3
                                             $ morning_event_done = True
-                                            call change_loc('fp_livingroom',sec_call='fs_talk') from _call_change_loc_36
+                                            call change_loc('fp_pool',prev_loc=current_location)
                                         "Continue to work, trying to get your emotions under control":
                                             call firstday_mc_work_internal() from _call_firstday_mc_work_internal
                                 else:
                                     fp "It's late, and probably time to call it a day"
                                     $ count = 0
-                                    $ talk_later = True
-                                    call fp_entrance() from _call_fp_entrance_3
-                            "Or, I could just slack off today, and work on the bike another day...":
-                                if daycount == 0:
-                                    $ daycount += 1
-                                if not firstday_after_talk:
-                                    $ fs_mad = 1
-                                $ count = 0
-                                $ talk_later = True
-                                call fp_entrance() from _call_fp_entrance_4
-                else:
-                    if daycount == 0:
-                        $ daycount += 1
-                    fp "Ah, it's a beautiful day. Maybe I should go to the beach...?"
-                    menu:
-                        "Nah, slack of in the garden instead":
-                            call fp_entrance() from _call_fp_entrance_5
-                        "Go to the beach":
-                            call change_loc('beach') from _call_change_loc_74
+                                    # $ talk_later = True
+                                    "You decide to find [fsName.yourformal] and see if she's willing to talk"
+                                    # call fp_entrance() from _call_fp_entrance_3
+                                    $ firstday_talk = True
+                                    $ morning_event_done = True
+                                    call change_loc('fp_pool',prev_loc=current_location)
+                            # "Or, I could just slack off today, and work on the bike another day...":
+                            #     # if daycount == 0:
+                            #     #     $ daycount += 1
+                            #     if not firstday_after_talk:
+                            #         $ fs_mad = 1
+                            #     $ count = 0
+                            #     $ talk_later = True
+                            #     call fp_entrance() from _call_fp_entrance_4
+                # else:
+                #     # if daycount == 0:
+                #     #     $ daycount += 1
+                #     fp "Ah, it's a beautiful day. Maybe I should go to the beach...?"
+                #     menu:
+                #         "Nah, slack of in the garden instead":
+                #             call fp_entrance() from _call_fp_entrance_5
+                #         "Go to the beach":
+                #             call change_loc('beach') from _call_change_loc_74
 
     label spill_in_kitchen(sik_called=False):
         if sik_called:
@@ -456,11 +460,11 @@ label morning_events():
                                 $ morning_event_done = True
                                 call fp_livingroom_scene
                                 call fs_talk(True) from _call_fs_talk_2
-                                call change_loc('fp_livingroom') from _call_change_loc_37
+                                call change_loc('fp_livingroom',prev_loc=current_location) from _call_change_loc_37
                             "Continue the day, and try to talk to [fsName.yourformal] later":
                                 $ shitty_morning = True
                                 $ morning_event_done = True
-                                call change_loc(current_location) from _call_change_loc_38
+                                call change_loc(current_location,prev_loc=current_location) from _call_change_loc_38
                     if not breakfast_jump:
                         if late_oh_shit:
                             label late_morning():
@@ -486,12 +490,12 @@ label morning_events():
                         if debug:
                             "event outside - day-week 4 (event 1)"
                         $ morning_event_done = True
-                        call change_loc('fp_outside',sec_call="fp_outside") from _call_change_loc_39
+                        call change_loc('fp_outside',sec_call="fp_outside",prev_loc=current_location) from _call_change_loc_39
                 else:
                     if debug:
                         "renpy random below 5"
                     $ morning_event_done = True
-                    call change_loc('fp_outside',sec_call="fp_outside") from _call_change_loc_40
+                    call change_loc('fp_outside',sec_call="fp_outside",prev_loc=current_location) from _call_change_loc_40
             else:
                 if debug:
                     "weekend"
@@ -544,7 +548,7 @@ label morning_events():
                             "Continue the day, and try to talk to [fsName.yourformal] later":
                                 $ shitty_morning = True
                                 $ morning_event_done = True
-                                call change_loc(current_location) from _call_change_loc_41
+                                call change_loc(current_location,prev_loc=current_location) from _call_change_loc_41
                 else:
                     $ morning_event_done = True
                     if debug:

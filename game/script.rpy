@@ -54,19 +54,17 @@ init 1:
         yourinformal "your housemate"
         relation "extended \"family\""
 
-init python:
-    # import os
-    def define_images(imageFolder, excludeFolders=0):
-        for path in renpy.list_files():
-            if path.startswith(imageFolder):
-                path_list = ("/".join(path.split())).split("/")
-                path_list[-1] = os.path.splitext(path_list[-1])[0]
-                path_list = tuple(path_list[excludeFolders:])
-                renpy.image(path_list, path)
-                # print(path_list)
+# init python:
+#     # import os
+#     def define_images(imageFolder, excludeFolders=0):
+#         for path in renpy.list_files():
+#             if path.startswith(imageFolder):
+#                 path_list = ("/".join(path.split())).split("/")
+#                 path_list[-1] = os.path.splitext(path_list[-1])[0]
+#                 path_list = tuple(path_list[excludeFolders:])
+#                 renpy.image(path_list, path)
+#                 # print(path_list)
 
-
-    define_images('test')
 
 label start:
     $ conditions = Conditions() ## enables the conditions-parameter used for assigning conditions to disable / enable choice-items
@@ -75,7 +73,8 @@ label start:
     $ gp_bed = random.choice(fs_p)
     $ gp_bath = random.choice(fs_p)
     $ current_time = "09:00"
-    $ weather = renpy.random.randint(1,3)
+    $ weather = renpy.random.randint(1,3) if daycount > 3 else 3
+    $ updateweather = 1
     call fp_bedroom_fp_scene from _call_fp_bedroom_fp_scene_1
 
     if config.developer:
@@ -106,12 +105,13 @@ label start:
         "Hmm... Maybe May? Or... no, I think we'll have to go all the way back to April, actually. You see, I was... attending my last semester at highschool. (Yeah, lets go with that, for now). Grinding away, trying to keep my grades up to at least passing standard, all the while trying not to attract too much attention."
         "Sorta failing most of that, but I wasn't too worried. I had plans, both for the summer after high school, and for what comes after. I was planning on taking some time off, take a cross-country trip. Had been working on my bike for a while now, and it was (slowly) getting done; the last, finishing touches left, so to speak. And, when done, I'd be taking it on the road, no definite goal, just... away!"
         "Planning on starting more or less were we are right now, on the East coast, and just drive - visiting as many places, people, landmarks and interesting spots that could possibly fit into a 3-4 months trip. That was basically what was on my mind these days... Until shit hit the fan. \"What to do AFTER high school\"... completely failing to take into account what would happen BEFORE that..."
-        call change_loc('fp_upstairs',sec_call='intro_hallway') from _call_change_loc_76
+        call change_loc('fp_upstairs',sec_call='intro_hallway',prev_loc=current_location) from _call_change_loc_76
         label intro_hallway(intro_cont=False):
         fp "{i}So, here we are. April 1st, a Saturday, if I'm not mistaken. I'd just woken up, and was on my way downstairs to get some breakfast, when I heard noises coming from [fsName.formal]'s room. Usually I wouldn't care, but those sounds weren't possible to mistake for anything else. [fsName.Myformal] was masturbating! Now... I'm sure most of you would say \"So what? She's [fsName.yourformal], dude! That's not at all cool\" And to those... I'd just say... \"You haven't seen [fsName.myformal]!\" So, I walked up to her door, thinking I could sneak a peak.{/i}"
-        call change_loc('upstairs closerdoor',sec_call='falling_scene') from _call_change_loc_80
+        call change_loc('upstairs closerdoor',sec_call='falling_scene',prev_loc=current_location) from _call_change_loc_80
+        pause .55
         label falling_scene(intro_falling=False):
-        pause(.1)
+        pause(.25)
         show fpfalling
         fp "{i}Unfortunately, I'm about as graceful as a drunk hippo at a roller-derby. Reason I heard her was that the door wasn't closed all the way... so when I leaned against it, I suddenly found myself tumbling into her room. Not very elegantly, mind. Quite the opposite, in fact. I {b}did{/b} get a nice view, though!{/i}"
         play sound "sounds/medium_camera_shutter.mp3"
@@ -122,7 +122,7 @@ label start:
         play sound "sounds/medium_camera_shutter.mp3"
         $ image_unlock('DCIM00002_portrait.webp')
         show juliette_intro
-        with dissolve
+        with Dissolve(.25)
         fp "{i}Then the shouting began, and 10 seconds after that, I was out in the hallway again, with a furious, but still very half-naked [fsName.role] yelling at me. I'm still amazed that [fmName.informal] didn't show up... THAT would've been embarassing, for both of us... mostly for me.{/i}"
         hide juliette_intro
         show juliette_intro_ani
@@ -130,11 +130,11 @@ label start:
         play sound "sounds/medium_camera_shutter.mp3"
         $ image_unlock('DCIM00003_portrait.webp')
         hide juliette_intro_ani
-        with dissolve
+        with Dissolve(.25)
         fp "{i}(Un)fortunately, [fsName.informal] realised that she was half naked (probably at least partly because I had a raging boner pitching a tent in my pants) - went beet red, turned on her heel, and went back into her room - this time closing and locking the door.{/i}"
-        call change_loc('fp_ufb',sec_call='end_of_intro')
+        call change_loc('fp_ufb',sec_call='end_of_intro',prev_loc=current_location)
         label end_of_intro(True):
-            show fpintro with Dissolve()
+            show fpintro with Dissolve(.25)
             fp "{i}Me... I went to the bathroom and jerked off. Yes, I know she's [fsName.myformal], and all that, but DAMN. She's HOT!{/i}"
             fp "{i}Okay... that might have been a bit TMI. I'm sorry. I'm a perv, and I'm usually not very cagy about it either. It has gotten me into trouble a few times, but mostly, it just means I get a lot of visuals to jerk off to when there is no ready to be had pussy available! This is only the beginning of my summertime blowout, though, and soon enough, I'll learn that this summer... is gonna be something different. I don't know that yet, though, so I need to move the story along...{/i}"
             $ persistent.skipintro = True
@@ -217,7 +217,7 @@ label start:
         $ after_principal_talk = False
 
         $ count = 0
-        $ end_bike_repair = False
+        $ end_fp_fb = False
 
         if wcount < 5:
             $ wcount += 1
@@ -366,7 +366,7 @@ label start:
                                         $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")
                                         $ mc_f = True
                                         $ update_mc_achievement(mc_b,mc_f)
-                                        call change_loc('fp_garage') from _call_change_loc_72
+                                        call change_loc('fp_garage',prev_loc=current_location) from _call_change_loc_72
                                     if mc_t == 0:
                                         $ renpy.notify("You did not improve the status of the bike this time")
                                     else:
@@ -388,7 +388,7 @@ label start:
                                         $ renpy.notify("You have increased the bike status by "+str(mc_t)+". You're currently "+str(mc_p)+"% done with the bike")
                                         $ mc_f = True
                                         $ update_mc_achievement(mc_b,mc_f)
-                                        call change_loc('fp_garage') from _call_change_loc_73
+                                        call change_loc('fp_garage',prev_loc=current_location) from _call_change_loc_73
                                     if mc_t == 0:
                                         $ renpy.notify("You did not improve the status of the bike this time")
                                     else:
@@ -408,16 +408,16 @@ label start:
                         call _repeat_event(77) from _call_repeat_event_5
                 elif event == 66:
                     "You need to get a piece to complete the bike. You can get this from the bike-shop, or from the scrapyard, or perhaps you can find something on Profit"
-                    if 25 <= mc_b < 50:
-                        "I need to get a front wheel for the bike"
-                    elif 50 <= mc_b < 75:
-                        "The gastank is completely busted. I'll have to get a new one"
-                    if 75 <= mc_b < 100:
-                        "Hm, better find new lights for this bike, I don't think I can save these ones"
-                    if 100 <= mc_b < 125:
-                        "Got to get those handlebars and that seat fixed"
-                    if 125 <= mc_b < 150:
-                        "Just need to get the exhaust now"
+                    if 60 <= mc_b < 75 and fp_money > 1500 and not engine_purchased:
+                        "I need to get the engine rebuilt properly"
+                    elif 75 <= mc_b < 105 and fp_money > 1200 and not brakes_purchased and not handlebars_purchased and not muffler_purchased:
+                        "I need to get new brakes, a new muffler and the handlebars refurbished"
+                    elif 105 <= mc_b < 115 and fp_money > 1200 and not gastank_purchased and not oiltank_purchased:
+                        "The gas- and oil-tank have seen better days, better get them refurbished and repainted"
+                    elif 115 <= mc_b < 125 and fp_money > 1500 and not drivetrain_purchased:
+                        "Drivetrain needs to be replaced. Got to get those parts"
+                    elif 140 <= mc_b < 150 and fp_money > 1000 and not finishing_touches_purchased:
+                        "Okay, just the last finishing touches left now"
                     call fp_entrance() from _call_fp_entrance_6
                 elif event == 77:
                     if not home_from_school:
@@ -425,24 +425,24 @@ label start:
                         "[text]"
                         if 'shower' in text:
                             $ required_shower = True
-                            call change_loc('fp_ufb',sec_call='lockdoorbathroom',loctrans=True)
+                            call change_loc('fp_ufb',sec_call='lockdoorbathroom',loctrans=True,prev_loc=current_location)
                         else:
-                            call change_loc('fp_kitchen') from _call_change_loc_67
+                            call change_loc('fp_kitchen',prev_loc=current_location) from _call_change_loc_67
                     else:
                         call _repeat_event(6) from _call_repeat_event_6
                 elif event == 88:
                     "You're done working on the bike today"
-                    $ end_bike_repair = True
+                    $ end_fp_fb = True
                     if weather == 1:
                         call fp_entrance() from _call_fp_entrance
                     else:
-                        call change_loc('fp_garage') from _call_change_loc_31
+                        call change_loc('fp_garage',prev_loc=current_location) from _call_change_loc_31
                 elif event == 99:
                     "You don't really wanna work on the bike right now"
                     if weather == 1:
                         call fp_entrance() from _call_fp_entrance_1
                     else:
-                        call change_loc('fp_garage') from _call_change_loc_32
+                        call change_loc('fp_garage',prev_loc=current_location) from _call_change_loc_32
 
 if end_game:
     return

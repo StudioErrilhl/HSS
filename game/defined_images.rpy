@@ -1,21 +1,3 @@
-# transform fm_standing_ahead_ani:
-#     ConditionSwitch(
-#         "int(current_time[:2]) in night","images/characters/anne/body/standing/ahead_night.webp",
-#         True,"images/characters/anne/body/standing/ahead.webp"
-#         )
-#     choice:
-#         pause 2
-#     choice:
-#         pause 4
-#     choice:
-#         pause 6
-#     ConditionSwitch(
-#         "int(current_time[:2]) in night","images/characters/anne/body/standing/ahead_eyes_closed_night.webp",
-#         True,"images/characters/anne/body/standing/ahead_eyes_closed.webp"
-#     )
-#     pause .25
-#     repeat
-
 transform fs_dream_intro_ani:
     "images/dreams/fs_dream_intro.webp"
     pause .5
@@ -24,108 +6,108 @@ transform fs_dream_intro_ani:
     repeat(3)
 
 transform fpi_ani:
-    "images/characters/marten/introanimation/fpi_1.webp"
+    "images/characters/fp/introanimation/fpi_1.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_2.webp"
+    "images/characters/fp/introanimation/fpi_2.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_3.webp"
+    "images/characters/fp/introanimation/fpi_3.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_4.webp"
+    "images/characters/fp/introanimation/fpi_4.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_5.webp"
+    "images/characters/fp/introanimation/fpi_5.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_6.webp"
+    "images/characters/fp/introanimation/fpi_6.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_7.webp"
+    "images/characters/fp/introanimation/fpi_7.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_8.webp"
+    "images/characters/fp/introanimation/fpi_8.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_9.webp"
+    "images/characters/fp/introanimation/fpi_9.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_8.webp"
+    "images/characters/fp/introanimation/fpi_8.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_7.webp"
+    "images/characters/fp/introanimation/fpi_7.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_6.webp"
+    "images/characters/fp/introanimation/fpi_6.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_5.webp"
+    "images/characters/fp/introanimation/fpi_5.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_4.webp"
+    "images/characters/fp/introanimation/fpi_4.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_3.webp"
+    "images/characters/fp/introanimation/fpi_3.webp"
     pause .1
-    "images/characters/marten/introanimation/fpi_2.webp"
+    "images/characters/fp/introanimation/fpi_2.webp"
     pause .1
     repeat
 
 transform fpi_falling_ani:
     "images/characters/multiple/animations/falling_00.webp" with Dissolve(.25)
-    pause .5
+    pause .25
     "images/characters/multiple/animations/falling_01.webp" with Dissolve(.25)
-    pause .15
+    pause .08
     "images/characters/multiple/animations/falling_02.webp" with Dissolve(.25)
-    pause .15
+    pause .08
     "images/characters/multiple/animations/falling_03.webp" with Dissolve(.25)
-    pause .15
+    pause .08
     "images/characters/multiple/animations/falling_04.webp" with Dissolve(.25)
-    pause .15
+    pause .08
     "images/characters/multiple/animations/falling_05.webp" with Dissolve(.25)
-    pause .15
+    pause .08
     "images/characters/multiple/animations/falling_06.webp" with Dissolve(.25)
-    pause .15
+    pause .08
     "images/characters/multiple/animations/falling_07.webp" with Dissolve(.25)
-    pause .15
+    pause .08
     "images/characters/multiple/animations/falling_08.webp" with Dissolve(.25)
-    pause .15
+    pause .08
     "images/characters/multiple/animations/falling_09.webp"
-    pause .15
+    pause .08
     block:
         "images/characters/multiple/animations/falling_10.webp"
-        pause .1
+        pause .08
         "images/characters/multiple/animations/falling_11.webp"
-        pause .1
+        pause .08
         "images/characters/multiple/animations/falling_12.webp"
-        pause .1
+        pause .08
         "images/characters/multiple/animations/falling_13.webp"
-        pause .1
+        pause .08
         "images/characters/multiple/animations/falling_14.webp"
-        pause .1
+        pause .08
         "images/characters/multiple/animations/falling_15.webp"
-        pause .1
+        pause .08
         repeat
 
 transform ks_ani_1:
-    "images/characters/anne/animations/kitchen_spill_01.webp" with Dissolve(.1)
+    "images/characters/fm/animations/kitchen_spill_01.webp" with Dissolve(.1)
     pause .08
-    "images/characters/anne/animations/kitchen_spill_02.webp" with Dissolve(.1)
+    "images/characters/fm/animations/kitchen_spill_02.webp" with Dissolve(.1)
     pause .08
-    "images/characters/anne/animations/kitchen_spill_03.webp" with Dissolve(.1)
+    "images/characters/fm/animations/kitchen_spill_03.webp" with Dissolve(.1)
     pause .08
-    "images/characters/anne/animations/kitchen_spill_04.webp" with Dissolve(.1)
+    "images/characters/fm/animations/kitchen_spill_04.webp" with Dissolve(.1)
     pause .08
-    "images/characters/anne/animations/kitchen_spill_05.webp" with Dissolve(.1)
+    "images/characters/fm/animations/kitchen_spill_05.webp" with Dissolve(.1)
     pause .08
-    "images/characters/anne/animations/kitchen_spill_06.webp" with Dissolve(.1)
+    "images/characters/fm/animations/kitchen_spill_06.webp" with Dissolve(.1)
     pause .08
 
 transform ks_ani_2:
-    "images/characters/anne/animations/kitchen_spill_07.webp" with Dissolve(.2)
+    "images/characters/fm/animations/kitchen_spill_07.webp" with Dissolve(.2)
     pause .15
-    "images/characters/anne/animations/kitchen_spill_08.webp" with Dissolve(.2)
+    "images/characters/fm/animations/kitchen_spill_08.webp" with Dissolve(.2)
     pause .15
-    "images/characters/anne/animations/kitchen_spill_09.webp" with Dissolve(.2)
+    "images/characters/fm/animations/kitchen_spill_09.webp" with Dissolve(.2)
     pause .15
-    "images/characters/anne/animations/kitchen_spill_10.webp" with Dissolve(.2)
+    "images/characters/fm/animations/kitchen_spill_10.webp" with Dissolve(.2)
     pause .15
-    "images/characters/anne/animations/kitchen_spill_11.webp" with Dissolve(.2)
+    "images/characters/fm/animations/kitchen_spill_11.webp" with Dissolve(.2)
     pause .15
-    "images/characters/anne/animations/kitchen_spill_12.webp" with Dissolve(.2)
+    "images/characters/fm/animations/kitchen_spill_12.webp" with Dissolve(.2)
     pause .15
-    "images/characters/anne/animations/kitchen_spill_13.webp" with Dissolve(.2)
+    "images/characters/fm/animations/kitchen_spill_13.webp" with Dissolve(.2)
     pause .15
-    "images/characters/anne/animations/kitchen_spill_14.webp" with Dissolve(.2)
+    "images/characters/fm/animations/kitchen_spill_14.webp" with Dissolve(.2)
     pause .15
-    "images/characters/anne/animations/kitchen_spill_15.webp" with Dissolve(.2)
+    "images/characters/fm/animations/kitchen_spill_15.webp" with Dissolve(.2)
     pause .15
 
 image fs_dream_intro:
@@ -146,14 +128,8 @@ image kitchenspill_2:
 image books_on_dresser:
     "images/backgrounds/interaction_items/fp_bedroom_morning_dresser_idle.webp"
 
-# image livingroom_morning_bad_weather:
-#     "images/backgrounds/fp_livingroom.webp"
-
-# image livingroom_morning_bad_weather_windows:
-#     "images/backgrounds/livingroom_morning_bad_weather_windows.webp"
-
 image juliette_shower:
-    "images/characters/juliette/scenes/upper_hallway_bathroom_juliette_shower_bubbles.webp"
+    "images/characters/fs/scenes/upper_hallway_bathroom_juliette_shower_bubbles.webp"
 
 image juliette_shower_night:
     "images/backgrounds/ufbn_juliette_shower_bubbles.webp"
@@ -167,44 +143,38 @@ image rain:
     0.2
     repeat
 
-image black_car:
-    ConditionSwitch(
-        "int(current_time[:2]) in night","images/black_car_night_idle.webp",
-        True,"images/black_car_morning_idle.webp"
-        )
-
 image juliette_intro:
-    "images/characters/juliette/scenes/juliette_intro_hallway_1_angry.webp"
+    "images/characters/fs/scenes/juliette_intro_hallway_1_angry.webp"
     zoom .8
     xoffset -320
     yoffset 0
 
 image juliette_intro_ani:
-    "images/characters/juliette/scenes/juliette_intro_hallway_1_angry.webp"
+    "images/characters/fs/scenes/juliette_intro_hallway_1_angry.webp"
     zoom .8
     xoffset -320
     yoffset 0
     .35
-    "images/characters/juliette/scenes/juliette_intro_hallway_2_embarrassed.webp"
+    "images/characters/fs/scenes/juliette_intro_hallway_2_embarrassed.webp"
     0.25
-    "images/characters/juliette/scenes/juliette_intro_hallway_3_turning_away.webp"
+    "images/characters/fs/scenes/juliette_intro_hallway_3_turning_away.webp"
     0.2
-    "images/characters/juliette/scenes/juliette_intro_hallway_4_moving_away.webp"
+    "images/characters/fs/scenes/juliette_intro_hallway_4_moving_away.webp"
     zoom .70
     xoffset -400
     yoffset -100
     0.2
-    "images/characters/juliette/scenes/juliette_intro_hallway_5_moving_away.webp"
+    "images/characters/fs/scenes/juliette_intro_hallway_5_moving_away.webp"
     zoom .60
     xoffset -450
     yoffset -150
     0.2
-    "images/characters/juliette/scenes/juliette_intro_hallway_4_moving_away.webp"
+    "images/characters/fs/scenes/juliette_intro_hallway_4_moving_away.webp"
     zoom .55
     xoffset -500
     yoffset -200
     0.1
-    "images/characters/juliette/scenes/juliette_intro_hallway_5_moving_away.webp"
+    "images/characters/fs/scenes/juliette_intro_hallway_5_moving_away.webp"
     zoom .45
     xoffset -550
     yoffset -250
@@ -218,7 +188,7 @@ layeredimage upper_floor_bathroom_morning_sink:
     always:
         "upfm_st"
 
-layeredimage bike_repair_morning:
+layeredimage fp_garage_fb_morning:
     if mc_b < 15:
         "gm_fb_00"
     elif mc_b < 30:
@@ -249,49 +219,56 @@ layeredimage bike_repair_morning:
         "gm_fb_finished"
 
     if backpack.has_item(toolbox_item) and mc_b < 15:
-        "gm_fb_15_toolbox"
-    elif backpack.has_item(toolbox_item) and mc_b < 75:
-        "gm_fb_75_toolbox"
-    elif backpack.has_item(toolbox_item) and mc_b < 115:
-        "gm_fb_115_toolbox"
+        "gm_fb_00_toolbox"
+    elif backpack.has_item(toolbox_item) and mc_b < 125:
+        "gm_fb_10_toolbox"
     elif backpack.has_item(toolbox_item) and mc_b < 135:
-        "gm_fb_135_toolbox"
-    elif backpack.has_item(toolbox_item) and mc_b < 140:
-        "gm_fb_140_toolbox"
+        "gm_fb_90_toolbox"
     elif backpack.has_item(toolbox_item) and mc_b < 150:
-        "gm_fb_149_toolbox"
+        "gm_fb_95_toolbox"
     elif backpack.has_item(toolbox_item) and mc_b == 150:
         "gm_fb_finished_toolbox"
 
-
-
-layeredimage bike_repair_night:
-    always:
-        "gn_fb_00"
+layeredimage fp_garage_fb_night:
     if mc_b < 15:
-        "gn_fb_10"
+        "gn_fb_00"
     elif mc_b < 30:
-        "gn_fb_20"
+        "gn_fb_10"
     elif mc_b < 45:
-        "gn_fb_30"
+        "gn_fb_20"
     elif mc_b < 60:
-        "gn_fb_40"
+        "gn_fb_30"
     elif mc_b < 75:
+        "gn_fb_40"
+    elif mc_b < 85:
         "gn_fb_50"
-    elif mc_b < 90:
+    elif mc_b < 95:
         "gn_fb_60"
     elif mc_b < 105:
         "gn_fb_70"
-    elif mc_b < 120:
+    elif mc_b < 115:
         "gn_fb_80"
+    elif mc_b < 125:
+        "gn_fb_85"
     elif mc_b < 135:
         "gn_fb_90"
-    elif mc_b == 150:
+    elif mc_b < 140:
+        "gn_fb_95"
+    elif mc_b < 150:
         "gn_fb_100"
+    elif mc_b == 150:
+        "gn_fb_finished"
 
-    group toolbox auto:
-        attribute toolbox default null
-
+    if backpack.has_item(toolbox_item) and mc_b < 15:
+        "gn_fb_00_toolbox"
+    elif backpack.has_item(toolbox_item) and mc_b < 125:
+        "gn_fb_10_toolbox"
+    elif backpack.has_item(toolbox_item) and mc_b < 135:
+        "gn_fb_90_toolbox"
+    elif backpack.has_item(toolbox_item) and mc_b < 150:
+        "gn_fb_95_toolbox"
+    elif backpack.has_item(toolbox_item) and mc_b == 150:
+        "gn_fb_finished_toolbox"
 
 layeredimage fp_bedroom_morning:
     always:
@@ -361,7 +338,6 @@ layeredimage fp_bedroom_night:
     if wallart['sincity']:
         "wallart_sincity_night_idle"
 
-
 layeredimage marten:
     pos(.25,1.0)
     yoffset 180
@@ -390,7 +366,6 @@ layeredimage anne:
     group eyes if_any "angry" auto variant "closed" prefix "angry"
     group eyes if_any "ahead" auto variant "closed" prefix "ahead"
 
-
 layeredimage jules:
     pos (.75, 1.0)
     yoffset 140
@@ -416,9 +391,6 @@ layeredimage side jules:
 
     group eyes if_any "angry" auto variant "closed" prefix "angry"
     group eyes if_any "ahead" auto variant "closed" prefix "ahead"
-
-    # group eyes auto:
-    #     attribute eo default
 
 layeredimage karen:
     pos (.75,1.0)
@@ -448,6 +420,12 @@ layeredimage ron:
     group eyes if_any "angry" auto variant "closed" prefix "angry"
     group eyes if_any "ahead" auto variant "closed" prefix "ahead"
 
+image bar_fill:
+    "gui/animated_bar_value_fill.webp"
+    zoom .5
+image bar_empty:
+    "gui/animated_bar_value_empty.webp"
+    zoom .5
 
 image stats_hover:
     "gui/stats_hover.webp"
@@ -468,17 +446,6 @@ transform alpha_transform(a):
 
 transform ModZoom(z):
     zoom z
-
-# transform Jiggle(z):
-#     zoom z
-#     yoffset int(random.randrange(-10,10))
-#     pause(.25)
-#     xoffset int(random.randrange(-10,10))
-#     pause(.25)
-#     repeat(10)
-    # yoffset 0
-    # pause(.1)
-    # xoffset 0
 
 transform Shake(z):
     block:
@@ -504,6 +471,22 @@ transform tshirt_overlay_transform:
     yalign 0.0
     yoffset 9
     xoffset 105
+
+transform diagonal_pan_up:
+    zoom .8
+    yalign 1.0
+    xalign 1.0
+    linear 5.0 yalign 0.0 xalign 0.0
+
+transform diagonal_pan_down:
+    zoom .8
+    yalign 0.0
+    xalign 0.0
+    linear 5.0 yalign 1.0 xalign 1.0
+
+transform vertical_pan_from_bottom:
+    yalign 1.0
+    linear 4.0 yalign 0.0
 
 transform center_transform:
     yalign 1.0

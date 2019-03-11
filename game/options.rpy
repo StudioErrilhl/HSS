@@ -35,7 +35,7 @@ define gui.about_2_head = _("{b}Disclaimer!{/b}")
 
 define gui.about_2_text = _("The game is in very early development, and currently we're working on the game mechanics, how to modify relationships, how to build a believeable story, and how to decide which characters get to do what with whom.\n\n")
 
-define gui.credits = _("Credit where credit's due - this game wouldn't have been possible without the use of {a=https://www.renpy.org/}Ren'Py{/a}, and by proxy, {a=https://www.patreon.com/renpytom}RenpyTom{/a}, the creator of Ren'py.\n\nOther worthy of mentioning is: (names to come)")
+define gui.credits = _("Credit where credit's due - this game wouldn't have been possible without the use of {a=https://www.renpy.org/}{b}Ren'Py{/b}{/a}, and by proxy, {a=https://www.patreon.com/renpytom}{b}RenpyTom{/b}{/a}, the creator of Ren'py.\n\nOther worthy of mentioning is: {b}Remix{/b}, whom you can find on the Renpy Discord, and other places. He's been kind enough to help with some of the more advanced code. (More names to come)")
 
 define gui.credits_2_head = False
 
