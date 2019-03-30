@@ -38,7 +38,7 @@ init 10:
     default achievement_wine_collector = NewAchievement("Wine collector","You've aquired wine!",1,'inventory/wine_idle.webp',hidden=True,next_tier=[achievement_all_the_wine])
 
     # Exploration Achievements
-    default achievement_been_everywhere = NewAchievement("Seasoned traveller","You visited every location in the game",19,'gui/star.webp','exploration')
+    default achievement_been_everywhere = NewAchievement("Seasoned traveller","You visited every location in the game",33,'gui/star.webp','exploration')
     default achievement_all_wallart = NewAchievement("Art Collector","You've purchased every wallart item",1,"gui/star.webp","exploration")
     default achievement_first_art = NewAchievement("First Art","You've purchased your first piece of art",1,"gui/star.webp","exploration",True,next_tier=[achievement_all_wallart])
 
@@ -112,7 +112,7 @@ init python:
             achievement_diverse_panties.update()
 
     def update_been_everywhere_achievement():
-        # if fp_bedroom_ach and fs_bedroom_ach and uhl_bathroom_ach and uhl_ach and entrance_ach and livingroom_ach and kitchen_ach and outside_ach and garage_ach and school_outside_ach and school_principal_office_ach and beach_ach:
+        # fp_bed, fm_bed, fs_bed, fp_topofstairs, fp_kit, fp_liv, fp_ent, fp_gar, fp_bath, fp_patio, fp_out, fp_gym, fp_sauna, fp_gym_bath, fp_pool, school_out, school_classroom, school_bath, school_principal, school_office, beach, marina, cabin, internet_cafe, store, sn_house, nk_house, nb_house, nr_house, docks, container, highway_overpass
         achievement_been_everywhere.update()
 
     def update_all_wallart_achievement():

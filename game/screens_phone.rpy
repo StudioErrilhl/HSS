@@ -1,5 +1,6 @@
 screen phone():
-    # modal True
+    # if renpy.get_screen('choice'):
+    modal True
     add Solid("#000000DF")
     tag menu
     zorder 800
@@ -517,21 +518,9 @@ screen phone_text_screen():
                             else:
                                 $ bg_color_text = '#ccc'
                             if not k == 'fp':
-                                if k == 'fm':
-                                    $ charimg = "images/characters/fm/anne_idle.webp"
-                                    $ charimg_hover = "images/characters/fm/anne_hover.webp"
-                                elif k == 'fs':
-                                    $ charimg = "images/characters/fs/juliette_idle.webp"
-                                    $ charimg_hover = "images/characters/fs/juliette_hover.webp"
-                                elif k == 'nk':
-                                    $ charimg = "images/characters/nk/karen_idle.webp"
-                                    $ charimg_hover = "images/characters/nk/karen_hover.webp"
-                                elif k == 'nr':
-                                    $ charimg = "images/characters/nr/ron_idle.webp"
-                                    $ charimg_hover = "images/characters/nr/ron_hover.webp"
-                                elif k == 'nc':
-                                    $ charimg = "images/characters/nc/catherina_idle.webp"
-                                    $ charimg_hover = "images/characters/chatherina/catherina_hover.webp"
+                                if renpy.loadable("images/characters/"+k+"/"+k+"_hover.webp"):
+                                    $ charimg = "images/characters/"+k+"/"+k+"_idle.webp"
+                                    $ charimg_hover = "images/characters/"+k+"/"+k+"_hover.webp"
                                 else:
                                     $ charimg = "gui/question_mark_idle.webp"
                                     $ charimg_hover = "gui/question_mark_hover.webp"
@@ -642,21 +631,9 @@ screen show_text_msg(compchar=False,char=False):
                     style_prefix "contacts"
                     for k,b,v in messages+read_messages:
                         if k == compchar:
-                            if k == 'fm':
-                                $ charimg = "images/characters/fm/anne_idle.webp"
-                                $ charimg_hover = "images/characters/fm/anne_hover.webp"
-                            elif k == 'fs':
-                                $ charimg = "images/characters/fs/juliette_idle.webp"
-                                $ charimg_hover = "images/characters/fs/juliette_hover.webp"
-                            elif k == 'nk':
-                                $ charimg = "images/characters/nk/karen_idle.webp"
-                                $ charimg_hover = "images/characters/nk/karen_hover.webp"
-                            elif k == 'nr':
-                                $ charimg = "images/characters/nr/ron_idle.webp"
-                                $ charimg_hover = "images/characters/nr/ron_hover.webp"
-                            elif k == 'nc':
-                                $ charimg = "images/characters/nc/catherina_idle.webp"
-                                $ charimg_hover = "images/characters/chatherina/catherina_hover.webp"
+                            if renpy.loadable("images/characters/"+k+"/"+k+"_hover.webp"):
+                                $ charimg = "images/characters/"+k+"/"+k+"_idle.webp"
+                                $ charimg_hover = "images/characters/"+k+"/"+k+"_hover.webp"
                             else:
                                 $ charimg = "gui/question_mark_idle.webp"
                                 $ charimg_hover = "gui/question_mark_hover.webp"
@@ -736,21 +713,9 @@ screen phone_call_screen():
                         else:
                             $ bg_color_contacts = '#ccc'
                         if not i[1] in not_in_contacts:
-                            if i[1] == 'fm':
-                                $ charimg = "images/characters/fm/anne_idle.webp"
-                                $ charimg_hover = "images/characters/fm/anne_hover.webp"
-                            elif i[1] == 'fs':
-                                $ charimg = "images/characters/fs/juliette_idle.webp"
-                                $ charimg_hover = "images/characters/fs/juliette_hover.webp"
-                            elif i[1] == 'nk':
-                                $ charimg = "images/characters/nk/karen_idle.webp"
-                                $ charimg_hover = "images/characters/nk/karen_hover.webp"
-                            elif i[1] == 'nr':
-                                $ charimg = "images/characters/nr/ron_idle.webp"
-                                $ charimg_hover = "images/characters/nr/ron_hover.webp"
-                            elif i[1] == 'nc':
-                                $ charimg = "images/characters/nc/catherina_idle.webp"
-                                $ charimg_hover = "images/characters/nc/catherina_hover.webp"
+                            if renpy.loadable("images/characters/"+i[1]+"/"+i[1]+"_hover.webp"):
+                                $ charimg = "images/characters/"+i[1]+"/"+i[1]+"_idle.webp"
+                                $ charimg_hover = "images/characters/"+i[1]+"/"+i[1]+"_hover.webp"
                             else:
                                 $ charimg = "gui/question_mark_idle.webp"
                                 $ charimg_hover = "gui/question_mark_hover.webp"
@@ -838,14 +803,7 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
         yalign .44
         maximum 370,686
         $ get_char = getattr(store,char)
-        if char == 'fm':
-            # $ char_name_lowered = fmName.name.lower()
-            $ phone_img = "images/characters/fm/"+fmName.name.lower()+"_phone_image.webp"
-        elif char == 'fs':
-            $ phone_img = "images/characters/fs/"+fsName.name.lower()+"_phone_image.webp"
-        else:
-            # $ char_name_lowered = get_char_name.name.lower().replace(' ','_')
-            $ phone_img = "images/characters/"+str(char)+"/"+get_char.name.lower().replace(' ','_')+"_phone_image.webp"
+        $ phone_img = "images/characters/"+str(char)+"/"+str(char)+"_phone_image.webp"
         vbox:
             ysize 500
             yalign 0.0
@@ -1895,7 +1853,10 @@ screen phone_light_background():
         add "gui/phone_background_light.webp" at ModZoom(.85)
 
 screen phone_overlay():
-    zorder 990
+    if renpy.get_screen('choice'):
+        zorder 999
+    else:
+        zorder 990
     $ keyclose = True
     hbox: #notification-bar
         if battery_text != 0:
@@ -1966,7 +1927,7 @@ screen phone_overlay():
         vbox:
             xalign .5
             yalign .5
-            if battery_text != 0 and not renpy.get_screen('say') and not renpy.get_screen('choice'):
+            if battery_text != 0 and not renpy.get_screen('say'):
                 imagebutton auto "gui/phone_white_home_%s.webp" focus_mask True:
                     at ModZoom(.85)
                     alternate [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Hide('phone')]

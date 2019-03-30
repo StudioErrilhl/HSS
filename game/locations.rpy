@@ -3,13 +3,13 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
     if timeadd:
         $ addtime(False, 30)
     if locname:
-        $ locname = locname.replace('_loc','').replace('bad_weather','').replace('bw','').replace('light','').replace('windows','').replace('after_shower','').replace('wallet','').replace('empty','').replace('wallart','').replace('sincity','').replace('parkinglot','').replace('peekaboo','').replace('roadtrip','').replace('ferrari','').replace('_',' ').replace('__',' ')
+        $ locname = locname.replace('_loc','').replace('bw','').replace('light','').replace('windows','').replace('after_shower','').replace('wallet','').replace('empty','').replace('wallart','').replace('sincity','').replace('parkinglot','').replace('peekaboo','').replace('roadtrip','').replace('ferrari','').replace('_',' ').replace('__',' ')
         $ current_location = locname.replace(' ','_')
         if current_location.endswith('_'):
             $ current_location = current_location[:-1]
         if prev_loc:
             $ previous_location = prev_loc
-        $ tmpname = locname.replace(' ','_').replace('_bad_weather','').replace('bw','').replace('_build','').replace('_finished','').replace('_windows','').replace('_after_shower','').replace('_light','').replace('_loc','').replace('__','_')
+        $ tmpname = locname.replace(' ','_').replace('bw','').replace('_build','').replace('_finished','').replace('_windows','').replace('_after_shower','').replace('_light','').replace('_loc','').replace('__','_')
         if 'scene' not in tmpname:
             if tmpname.endswith('_'):
                 $ tmpname = tmpname[:-1]
@@ -25,7 +25,8 @@ label change_loc(locname=False,loctrans=False,timeadd=False,char=False,imgname=F
                 call expression tmpname pass (wetshower=showerstat) from _call_expression_3
             else:
                 call expression tmpname from _call_expression_4
-        show screen location(current_location)
+        $ renpy.hide(current_location)
+        show screen location(current_location) #with Dissolve(.25)
         if locname in firstday_talk_list:
             if firstday_talk:
                 if renpy.random.random() > .75:
@@ -142,23 +143,23 @@ label fp_bedroom_fs(fsl_called=False,trans=False):
         $ update_been_everywhere_achievement()
     if fsl_called or uhl_fsb_cfs:
         $ fsl_called = uhl_fsb_cfs = False
-        if tablet_added:
-            if not tablet_always_look:
-                "Oh, she left her tablet..."
-                menu:
-                    "Look at tablet (evil)":
-                        $ statschangenotify("lil_bad",1,True)
-                        $ statschangenotify('fp_alignment',-1)
-                        $ ic_num = []
-                        $ tablet_always_look = True
-                        call screen fs_tablet()
-                    "Leave tablet (good)":
-                        $ statschangenotify("aru_good",1,True)
-                        $ statschangenotify('fp_alignment',1)
-                        $ tablet_added = False
-                        $ find_tablet = True
-            else:
-                call screen fs_tablet()
+        # if tablet_added:
+        #     if not tablet_always_look:
+        #         "Oh, she left her tablet..."
+        #         menu:
+        #             "Look at tablet (evil)":
+        #                 $ statschangenotify("lil_bad",1,True)
+        #                 $ statschangenotify('fp_alignment',-1)
+        #                 $ ic_num = []
+        #                 $ tablet_always_look = True
+        #                 call screen fs_tablet()
+        #             "Leave tablet (good)":
+        #                 $ statschangenotify("aru_good",1,True)
+        #                 $ statschangenotify('fp_alignment',1)
+        #                 $ tablet_added = False
+        #                 $ find_tablet = True
+        #     else:
+        #         call screen fs_tablet()
         # if panties_added:
         #     $ current_p = getattr(store,gp_bed+"_panties_item")
         #     if carry_backpack:
@@ -480,6 +481,7 @@ label fp_livingroom(lvr_called=False,trans=False):
         if carkeys_added:
             $ carkeys_added = False
             $ carkeys_pickup = True
+            $ carry_carkeys = True
             $ update_all_the_stuff()
             $ backpack.add_item(carkeys_item)
             call change_loc(current_location) from _call_change_loc_64
@@ -511,8 +513,8 @@ label fp_outside(out_called=False,trans=False):
             call fp_outside_scene from _call_outside_scene_1
         if day_week <= 4 and int(current_time[:2]) in morning:
             call fp_outside_scene from _call_outside_scene_3
-            if weather == 2:
-                show rain
+            # if weather == 2:
+            #     show rain
             menu:
                 "Stay home (evil)":
                     $ statschangenotify("lil_bad",1,True)
@@ -564,8 +566,17 @@ label fp_outside(out_called=False,trans=False):
                 else:
                     $ renpy.notify("You should go take a shower. No way is the people using "+drivingcmp+" gonna want to ride with you")
                     $ renpy.pause(.4)
-                call change_loc('fp_outside',loctrans=True,sec_call='fp_outside') from _call_change_loc_15
-        call change_loc('fp_outside') from _call_change_loc_61
+                call change_loc('fp_outside_scene',loctrans=True,sec_call='fp_outside') from _call_change_loc_15
+        call change_loc('fp_outside_scene') from _call_change_loc_61
+
+label fp_patio(pat_called=False,trans=False):
+    $ current_location = 'fp_patio'
+    if not fp_patio_ach:
+        $ fp_patio_ach = True
+        $ update_been_everywhere_achievement()
+    if pat_called or pat_cfs:
+        $ pat_called = pat_cfs = False
+        call change_loc('fp_patio')
 
 label fp_topofstairs(uts_called=False,trans=False):
     $ current_location = 'fp_topofstairs'

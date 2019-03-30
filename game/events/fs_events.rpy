@@ -173,12 +173,12 @@ label fs_talk(fst_called=False):
                 show fp_pm_fs_after_intro_talk_fs_full_turn_pan at diagonal_pan_up
                 with Dissolve(.25)
                 $ renpy.pause(6)
-                hide fp_pm_fs_after_intro_talk_fs_full_turn_pan
-                show fp_pm_fs_after_intro_talk_fs_full_turn
-                with Dissolve(.25)
                 fs smile "Yeah, how about you pick up that bottle of sunscreen, and put some on my back?"
                 fp "Uhm... sure?"
                 fs "Cool!"
+                hide fp_pm_fs_after_intro_talk_fs_full_turn_pan
+                show fp_pm_fs_after_intro_talk_fs_full_turn
+                with Dissolve(.25)
                 menu put_on_sunscreen_back:
                     "So, you should put on some sunscreen - where to start?"
                     "Turn over":
@@ -261,13 +261,17 @@ label fs_talk(fst_called=False):
                         hide fp_pm_fs_after_intro_talk_fs_legs_closeup
                         hide fp_pm_fs_after_intro_talk_fs_feet_closeup
                         hide fp_pm_fs_after_intro_talk_fs_shoulders_closeup
-                        show fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        if persistent.prefanal:
+                            show fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        else:
+                            show fp_pm_fs_after_intro_talk_fs_butt_closeup_no_buttplug
                         with Dissolve(.25)
                         if 'butt' not in i_s['pos_back']:
                             if all(elem in i_s['pos_back'] for elem in ['shoulders','legs','feet']):
                                 $ total_fs_sunscreen_points += 1
                                 "[fsName.Yourformal] moans slightly, obviously liking what you're doing..."
-                                "Wait... is that... no, you must be seeing things"
+                                if persistent.prefanal:
+                                    "Wait... is that... no, you must be seeing things"
                             else:
                                 $ total_fs_sunscreen_points = -5
                                 fs "Hey! What the hell are you doing? Don't touch me there!"
@@ -306,21 +310,26 @@ label fs_talk(fst_called=False):
                             $ i_s['pos_back'].append('back')
                             if all(elem in i_s['pos_back'] for elem in ['shoulders','legs','feet','butt']):
                                 fp "..."
-                                menu:
-                                    "Mention buttplug":
-                                        fp "Uhm, [fsName.informal]..."
-                                        fs "Yeah?"
-                                        fp "Are you using a... buttplug?"
-                                        fs "You noticed, huh?"
-                                        fp "Yeah..."
-                                        "You feel yourself getting rock hard. Nothing you can do about that, really..."
-                                        $ statschangenotify('fs_aro',1,True)
-                                        $ statschangenotify('fs_anal',1)
-                                        $ total_fs_sunscreen_points += 1
-                                    "Dont mention it":
-                                        fp "So, this okay?"
-                                        fs "Yup, it's great!"
-                                        $ i_s['pos_back'].append('butt_2')
+                                if persistent.prefanal:
+                                    menu:
+                                        "Mention buttplug":
+                                            fp "Uhm, [fsName.informal]..."
+                                            fs "Yeah?"
+                                            fp "Are you using a... buttplug?"
+                                            fs "You noticed, huh?"
+                                            fp "Yeah..."
+                                            "You feel yourself getting rock hard. Nothing you can do about that, really..."
+                                            $ statschangenotify('fs_aro',1,True)
+                                            $ statschangenotify('fs_anal',1)
+                                            $ total_fs_sunscreen_points += 1
+                                        "Dont mention it":
+                                            fp "So, this okay?"
+                                            fs "Yup, it's great!"
+                                            $ i_s['pos_back'].append('butt_2')
+                                else:
+                                    fp "So, this okay?"
+                                    fs "Yup, it's great"
+                                    $ i_s['pos_back'].append('butt_2')
                             elif total_fs_sunscreen_points >= 4:
                                 "[fsName.Yourformal] sighs, content, while you work the sunscreen into her back"
                                 $ total_fs_sunscreen_points += 1

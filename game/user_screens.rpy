@@ -286,7 +286,6 @@ screen game_menu(title, scroll=None, yinitial=0.0):
 
 
 screen notify(message,status=False,notifypause=False):
-
     if status:
         $ message = message
     elif isinstance(message, ( set, list, tuple )):
@@ -466,39 +465,30 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                 if filth_val < 10:
                     at alpha_transform(.1)
                     tooltip "Might be time to wash your hands ("+str(filth_val)+"% dirty)"
-                    # action NullAction()
                 elif filth_val < 20:
                     at alpha_transform(.2)
                     tooltip "Cleanliness is a virtue ("+str(filth_val)+"% dirty)"
-                    # action NullAction()
                 elif filth_val < 30:
                     at alpha_transform(.3)
                     tooltip "You pick your nose with those hands? Yuck! ("+str(filth_val)+"% dirty)"
-                    # action NullAction()
                 elif filth_val < 40:
                     at alpha_transform(.4)
                     tooltip "Okay, a bit of grime under the fingernails isn't that bad... but seriously ("+str(filth_val)+"% dirty)"
-                    # action NullAction()
                 elif filth_val < 50:
                     at alpha_transform(.5)
                     tooltip "There is dirty, and then there is you ("+str(filth_val)+"% dirty)"
-                    # action NullAction()
                 elif filth_val < 60:
                     at alpha_transform(.6)
                     tooltip "Have you been digging up the entire back yard? ("+str(filth_val)+"% dirty)"
-                    # action NullAction()
                 elif filth_val < 70:
                     at alpha_transform(.7)
                     tooltip "Seriously, have you ever heard of soap? ("+str(filth_val)+"% dirty)"
-                    # action NullAction()
                 elif filth_val < 80:
                     at alpha_transform(.8)
                     tooltip "Sometimes, one wonders why we even invented showers, or soap ("+str(filth_val)+"% dirty)"
-                    # action NullAction()
                 elif filth_val < 90:
                     at alpha_transform(.9)
                     tooltip "You're really dirty. You should go take a shower ("+str(filth_val)+"% dirty)"
-                    # action NullAction()
                 else:
                     tooltip "You're filthy! Go wash up! ("+str(filth_val)+"% dirty)"
                 action NullAction()
@@ -526,7 +516,13 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
         vbox:
             xalign .5
             yalign 0.0
-            text previous_location
+            textbutton "Nav-menu":
+                action [ToggleScreen('navmenu')]
+
+    if config.developer:
+        vbox:
+            xalign .5
+            yalign 0.0
             hbox:
                 xalign .5
                 ypos 50
@@ -567,7 +563,7 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                         else:
                             action [FileTakeScreenshot(),ToggleScreen('phone')]
                         at ModZoom(.8)
-                        # tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more"
+                        tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more"
                 elif calls:
                     imagebutton auto "gui/menu_phone_call_%s.webp" focus_mask True:
                         if renpy.get_screen('phone'):
@@ -575,7 +571,7 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                         else:
                             action [FileTakeScreenshot(),ToggleScreen('phone'),Show('')]
                         at ModZoom(.8)
-                        # tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, unanswered calls"
+                        tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, unanswered calls"
                 elif messages:
                     imagebutton auto "gui/menu_phone_message_%s.webp" focus_mask True:
                         if renpy.get_screen('phone'):
@@ -583,7 +579,7 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                         else:
                             action [FileTakeScreenshot(),ToggleScreen('phone')]
                         at ModZoom(.8)
-                        # tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new messages"
+                        tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new messages"
                 elif hints:
                     imagebutton auto "gui/menu_phone_hint_%s.webp" focus_mask True:
                         if renpy.get_screen('phone'):
@@ -591,8 +587,8 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
                         else:
                             action [FileTakeScreenshot(),ToggleScreen('phone')]
                         at Shake(.8)
-                        # if tooltipcounterforphone <= 5:
-                        #     tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new hints"
+                        if tooltipcounterforphone > 0:
+                            tooltip "Here's your phone. It contains ingame menus, imagegalleries, achievements and more. And right now, new hints"
 
                 add "gui/menu_phone_overlay.webp" at ModZoom(.87):
                     yoffset -134
@@ -722,6 +718,17 @@ screen ingame_menu_display(day_week=day_week,current_month=current_month,current
     key "meta_K_q" action [Show('phone'),SetVariable('show_icons',False),Show('custom_confirm',None,'quit')]
     key 'h' action HideInterface_new()
 
+screen navmenu(current_location):
+    # on show:
+    #     yalign 0.0
+    #     linear 2.0 yalign .2
+    frame:
+        ysize 200
+        xsize 1920
+        background Solid("#000")
+        text "This is a test":
+            color "#FFF"
+
 screen custom_mainmenu_confirm(selector=False):
     zorder 999
     $ keyclose = True
@@ -822,23 +829,8 @@ screen stat_screen():
                             background bg_c
                             hover_background "#ddd"
                             selected_background "#ddd"
-                            if name[1] == "fp":
-                                # $ foldername = 'marten'
-                                $ imagename = 'marten_hover'
-                            elif name[1] == 'fs':
-                                # $ foldername = 'juliette'
-                                $ imagename = 'juliette_hover'
-                            elif name[1] == 'fm':
-                                # $ foldername = 'anne'
-                                $ imagename = 'anne_hover'
-                            elif name[1] == 'nk':
-                                # $ foldername = 'karen'
-                                $ imagename = 'karen_hover'
-                            elif name[1] == 'nc':
-                                $ imagename = 'catherina_hover'
-                            elif name[1] == 'nr':
-                                # $ foldername = 'ron'
-                                $ imagename = 'ron_hover'
+                            if renpy.loadable("images/characters/"+name[1]+"/"+name[1]+"_hover.webp"):
+                                $ imagename = name[1]+"_hover"
                             else:
                                 $ imagename = 'question_mark_hover'
                             hbox:
@@ -906,7 +898,6 @@ screen stat_screen():
                                         focus_mask dynamic_animation_list[str(clicked[1])]
                                         hovered SetField(dynamic_animation_list[str(clicked[1])],"pause",True)
                                         unhovered SetField(dynamic_animation_list[str(clicked[1])],"pause",False)
-                                        # action ToggleField(dynamic_animation_list(str(clicked[1])),"pause",True,False)
                                         action NullAction()
                                 else:
                                     add Solid("#DDD")
@@ -973,7 +964,6 @@ screen stat_screen():
                                             xalign .5
                                             xsize 400
                                             hbox:
-                                                # xalign .5
                                                 xsize 300
                                                 hbox:
                                                     button:
@@ -989,7 +979,6 @@ screen stat_screen():
                                                         xysize(200,40)
                                                         yalign .5
                                                         xalign .5
-                                                        # yoffset -4
 
                                                 if persistent.cheat:
                                                     hbox:
@@ -1001,7 +990,6 @@ screen stat_screen():
                                                             ypos 10
                                                             xpos 40
                                             hbox:
-                                                # xalign .5
                                                 xsize 300
                                                 hbox:
                                                     button:
@@ -1017,7 +1005,6 @@ screen stat_screen():
                                                         xysize(200,40)
                                                         yalign .5
                                                         xalign .5
-                                                        # yoffset -4
 
                                                 if persistent.cheat:
                                                     hbox:
@@ -1029,7 +1016,6 @@ screen stat_screen():
                                                             ypos 10
                                                             xpos 40
                                             hbox:
-                                                # xalign .5
                                                 xsize 300
                                                 hbox:
                                                     button:
@@ -1046,7 +1032,6 @@ screen stat_screen():
                                                         xysize(200,40)
                                                         yalign .5
                                                         xalign .5
-                                                        # yoffset -4
                                                 if persistent.cheat:
                                                     hbox:
                                                         xsize 50
@@ -1159,7 +1144,6 @@ screen inventory_screen():
             vpgrid:
                 style_prefix "inventory"
                 cols 1
-                # scrollbars None
                 edgescroll 100,500
                 mousewheel True
                 pagekeys True
@@ -1409,29 +1393,6 @@ transform delayed_blink(delay, cycle):
         pause (cycle - .4)
         repeat
 
-# style skip_frame is empty
-# style skip_text is gui_text
-# style skip_triangle is skip_text
-
-# style skip_frame:
-#     yalign .2
-#     background Frame("gui/skip.webp", gui.skip_frame_borders, tile=gui.frame_tile)
-#     padding gui.skip_frame_borders.padding
-
-# style skip_text:
-#     size gui.notify_text_size
-#     color "#fff"
-
-# style skip_triangle:
-#     ## We have to use a font that has the BLACK RIGHT-POINTING SMALL TRIANGLE
-#     ## glyph in it.
-#     font "DejaVuSans.ttf"
-#     color "#fff"
-
-# style skip_triangle_call:
-#     font "DejaVuSans.ttf"
-#     color "#50AF00"
-
 screen say(who, what):
     zorder 990
     style_prefix "say"
@@ -1512,54 +1473,7 @@ screen say(who, what):
 init python:
     config.character_id_prefixes.append('namebox')
 
-# style window is default
-# style say_label is default
-# style say_dialogue is default
-# style say_thought is say_dialogue
-
-# style namebox is default
-# style namebox_label is say_label
-
-# style window:
-#     xalign 0.5
-#     xfill True
-#     yalign gui.textbox_yalign
-#     ysize gui.textbox_height
-#     background Image("gui/textbox.webp", xalign=0.5, yalign=1.0)
-
-# style namebox:
-#     xpos gui.name_xpos
-#     xanchor gui.name_xalign
-#     xsize gui.namebox_width
-#     ypos gui.name_ypos
-#     ysize gui.namebox_height
-
-#     background Frame("gui/namebox.webp", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
-#     padding gui.namebox_borders.padding
-
-# style namebox_char:
-#     xpos gui.name_xpos
-#     xanchor gui.name_xalign
-#     xsize gui.namebox_width
-#     ypos gui.name_ypos
-#     ysize gui.namebox_height
-
-#     padding gui.namebox_borders.padding
-
-# style say_label:
-#     properties gui.text_properties("name", accent=False)
-#     xalign gui.name_xalign
-#     yalign 0.5
-#     color "#ffffff"
-
-# style say_dialogue:
-#     properties gui.text_properties("dialogue")
-#     xpos gui.dialogue_xpos
-#     xsize gui.dialogue_width
-#     ypos gui.dialogue_ypos
-
 screen location(room=False):
-    # $ print('room: '+room)
     layer "master"
     $ exitdown = exitleft = exitup = exitright = False
     default x = 500
@@ -1572,18 +1486,10 @@ screen location(room=False):
         yval = 1.0 if y > config.screen_height/2 else .0
     if room == 'fp_entrance':
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-            # imagebutton auto ("images/backgrounds/interaction_moves/fp_edn_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/fp_edm_%s.webp") focus_mask True action [SetVariable('trans',True),SetVariable('out_cfs',True),Jump('fp_outside')]:
-                # tooltip "Go outside"
-            # imagebutton auto ("images/backgrounds/interaction_moves/fp_kitn_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/fp_kitm_%s.webp") focus_mask True action [SetVariable('kit_cfs',True),Jump('fp_kitchen')]:
-            #     tooltip 'Kitchen'
-            # imagebutton auto ("images/backgrounds/interaction_moves/fp_livn_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/fp_livm_%s.webp") focus_mask True action [SetVariable('lvr_cfs',True),Jump('fp_livingroom')]:
-                # tooltip "Livingroom"
-            imagebutton auto ("images/backgrounds/interaction_moves/fp_enfmb_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/fp_emfmb_%s.webp") focus_mask True action [SetVariable('fmb_cfs',True),Jump('fp_bedroom_fm')]:
+            imagebutton auto ("images/backgrounds/interaction_moves/fp_en_fm_door_%s.webp" if int(current_time[:2]) in night else ("images/backgrounds/interaction_moves/fp_em_bw_fm_door_%s.webp" if weather == 1 or weather == 2 else "images/backgrounds/interaction_moves/fp_em_fm_door_%s.webp")) focus_mask True action [SetVariable('fmb_cfs',True),Jump('fp_bedroom_fm')]:
                 tooltip "[fmName.name]'s bedroom"
-            imagebutton auto ("images/backgrounds/interaction_moves/fp_ensu_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/fp_emsu_%s.webp") focus_mask True action [SetVariable('uts_cfs',True),Jump('fp_topofstairs')]:
+            imagebutton auto ("images/backgrounds/interaction_moves/fp_en_stairs_%s.webp" if int(current_time[:2]) in night else ("images/backgrounds/interaction_moves/fp_em_bw_stairs_%s.webp" if weather == 1 or weather == 2 else "images/backgrounds/interaction_moves/fp_em_stairs_%s.webp")) focus_mask True action [SetVariable('uts_cfs',True),Jump('fp_topofstairs')]:
                 tooltip "Bedrooms / Bathroom"
-            # imagebutton auto ("images/backgrounds/interaction_moves/fp_sbn_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/fp_sbm_%s.webp") focus_mask True action [SetVariable('gar_cfs',True),Jump('fp_garage')]:
-                # tooltip "Downstairs / Garage"
 
             $ exitright_event_var = 'gar_cfs'
             $ exitright_event = 'fp_garage'
@@ -1654,15 +1560,13 @@ screen location(room=False):
                     $ phoneimg = "images/backgrounds/interaction_items/fp_bedroom_morning_phone_%s.webp"
                 imagebutton auto phoneimg focus_mask True action [SetVariable('uhl_fpb_cfs',True),SetVariable('phone_added',True),Jump('fp_bedroom_fp')]
 
-            imagebutton auto ("images/backgrounds/interaction_moves/fp_bedroom_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/fp_bedroom_door_morning_%s.webp") focus_mask True action [SetVariable('morning_out_of_bed',True),SetVariable('ups_cfs',True),Call('upstairs_loc')]:
-                tooltip "Upper Hallway"
         else:
             if int(current_time[:2]) in night:
                 add "images/backgrounds/interaction_items/fpbn_lilimaruru_idle.webp"
                 add "images/backgrounds/interaction_moves/fp_bedroom_door_night_idle.webp"
             else:
                 add "images/backgrounds/interaction_items/fpbm_lilimaruru_idle.webp"
-                add "images/backgrounds/interaction_moves/fp_bedroom_door_morning_idle.webp"
+                # add "images/backgrounds/interaction_moves/fp_bedroom_door_morning_idle.webp"
             if not backpack.has_item(schoolbooks_item):
                 if int(current_time[:2]) in night:
                     add "images/backgrounds/interaction_items/fp_bedroom_night_dresser_idle.webp"
@@ -1684,12 +1588,16 @@ screen location(room=False):
                 else:
                     add "images/backgrounds/interaction_items/fp_bedroom_morning_phone_idle.webp"
 
+
+        imagebutton auto ("images/backgrounds/interaction_moves/fp_bn_fp_door_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/fp_bm_fp_door_%s.webp") focus_mask True action [SetVariable('morning_out_of_bed',True),SetVariable('ups_cfs',True),Call('upstairs_loc')]:
+            tooltip "Upper Hallway"
+
     if room == "fp_bedroom_fs":
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-            if find_panties:
-                    imagebutton auto ("images/backgrounds/interaction_items/bedroom_panties_"+gp_bed+"_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/bedroom_panties_"+gp_bed+"_morning_%s.webp") focus_mask True action [SetVariable('find_panties',False),SetVariable('panties_added',True),SetVariable('gp_bed',gp_bed),SetVariable('uhl_fsb_cfs',True),Jump('fp_bedroom_fs')]
-            if find_tablet:
-                imagebutton auto ("images/backgrounds/interaction_items/fs_tablet_bedroom_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/fs_tablet_bedroom_morning_%s.webp") focus_mask True action [SetVariable('find_tablet',False),SetVariable('tablet_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fp_bedroom_fs')]
+            # if find_panties:
+            #         imagebutton auto ("images/backgrounds/interaction_items/bedroom_panties_"+gp_bed+"_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/bedroom_panties_"+gp_bed+"_morning_%s.webp") focus_mask True action [SetVariable('find_panties',False),SetVariable('panties_added',True),SetVariable('gp_bed',gp_bed),SetVariable('uhl_fsb_cfs',True),Jump('fp_bedroom_fs')]
+            # if find_tablet:
+            #     imagebutton auto ("images/backgrounds/interaction_items/fs_tablet_bedroom_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/fs_tablet_bedroom_morning_%s.webp") focus_mask True action [SetVariable('find_tablet',False),SetVariable('tablet_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fp_bedroom_fs')]
             if find_pb:
                 if not backpack.has_item(princessplug_item):
                     imagebutton auto ("images/backgrounds/interaction_items/pink_buttplug_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/pink_buttplug_morning_%s.webp") focus_mask True action [SetVariable('find_pb',False),SetVariable('pb_added',True),SetVariable('uhl_fsb_cfs',True),Jump('fp_bedroom_fs')]
@@ -1700,19 +1608,20 @@ screen location(room=False):
     if room == "fp_garage":
         if int(current_time[:2]) in day+night:
             if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-                if int(current_time[:2]) in day and (int(current_time[:2]) > 15 and int(current_time[:2]) < 22):
-                    imagebutton auto "images/backgrounds/interaction_items/cm_%s.webp" focus_mask True:
-                        if backpack.has_item(carkeys_item):
+                # if int(current_time[:2]) in day and (int(current_time[:2]) > 15 and int(current_time[:2]) < 22):
+                imagebutton auto ("images/backgrounds/interaction_items/cn_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_items/cm_%s.webp") focus_mask True:
+                    if backpack.has_item(carkeys_item):
+                        if int(current_time[:2]) in night:
                             action [SetVariable('out_cfs',True),SetVariable('bc_clicked',True),Jump('fp_outside')]
                         else:
-                            action [Function(renpy.notify,"You need to find the car-keys"),Function(set_hint,"You need to find the carkeys to drive the car")]
-                elif int(current_time[:2]) in night:
-                    if int(current_time[:2]) >= 22 or int(current_time[:2]) < 4:
-                        imagebutton auto "images/backgrounds/interaction_items/cn_%s.webp" focus_mask True:
-                            if backpack.has_item(carkeys_item):
-                                action [SetVariable('out_cfs',True),SetVariable('bc_clicked',True),Jump('fp_outside')]
-                            else:
-                                action [Function(renpy.notify,"You need to find the car-keys"),Function(set_hint,"You need to find the carkeys to drive the car")]
+                            action NullAction()
+                # elif int(current_time[:2]) in night:
+                #     if int(current_time[:2]) >= 22 or int(current_time[:2]) < 4:
+                #         imagebutton auto "images/backgrounds/interaction_items/cn_%s.webp" focus_mask True:
+                #             if backpack.has_item(carkeys_item):
+                #                 action [SetVariable('out_cfs',True),SetVariable('bc_clicked',True),Jump('fp_outside')]
+                    else:
+                        action [Call('change_loc',locname=current_location,sec_call="fp_find_keys")]
 
         # if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
         #     if not backpack.has_item(toolbox_item):
@@ -1734,13 +1643,13 @@ screen location(room=False):
         #         imagebutton auto "gui/tools_1_morning_%s.webp" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('wmc_cfs',True),Jump('w_mc')]:
         #             xalign .5
         #             yalign .5
-            $ exitleft_event_var = "gar_fb_cfs"
-            $ exitleft_event = "fp_garage_fb"
-            $ exitleft = "Work on bike"
+        $ exitleft_event_var = "gar_fb_cfs"
+        $ exitleft_event = "fp_garage_fb"
+        $ exitleft = "Work on bike"
         # if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
-            $ exitdown_event_var = "lvr_cfs"
-            $ exitdown_event = "fp_livingroom"
-            $ exitdown = "Livingroom"
+        $ exitdown_event_var = "lvr_cfs"
+        $ exitdown_event = "fp_livingroom"
+        $ exitdown = "Livingroom"
 
     if room == "fp_garage_fb":
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
@@ -1763,11 +1672,13 @@ screen location(room=False):
                 imagebutton auto "gui/tools_1_morning_%s.webp" focus_mask True action [SetVariable('gar_cfs',True),SetVariable('wmc_cfs',True),Jump('w_mc')]:
                     xalign .5
                     yalign .5
+            if mc_f:
+                imagebutton auto "images/backgrounds/interaction_items/gm_fb_finished_ride_%s.webp" focus_mask True action NullAction():
+                    tooltip "Take a ride"
 
             $ exitdown_event_var = "gar_cfs"
             $ exitdown_event = "fp_garage"
             $ exitdown = "Garage"
-
 
     if room == "fp_livingroom":
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
@@ -1801,6 +1712,7 @@ screen location(room=False):
 
     if room == "fp_kitchen":
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+            imagebutton auto ("images/backgrounds/interaction_moves/fp_kn_patio_door_%s.webp" if int(current_time[:2]) in night else ("images/backgrounds/interaction_moves/fp_km_bw_patio_door_%s.webp" if (weather == 1 or weather == 2) else "images/backgrounds/interaction_moves/fp_km_patio_door_%s.webp")) focus_mask True action [SetVariable('pat_cfs',True),Jump('fp_patio')]
             if fm_seen:
                 if wcount == 5:
                     if bottles == 1 or br == 1 and int(current_time[:2]) in (day or night):
@@ -1916,6 +1828,12 @@ screen location(room=False):
             $ exitdown_event = 'fp_kitchen'
             $ exitdown = "Kitchen"
 
+    if room == 'fp_patio':
+        if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
+            $ exitdown_event_var = 'kit_cfs'
+            $ exitdown_event = 'fp_kitchen'
+            $ exitdown = 'Kitchen'
+
     if room == "fp_upstairs":
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
         #imagebutton auto ("images/backgrounds/interaction_moves/upper_hallway_fp_door_night_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/upper_hallway_fp_door_morning_%s.webp") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Jump('fp_bedroom_fp')]:
@@ -1941,7 +1859,7 @@ screen location(room=False):
     if room == "fp_topofstairs":
         imagebutton auto ("images/backgrounds/interaction_moves/fp_ufbn_topofstairs_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/fp_ufbm_topofstairs_%s.webp") focus_mask True action [Call('fp_ufb',uhlbcfs=True)]:
             tooltip 'Enter bathroom'
-        imagebutton auto ("images/backgrounds/interaction_moves/fp_un_fpd_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/fp_um_fpd_%s.webp") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Call('fp_bedroom_fp')]:
+        imagebutton auto ("images/backgrounds/interaction_moves/fp_un_fpd_%s.webp" if int(current_time[:2]) in night else "images/backgrounds/interaction_moves/fp_um_fpd_%s.webp") focus_mask True action [SetVariable('uhl_fpb_cfs',True),Call('change_loc',locname='fp_bedroom_fp')]:
             tooltip "Enter your room"
         if not renpy.get_screen('say') and not renpy.get_screen('choice') and not renpy.get_screen('phone'):
         # $ exitdown_event_var = "uts_cfs"
@@ -2075,7 +1993,7 @@ screen location(room=False):
                         xalign 0.0
                         yalign .5
                         tooltip exitleft
-                elif current_location == 'fp_topofstairs' and fs_rel <= 30:
+                elif current_location == 'fp_topofstairs' and fs_rel < 30:
                     imagebutton auto "gui/exit_left_%s.webp" focus_mask True action NullAction():
                         xalign 0.0
                         yalign .5
@@ -2925,9 +2843,43 @@ screen preferences():
                                     add "gui/blue_checkmark.webp" at ModZoom(.2)
                             hbox:
                                 xsize 230
-                                textbutton _("Wetting") action [ToggleField(persistent,'prefwetting',True,False)]:
+                                textbutton _("Wetting") action [ToggleField(persistent,'prefpiss',True,False)]:
                                     xsize 170
-                                if persistent.prefwetting:
+                                if persistent.prefpiss:
+                                    add "gui/blue_checkmark.webp" at ModZoom(.2)
+                        hbox:
+                            ypos 50
+                            xalign .5
+                            spacing 70
+                            hbox:
+                                xsize 210
+                                textbutton _("Milking") action [ToggleField(persistent,'prefmilk',True,False)]:
+                                    xsize 150
+                                if persistent.prefmilk:
+                                    add "gui/blue_checkmark.webp" at ModZoom(.2)
+                            hbox:
+                                xsize 210
+                                textbutton _("Shemale") action [ToggleField(persistent,'preftran',True,False)]:
+                                    xsize 150
+                                if persistent.preftran:
+                                    add "gui/blue_checkmark.webp" at ModZoom(.2)
+                            hbox:
+                                xsize 210
+                                textbutton _("Pregnant") action [ToggleField(persistent,'prefpreg',True,False)]:
+                                    xsize 150
+                                if persistent.prefpreg:
+                                    add "gui/blue_checkmark.webp" at ModZoom(.2)
+                            hbox:
+                                xsize 210
+                                textbutton _("Fisting") action [ToggleField(persistent,'preffist',True,False)]:
+                                    xsize 150
+                                if persistent.preffist:
+                                    add "gui/blue_checkmark.webp" at ModZoom(.2)
+                            hbox:
+                                xsize 210
+                                textbutton _("Groupsex") action [ToggleField(persistent,'prefmult',True,False)]:
+                                    xsize 150
+                                if persistent.prefmult:
                                     add "gui/blue_checkmark.webp" at ModZoom(.2)
             else:
                 text "Select one of the preference subpages from the menu above":

@@ -252,14 +252,15 @@ label day_events():
             "Staring at her ass, you keep looking, as it gyrates in front of you. You've never really noticed how... sexy it looks before!"
             "Suddenly... this gotta be in your head?!?"
             scene kitchen_spill_semi_transparent with Dissolve(.25)
-            "Your dick is waking up, potentially causing a lot of trouble very soon..."
             menu:
+                fp "What the fuck is going on here...?"
                 "If you think this is all in your head, [fp]... This is gonna be funnier than I thought! (evil)":
                     $ statschangenotify('lil_bad',2,True)
                     $ statschangenotify('fp_alignment',-2)
                 "Sure, sure, this is all in your head, [fp]! (good)":
                     $ statschangenotify('aru_good',2,True)
                     $ statschangenotify('fp_alignment',2)
+            "Your dick is waking up, potentially causing a lot of trouble very soon..."
             scene fp_kitchen_spill
             "You make a concentrated effort to focus on something else!"
             "... *cough* ..."

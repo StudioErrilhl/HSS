@@ -1,3 +1,9 @@
+label fp_find_keys():
+    if not carry_carkeys:
+        fp "Crap! I don't have the keys. I'll need to find them..."
+        $ carkeys_added = True
+        $ set_hint("You need to find the carkeys to drive the car")
+
 label fp_aquire_couch():
     $ conditions.addcondition("Yes","fp_money > 250")
     menu:

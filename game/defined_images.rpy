@@ -220,9 +220,9 @@ layeredimage fp_garage_fb_morning:
 
     if backpack.has_item(toolbox_item) and mc_b < 15:
         "gm_fb_00_toolbox"
-    elif backpack.has_item(toolbox_item) and mc_b < 125:
+    elif backpack.has_item(toolbox_item) and mc_b < 75:
         "gm_fb_10_toolbox"
-    elif backpack.has_item(toolbox_item) and mc_b < 135:
+    elif backpack.has_item(toolbox_item) and mc_b < 125:
         "gm_fb_90_toolbox"
     elif backpack.has_item(toolbox_item) and mc_b < 150:
         "gm_fb_95_toolbox"
