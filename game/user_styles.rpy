@@ -32,6 +32,23 @@ style slider:
     base_bar Frame("gui/slider/horizontal_[prefix_]bar.webp", gui.slider_borders, tile=gui.slider_tile)
     thumb "gui/slider/horizontal_[prefix_]thumb_cr.webp"
 
+style category_label:
+    xsize 370
+
+style category_sub_label:
+    xsize 370
+
+style category_label_text:
+    color "#fff"
+    outlines [(absolute(1),"#0cf",absolute(0),absolute(0))]
+    xalign .5
+    text_align .5
+
+style category_sub_label_text:
+    color "#fff"
+    xalign .5
+    text_align .5
+
 style category_button_text:
     color "#fff"
     hover_color "#0cf"
@@ -86,14 +103,16 @@ init -2:
         properties gui.button_properties("choice_button")
         hover_color "#000"
 
-    style choice_button_disabled_evil:
-        properties gui.button_properties('choice_button_disabled')
+    # style choice_button_disabled_evil:
+    #     properties gui.button_properties('choice_button_disabled')
+        # color "#aaaaaa"
         # color "#F00"
-        outlines [(absolute(1),"#F00",absolute(0),absolute(0))]
+        # outlines [(absolute(1),"#F00",absolute(0),absolute(0))]
 
-    style choice_button_disabled_good:
-        properties gui.button_properties('choice_button_disabled')
-        outlines [(absolute(1),"#3D3",absolute(0),absolute(0))]
+    # style choice_button_disabled_good:
+    #     properties gui.button_properties('choice_button_disabled')
+        # color "#aaaaaa"
+        # outlines [(absolute(1),"#3D3",absolute(0),absolute(0))]
         # color "#0F0"
 
     style choice_button_evil:
@@ -108,7 +127,9 @@ init -2:
 
     style choice_button_disabled is default:
         properties gui.button_text_properties("choice_button_disabled")
-        color "#aaaaaa"
+        # background "gui/button/choice_insensitive_background.webp"
+        # hover_background "gui/choice_insensitive_background.webp"
+
     style menu_window is default
 
     style menu_choice_button is button:

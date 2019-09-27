@@ -1,6 +1,3 @@
-# init -100 python:
-#     import random
-
 init python:
 
     def info_hover(a,b="hide"):

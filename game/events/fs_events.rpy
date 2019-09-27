@@ -148,7 +148,8 @@ label fs_talk(fst_called=False):
                 with Dissolve(.25)
                 fs ahead "Can we just agree that unless I'm screaming bloody murder... and even if I am, {i}check first!{/i}, that you do not go creeping about my door?"
                 fp "Sure, [fsName.informal]. I am really sorry!"
-                fs ahead closed "Yeah, yeah... not as sorry as me..."
+                # fs ahead closed "Yeah, yeah... not as sorry as me..."
+                fs ahead "Yeah, yeah... not as sorry as me..."
                 fp "Huh?"
                 hide fp_pm_fs_after_intro_talk_fs_less_annoyed
                 show fp_pm_fs_after_intro_talk_fs_relaxed
@@ -179,14 +180,21 @@ label fs_talk(fst_called=False):
                 hide fp_pm_fs_after_intro_talk_fs_full_turn_pan
                 show fp_pm_fs_after_intro_talk_fs_full_turn
                 with Dissolve(.25)
-                menu put_on_sunscreen_back:
-                    "So, you should put on some sunscreen - where to start?"
+                label put_on_sunscreen_back:
+                    if first_sunscreen:
+                        $ sunscreen_text = "So, you should put on some sunscreen - where to start?"
+                    else:
+                        $ sunscreen_text = "So, more sunscreen to put on - where to go from here?"
+                menu:
+                    # "So, you should put on some sunscreen - where to start?"
+                    "[sunscreen_text]"
                     "Turn over":
                         fs "You wanna do the other side too?"
                         jump turned_over_intro
                     "Shoulders" if 'shoulders' not in i_s['pos_back']: # first / second
+                        $ first_sunscreen = False
                         hide fp_pm_fs_after_intro_talk_fs_full_turn
-                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup_with_buttplug
                         hide fp_pm_fs_after_intro_talk_fs_back_closeup
                         hide fp_pm_fs_after_intro_talk_fs_legs_closeup
                         hide fp_pm_fs_after_intro_talk_fs_feet_closeup
@@ -209,8 +217,9 @@ label fs_talk(fst_called=False):
                         else:
                             jump turned_over_intro
                     "Legs" if 'legs' not in i_s['pos_back']: # third
+                        $ first_sunscreen = False
                         hide fp_pm_fs_after_intro_talk_fs_full_turn
-                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup_with_buttplug
                         hide fp_pm_fs_after_intro_talk_fs_back_closeup
                         hide fp_pm_fs_after_intro_talk_fs_legs_closeup
                         hide fp_pm_fs_after_intro_talk_fs_feet_closeup
@@ -232,8 +241,9 @@ label fs_talk(fst_called=False):
                         else:
                             jump turned_over_intro
                     "Feet" if 'feet' not in i_s['pos_back']: # fourth
+                        $ first_sunscreen = False
                         hide fp_pm_fs_after_intro_talk_fs_full_turn
-                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup_with_buttplug
                         hide fp_pm_fs_after_intro_talk_fs_back_closeup
                         hide fp_pm_fs_after_intro_talk_fs_legs_closeup
                         hide fp_pm_fs_after_intro_talk_fs_feet_closeup
@@ -255,14 +265,15 @@ label fs_talk(fst_called=False):
                         else:
                             jump turned_over_intro
                     "Butt" if 'butt' not in i_s['pos_back'] or 'butt_2' not in i_s['pos_back']: # fifth and seventh
+                        $ first_sunscreen = False
                         hide fp_pm_fs_after_intro_talk_fs_full_turn
-                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup_with_buttplug
                         hide fp_pm_fs_after_intro_talk_fs_back_closeup
                         hide fp_pm_fs_after_intro_talk_fs_legs_closeup
                         hide fp_pm_fs_after_intro_talk_fs_feet_closeup
                         hide fp_pm_fs_after_intro_talk_fs_shoulders_closeup
                         if persistent.prefanal:
-                            show fp_pm_fs_after_intro_talk_fs_butt_closeup
+                            show fp_pm_fs_after_intro_talk_fs_butt_closeup_with_buttplug
                         else:
                             show fp_pm_fs_after_intro_talk_fs_butt_closeup_no_buttplug
                         with Dissolve(.25)
@@ -297,9 +308,10 @@ label fs_talk(fst_called=False):
                             jump put_on_sunscreen_back
                         else:
                             jump turned_over_intro
-                    "Back" if 'back' not in i_s['pos_back']:
+                    "Back" if 'back' not in i_s['pos_back']: #sixth
+                        $ first_sunscreen = False
                         hide fp_pm_fs_after_intro_talk_fs_full_turn
-                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup
+                        hide fp_pm_fs_after_intro_talk_fs_butt_closeup_with_buttplug
                         hide fp_pm_fs_after_intro_talk_fs_back_closeup
                         hide fp_pm_fs_after_intro_talk_fs_legs_closeup
                         hide fp_pm_fs_after_intro_talk_fs_feet_closeup
@@ -329,7 +341,8 @@ label fs_talk(fst_called=False):
                                 else:
                                     fp "So, this okay?"
                                     fs "Yup, it's great"
-                                    $ i_s['pos_back'].append('butt_2')
+                                    # $ i_s['pos_back'].append('butt_2')
+                                    $ total_fs_sunscreen_points += 1
                             elif total_fs_sunscreen_points >= 4:
                                 "[fsName.Yourformal] sighs, content, while you work the sunscreen into her back"
                                 $ total_fs_sunscreen_points += 1
@@ -365,7 +378,7 @@ label fs_talk(fst_called=False):
                     $ renpy.pause(6)
                     show fp_pm_fs_after_intro_talk_fs_front_full
                     with Dissolve(.25)
-                    fs smile "Sure, do the front as well"
+                    fs smile "So, do the front as well"
                     jump put_on_sunscreen_front
                 else:
                     menu put_on_sunscreen_front:
@@ -376,11 +389,11 @@ label fs_talk(fst_called=False):
                             hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
                             hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
-                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
-                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
                             show fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
                             with Dissolve(.25)
                             if 'stomach' not in i_s['pos_front']:
@@ -402,11 +415,11 @@ label fs_talk(fst_called=False):
                             hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
                             hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
-                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
-                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
                             show fp_pm_fs_after_intro_talk_fs_front_shoulders_closeup
                             with Dissolve(.25)
                             if 'shoulders' not in i_s['pos_front']:
@@ -428,11 +441,11 @@ label fs_talk(fst_called=False):
                             hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
                             hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
-                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
-                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
                             show fp_pm_fs_after_intro_talk_fs_front_legs_closeup
                             with Dissolve(.25)
                             if 'legs' not in i_s['pos_front']:
@@ -454,11 +467,11 @@ label fs_talk(fst_called=False):
                             hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
                             hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
-                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
-                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
                             show fp_pm_fs_after_intro_talk_fs_front_feet_closeup
                             with Dissolve(.25)
                             if 'feet' not in i_s['pos_front']:
@@ -481,11 +494,11 @@ label fs_talk(fst_called=False):
                                 hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
                                 hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
                                 hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
-                                hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                                # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
                                 hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
                                 hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
                                 hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
-                                hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                                # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
                                 show fp_pm_fs_after_intro_talk_fs_front_breast_closeup
                                 with Dissolve(.25)
                             if not i_s['pos_front']:
@@ -502,11 +515,11 @@ label fs_talk(fst_called=False):
                                             hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
                                             hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
-                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
-                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
                                             show fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan at vertical_pan_from_bottom
                                             with Dissolve(.25)
                                             $ renpy.pause(4)
@@ -515,11 +528,11 @@ label fs_talk(fst_called=False):
                                             hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
                                             hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
-                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
-                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
                                             show fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
                                             with Dissolve(.25)
                                             fp "Wow! You got beautiful boobs, [fsName.informal]!"
@@ -528,11 +541,11 @@ label fs_talk(fst_called=False):
                                             hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
                                             hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
-                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
-                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
                                             show fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
                                             with Dissolve(.25)
                                             fs "Thanks... now... sunscreen?"
@@ -543,7 +556,8 @@ label fs_talk(fst_called=False):
                                             fs "That... feels... nice {i}She moans under her breath, trying to keep it inaudible... and failing{/i}"
                                             "You finish rubbing her boobs, and just sit there for a little while..."
                                             fs "If you're done, you can move, you know..."
-                                            fp blushing "Yeah... uhm... trying to not embarrass myself here!"
+                                            # fp blushing "Yeah... uhm... trying to not embarrass myself here!"
+                                            fp "Yeah... uhm... trying to not embarrass myself here!"
                                             "[fs] looks down, turning a shade of red again"
                                             fs "Oh!"
                                             fp "Yeah... but, fine, I'm gonna get off you now. And... go someplace else!"
@@ -558,12 +572,12 @@ label fs_talk(fst_called=False):
                                             hide fp_pm_fs_after_intro_talk_fs_front_feet_closeup
                                             hide fp_pm_fs_after_intro_talk_fs_front_stomach_closeup
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup
-                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
+                                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_pan
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_unsure
                                             hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_remove_bra_face_smile
-                                            hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
-                                            show fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                                            # hide fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
+                                            # show fp_pm_fs_after_intro_talk_fs_front_breast_closeup_disappointed
                                             with Dissolve(.25)
                                             "She seems a bit... disappointed. Wonder what that was all about?"
                                         else:

@@ -3,10 +3,12 @@ label travel_events(event=False):
         if event == 'travel_school':
             if 6 <= int(current_time[:2]) <= 8 and day_week <= 4:
                 if (shitty_morning and int(current_time[:2]) <= 7) or (int(current_time[:2]) <= 7 and (weather == 2)):
-                    nk ahead "Hi [fp]! You wanna ride to school?"
+                    # nk ahead "Hi [fp]! You wanna ride to school?"
+                    nk "Hi [fp]! You wanna ride to school?"
                     if not nk_driving:
                         fp "Hi [nk]... Didn't know you drove?"
-                        nk ahead "My mom got me this for my birthday. Haven't really driven it much, but it's awesome."
+                        # nk ahead "My mom got me this for my birthday. Haven't really driven it much, but it's awesome."
+                        nk "My mom got me this for my birthday. Haven't really driven it much, but it's awesome."
                         $ nk_driving = True
                     else:
                         fp "Hi [nk]"
@@ -41,10 +43,12 @@ label travel_events(event=False):
                                         call school_events('sn_punishment_late') from _call_school_events_2
                 elif not shitty_morning and int(current_time[:2]) <= 7 and renpy.random.random() < .5:
                     show karen with dissolve
-                    nk ahead "Hi [fp]! Wanna walk to school with me?"
+                    # nk ahead "Hi [fp]! Wanna walk to school with me?"
+                    nk "Hi [fp]! Wanna walk to school with me?"
                     menu:
                         "Sure, [nk]":
-                            show karen smile with dissolve
+                            # show karen smile with dissolve
+                            show karen with dissolve
                             if nk_rel < 15:
                                 $ nkrel = 1
                             else:
@@ -52,12 +56,14 @@ label travel_events(event=False):
                             $ statschangenotify("nk_rel",nkrel)
                             call nk_walk_with(True) from _call_nk_walk_with_1
                         "Nah... I just wanna go by myself today, I got a lot on my mind, need to think a little bit":
-                            show karen annoyed with dissolve
+                            # show karen annoyed with dissolve
+                            show karen with dissolve
                             $ renpy.pause(.5)
                             $ walk_to_school = True
                             call travel_events('arrive_school') from _call_travel_events_8
                         "No thanks, [nk]":
-                            show karen angry with dissolve
+                            # show karen angry with dissolve
+                            show karen with dissolve
                             if nk_rel < 15:
                                 $ nkrel = -.5
                             else:
@@ -148,7 +154,8 @@ label travel_events(event=False):
                                 else:
                                     if weather == 2:
                                         fp "Thanks, [nk]! I would've drowned out there on my own"
-                                        nk smile "Oh, no, you wouldn't, you doofus. You're just lazy, and happy someone drove you!"
+                                        # nk smile "Oh, no, you wouldn't, you doofus. You're just lazy, and happy someone drove you!"
+                                        nk "Oh, no, you wouldn't, you doofus. You're just lazy, and happy someone drove you!"
                                         menu:
                                             "Compliment her":
                                                 pass
@@ -173,32 +180,43 @@ label travel_events(event=False):
 label nk_walk_with(nkww_called=False):
     if nkww_called:
         $ nkww_called = False
-        show karen smile with dissolve
+        # show karen smile with dissolve
+        show karen with dissolve
         "[fp] starts walking with [nk] towards their school, talking about everything and nothing. It's a nice day, and [nk] is, as always, nice to be around"
         if nk_rel > 5:
             fp "So, did you finish the assignment yet?"
             if renpy.random.random() > .5:
-                nk ahead "Yeah, I did. Wasn't that much work, so I finished it last night. Why?"
+                # nk ahead "Yeah, I did. Wasn't that much work, so I finished it last night. Why?"
+                nk "Yeah, I did. Wasn't that much work, so I finished it last night. Why?"
                 fp "Well... I was hoping you'd lemme look at your assignment, maybe gimme a few pointers. I'm a bit lost"
                 if nk_rel > 15:
-                    show karen smile_open with dissolve
-                    nk smile_open "Sure. How about I come over after school, and we can look at it together?"
+                    # show karen smile_open with dissolve
+                    show karen with dissolve
+                    # nk smile_open "Sure. How about I come over after school, and we can look at it together?"
+                    nk "Sure. How about I come over after school, and we can look at it together?"
                     fp "That would be awesome, [nk]! Thanks a million"
-                    nk devious "Oh, you'll make it up to me... ;)"
+                    # nk devious "Oh, you'll make it up to me... ;)"
+                    nk "Oh, you'll make it up to me... ;)"
                     $ nk_sa_status = ['happy','walk']
                     call travel_events('arrive_school') from _call_travel_events_14
                 else:
-                    show karen annoyed with dissolve
-                    nk annoyed "I don't think so, [fp]. Wouldn't feel right you looking at my work..."
+                    # show karen annoyed with dissolve
+                    show karen with dissolve
+                    # nk annoyed "I don't think so, [fp]. Wouldn't feel right you looking at my work..."
+                    nk "I don't think so, [fp]. Wouldn't feel right you looking at my work..."
                     "Seems your relationship with [nk] isn't strong enough to ask her for help yet"
                     $ nk_sa_status = ['annoyed','walk']
                     call travel_events('arrive_school') from _call_travel_events_15
             else:
-                show karen sad with dissolve
-                nk sad "No, I haven't even started yet. There is so much schoolwork, and I'm behind on studying for finals... {i}she trails off, looking a bit troubled{/i}"
+                # show karen sad with dissolve
+                show karen with dissolve
+                # nk sad "No, I haven't even started yet. There is so much schoolwork, and I'm behind on studying for finals... {i}she trails off, looking a bit troubled{/i}"
+                nk "No, I haven't even started yet. There is so much schoolwork, and I'm behind on studying for finals... {i}she trails off, looking a bit troubled{/i}"
                 fp "How about you come over to my house this evening, and we can work on it together?"
-                show karen smile with dissolve
-                nk smile "Oh, that would be nice. Sure, I can do that. Let's say around seven?"
+                # show karen smile with dissolve
+                show karen with dissolve
+                # nk smile "Oh, that would be nice. Sure, I can do that. Let's say around seven?"
+                nk "Oh, that would be nice. Sure, I can do that. Let's say around seven?"
                 fp "Sure, that works for me. I'll be working on my bike till then"
                 $ statschangenotify("nk_rel",.5)
                 $ nk_sa_status = ['happy','walk']

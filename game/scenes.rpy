@@ -206,14 +206,35 @@ label fp_garage_scene(trans=True): #updated
 label fp_garage_fb_scene(trans=True):
     if int(current_time[:2]) in night:
         if trans:
-            scene fp_garage_fb_night with Dissolve(.25)
+            scene fp_garage_fb_night
+            show gn_fb_outside behind fp_garage_fb_night
+            with Dissolve(.25)
         else:
             scene fp_garage_fb_night
+            show gn_fb_outside behind fp_garage_fb_night
     else:
         if trans:
-            scene fp_garage_fb_morning with Dissolve(.25)
+            scene fp_garage_fb_morning
+            show gm_fb_outside behind fp_garage_fb_morning
+            with Dissolve(.25)
         else:
             scene fp_garage_fb_morning
+            show gm_fb_outside behind fp_garage_fb_morning
+    return
+
+label fp_garage_exit_scene(trans=True):
+    if int(current_time[:2]) in night:
+        if trans:
+            scene fp_gn_exit
+            with Dissolve(.25)
+        else:
+            scene fp_gn_exit
+    else:
+        if trans:
+            scene fp_gm_exit
+            with Dissolve(.25)
+        else:
+            scene fp_gm_exit
     return
 
 label icafe_scene(trans=True):
@@ -235,6 +256,8 @@ label fp_kitchen_spill_scene(trans=True):
             scene fp_kitchen_spill with Dissolve(.25)
         else:
             scene fp_kitchen_spill
+    else:
+        call change_loc('fp_kitchen') from _call_change_loc_103
     return
 
 label fp_kitchen_scene(trans=True): #updated
@@ -296,8 +319,12 @@ label fp_livingroom_scene(trans=True): #updated
                 alpha .25
             show fp_lm_bw_outside behind rain
         else:
-            scene fp_lm_transparent
-            show fp_lm_outside behind fp_lm_transparent
+            if not backpack.has_item(carkeys_item) and find_keys:
+                scene fp_lm_transparent_with_key
+                show fp_lm_outside behind fp_lm_transparent_with_key
+            else:
+                scene fp_lm_transparent
+                show fp_lm_outside behind fp_lm_transparent
         if trans:
             with Dissolve(.25)
     return
@@ -307,17 +334,11 @@ label fp_outside_scene(trans=True):
         $ fp_outside_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
-        if weather == 1:
-            scene fp_on
-            if trans:
-                with Dissolve(.25)
+        scene fp_on
         if weather == 2:
-            scene fp_on
-            # if trans:
-            #     show rain with Dissolve(.25):
-            #         alpha .25
-            # else:
-            #     show rain
+            show rain
+        if trans:
+            with Dissolve(.25)
     else:
         if weather == 1:
             scene fp_om_bw
@@ -379,8 +400,8 @@ label schoolbuilding_scene(trans=True):
     return
 
 label school_po_scene(trans=True):
-    if not school_principal_office_ach:
-        $ school_prinicpal_ach = True
+    if not fp_school_po_ach:
+        $ fp_school_po_ach = True
         $ update_been_everywhere_achievement()
     if int(current_time[:2]) in night:
         scene school_principal_office_night with Dissolve(.25)
@@ -413,6 +434,13 @@ label upstairs_closerdoor_scene(trans=True):
         $ fp_topofstairs_ach = True
         $ update_been_everywhere_achievement()
     scene fp_intro_cd with Dissolve(.25)
+    return
+
+label upstairs_uhaf_scene(trans=True):
+    if not fp_topofstairs_ach:
+        $ fp_topofstairs_ach = True
+        $ update_been_everywhere_achievement()
+    scene fpintro_hallway with Dissolve(.25)
     return
 
 label upper_hallway_bathroom_peek_scene(trans=True,wetshower=False):

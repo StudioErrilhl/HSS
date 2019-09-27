@@ -2,7 +2,7 @@ label day_events():
     #day events goes here
     label weekend_sat():
         if sat_event:
-            call fp_livingroom_scene
+            call fp_livingroom_scene from _call_fp_livingroom_scene
             label sat_what_to_do():
                 if not mc_f:
                     call fp_garage_scene from _call_fp_garage_scene_2
@@ -31,15 +31,17 @@ label day_events():
             if sun_event:
                 if renpy.random.random() <= .5:
                     show anne with easeinleft #dissolve
-                    fm ahead "Could you help me open this, [fp]? I can't seem to get it open, and I need this for dinner today"
+                    # fm ahead "Could you help me open this, [fp]? I can't seem to get it open, and I need this for dinner today"
+                    fm "Could you help me open this, [fp]? I can't seem to get it open, and I need this for dinner today"
                     menu:
-                        "No, [fmName.informal], I don't have time to help you right now (evil)":
-                            show anne angry
+                        "No, [fmName.informal], I don't have time to help you right now" (cs="evil"):
+                            # show anne angry
+                            show anne
                             $ statschangenotify("lil_bad",1,True)
                             $ statschangenotify('fp_alignment',-1,True)
                             $ statschangenotify("fm_dom",.5,True)
                             $ statschangenotify("fm_rel",-.5)
-                        "Yes, [fmName.informal], no problem. *you open the jar* (good)":
+                        "Yes, [fmName.informal], no problem. *you open the jar*" (cs="good"):
                             if fm_dom <= 5:
                                 $ statschangenotify("fm_dom",.5,True)
                                 $ statschangenotify("fm_rel",1)
@@ -47,8 +49,8 @@ label day_events():
                                 $ statschangenotify("fm_rel",.5)
                             $ statschangenotify("aru_good",1,True)
                             $ statschangenotify('fp_alignment',1)
-                $ sun_event = False
-                hide anne
+                    $ sun_event = False
+                    hide anne
                 call change_loc(current_location,prev_loc=current_location) from _call_change_loc_70
 
     label dinner_events(de_called=False):
@@ -56,29 +58,39 @@ label day_events():
             $ de_called = False
             if dinner_event:
                 if fs_mad == 1:
-                    show anne smile with dissolve
-                    fm smile "Hey [fp]. It's dinnertime soon, do you wanna go see if you can find [fsName.name], and tell her to get ready?"
+                    # show anne smile with dissolve
+                    show anne with dissolve
+                    # fm smile "Hey [fp]. It's dinnertime soon, do you wanna go see if you can find [fsName.name], and tell her to get ready?"
+                    fm "Hey [fp]. It's dinnertime soon, do you wanna go see if you can find [fsName.name], and tell her to get ready?"
                     fp "Well... [fsName.name] isn't really speaking to me at the moment..."
                     show anne with dissolve
-                    fm ahead "Oh? What did you do now?"
+                    # fm ahead "Oh? What did you do now?"
+                    fm "Oh? What did you do now?"
                     fp "Why do you just assume I did anything? I'll talk to her, but now might not be the best time... I'll tell her dinner is ready if I see her, okay?"
-                    fm ahead "Fine. But you fix this with [fsName.yourformal], okay?"
+                    # fm ahead "Fine. But you fix this with [fsName.yourformal], okay?"
+                    fm "Fine. But you fix this with [fsName.yourformal], okay?"
                     fp "I will, [fmName.informal], I will"
                     $ dinner_event = False
                     $ talk_later = True
                     hide anne
                 elif dinner_food:
-                    show anne smile with dissolve
-                    fm smile "Hey [fp]. Dinner is ready soon"
+                    # show anne smile with dissolve
+                    show anne with dissolve
+                    # fm smile "Hey [fp]. Dinner is ready soon"
+                    fm "Hey [fp]. Dinner is ready soon"
                     fp "Nice. What are we having?"
-                    fm smile "[dinner_food]"
+                    # fm smile "[dinner_food]"
+                    fm "[dinner_food]"
                     fp "[dinner_reply]"
                     if dinner_mod > 0:
-                        fm smile "[dinner_comeback]"
+                        # fm smile "[dinner_comeback]"
+                        fm "[dinner_comeback]"
                     else:
-                        fm ahead "[dinner_comeback]"
+                        # fm ahead "[dinner_comeback]"
+                        fm "[dinner_comeback]"
                     if dinner_mod > 0:
-                        show anne smile with dissolve
+                        # show anne smile with dissolve
+                        show anne with dissolve
                     else:
                         show anne with dissolve
                     $ statschangenotify(dinner_att,dinner_mod)
@@ -118,7 +130,7 @@ label day_events():
                         "After waiting for ages, [fmName.yourformal] finally comes home and let you into the house"
                         call change_loc('fp_entrance',prev_loc=current_location) from _call_change_loc_71
                 else:
-                    call fp_livingroom_scene
+                    call fp_livingroom_scene from _call_fp_livingroom_scene_1
                     if renpy.random.random() > .5 and not hacker_3:
                         if  current_month >= 5 and current_month <= 8 and not detention_served:
                             call change_loc('fp_outside',sec_call='lounge_pool',prev_loc=current_location) from _call_change_loc_48
@@ -154,7 +166,8 @@ label day_events():
             "You decide to take a ride"
             "You decide to call up [nk] to see if she wants to come with"
             # if (renpy.random.random() > .65 and nk_rel > 15) or (renpy.random.random() > .5 and nk_rel > 20) or (renpy.random.random() > .35 and nk_rel > 30):
-            nk ahead "Hi, [fp]"
+            # nk ahead "Hi, [fp]"
+            nk "Hi, [fp]"
             fp "Hi, [nk]. I was wondering if you wanted to come for a ride with me today? Was thinking we could"
             $ conditions.addcondition("Go to the cabin","current_month >= 9 and current_month <= 3 and has_cabin")
             $ conditions.addcondition("Go to the marina","boat_at_marina")
@@ -245,6 +258,7 @@ label day_events():
     label fp_kitchen_spill_event(kse_called=False):
         if kse_called:
             $ kse_called = False
+            scene fp_kitchen_spill
             "Entering the kitchen, you spot [fmName.yourinformal] kneeling in front of the counter - obviously she spilled something"
             scene kitchenspill_1
             "Holy shit! That's a nice ass!"
@@ -254,10 +268,10 @@ label day_events():
             scene kitchen_spill_semi_transparent with Dissolve(.25)
             menu:
                 fp "What the fuck is going on here...?"
-                "If you think this is all in your head, [fp]... This is gonna be funnier than I thought! (evil)":
+                "If you think this is all in your head, [fp]... This is gonna be funnier than I thought!" (cs="evil"):
                     $ statschangenotify('lil_bad',2,True)
                     $ statschangenotify('fp_alignment',-2)
-                "Sure, sure, this is all in your head, [fp]! (good)":
+                "Sure, sure, this is all in your head, [fp]!" (cs="good"):
                     $ statschangenotify('aru_good',2,True)
                     $ statschangenotify('fp_alignment',2)
             "Your dick is waking up, potentially causing a lot of trouble very soon..."
@@ -284,19 +298,24 @@ label day_events():
             if nk_school_assignment_evening and day_week <= 4:
                 $ nk_school_assignment_evening = False
                 "{b}*ding dong*{/b}"
-                fm ahead "{b}[fp], can you get that?{/b}"
+                # fm ahead "{b}[fp], can you get that?{/b}"
+                fm "{b}[fp], can you get that?{/b}"
                 call fp_entrance_scene from _call_entrance_scene
                 "You go to get the door, expecting it to be [nk]"
-                nk smile "Hi [fp]."
+                # nk smile "Hi [fp]."
+                nk "Hi [fp]."
                 "[nk] is outside, all smiles and with a stack of books in her arms."
                 fp "Hi... you do know we have Internet on the premises, right? And on our phones, and pretty much in every Starshots in town...?"
-                nk smile "I know, silly. But I've always felt that books provide some... well, they make it easier to focus on the task at hand!\n{i}she lets out a cute little laugh{/i}"
+                # nk smile "I know, silly. But I've always felt that books provide some... well, they make it easier to focus on the task at hand!\n{i}she lets out a cute little laugh{/i}"
+                nk "I know, silly. But I've always felt that books provide some... well, they make it easier to focus on the task at hand!\n{i}she lets out a cute little laugh{/i}"
                 fp "Well, I was thinking we could set up in my room. I have set up a double set of chairs, I have my computer there, and we should have room enough to go through the books you brought. {i}You grab the books from her, and motion for her to come along{/i}"
                 call fp_bedroom_fp_scene from _call_fp_bedroom_fp_scene_3
                 fp "Long time since you've been here, I've changed a few things"
-                nk ahead "{i}She looks around your room{/i}\nI can see that. No more supercar wallpaper :D"
+                # nk ahead "{i}She looks around your room{/i}\nI can see that. No more supercar wallpaper :D"
+                nk "{i}She looks around your room{/i}\nI can see that. No more supercar wallpaper :D"
                 fp "Yeah, yeah. Stop mocking me. I was eight!"
-                nk smile_open "Okay, okay... let's get this show on the road, shall we?"
+                # nk smile_open "Okay, okay... let's get this show on the road, shall we?"
+                nk "Okay, okay... let's get this show on the road, shall we?"
                 if nk_rel > 15:
                     "[nk] steps up to you, grabs you, and presses against you. Soon after she's kissing you agressively"
                     $ statschangenotify("nk_aro",.5)

@@ -4,16 +4,19 @@ label nk_talk(event=False,callrand=False):
         $ nktr = renpy.random.random()
         if event == 'ride':
             if int(current_time[:2]) <= 7:
-                nk ahead "Hi [fp]! You wanna ride to school?"
+                # nk ahead "Hi [fp]! You wanna ride to school?"
+                nk "Hi [fp]! You wanna ride to school?"
                 if not nk_driving:
                     fp "Hi [nk]... What happened to the Beetle?"
-                    nk ahead "My mom got me new wheels for my birthday. It was delivered today!"
+                    # nk ahead "My mom got me new wheels for my birthday. It was delivered today!"
+                    nk "My mom got me new wheels for my birthday. It was delivered today!"
                     $ nk_driving = True
                 else:
                     fp "Hi [nk]"
                 if weather == 2:
                     $ text1 = "Sure! That way I won't be late, not to mention drowning by the time I get there!\nAnd I can spend some time with my favorite girl!"
-                    show fp_nk_kiss_inside_car with Dissolve(.25)
+                    # show fp_nk_kiss_inside_car with Dissolve(.25)
+                    show psa_renders with Dissolve(.25)
                 else:
                     $ text1 = "Sure! Then I won't be late!\n{i}Who cares if [nk] is not one of the popular kids - her offer is nice{/i}"
                     $ text2 = "No thanks! I'll just walk. Don't really wanna trust my life to your driving!\n{i}Don't wanna be caught dead in the same car as [nk]...{/i}"
@@ -66,10 +69,12 @@ label nk_talk(event=False,callrand=False):
                 call change_loc(current_location,prev_loc=current_location) from _call_change_loc_78
         elif nktr < .5 and day_week <= 4 and not shitty_morning:
             show karen with dissolve
-            nk ahead "Hi [fp]! Wanna walk to school with me?"
+            # nk ahead "Hi [fp]! Wanna walk to school with me?"
+            nk "Hi [fp]! Wanna walk to school with me?"
             menu:
                 "Sure, [nk]":
-                    show karen smile with dissolve
+                    # show karen smile with dissolve
+                    show karen with dissolve
                     if nk_rel < 15:
                         $ nkrel = 1
                     else:
@@ -77,11 +82,13 @@ label nk_talk(event=False,callrand=False):
                     $ statschangenotify("nk_rel",nkrel)
                     call nk_walk_with(True) from _call_nk_walk_with
                 "Nah... I just wanna go by myself today, I got a lot on my mind, need to think a little bit":
-                    show karen annoyed with dissolve
+                    # show karen annoyed with dissolve
+                    show karen with dissolve
                     $ renpy.pause(.5)
                     call travel_events('arrive_school') from _call_travel_events_3
                 "No thanks, [nk]":
-                    show karen angry with dissolve
+                    # show karen angry with dissolve
+                    show karen with dissolve
                     if nk_rel < 15:
                         $ nkrel = -.5
                     else:

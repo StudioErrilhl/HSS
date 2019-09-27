@@ -20,11 +20,9 @@ define config.name = _("HSS")
 
 define gui.show_name = False
 
-
 ## The version of the game.
 
-define config.version = "0.026-rc11"
-
+define config.version = "0.1_(new_version_number)"
 
 ## Text that is placed on the game's about screen. To insert a blank line
 ## between paragraphs, write \n\n.
@@ -50,15 +48,14 @@ define gui.changelog = _("{b}0.026:{/b}\n• Added new graphics for Anne\n• Ad
 
 define build.name = "HSS"
 
-
 ## Sounds and music ############################################################
 
 ## These three variables control which mixers are shown to the player by
 ## default. Setting one of these to False will hide the appropriate mixer.
 
-# define config.has_sound = True
-# define config.has_music = True
-# define config.has_voice = True
+define config.has_sound = True
+define config.has_music = True
+define config.has_voice = True
 
 
 ## To allow the user to play a test sound on the sound or voice channel,
@@ -66,7 +63,6 @@ define build.name = "HSS"
 
 # define config.sample_sound = "sample-sound.ogg"
 # define config.sample_voice = "sample-voice.ogg"
-
 
 ## Uncomment the following line to set an audio file that will be played while
 ## the player is at the main menu. This file will continue playing into the
@@ -91,11 +87,9 @@ define config.exit_transition = dissolve
 
 define config.intra_transition = dissolve
 
-
 ## A transition that is used after a game has been loaded.
 
 define config.after_load_transition = None
-
 
 ## Used when entering the main menu after the game has ended.
 
@@ -105,7 +99,6 @@ define config.end_splash_transition = dissolve
 
 ## A variable to set the transition used when the game starts does not exist.
 ## Instead, use a with statement after showing the initial scene.
-
 
 ## Window management ###########################################################
 ##
@@ -134,12 +127,10 @@ define config.window_hide_transition = Dissolve(.2)
 
 default preferences.text_cps = 20
 
-
 ## The default auto-forward delay. Larger numbers lead to longer waits, with 0
 ## to 30 being the valid range.
 
 default preferences.afm_time = 15
-
 
 ## Save directory ##############################################################
 ##
@@ -157,20 +148,17 @@ default preferences.afm_time = 15
 
 define config.save_directory = "HSS-1510067763"
 
-
 ## Icon ########################################################################
 ##
 ## The icon displayed on the taskbar or dock.
 
 define config.window_icon = "gui/window_icon.webp"
 
-
 ## Build configuration #########################################################
 ##
 ## This section controls how Ren'Py turns your project into distribution files.
 
 init python:
-
     ## The following functions take file patterns. File patterns are case-
     ## insensitive, and matched against the path relative to the base directory,
     ## with and without a leading /. If multiple patterns match, the first is
@@ -189,73 +177,73 @@ init python:
     ## subdirectories, and "**.psd" matches psd files anywhere in the project.
 
     ## Classify files as None to exclude them from the built distributions.
-
     build.classify('**~', None)
     build.classify('**.bak', None)
     build.classify('**/.**', None)
     build.classify('**/#**', None)
     build.classify('**/thumbs.db', None)
     build.classify('**.rpy', None)
+    # build.classify('game/classes/**.rpy',None)
     build.classify('**patch.**',None)
-    build.classify('saves/**.**',None)
-    build.classify('cache/**.**',None)
+    # build.classify('saves/**.**',None)
+    # build.classify('cache/**.**',None)
     build.classify('game/AON-packages/**.**',None)
     build.classify('game/AON-packages',None)
     build.classify('game/AON.rpa',None)
-    build.classify('game/AONvve.rpy',None)
+    # build.classify('game/AONvve.rpy',None)
     build.classify('game/AONvve.rpyc',None)
 
     # ## To archive files, classify them as 'archive'.
-# ## The archive ability is currently turned off, to make it easier to make hotfixes for game-releases
-    # build.archive('scripts','all')
-    # build.archive('images','all')
-    # build.archive('backgrounds','all')
-    # build.archive('characters','all')
-    # build.archive('fonts','all')
-    # build.archive('classes','all')
+    # ## The archive ability is currently turned off, to make it easier to make hotfixes for game-releases
+    build.archive('scripts','all')
+    build.archive('images','all')
+    build.archive('gui','all')
+    build.archive('backgrounds','all')
+    build.archive('characters','all')
+    build.archive('fonts','all')
+    build.archive('classes','all')
+    build.archive('events','all')
 
-    # build.classify('game/images/backgrounds/**.jpg', 'backgrounds')
-    # build.classify('game/images/backgrounds/**.jpeg','backgrounds')
-    # build.classify('game/images/backgrounds/**.mkv', 'backgrounds')
-    # build.classify('game/images/backgrounds/**.webp', 'backgrounds')
-    # build.classify('game/images/characters/**.jpg', 'characters')
-    # build.classify('game/images/characters/**.jpeg','characters')
-    # build.classify('game/images/characters/**.mkv', 'characters')
-    # build.classify('game/images/characters/**.webp', 'characters')
-    # build.classify('game/images/**.jpg', 'images')
-    # build.classify('game/images/**.jpeg','images')
-    # build.classify('game/images/**.mkv', 'images')
-    # build.classify('game/images/**.webp', 'images')
-    # build.classify('game/classes/**.rpy','classes')
-    # build.classify('game/classes/**.rpyc','classes')
-    # build.classify('game/**.rpy', 'scripts')
-    # build.classify('game/**.rpyc', 'scripts')
-    # build.classify('game/gui/fonts/**.otf','fonts')
-    # build.classify('game/gui/fonts/**.ttf','fonts')
+    build.classify('game/images/backgrounds/**.**', 'backgrounds')
+    build.classify('game/images/backgrounds/**.jpeg','backgrounds')
+    build.classify('game/images/backgrounds/**.mkv', 'backgrounds')
+    build.classify('game/images/backgrounds/**.webp', 'backgrounds')
+    build.classify('game/images/backgrounds/**.png','backgrounds')
+    build.classify('game/images/characters/**.**', 'characters')
+    build.classify('game/images/characters/**.jpeg','characters')
+    build.classify('game/images/characters/**.mkv', 'characters')
+    build.classify('game/images/characters/**.webp', 'characters')
+    build.classify('game/images/characters/**.png','characters')
+    build.classify('game/images/**.**', 'images')
+    build.classify('game/images/**.jpeg','images')
+    build.classify('game/images/**.mkv', 'images')
+    build.classify('game/images/**.webp', 'images')
+    build.classify('game/images/**.png','images')
+    build.classify('game/classes/**.rpyc','classes')
+    build.classify('game/events/**.rpyc','events')
+    build.classify('game/**.rpyc', 'scripts')
+    build.classify('game/gui/fonts/**.otf','fonts')
+    build.classify('game/gui/fonts/**.ttf','fonts')
+    build.classify('game/gui/**.**','gui')
 
     ## Files matching documentation patterns are duplicated in a mac app build,
     ## so they appear in both the app and the zip file.
 
     build.documentation('*.html')
     build.documentation('*.txt')
+    build.documentation('README.txt')
+    build.documentation('changelog.txt')
 
-    # Include README.txt
-    build.classify('README.txt', 'all')
-    build.classify('changelog.txt','all')
-
-    # But exclude all other txt files.
     build.classify('**.txt', None)
 
-    # Add png and jpg files in the game directory into an archive.
-    build.classify('game/**.webp', 'archive')
-    build.classify('game/**.jpg', 'archive')
+    # build.classify('game/**.webp', 'archive')
+    # build.classify('game/**.jpg', 'archive')
+
+
 ## Set this to a string containing your Apple Developer ID Application to enable
 ## codesigning on the Mac. Be sure to change it to your own Apple-issued ID.
 
 # define build.mac_identity = "Developer ID Application: Guy Shy (XHTE5H7Z42)"
-
-
-
 
 ## A Google Play license key is required to download expansion files and perform
 ## in-app purchases. It can be found on the "Services & APIs" page of the Google

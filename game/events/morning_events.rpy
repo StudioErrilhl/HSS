@@ -10,26 +10,28 @@ label morning_events():
                 "Go check on [fsName.yourformal]":
                     pass
                 "Go about your day":
-                    call change_loc(current_location,prev_loc=current_location)
+                    call change_loc(current_location,prev_loc=current_location) from _call_change_loc_100
         else:
             if (fpmc_r < .35 and day_week <= 4 and overslept and int(current_time[:2]) > 7) or (int(current_time[:2]) > 7 and day_week <= 4):
                 $ overslept = False
                 # show anne angry
-                fm mad "[fp]! Wake UP!"
+                # fm mad "[fp]! Wake UP!"
+                fm "[fp]! Wake UP!"
                 fp "uuuhh..."
-                fm mad "[fp]! Get out of bed THIS INSTANT!"
+                # fm mad "[fp]! Get out of bed THIS INSTANT!"
+                fm "[fp]! Get out of bed THIS INSTANT!"
                 $ conditions.addcondition("[fmName.Informal]! Shut up! I'm awake, and getting up!","fm_rel >= 15 and fm_dom >= 20")
                 $ conditions.addcondition("Yeez, [fmName.informal]! Stop nagging me, will you? I'm gonna get up in a second","fm_rel >= 5")
                 menu:
-                    "[fmName.Informal]! Shut up! I'm awake, and getting up! (evil)":
+                    "[fmName.Informal]! Shut up! I'm awake, and getting up!" (cs="evil"):
                         $ statschangenotify("lil_bad",1,True)
                         $ statschangenotify('fp_alignment',-1)
                         call fm_morningchoice_dom(True) from _call_fm_morningchoice_dom
-                    "Yeez, [fmName.informal]! Stop nagging me, will you? I'm gonna get up in a second (evil)":
+                    "Yeez, [fmName.informal]! Stop nagging me, will you? I'm gonna get up in a second" (cs="evil"):
                         $ statschangenotify("lil_bad",1,True)
                         $ statschangenotify('fp_alignment',-1)
                         call fm_morningchoice_reldom(True) from _call_fm_morningchoice_reldom
-                    "Okay, [fmName.informal]... I'm up, I'm up. Please don't yell (good)":
+                    "Okay, [fmName.informal]... I'm up, I'm up. Please don't yell" (cs="good"):
                         $ statschangenotify("aru_good",1,True)
                         $ statschangenotify('fp_alignment',1)
                         call fm_morningchoice_rel(True) from _call_fm_morningchoice_rel
@@ -48,22 +50,26 @@ label morning_events():
                             pass
                         $ fm_choice1_choice = "dom"
                         $ addtime(False, 10)
-                        fm mad "Don't talk to me like that! I'm your [fmName.role]! You respect me, you hear?"
+                        # fm mad "Don't talk to me like that! I'm your [fmName.role]! You respect me, you hear?"
+                        fm "Don't talk to me like that! I'm your [fmName.role]! You respect me, you hear?"
                         if fm_dom >= 45:
                             fp "[fmName.Formal]! *You bark at her*"
                             fp "Get your fat ass over here right this instant!"
                             "[fmName.yourrole] hurries over to you, eyes downcast, not wanting to anger you further"
                             fp "What did you just say to me?"
-                            fm sad "I'm... I'm sorry. I didn't mean to raise my voice. I'm just a bit stressed..."
+                            # fm sad "I'm... I'm sorry. I didn't mean to raise my voice. I'm just a bit stressed..."
+                            fm "I'm... I'm sorry. I didn't mean to raise my voice. I'm just a bit stressed..."
                             fp "Stop it! I don't wanna hear it! Get down!"
                             "[fmName.name] stares at you, bewildered. Down...?"
                             "You grab her shoulder, and push her down, hard, so that she lands on her knees"
-                            fm crying "*OUCH!*"
+                            # fm crying "*OUCH!*"
+                            fm "*OUCH!*"
                             fp "Shut it!"
                             "She shuts her mouth immediately, recognizing the mood you're in"
                             $ addtime(False,15)
                             fp "Are you just gonna sit there? I'm already late for school. Shouldn't you be getting on with your apology by now?"
-                            fm blushing "You want me to...?"
+                            # fm blushing "You want me to...?"
+                            fm "You want me to...?"
                             $ conditions.addcondition("Tell her to pull down her pants and present her ass to you","fm_dom >= 40")
                             $ conditions.addcondition("Tell her to sit back and spread her pussy for you","fm_dom >= 30")
                             menu:
@@ -74,29 +80,34 @@ label morning_events():
                                         $ statschangenotify("fm_anal",1)
                                         call morning_assfuck() from _call_morning_assfuck
                                     elif fm_anal >= 10 and fm_anal <= fm_pussy:
-                                        fm blushing "Do you really wanna fuck my ass?"
+                                        # fm blushing "Do you really wanna fuck my ass?"
+                                        fm "Do you really wanna fuck my ass?"
                                         menu:
-                                            "Yes (evil)":
+                                            "Yes" (cs="evil"):
                                                 $ statschangenotify("lil_bad",1,True)
                                                 $ statschangenotify('fp_alignment',-1)
                                                 call morning_assfuck() from _call_morning_assfuck_1
-                                            "No (good)":
+                                            "No" (cs="good"):
                                                 $ statschangenotify("aru_good",1,True)
                                                 $ statschangenotify('fp_alignment',1)
                                                 call morning_pussyfuck() from _call_morning_pussyfuck
                                     else:
-                                        fm ahead "What are you going to do?\n{i}Her voice shakes a little bit{/i}"
+                                        # fm ahead "What are you going to do?\n{i}Her voice shakes a little bit{/i}"
+                                        fm "What are you going to do?\n{i}Her voice shakes a little bit{/i}"
                                         fp "Oh, I dunno... *you slap her ass, hard*"
                                         $ statschangenotify("fm_dom",1)
-                                        fm crying "{b}OUCH!{/b}"
+                                        # fm crying "{b}OUCH!{/b}"
+                                        fm "{b}OUCH!{/b}"
                                         fp "Shut up!\n{b}you slap her again{/b}"
                                         "Getting turned on by her sounds, and the spanking in general, you continue, till she begs for mercy"
-                                        fm crying "{b}PLEASE!{/b}\nStop it.\n{i}Tears are streaming down her face{/i}"
+                                        # fm crying "{b}PLEASE!{/b}\nStop it.\n{i}Tears are streaming down her face{/i}"
+                                        fm "{b}PLEASE!{/b}\nStop it.\n{i}Tears are streaming down her face{/i}"
                                         $ statschangenotify("fm_rel",-1,True)
                                         $ statschangenotify("fm_dom",1.5)
                                         "You stop, looking over her ass, which is reddening nicely"
                                         fp "Get up, get dressed, and get out of my room"
-                                        fm ahead_eyes_closed "Okay... {i}she meekly replies, staring into the ground{/i}"
+                                        # fm ahead_eyes_closed "Okay... {i}she meekly replies, staring into the ground{/i}"
+                                        fm "Okay... {i}she meekly replies, staring into the ground{/i}"
                                 "Tell her to sit back and spread her pussy for you":
                                     $ statschangenotify("fm_dom",1.5,True)
                                     $ statschangenotify("fm_pussy",1)
@@ -104,21 +115,24 @@ label morning_events():
                                         $ statschangenotify("fm_pussy",1)
                                         call morning_pussyfuck() from _call_morning_pussyfuck_1
                                     elif fm_pussy >= 10 and fm_pussy <= fm_bj:
-                                        fm ahead "Do you want my pussy, or do you want a blowjob?"
+                                        # fm ahead "Do you want my pussy, or do you want a blowjob?"
+                                        fm "Do you want my pussy, or do you want a blowjob?"
                                         menu:
                                             "Pussy":
                                                 call morning_pussyfuck() from _call_morning_pussyfuck_2
                                             "Blowjob":
                                                 call morning_bj() from _call_morning_bj
-                                            "How about both? (evil)":
+                                            "How about both?" (cs="evil"):
                                                 $ statschangenotify("lil_bad",1,True)
                                                 $ statschangenotify('fp_alignment',-1)
                                                 call morning_pussy_bj() from _call_morning_pussy_bj
                                     else:
                                         "You watch as [fmName.yourshort] hitches her thumbs under her panties and swiftly pulls them down over her thighs. She's got shapely legs, not at all bad for a woman in her forties. She pulls up her skirt, and sits back on the bed, spreading her legs as she does so."
-                                        fm ahead "Happy now? {i}There's still a bit of defiance in her voice, some residual want to fight you, to stand up for herself{/i}"
+                                        # fm ahead "Happy now? {i}There's still a bit of defiance in her voice, some residual want to fight you, to stand up for herself{/i}"
+                                        fm "Happy now? {i}There's still a bit of defiance in her voice, some residual want to fight you, to stand up for herself{/i}"
                                         fp "Not quite. I would love to introduce my cock to your pussy, but I don't have time. Start masturbating!"
-                                        fm blushing "{b}Gasp{/b} You... you want me to... rub... rub my pussy... here? In... in front of you?"
+                                        # fm blushing "{b}Gasp{/b} You... you want me to... rub... rub my pussy... here? In... in front of you?"
+                                        fm "{b}Gasp{/b} You... you want me to... rub... rub my pussy... here? In... in front of you?"
                                         fp "Yes, I though I made myself pretty clear? If it was possible to misunderstand, I apologize. Let's see... \"{b}rub your pussy! Until you cum{/b}"
                                         "You can see her hesitating. The emotions play over her face, making it clear that she's weighing the options, carefully."
                                         "You look at your watch, realising you're gonna be late."
@@ -136,13 +150,14 @@ label morning_events():
                                         $ statschangenotify("fm_bj",1)
                                         call morning_bj() from _call_morning_bj_1
                                     elif fm_bj >= 10 and fm_bj <= fm_pussy:
-                                        fm ahead "Do you want a blowjob, or do you want my pussy?"
+                                        # fm ahead "Do you want a blowjob, or do you want my pussy?"
+                                        fm "Do you want a blowjob, or do you want my pussy?"
                                         menu:
                                             "Blowjob":
                                                 call morning_bj() from _call_morning_bj_2
                                             "Pussy":
                                                 call morning_pussyfuck() from _call_morning_pussyfuck_3
-                                            "How about both? (evil)":
+                                            "How about both?" (cs="evil"):
                                                 $ statschangenotify("lil_bad",1,True)
                                                 $ statschangenotify('fp_alignment',-1)
                                                 call morning_pussy_bj() from _call_morning_pussy_bj_1
@@ -150,12 +165,14 @@ label morning_events():
                                         "This is a placeholder for the morning event for fm_dom above 45"
                         elif fm_dom >= 30:
                             fp "Hell no, [fmName.informal]! You've lost that. I'm the one in charge here now."
-                            fm ahead_eyes_closed "... Yes, [fp] ... "
+                            # fm ahead_eyes_closed "... Yes, [fp] ... "
+                            fm "... Yes, [fp] ... "
                             "{i}[fmName.Yourinformal] looks down at the floor, a slight blush on her cheeks, clearly uncomfortable with the situation. Maybe also a little afraid. Not really of you, but that she's excited, just a slight stirring in her loins, by all this...{/i}"
                             $ statschangenotify("fm_aro",1)
-                            fm ahead_eyes_closed "... You're in charge. What will you have me do?"
+                            # fm ahead_eyes_closed "... You're in charge. What will you have me do?"
+                            fm "... You're in charge. What will you have me do?"
                             menu:
-                                "Screw school, I can be late for once. Strip! (evil)":
+                                "Screw school, I can be late for once. Strip!" (cs="evil"):
                                     $ statschangenotify("fm_dom",1,True)
                                     $ statschangenotify("fm_cor",1,True)
                                     $ statschangenotify("fm_rel",-5)
@@ -164,16 +181,18 @@ label morning_events():
                                 "{b}I'll be late for school{/b}":
                                     hide anne
                                     call late_morning() from _call_late_morning_1
-                                "Have [fmName.yourinformal] drive you to school, and make sure you're not late (good)":
+                                "Have [fmName.yourinformal] drive you to school, and make sure you're not late" (cs="good"):
                                     $ statschangenotify("fm_dom",.5)
                                     hide anne
                                     call drive_to_school() from _call_drive_to_school
                         elif fm_dom >= 20:
                             fp "Oh, shut it, [fmName.name]. \"Respect\". Don't make me laugh!"
-                            fm ahead_eyes_closed "{b}her lip quivering...{/b} don't... just... you're gonna be late..."
+                            # fm ahead_eyes_closed "{b}her lip quivering...{/b} don't... just... you're gonna be late..."
+                            fm "{b}her lip quivering...{/b} don't... just... you're gonna be late..."
                             fp "Where are you going? Come right back here and apologize!"
                             "[fmName.name] slowly turns, shuffles back towards you and, in a barely audible whisper..."
-                            fm ahead_eyes_closed "I'm sorry, [fp]. I apologize for my behavior"
+                            # fm ahead_eyes_closed "I'm sorry, [fp]. I apologize for my behavior"
+                            fm "I'm sorry, [fp]. I apologize for my behavior"
                             fp "Fine. Don't let it happen again!"
                             $ fm_apologize = True
                             $ addtime(False,10)
@@ -191,22 +210,27 @@ label morning_events():
                         $ fm_choice1_choice = "reldom"
                         if int(current_time[3:]) == 0:
                             $ already_late = True
-                            fm ahead "You're late. School just started!"
+                            # fm ahead "You're late. School just started!"
+                            fm "You're late. School just started!"
                         else:
                             if int(current_time[:2]) <= 8:
                                 if int(current_time[:2]) == 8:
                                     $ tt = abs(int(current_time[3:]))
-                                    fm ahead "You're late. School started [tt] minutes ago"
+                                    # fm ahead "You're late. School started [tt] minutes ago"
+                                    fm "You're late. School started [tt] minutes ago"
                                 else:
                                     $ tl = abs(int(current_time[3:])-60)
-                                    fm ahead "You're gonna be late. School starts in [tl] minutes."
+                                    # fm ahead "You're gonna be late. School starts in [tl] minutes."
+                                    fm "You're gonna be late. School starts in [tl] minutes."
                             else:
                                 $ already_late = True
                                 $ th = abs(int(current_time[:2])-8)
                                 $ text = "You're late. School started over {0} {1} ago".format(th,'hours' if th > 1 else 'hour')
-                                fm ahead "[text]"
+                                # fm ahead "[text]"
+                                fm "[text]"
                         fp "Yes, yes, I know. Just... let me get dressed, and take a shower, okay?"
-                        fm ahead "Fine! I'm going to work. Make sure you lock the door when you leave!"
+                        # fm ahead "Fine! I'm going to work. Make sure you lock the door when you leave!"
+                        fm "Fine! I'm going to work. Make sure you lock the door when you leave!"
                         $ morning_event_done = True
                         call change_loc('fp_bedroom_fp',prev_loc=current_location) from _call_change_loc_33
 
@@ -219,26 +243,32 @@ label morning_events():
                             $ statschangenotify("fm_rel",1)
                         else:
                             $ statschangenotify("fm_rel",.25)
-                        fm ahead "You need to stop staying up all night, [fp]. If you can't get out of bed in the morning, you'll fail both school and work, when that time comes."
+                        # fm ahead "You need to stop staying up all night, [fp]. If you can't get out of bed in the morning, you'll fail both school and work, when that time comes."
+                        fm "You need to stop staying up all night, [fp]. If you can't get out of bed in the morning, you'll fail both school and work, when that time comes."
                         fp "You know that there are jobs where you work both evenings and nights, right [fmName.informal]?"
-                        fm ahead "Of course I do! But that doesn't mean that you should aim for those jobs. Now get your ass in gear!"
+                        # fm ahead "Of course I do! But that doesn't mean that you should aim for those jobs. Now get your ass in gear!"
+                        fm "Of course I do! But that doesn't mean that you should aim for those jobs. Now get your ass in gear!"
                         $ addtime(False,10)
                         if int(current_time[3:]) == 0:
                             $ already_late = True
-                            fm ahead "You're late. School just started!"
+                            # fm ahead "You're late. School just started!"
+                            fm "You're late. School just started!"
                         else:
                             if int(current_time[:2]) <= 8:
                                 if int(current_time[:2]) == 8:
                                     $ tt = abs(int(current_time[3:]))
-                                    fm ahead "You're late. School started [tt] minutes ago"
+                                    # fm ahead "You're late. School started [tt] minutes ago"
+                                    fm "You're late. School started [tt] minutes ago"
                                 else:
                                     $ tl = abs(int(current_time[3:])-60)
-                                    fm ahead "You're gonna be late. School starts in [tl] minutes."
+                                    # fm ahead "You're gonna be late. School starts in [tl] minutes."
+                                    fm "You're gonna be late. School starts in [tl] minutes."
                             else:
                                 $ already_late = True
                                 $ th = abs(int(current_time[:2])-8)
                                 $ text = "You're late. School started over {0} {1} ago".format(th,'hours' if th > 1 else 'hour')
-                                fm ahead "[text]"
+                                # fm ahead "[text]"
+                                fm "[text]"
                         $ morning_event_done = True
                         call late_morning() from _call_late_morning_3
             elif fpmc_r < .75:
@@ -249,7 +279,8 @@ label morning_events():
                             # "test books on dresser"
                         # show books_on_dresser
                 # show anne with dissolve
-                fm ahead "[fp], time to get out of bed and have some breakfast"
+                # fm ahead "[fp], time to get out of bed and have some breakfast"
+                fm "[fp], time to get out of bed and have some breakfast"
                 fp "Sure, [fmName.informal] - I'll be right down"
                 # hide anne
                 $ morning_out_of_bed = True
@@ -266,7 +297,7 @@ label morning_events():
                 if int(current_time[:2]) == 6 and day_week <= 4:
                     if not mc_f:
                         fp "{i}Oh, it's really early... oh well, lets get up, maybe I can do some work on the bike before school{/i}"
-                        call change_loc('fp_garage',prev_loc=current_location) from _call_change_loc_34
+                        call change_loc('fp_garage_fb',prev_loc=current_location) from _call_change_loc_34
                         fp "{i}Oh, I better get going, if I'm gonna be on time{/i}"
                         call fp_entrance() from _call_fp_entrance_2
                     else:
@@ -275,8 +306,8 @@ label morning_events():
                 elif int(current_time[:2]) == 6 and day_week >= 5:
                     if not mc_f:
                         fp "Oh, it's really early... oh well, maybe I can get an early start and work on the bike today"
-                        call fp_garage_scene from _call_fp_garage_scene
-                        call change_loc('fp_garage',prev_loc=current_location) from _call_change_loc_35
+                        # call fp_garage_scene from _call_fp_garage_scene
+                        call change_loc('fp_garage_fb',prev_loc=current_location) from _call_change_loc_35
                         call w_mc(True) from _call_w_mc
                         $ early_morning_we = True
                         $ addtime(False,15)
@@ -324,8 +355,8 @@ label morning_events():
             if called:
                 $ called = False
                 $ addtime(False,30)
-                fp "{i}Deciding to skip breakfast, to avoid uncomfortable incidents with [fsName.myformal], I go straight to the garage.{/i}"
-                call fp_garage_fb_scene
+                fp "{i}Deciding to skip breakfast, to avoid an awkward encounter with [fsName.myformal] over cereal, I go straight to the garage.{/i}"
+                call fp_garage_fb_scene from _call_fp_garage_fb_scene
                 if not mc_f:
                     fp "Ah, at least working on my bike tends to get my mind off things."
                     label firstday_mc_work:
@@ -343,7 +374,7 @@ label morning_events():
                                             $ firstday_talk = True
                                             $ count = 3
                                             $ morning_event_done = True
-                                            call change_loc('fp_pool',prev_loc=current_location)
+                                            call change_loc('fp_garage_exit',prev_loc=current_location) from _call_change_loc_101
                                         "Continue to work, trying to get your emotions under control":
                                             call firstday_mc_work_internal() from _call_firstday_mc_work_internal
                                 else:
@@ -354,7 +385,7 @@ label morning_events():
                                     # call fp_entrance() from _call_fp_entrance_3
                                     $ firstday_talk = True
                                     $ morning_event_done = True
-                                    call change_loc('fp_pool',prev_loc=current_location)
+                                    call change_loc('fp_garage_exit',prev_loc=current_location) from _call_change_loc_102
                             # "Or, I could just slack off today, and work on the bike another day...":
                             #     # if daycount == 0:
                             #     #     $ daycount += 1
@@ -385,36 +416,38 @@ label morning_events():
         if bin_called and not had_breakfast:
             $ bin_called = False
             if breakfast_food:
-                show anne at left, ModOffsetX(200)
-                show marten ahead at right, ModOffsetX(-200)
+                # show anne at left, ModOffsetX(200)
+                # show marten ahead at right, ModOffsetX(-200)
                 with dissolve
                 if breakfast_food == 'cereal':
-                    fm ahead "I poured you some [breakfast_food]. We're sort of out of everything. Need to go shopping"
+                    # fm ahead "I poured you some [breakfast_food]. We're sort of out of everything. Need to go shopping"
+                    fm "I poured you some [breakfast_food]. We're sort of out of everything. Need to go shopping"
                     fp "Cereal is fine, [fmName.informal]"
                     $ resolved = breakfast_nice_att = breakfast_nice_mod = breakfast_mean_att1 = breakfast_mean_att2 = breakfast_mean_mod1 = breakfaste_mean_mod2 = False
                 else:
-                    fm ahead "I made [breakfast_food]"
+                    # fm ahead "I made [breakfast_food]"
+                    fm "I made [breakfast_food]"
                     menu:
-                        "Be mean (evil)":
+                        "Be mean" (cs="evil"):
                             $ resolved = 'mean'
                             $ breakfast_reply = breakfast_mean.format(breakfast_food).capitalize()
-                        "Be nice (good)":
+                        "Be nice" (cs="good"):
                             $ resolved = 'nice'
                             $ breakfast_reply = breakfast_nice.format(breakfast_food).capitalize()
                     fp "[breakfast_reply], [fmName.informal]"
-                show marten ahead at right, ModOffsetX(-200)
+                # show marten ahead at right, ModOffsetX(-200)
                 if resolved == 'nice':
                     $ resolved = False
-                    show anne smile with dissolve
+                    # show anne smile with dissolve
                     $ statschangenotify(breakfast_nice_att,breakfast_nice_mod)
                 elif resolved == 'mean':
                     $ resolved = False
-                    show anne angry with dissolve
+                    # show anne angry with dissolve
                     $ statschangenotify(breakfast_mean_att1,breakfast_mean_mod1,True)
                     $ statschangenotify(breakfast_mean_att2,breakfast_mean_mod2)
                 $ resolved = breakfast_nice_att = breakfast_nice_mod = breakfast_mean_att1 = breakfast_mean_att2 = breakfast_mean_mod1 = breakfaste_mean_mod2 = False
                 $ had_breakfast = True
-                hide anne with dissolve
+                # hide anne with dissolve
             $ addtime(False,30)
             if day_week <= 4:
                 if debug:
@@ -458,7 +491,7 @@ label morning_events():
                             "Skip the day, and talk to [fsName.yourformal]":
                                 $ talk_later = True
                                 $ morning_event_done = True
-                                call fp_livingroom_scene
+                                call fp_livingroom_scene from _call_fp_livingroom_scene_2
                                 call fs_talk(True) from _call_fs_talk_2
                                 call change_loc('fp_livingroom',prev_loc=current_location) from _call_change_loc_37
                             "Continue the day, and try to talk to [fsName.yourformal] later":

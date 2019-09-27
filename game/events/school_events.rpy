@@ -12,9 +12,10 @@ label school_events(event=False):
         if event == 'sn_punishment_late':
             $ addtime(False,25)
             sn "You're late! This will not be tolerated, [fp]. You will be on time, or I will be forced to reduce your grades for this semester! For now, you have detention, come meet me here after you're done with classes for today."
+            $ conditions.addcondition("Mouth off to [sn]","int(current_time[:2]) < 9")
             label respond_detention():
                 menu:
-                    "Mouth off to [sn] (evil)":
+                    "Mouth off to [sn]" (cs="evil"):
                         fp "Oh, shut it! I'm a few minutes late. It's not like I do this often, and it wasn't like I tried to arrive late. Damn, \"reduce my grades\" - you know you'll have to give me a warning first, and even a letter that I might receive a reduced grade... and I have definitely not deserved that, yet"
                         sn "How dare you talk to me like that? Go see [sp] right now! I will not have a student talk to me like this!"
                         fp "Oh, stop pretending! You're not a bad-ass, [sn]. You never will be."
@@ -25,7 +26,7 @@ label school_events(event=False):
                         $ statschangenotify("sn_rel",-1,True)
                         $ statschangenotify("sn_aro",1)
                         call school_events('punishment') from _call_school_events_8
-                    "Yes, [sn]! (good)":
+                    "Yes, [sn]!" (cs="good"):
                         $ statschangenotify("sn_dom",-1,True)
                         $ statschangenotify("sn_rel",1)
                         call school_events('detention') from _call_school_events_7

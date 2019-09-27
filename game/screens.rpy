@@ -258,6 +258,7 @@ screen quick_menu():
             yalign 1.0
 
             textbutton _("Back") action Rollback()
+            textbutton _("Hide") action HideInterface()
             textbutton _("History") action ShowMenu('history')
             textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
             textbutton _("Auto") action Preference("auto-forward", "toggle")

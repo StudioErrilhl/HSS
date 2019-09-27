@@ -76,6 +76,16 @@ transform fpi_falling_ani:
         pause .08
         repeat
 
+transform fpi_hallway_ani:
+    "images/backgrounds/intro_sequence/fp_uh_intro_2.webp" with Dissolve(.25)
+    pause 1
+    "images/backgrounds/intro_sequence/fp_uh_intro_3.webp" with Dissolve(.25)
+    pause .5
+    "images/backgrounds/intro_sequence/fp_uh_intro_4.webp" with Dissolve(.25)
+    pause .5
+    "images/backgrounds/intro_sequence/fp_uh_intro_5.webp" with Dissolve(.25)
+    pause 1
+
 transform ks_ani_1:
     "images/characters/fm/animations/kitchen_spill_01.webp" with Dissolve(.1)
     pause .08
@@ -119,6 +129,12 @@ image fpintro:
 image fpfalling:
     contains fpi_falling_ani
 
+image fpintro_hallway_1:
+    "images/backgrounds/intro_sequence/fp_uh_intro_1.webp"
+
+image fpintro_hallway_2:
+    contains fpi_hallway_ani
+
 image kitchenspill_1:
     contains ks_ani_1
 
@@ -128,11 +144,11 @@ image kitchenspill_2:
 image books_on_dresser:
     "images/backgrounds/interaction_items/fp_bedroom_morning_dresser_idle.webp"
 
-image juliette_shower:
-    "images/characters/fs/scenes/upper_hallway_bathroom_juliette_shower_bubbles.webp"
+# image juliette_shower:
+#     "images/characters/fs/scenes/upper_hallway_bathroom_juliette_shower_bubbles.webp"
 
-image juliette_shower_night:
-    "images/backgrounds/ufbn_juliette_shower_bubbles.webp"
+# image juliette_shower_night:
+#     "images/backgrounds/ufbn_juliette_shower_bubbles.webp"
 
 image rain:
     "images/rain1.webp"
@@ -427,11 +443,11 @@ image bar_empty:
     "gui/animated_bar_value_empty.webp"
     zoom .5
 
-image stats_hover:
-    "gui/stats_hover.webp"
+# image stats_hover:
+#     "gui/stats_hover.webp"
 
-image tshirt_overlay:
-    "gui/tshirt_overlay.webp"
+# image tshirt_overlay:
+#     "gui/tshirt_overlay.webp"
 
 define flash = Fade(0.1, 1.0, 0.5, color="#000")
 
@@ -440,6 +456,10 @@ define cumflash = MultipleTransition([
     True, Fade(0.1,0.0,0.5, color="#FFF"),
     True, Fade(0.1,0.0,0.5, color="#FFF"),
     True])
+
+transform alpha_fadein():
+    alpha 0.2
+    linear 1.0 alpha 1.0
 
 transform alpha_transform(a):
     alpha a
@@ -477,6 +497,15 @@ transform diagonal_pan_up:
     yalign 1.0
     xalign 1.0
     linear 5.0 yalign 0.0 xalign 0.0
+
+transform diagonal_pan_up_with_pause:
+    zoom .8
+    yalign 1.0
+    xalign 1.0
+    # linear 5.0 yalign 0.0 xalign 0.0
+    linear 2.5 yalign 0.5 xalign 0.5
+    pause 2
+    linear 2.5 yalign 0.0 xalign 0.0
 
 transform diagonal_pan_down:
     zoom .8

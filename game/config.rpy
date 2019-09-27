@@ -150,7 +150,7 @@ default char_desc = [
     ["[nc] was born in Prague, but moved here with her mom and brother when she was only a baby. She is supposed to go to highschool... Basically, what she does is hack the system to make sure her grades are okay, her attendance record is decent, and that she isn't kicked out due to someone checking her records.\n\nMostly, she hangs around at [icafe], where she has her own spot - I suggest you don't try to take that away from her... She knows a lot of shady people, and if you need something fixed (or someone, for that matter), she can probably make that happen. For a fee.\n\nShe's got a goth look to her, although she's not that into the whole depressed, \"the world is horrible\" view. She mostly just likes the look, and that it usually makes people cross the street when she comes walking. Easy way to avoid most humans can't be that bad!\n\nAnd her brother... is [nr]"],
     ["[nb] is..."],
     ["[nr] is [fp]'s best friend. You've been friends since about 1 day after you moved here, due to... let's say some \"questionable choices\" you made... He's also [nc]'s brother"],
-    ["[sn] is..."],
+    ["[sn] is your homeroom teacher, and also your English and Science teacher. She's originally from the Czech Republic, but have been living her since she was a little girl, and you'd never tell besides her name. She's usually strict about the \"Miss Novak\" bit, but you've learned her first name is Evelínka, which she's shortened to Evelyn to make it less... foreign.\n\nShe's been working at HSS for 8 years, and have been known for her strict, formal behavior, and yet still managing to keep a job as the homeroom teacher for the last 3 years. If you tell her something, or have a problem, she'll do her best to comfort you, or solve the issues at hand.\n\nYou've always had a thing for Evelyn, but you think you've managed to keep her from recognizing that fact. You might be wrong about that, though..."],
     ["[se] is..."],
     ["[sp] is..."],
     ["[scm] is..."],
@@ -180,6 +180,7 @@ default fpe = False
 default fp_couch_aquired = False
 default lil_bad = 0
 default aru_good = 0
+default fp_alignment_text = "evil" if lil_bad > aru_good else "good"
 default fp_alignment = 0
 default choicestatus = None
 default dream_event = False
@@ -353,9 +354,9 @@ default total_pussy = fm_pussy + fs_pussy + nk_pussy + nb_pussy + sn_pussy
 default total_bj = fm_bj + fs_bj + nk_bj + nb_bj + sn_bj
 
 default fp_sex_pref = "BJ"
-if (total_bj >= total_pussy >= total_anal) or (total_bj >= total_anal >= total_pussy):
+if (total_bj >= (total_pussy + total_anal)):
     $ fp_sex_pref = "BJ"
-elif (total_pussy >= total_bj >= total_anal) or (total_pussy >= total_anal >= total_bj):
+elif (total_pussy >= (total_bj + total_anal)):
     $ fp_sex_pref = "Pussy"
 else:
     $ fp_sex_pref = "Anal"
@@ -365,28 +366,9 @@ default i_s = {
     'pos_back':[],
     'pos_front':[]
 }
-# default pos_back = {
-#     'arms':False,
-#     'back':False,
-#     'butt':False,
-#     'butt_2':False,
-#     'feet':False,
-#     'legs':False,
-#     'shoulders':False
-#     }
-# default pos_back_arms = False
-# default pos_back_back = False
-# default pos_back_butt = False
-# default pos_back_butt_2 = False
-# default pos_back_feet = False
-# default pos_back_legs = False
-# default pos_back_shoulders = False
-# default pos_front_arms = False
-# default pos_front_breasts = False
-# default pos_front_feet = False
-# default pos_front_legs = False
-# default pos_front_shoulders = False
-# default pos_front_stomach = False
+
+default sunscreen_text = "So, you should put on some sunscreen - where to start?"
+default first_sunscreen = True
 
 default total_fs_sunscreen_points = 0
 
@@ -396,6 +378,8 @@ default hide_exit_buttons = False
 default early_morning_we = False #check this to see if needed
 default overslept = False
 default overslept_time = False
+default armybox_open = False
+default broken_ufb_lock = False
 # default talk_later = False #this should probably be renamed to fs_talk_later
 default skip_breakfast = False
 default late_oh_shit = False
@@ -417,6 +401,7 @@ default morning_out_of_bed = False
 default morning_event_done = False
 default after_sleep = False
 default has_cabin = False
+default tooltipcounterforphone = 0
 default boat_at_marina = False
 default had_breakfast = False # check to see if needed
 default dinner_event = True
@@ -483,6 +468,7 @@ default fsp_yellow = False
 default find_panties = True
 default bathroom_find_panties = True
 default find_pb = False
+default find_keys = False
 default panties_added = False
 default carkeys_added = False
 default carry_carkeys = False
@@ -554,18 +540,19 @@ default gar_cfs = False
 default gar_fb_cfs = False
 default kit_cfs = False
 default pat_cfs = False
-default uhlbcfs = False
-default uhlbc = False
+default ufbm = False
+default ufbmcfs = False
 default uts_cfs = False
 default ups_cfs = False
 default upscd_cfs = False
+default uhaf_cfs = False
 default out_cfs = False
 default lvr_cfs = False
 default tfs_cfs = False
 default end_cfs = False
 default stn_cfs = False
 default wmc_cfs = False
-default ufbtcfs = False
+default ufbmtcfs = False
 default current_file = False
 default keyclose = False
 default ic_cfs = False
@@ -825,6 +812,7 @@ default current_month_text = months_days[current_month][0]
 default current_day = week_days[day_week]
 define morning = [6,7,8,9,10,11]
 define day = [11,12,13,14,15,16,17,18,19,20,21,22]
+define evening = [20,21,22]
 define night = [22,23,0,1,2,3,4,5]
 define hours = [0,1,22,23] # these are the "glowhours" before night-time, when lights are on
 

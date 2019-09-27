@@ -4,7 +4,7 @@ label night_events():
             $ end_called = end_cfs = False
             hide jules
             hide anne
-            hide nk_standing
+            # hide nk_standing
             with dissolve
             $ nh = format(int(night[renpy.random.randint(0,(len(night)-1))]),"02d")
             $ nm = format(renpy.random.randint(00,59),"02d")
@@ -22,7 +22,7 @@ label night_events():
                 else:
                     $ current_month_day += 1
                     $ day_ahead = True
-            call change_loc('fp_bedroom_fp',prev_loc=current_location)
+            call change_loc('fp_bedroom_fp',prev_loc=current_location) from _call_change_loc_96
             "This ends the day"
             call sleep_the_night(True) from _call_sleep_the_night
 
@@ -34,13 +34,13 @@ label night_events():
                     "Sleep the day away":
                         call sleeping_day_away(True) from _call_sleeping_day_away
                     "Stay up":
-                        call change_loc('fp_bedroom_fp',prev_loc=current_location)
+                        call change_loc('fp_bedroom_fp',prev_loc=current_location) from _call_change_loc_97
             else:
                 menu:
                     "Go to sleep":
                         call sleeping(True) from _call_sleeping
                     "Stay up a bit longer":
-                        call change_loc('fp_bedroom_fp',prev_loc=current_location)
+                        call change_loc('fp_bedroom_fp',prev_loc=current_location) from _call_change_loc_98
 
     label sleeping(sle_called=False):
         if sle_called:
@@ -48,13 +48,15 @@ label night_events():
             if dream_event:
                 if dreameventsChars:
                     $ randomDreamEvent = renpy.random.choice(dreameventsChars)
-                    show dreamintro
+                    # show dreamintro
+                    show psa_renders
                     if randomDreamEvent == 'fs':
                         # show fs_dream with flash
                         if fs_dream_event == 1:
                             show fs_dream_intro
                             $ renpy.pause(3)
-                            show fp_fs_dream_1_1
+                            # show fp_fs_dream_1_1
+                            show psa_renders
                             fs "Hey, [fp]! Come to look, or join in?"
                             "You stare a bit at the inviting view before you"
                             menu:
@@ -62,53 +64,76 @@ label night_events():
                                     $ fs_dream_event = 0
                             fs "Thought so! Get over here!"
                             "[fsName.Yourformal] drags you closer, and tears off your boxers"
-                            show fp_fs_dream_1_2
+                            # show fp_fs_dream_1_2
+                            show psa_renders
                             fs "Mmmmhm... you look hot, [fp]"
                             fp "Thanks, I guess?"
                             "You're not entirely sure what's going on, but you decide to just go with the flow"
-                            show fp_fs_dream_1_3
+                            # show fp_fs_dream_1_3
+                            show psa_renders
                             fs "Uh..uh..."
                             fp "Oh, that feels good [fsName.informal]"
                             "..."
                             "..."
                             fp "If you keep doing that, I'm... I'm... CUMMING!"
-                            show fp_fs_dream_1_4 with cumflash
+                            # show fp_fs_dream_1_4 with cumflash
+                            show psa_renders with cumflash
                         elif fs_dream_event == 2:
-                            show fp_fs_dream_2_1
+                            # show fp_fs_dream_2_1
+                            show psa_renders
                             fs "Hey, I missed you! ... and you hard dick!"
                             fs "Now, you just lay back, and let me do all the work, mkay?"
                             fp "Mkay..."
-                            show fp_fs_dream_2_2
+                            # show fp_fs_dream_2_2
+                            show psa_renders
                             "You stretch out on the bed, spreading your legs to accomodate [fsName.yourformal]"
-                            show fp_fs_dream_2_3
+                            # show fp_fs_dream_2_3
+                            show psa_renders
                             "[fsName.yourformal] crawls closer to you, and starts licking your rock hard member"
-                            show fp_fs_dream_2_4
+                            # show fp_fs_dream_2_4
+                            show psa_renders
                             if fp_sex_pref in ["BJ", "Pussy"]:
-                                show fp_fs_dream_2_5_1
+                                # show fp_fs_dream_2_5_1
+                                show psa_renders
                                 "Working her way up onto the bed, she keeps licking and kissing your cock as long as she can manage, before settling on top of you"
-                                show fp_fs_dream_2_5_2
+                                # show fp_fs_dream_2_5_2
+                                show psa_renders
                             elif fp_sex_pref == "Anal":
-                                show fp_fs_dream_2_5_1
+                                # show fp_fs_dream_2_5_1
+                                show psa_renders
                                 "Slowly crawling closer, she starts licking and kissing your cock. While this is pleasant enough, you decide to push her a bit further, and lift your legs, and cock an eyebrow towards her"
-                                show fp_fs_dream_2_5_3
+                                # show fp_fs_dream_2_5_3
+                                show psa_renders
                                 "She settles in, and starts rimming you"
-                                show fp_fs_dream_2_5_4
+                                # show fp_fs_dream_2_5_4
+                                show psa_renders
                     elif randomDreamEvent == 'fm':
-                        show dreamintro
-                        show fm_dream with flash
+                        # show dreamintro
+                        show psa_renders
+                        # show fm_dream with flash
+                        show psa_renders with flash
                     elif randomDreamEvent == 'nc':
-                        show dreamintro
-                        show nc_dream with flash
+                        # show dreamintro
+                        show psa_renders
+                        # show nc_dream with flash
+                        show psa_renders with flash
                     elif randomDreamEvent == 'nk':
-                        show dreamintro
-                        show nk_dream with flash
+                        # show dreamintro
+                        show psa_renders
+                        # show nk_dream with flash
+                        show psa_renders with flash
                     elif randomDreamEvent == 'nb':
-                        show dreamintro
-                        show nb_dream with flash
+                        # show dreamintro
+                        show psa_renders
+                        # show nb_dream with flash
+                        show psa_renders with flash
                     elif randomDreamEvent == 'sn':
-                        show dreamintro
-                        show sn_dream with flash
-                    show dreamoutro
+                        # show dreamintro
+                        show psa_renders
+                        # show sn_dream with flash
+                        show psa_renders with flash
+                    # show dreamoutro
+                    show psa_renders
                     "Zzz Zzzzzzzz *snore*"
             if not day_ahead:
                 $ current_day_of_the_week_3 = day_week
@@ -134,5 +159,5 @@ label night_events():
             $ sld_called = False
             $ settime(22,False)
             # call fp_bedroom_fp(True) from _call_fp_bedroom_fp_2
-            call change_loc('fp_bedroom_fp',prev_loc=current_location)
+            call change_loc('fp_bedroom_fp',prev_loc=current_location) from _call_change_loc_99
 

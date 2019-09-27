@@ -118,21 +118,22 @@ label start:
         $ image_unlock('DCIM00001_landscape.webp')
         fp "{i}[fsName.Myformal] was on her bed, going at it with vigor! Her right hand buried between her legs, which, mind you, was spread quite wide. Nimble, that girl is. I couldn't really have had a better view even if I was sitting right in front of a porn-shoot.{/i}"
         fp "{i}Didn't last long, though. About 5 seconds after me landing on her bedroom floor, I got hit with something hard!{/i}"
-        call upstairs_closerdoor_scene from _call_upstairs_closerdoor_scene
+        call change_loc('upstairs uhaf', sec_call="uhaf_scene", prev_loc=current_location) from _call_change_loc
+        label uhaf_scene(intro_uhaf=False):
+        show fpintro_hallway_1
+        with Dissolve(.25)
         play sound "sounds/medium_camera_shutter.mp3"
         $ image_unlock('DCIM00002_portrait.webp')
-        show juliette_intro
-        with Dissolve(.25)
         fp "{i}Then the shouting began, and 10 seconds after that, I was out in the hallway again, with a furious, but still very half-naked [fsName.role] yelling at me. I'm still amazed that [fmName.informal] didn't show up... THAT would've been embarassing, for both of us... mostly for me.{/i}"
-        hide juliette_intro
-        show juliette_intro_ani
-        pause(1.5)
-        play sound "sounds/medium_camera_shutter.mp3"
-        $ image_unlock('DCIM00003_portrait.webp')
-        hide juliette_intro_ani
+        pause(.5)
+        hide fpintro_hallway_1
+        show fpintro_hallway_2
         with Dissolve(.25)
         fp "{i}(Un)fortunately, [fsName.informal] realised that she was half naked (probably at least partly because I had a raging boner pitching a tent in my pants) - went beet red, turned on her heel, and went back into her room - this time closing and locking the door.{/i}"
-        call change_loc('fp_ufb',sec_call='end_of_intro',prev_loc=current_location)
+        play sound "sounds/medium_camera_shutter.mp3"
+        $ image_unlock('DCIM00003_portrait.webp')
+        pause(.5)
+        call change_loc('fp_ufb',sec_call='end_of_intro',prev_loc=current_location) from _call_change_loc_1
         label end_of_intro(True):
             show fpintro with Dissolve(.25)
             fp "{i}Me... I went to the bathroom and jerked off. Yes, I know she's [fsName.myformal], and all that, but DAMN. She's HOT!{/i}"
@@ -148,7 +149,7 @@ label start:
             $ dinner_comeback = False
             $ dinner_mod = False
             $ dinner_att = False
-            call skip_breakfast(True)
+            call skip_breakfast(True) from _call_skip_breakfast_1
 
     label skippedintro():
         $ fs_mad = 1
@@ -282,7 +283,12 @@ label start:
 
         label day_wrapper():
             # if int(current_time[:2]) in morning:
-            call morning_events() from _call_morning_events_1
+            $ print('this happened')
+            if current_month == 3:
+                call morning_events() from _call_morning_events_1
+            else:
+                $ end_game = True
+                jump end_game_label
             # elif int(current_time[:2]) in day:
             #     # call day_events()
             #     "this is the day time"
@@ -425,7 +431,7 @@ label start:
                         "[text]"
                         if 'shower' in text:
                             $ required_shower = True
-                            call change_loc('fp_ufb',sec_call='lockdoorbathroom',loctrans=True,prev_loc=current_location)
+                            call change_loc('fp_ufb',sec_call='lockdoorbathroom',loctrans=True,prev_loc=current_location) from _call_change_loc_5
                         else:
                             call change_loc('fp_kitchen',prev_loc=current_location) from _call_change_loc_67
                     else:
@@ -444,5 +450,8 @@ label start:
                     else:
                         call change_loc('fp_garage',prev_loc=current_location) from _call_change_loc_32
 
-if end_game:
-    return
+label end_game_label:
+    if end_game:
+        call screen skip_endgame()
+    else:
+        call morning_events() from _call_morning_events

@@ -3,13 +3,7 @@ screen phone():
     modal True
     add Solid("#000000DF")
     tag menu
-    zorder 800
-    default x = 500
-    default y = 400
-    python:
-        x, y = renpy.get_mouse_pos()
-        xval = 1.0 if x > config.screen_width/2 else .0
-        yval = 1.0 if y > config.screen_height/2 else .0
+    # zorder 970
 
     if persistent.phone_firstshow:
         on 'show' action [SetVariable('show_icons',False),Show('phone_info_screen')]
@@ -22,69 +16,51 @@ screen phone():
             yalign .5
             xalign .5
             yoffset -8
-
-        hbox:
-            if battery_text != 0:
+        if battery_text != 0:
+            vbox:
                 xalign .5
-                xoffset 3
-                yalign 0.0
+                spacing 12
                 yoffset 20
-                spacing 12
                 xsize 370
-                if show_icons:
-                    imagebutton auto "gui/phone_button_achievement_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.9):
-                        tooltip "Open the achievement-screen"
-                    imagebutton auto "gui/phone_button_gallery_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_gallery_screen')] at ModZoom(.9):
-                        tooltip "Open the image gallery"
-                    imagebutton auto "gui/phone_button_call_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_call_screen')] at ModZoom(.9):
-                        tooltip "Phonecalls happen here"
-                    imagebutton auto "gui/phone_button_help_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.9):
-                        tooltip "Open the in-game help-screen"
-                    if len(hints) > 0:
-                        imagebutton auto "gui/phone_button_hint_redglow_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen')] at ModZoom(.9):
-                            tooltip "New hints available"
-                    elif len(read_hints) > 0:
-                        imagebutton auto "gui/phone_button_hint_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen',None,'read')] at ModZoom(.9):
-                            tooltip "No new hints available"
-                    else:
-                        imagebutton idle "gui/phone_button_hint_insensitive.webp" focus_mask True action NullAction() at ModZoom(.9):
-                            tooltip "No hints available at the current time"
-        hbox:
-            if battery_text != 0:
-                xalign .5
-                xoffset 3
-                yalign 0.1
-                yoffset 30
-                spacing 12
-                xsize 370
-                if show_icons:
-                    imagebutton auto "gui/phone_button_text_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_text_screen')] at ModZoom(.9):
-                        tooltip "Read your messages"
-                        # xoffset 4
-                    imagebutton auto "gui/phone_button_alarm_clock_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_alarm')] at ModZoom(.9):
-                        tooltip "Set the alarm"
-                        # xoffset -48
-                        # xoffset 4
-                    imagebutton auto "gui/phone_button_playstore_%s.webp" focus_mask True action [SetVariable('show_icons',False),Function(randomize_appstorelists),Show('phone_playstore')] at ModZoom(.9):
-                        tooltip "Go to the PlayStore"
-                        # xoffset -96
-                        # xoffset 4
-                    imagebutton auto "gui/phone_button_droneflight_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('drone_flight')] at ModZoom(.9):
-                        tooltip "Fly your drone"
-                        # xoffset 4
-                    if installedFF:
-                        imagebutton auto "gui/phone_button_friendfinder_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_friendfinder')] at ModZoom(.9):
-                            tooltip "Open FriendFinder"
-                            # xsize 70
-                    else:
-                        imagebutton idle "gui/phone_button_empty_idle.webp" focus_mask True action NullAction()
-
-        hbox:
-            if battery_text != 0:
-                xalign 0.5
-                xoffset 3
+                hbox:
+                    spacing 12
+                    if show_icons:
+                        imagebutton auto "gui/phone_button_achievement_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('display_achievements')] at ModZoom(.9):
+                            tooltip "Open the achievement-screen"
+                        imagebutton auto "gui/phone_button_gallery_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_gallery_screen')] at ModZoom(.9):
+                            tooltip "Open the image gallery"
+                        imagebutton auto "gui/phone_button_call_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_call_screen')] at ModZoom(.9):
+                            tooltip "Phonecalls happen here"
+                        imagebutton auto "gui/phone_button_help_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_info_screen')] at ModZoom(.9):
+                            tooltip "Open the in-game help-screen"
+                        if len(hints) > 0:
+                            imagebutton auto "gui/phone_button_hint_redglow_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen')] at ModZoom(.9):
+                                tooltip "New hints available"
+                        elif len(read_hints) > 0:
+                            imagebutton auto "gui/phone_button_hint_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_hint_screen',None,'read')] at ModZoom(.9):
+                                tooltip "No new hints available"
+                        else:
+                            imagebutton idle "gui/phone_button_hint_insensitive.webp" focus_mask True action NullAction() at ModZoom(.9):
+                                tooltip "No hints available at the current time"
+                hbox:
+                    spacing 12
+                    if show_icons:
+                        imagebutton auto "gui/phone_button_text_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_text_screen')] at ModZoom(.9):
+                            tooltip "Read your messages"
+                        imagebutton auto "gui/phone_button_alarm_clock_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_alarm')] at ModZoom(.9):
+                            tooltip "Set the alarm"
+                        imagebutton auto "gui/phone_button_playstore_%s.webp" focus_mask True action [SetVariable('show_icons',False),Function(randomize_appstorelists),Show('phone_playstore')] at ModZoom(.9):
+                            tooltip "Go to the PlayStore"
+                        imagebutton auto "gui/phone_button_droneflight_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('drone_flight')] at ModZoom(.9):
+                            tooltip "Fly your drone"
+                        if installedFF:
+                            imagebutton auto "gui/phone_button_friendfinder_%s.webp" focus_mask True action [SetVariable('show_icons',False),Show('phone_friendfinder')] at ModZoom(.9):
+                                tooltip "Open FriendFinder"
+                        else:
+                            imagebutton idle "gui/phone_button_empty_idle.webp" focus_mask True action NullAction()
+            hbox:
                 yalign 1.0
-                yoffset -24
+                yoffset -20
                 spacing 12
                 if show_icons:
                     imagebutton auto "gui/phone_button_menu_%s.webp" focus_mask True action [SetVariable('show_icons',False),SetVariable('quit_screen',True),Show('custom_confirm',None,'mainmenu')] at ModZoom(.9):
@@ -100,10 +76,7 @@ screen phone():
 
     use phone_overlay
     if GetTooltip() is not None:
-        frame:
-            pos(x, y)
-            anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"
+        $ renpy.show_screen("tooltip_screen")
 
 screen phone_hint_screen(hintselect='new'):
     tag phonescreen
@@ -149,12 +122,7 @@ screen phone_playstore():
     tag phonescreen
     # modal True
     zorder 800
-    default x = 500
-    default y = 400
-    python:
-        x, y = renpy.get_mouse_pos()
-        xval = 1.0 if x > config.screen_width/2 else .0
-        yval = 1.0 if y > config.screen_height/2 else .0
+
     $ keyclose = True
     fixed:
         maximum 370,710
@@ -250,10 +218,7 @@ screen phone_playstore():
 
     use phone_overlay
     if GetTooltip() is not None:
-        frame:
-            pos(x, y)
-            anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"
+        $ renpy.show_screen("tooltip_screen")
 
     if keyclose:
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
@@ -329,12 +294,7 @@ screen phone_playstore_apppage():
     default updatepercentage = False
     default installedapp = False
     zorder 800
-    default x = 500
-    default y = 400
-    python:
-        x, y = renpy.get_mouse_pos()
-        xval = 1.0 if x > config.screen_width/2 else .0
-        yval = 1.0 if y > config.screen_height/2 else .0
+
     $ keyclose = True
     fixed:
         maximum 370,710
@@ -454,10 +414,7 @@ screen phone_playstore_apppage():
 
     use phone_overlay
     if GetTooltip() is not None:
-        frame:
-            pos(x, y)
-            anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"
+        $ renpy.show_screen("tooltip_screen")
 
     if keyclose:
         key "K_ESCAPE" action [SetVariable('keyclose',False),Hide('phone_playstore_apppage'),Show('phone_playstore')]
@@ -466,13 +423,9 @@ screen phone_text_screen():
     tag phonescreen
     # modal True
     zorder 800
-    default x = 500
-    default y = 400
+
     default temp_msg_char = []
-    python:
-        x, y = renpy.get_mouse_pos()
-        xval = 1.0 if x > config.screen_width/2 else .0
-        yval = 1.0 if y > config.screen_height/2 else .0
+
     $ keyclose = True
     default char = False
     default msg = False
@@ -574,10 +527,7 @@ screen phone_text_screen():
 
     use phone_overlay
     if GetTooltip() is not None:
-        frame:
-            pos(x, y)
-            anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"
+        $ renpy.show_screen("tooltip_screen")
 
     if keyclose:
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
@@ -586,12 +536,7 @@ screen show_text_msg(compchar=False,char=False):
     tag phonescreen
     # modal True
     zorder 800
-    default x = 500
-    default y = 400
-    python:
-        x, y = renpy.get_mouse_pos()
-        xval = 1.0 if x > config.screen_width/2 else .0
-        yval = 1.0 if y > config.screen_height/2 else .0
+
     $ keyclose = True
     default char = False
     default msg = False
@@ -656,21 +601,13 @@ screen show_text_msg(compchar=False,char=False):
 
     use phone_overlay
     if GetTooltip() is not None:
-        frame:
-            pos(x, y)
-            anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"
+        $ renpy.show_screen("tooltip_screen")
 
 screen phone_call_screen():
     tag phonescreen
     # modal True
     zorder 800
-    default x = 500
-    default y = 400
-    python:
-        x, y = renpy.get_mouse_pos()
-        xval = 1.0 if x > config.screen_width/2 else .0
-        yval = 1.0 if y > config.screen_height/2 else .0
+
     $ keyclose = True
     default stats = None
     default clicked = None
@@ -773,10 +710,7 @@ screen phone_call_screen():
                             $ c += 1
     use phone_overlay
     if GetTooltip() is not None:
-        frame:
-            pos(x, y)
-            anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"
+        $ renpy.show_screen("tooltip_screen")
 
     if keyclose:
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
@@ -784,12 +718,7 @@ screen phone_call_screen():
 screen phone_call_show(char=False,label=False,calling_out=False,event=False):
     tag phonescreen
     zorder 900
-    default x = 500
-    default y = 400
-    python:
-        x, y = renpy.get_mouse_pos()
-        xval = 1.0 if x > config.screen_width/2 else .0
-        yval = 1.0 if y > config.screen_height/2 else .0
+
     $ keyclose = True
     frame:
         # background None
@@ -916,10 +845,7 @@ screen phone_call_show(char=False,label=False,calling_out=False,event=False):
 
     # use phone_overlay
     if GetTooltip() is not None:
-        frame:
-            pos(x, y)
-            anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"
+        $ renpy.show_screen("tooltip_screen")
 
 screen phone_gallery_screen():
     tag phonescreen
@@ -973,12 +899,7 @@ screen phone_gallery_screen():
 screen phone_gallery_show():
     tag phonescreen
     zorder 950
-    default x = 500
-    default y = 400
-    python:
-        x, y = renpy.get_mouse_pos()
-        xval = 1.0 if x > config.screen_width/2 else .0
-        yval = 1.0 if y > config.screen_height/2 else .0
+
     $ keyclose = True
     frame:
         style_prefix "infoscreen"
@@ -1029,10 +950,7 @@ screen phone_gallery_show():
 
     use phone_overlay
     if GetTooltip() is not None:
-        frame:
-            pos(x, y)
-            anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"
+        $ renpy.show_screen("tooltip_screen")
 
 screen phone_info_screen():
     tag phonescreen
@@ -1258,12 +1176,7 @@ screen phone_alarm(pa_chosen=False):
 screen drone_flight():
     tag phonescreen
     zorder 800
-    default x = 500
-    default y = 400
-    python:
-        x, y = renpy.get_mouse_pos()
-        xval = 1.0 if x > config.screen_width/2 else .0
-        yval = 1.0 if y > config.screen_height/2 else .0
+
     $ keyclose = True
     frame:
         background None
@@ -1274,25 +1187,41 @@ screen drone_flight():
         yalign .44
         maximum 370,686
         vbox:
-            xalign 1.0
-            yalign 1.0
-            imagebutton auto "gui/df_u_%s.webp" focus_mask True action NullAction()
-            hbox:
-                imagebutton auto "gui/df_l_%s.webp" focus_mask True action NullAction()
-                imagebutton auto "gui/df_r_%s.webp" focus_mask True action NullAction()
-            imagebutton auto "gui/df_d_%s.webp" focus_mask True action NullAction()
-        imagebutton auto "gui/closebutton_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
+            # maximum 370,200
+            xalign .5
+            yalign .76
+            imagebutton auto "gui/df_u_%s.webp" focus_mask True action NullAction() at ModZoom(.5):
+                xalign .5
+                ypos 10
+                ysize 20
+            imagebutton auto "gui/df_d_%s.webp" focus_mask True action NullAction() at ModZoom(.5):
+                xalign .5
+                ypos 20
+                ysize 20
+        hbox:
+            xalign .5
+            yalign .98
+            imagebutton auto "gui/df_l_%s.webp" focus_mask True action NullAction() at ModZoom(.5)
+            imagebutton auto "gui/df_r_%s.webp" focus_mask True action NullAction() at ModZoom(.5)
+
+        imagebutton auto "gui/closebutton_%s.webp" focus_mask True action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')] at ModZoom(.5):
+            yalign 1.035
+            xalign 1.015
+
+        frame:
+            yalign .3
+            text "This is gonna be a drone-flying minigame. It's currently NOT implemented, only the buttons and the icon is currently set up. Don't worry, it will be part of the game soon enough, as soon as I get a handle on whether it actually works sort of okay, or not":
+                color "#FFF"
+                justify True
+
+
 
     use phone_overlay
     if GetTooltip() is not None:
-        frame:
-            pos(x, y)
-            anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"
+        $ renpy.show_screen("tooltip_screen")
 
     if keyclose:
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
-
 
 screen custom_confirm(cc_chosen=False):
     tag phonescreen
@@ -1331,12 +1260,7 @@ screen display_achievements():
     tag phonescreen
     # modal True
     zorder 800
-    default x = 500
-    default y = 400
-    python:
-        x, y = renpy.get_mouse_pos()
-        xval = 1.0 if x > config.screen_width/2 else .0
-        yval = 1.0 if y > config.screen_height/2 else .0
+
 
     on 'show' action Function(achievement_trophy_case.update)
 
@@ -1504,11 +1428,7 @@ screen display_achievements():
 
     use phone_overlay
     if GetTooltip() is not None:
-        frame:
-            pos(x, y)
-            anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"
-
+        $ renpy.show_screen("tooltip_screen")
 
 # This allows the user to view achievements based on their category
 screen display_achievements_category_panel():
@@ -1575,12 +1495,7 @@ screen custom_preferences():
     tag phonescreen
     # modal True
     zorder 800
-    default x = 500
-    default y = 400
-    python:
-        x, y = renpy.get_mouse_pos()
-        xval = 1.0 if x > config.screen_width/2 else .0
-        yval = 1.0 if y > config.screen_height/2 else .0
+
     $ keyclose = True
     frame:
         background None
@@ -1600,219 +1515,142 @@ screen custom_preferences():
                         style_prefix "category"
                         xsize 370
                         ysize 150
-                        hbox:
+                        vbox:
                             yalign 0.0
                             xalign .5
-                            label _("Display"):
-                                text_color "#fff"
-                        hbox:
-                            ypos 40
+                            spacing -10
+                            label _("Display")
                             textbutton _("Window") action Preference("display", "window")
                                 # foreground "gui/button/check_[prefix_]foreground_white.webp"
-                        hbox:
-                            ypos 80
                             textbutton _("Fullscreen") action Preference("display", "fullscreen")
                                 # foreground "gui/button/check_[prefix_]foreground_white.webp"
                 if not renpy.variant("pc"):
                     fixed:
                         xsize 370
-                        ysize 200
+                        ysize 150
                         style_prefix "category"
-                        hbox:
+                        vbox:
                             yalign 0.0
                             xalign .5
-                            label _("Rollback Side"):
-                                text_color "#fff"
-                        hbox:
-                            ypos 40
+                            label _("Rollback Side")
                             textbutton _("Disable") action Preference("rollback side", "disable")
                                 # foreground "gui/button/check_[prefix_]foreground_white.webp"
-                        hbox:
-                            ypos 80
                             textbutton _("Left") action Preference("rollback side", "left")
                                 # foreground "gui/button/check_[prefix_]foreground_white.webp"
-                        hbox:
-                            ypos 120
                             textbutton _("Right") action Preference("rollback side", "right")
                                 # foreground "gui/button/check_[prefix_]foreground_white.webp"
-
                 fixed:
                     xsize 370
-                    ysize 200
+                    ysize 220
                     style_prefix "category"
-                    hbox:
+                    vbox:
                         yalign 0.0
                         xalign .5
-                        label _("Skip"):
-                            text_color "#fff"
-                    hbox:
-                        ypos 40
+                        label _("Skip")
                         textbutton _("Unseen Text") action Preference("skip", "toggle"):
                             selected preferences.skip_unseen == True
                             # foreground "gui/button/check_[prefix_]foreground_white.webp"
-                    hbox:
-                        ypos 80
                         textbutton _("After Choices") action Preference("after choices", "toggle"):
                             # foreground "gui/button/check_[prefix_]foreground_white.webp"
                             selected preferences.skip_after_choices == True
-                    hbox:
-                        ypos 120
                         textbutton _("Transitions") action InvertSelected(Preference("transitions", "toggle")):
                             # foreground "gui/button/check_[prefix_]foreground_white.webp"
                             selected preferences.transitions == 0
+                fixed:
+                    xsize 370
+                    ysize 200
+                    style_prefix "category"
+                    vbox:
+                        yalign 0.0
+                        xalign .5
+                        label _("Speed")
+                        vbox:
+                            style_prefix "category_sub"
+                            spacing 10
+                            vbox:
+                                label _("Text Speed")
+                                bar value Preference("text speed")
+                            vbox:
+                                label _("Auto-Forward Time")
+                                bar value Preference("auto-forward time")
 
-                fixed:
-                    xsize 370
-                    ysize 200
-                    hbox:
-                        yalign 0.0
-                        xalign .5
-                        label _("Text Speed"):
-                            text_color "#fff"
-                    hbox:
-                        ypos 80
-                        bar value Preference("text speed")
-                fixed:
-                    xsize 370
-                    ysize 200
-                    hbox:
-                        yalign 0.0
-                        xalign .5
-                        label _("Auto-Forward Time"):
-                            text_color "#fff"
-                    hbox:
-                        ypos 80
-                        bar value Preference("auto-forward time")
-                if config.has_music:
-                    fixed:
-                        xsize 370
-                        ysize 200
-                        hbox:
-                            yalign 0.0
-                            xalign .5
-                            label _("Music Volume"):
-                                text_color "#fff"
-                        hbox:
-                            ypos 80
-                            bar value Preference("music volume"):
-                                xsize 375
-                if config.has_sound:
-                    fixed:
-                        xsize 370
-                        ysize 200
-                        hbox:
-                            yalign 0.0
-                            xalign .5
-                            label _("Sound Volume"):
-                                text_color "#fff"
-                        hbox:
-                            ypos 80
-                            bar value Preference("sound volume"):
-                                xsize 375
-                            if config.sample_sound:
-                                textbutton _("Test") action Play("sound", config.sample_sound)
-                if config.has_voice:
-                    fixed:
-                        xsize 370
-                        ysize 200
-                        hbox:
-                            yalign 0.0
-                            xalign .5
-                            label _("Voice Volume"):
-                                text_color "#fff"
-                        hbox:
-                            ypos 80
-                            bar value Preference("voice volume"):
-                                xsize 375
-                            if config.sample_voice:
-                                textbutton _("Test") action Play("voice", config.sample_voice):
-                                    text_color "#fff"
                 if config.has_music or config.has_sound or config.has_voice:
                     fixed:
                         xsize 370
-                        ysize 100
-                        hbox:
+                        ysize 300
+                        style_prefix "category"
+                        vbox:
                             yalign 0.0
                             xalign .5
-                            textbutton _("Mute All"):
-                                action Preference("all mute", "toggle")
-                                style "mute_all_button"
-                                text_color "#fff"
+                            label _("Sound")
+                            if config.has_music:
+                                vbox:
+                                    style_prefix "category_sub"
+                                    label _("Music Volume")
+                                    bar value Preference("music volume")
+                                    # xsize 375
+                            if config.has_sound:
+                                vbox:
+                                    style_prefix "category_sub"
+                                    label _("Sound Volume")
+                                    bar value Preference("sound volume")
+                                        # xsize 375
+                                    if config.sample_sound:
+                                        textbutton _("Test") action Play("sound", config.sample_sound)
+                            if config.has_voice:
+                                vbox:
+                                    style_prefix "category_sub"
+                                    label _("Voice Volume")
+                                    bar value Preference("voice volume")
+                                        # xsize 375
+                                    if config.sample_voice:
+                                        textbutton _("Test") action Play("voice", config.sample_voice)
+                            vbox:
+                                xalign .5
+                                textbutton _("Mute All"):
+                                    action Preference("all mute", "toggle")
+                                    style "mute_all_button"
+                                    text_color "#fff"
+                                    xalign .5
                                 # foreground "gui/button/check_[prefix_]foreground_white.webp"
-
                 fixed:
                     xsize 370
                     ysize 200
                     style_prefix "category"
-                    hbox:
-                        yalign 0.0
-                        xalign .5
-                        label _("Cheats"):
-                            text_color "#fff"
-                    hbox:
-                        ypos 40
+                    vbox:
+                        label _("Cheats")
                         textbutton _("Disable") action SetField(persistent,"cheat",False)
                             # foreground "gui/button/check_[prefix_]foreground_white.webp"
-                    hbox:
-                        ypos 80
                         textbutton _("Enable") action SetField(persistent,"cheat",True)
                             # foreground "gui/button/check_[prefix_]foreground_white.webp"
-
                 fixed:
                     xsize 370
                     ysize 200
                     style_prefix "category"
-                    hbox:
-                        ysize 50
-                        xalign .5
-                        label _("Zoomed side-images"):
-                            text_color "#fff"
-                    hbox:
-                        ysize 50
-                        ypos 50
-                        xsize 370
-                        textbutton _("Disable") action SetField(persistent,'side_image_zoom',False):
+                    vbox:
+                        label _("Zoomed side-images")
+                        textbutton _("Disable") action SetField(persistent,'side_image_zoom',False)
                             # foreground "gui/button/check_[prefix_]foreground_white.webp"
-                            yalign .5
-                    hbox:
-                        ysize 50
-                        ypos 100
-                        xsize 370
-                        textbutton _("Enable") action SetField(persistent,'side_image_zoom',True):
+                        textbutton _("Enable") action SetField(persistent,'side_image_zoom',True)
                             # foreground "gui/button/check_[prefix_]foreground_white.webp"
-                            yalign .5
-
                 fixed:
                     xsize 370
                     ysize 200
                     style_prefix "category"
-                    hbox:
-                        ysize 50
-                        xalign .5
-                        label _("Quick Menu"):
-                            text_color "#fff"
-                    hbox:
-                        ysize 50
-                        ypos 50
-                        xsize 370
-                        textbutton _("Disable") action SetField(persistent,'quick_menu', False):
+                    vbox:
+                        label _("Quick Menu")
+                        textbutton _("Disable") action SetField(persistent,'quick_menu', False)
                             # foreground "gui/button/check_[prefix_]foreground_white.webp"
-                            yalign .5
-                    hbox:
-                        ysize 50
-                        ypos 100
-                        xsize 370
-                        textbutton _("Enable") action SetField(persistent,'quick_menu', True):
+                        textbutton _("Enable") action SetField(persistent,'quick_menu', True)
                             # foreground "gui/button/check_[prefix_]foreground_white.webp"
-                            yalign .5
 
                 if disabled_hints:
                     fixed:
                         xsize 370
                         ysize 200
-                        hbox:
-                            yalign 0.0
-                            xalign .5
+                        style_prefix "category"
+                        vbox:
+                            label _("Hints")
                             textbutton _("Restore hints"):
                                 action Function(restore_hints)
                                 style "mute_all_button"
@@ -1837,14 +1675,10 @@ screen custom_preferences():
 
     use phone_overlay
     if GetTooltip() is not None:
-        frame:
-            pos(x, y)
-            anchor (xval, yval)
-            text GetTooltip() style "tooltip_hover"
+        $ renpy.show_screen("tooltip_screen")
 
     if keyclose:
         key "K_ESCAPE" action [SetVariable('keyclose',False),SetVariable('show_icons',True),Function(hide_phone_screens),Show('phone')]
-
 
 screen phone_light_background():
     hbox:

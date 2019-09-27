@@ -17,11 +17,11 @@ label nc_talk(event=False,callrand=False):
                 "{b}beeeeeep...{/b}"
                 fp "{i}She hung up on me! The bitch... hung up on me!{/i}"
                 menu:
-                    "What a bitch, huh? (evil)":
+                    "What a bitch, huh?" (cs="evil"):
                         # $ fp_alignment -= 1
                         $ statschangenotify('lil_bad',1,True)
                         $ statschangenotify('fp_alignment',-1)
-                    "What a... oh, well, I guess she had her reasons (good)":
+                    "What a... oh, well, I guess she had her reasons" (cs="good"):
                         # $ fp_alignment += 1
                         $ statschangenotify('aro_good',1,True)
                         $ statschangenotify('fp_alignment',1)
